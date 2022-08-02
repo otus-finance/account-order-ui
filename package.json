@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "format": "yarn prettier --write ."
   },
   "dependencies": {
     "@prisma/client": "^4.1.1",
@@ -15,7 +16,9 @@
     "@trpc/next": "^9.26.2",
     "@trpc/react": "^9.26.2",
     "@trpc/server": "^9.26.2",
+    "eslint-config-prettier": "^8.5.0",
     "next": "12.2.3",
+    "prettier": "^2.7.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "3.39.2",
