@@ -22,8 +22,8 @@ const Home: NextPage = () => {
                 </Link>
 
                 <div className="absolute left-0 flex-col items-center justify-center hidden w-full pb-8 mt-48 border-b border-gray-200 md:relative md:w-auto md:bg-transparent md:border-none md:mt-0 md:flex-row md:p-0 md:items-end md:flex md:justify-between">
-                    <Link href="#_" className="relative z-40 px-3 py-2 mr-0 text-sm font-bold text-indigo-600 md:px-5 sm:mr-3 md:mt-0" data-primary="indigo-600">Login</a>
-                    <Link href="#_" className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all transition duration-100 duration-300 bg-indigo-600 rounded shadow-md fold-bold sm:w-full lg:shadow-none hover:shadow-xl" data-primary="indigo-600" data-rounded="rounded">Get Started</a>
+                    <Link href="#_" className="relative z-40 px-3 py-2 mr-0 text-sm font-bold text-indigo-600 md:px-5 sm:mr-3 md:mt-0" data-primary="indigo-600">Login</Link>
+                    <Link href="#_" className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all transition duration-100 duration-300 bg-indigo-600 rounded shadow-md fold-bold sm:w-full lg:shadow-none hover:shadow-xl" data-primary="indigo-600" data-rounded="rounded">Get Started</Link>
 
                 </div>
 
@@ -40,7 +40,7 @@ const Home: NextPage = () => {
                 <div className="z-30 flex flex-col items-center w-full max-w-xl text-center lg:items-start lg:w-1/2 lg:pt-24 lg:text-left">
                     <h1 className="relative mb-4 text-3xl font-black leading-tight text-gray-900 lg:pr-16 sm:text-6xl lg:mb-8">The Marketplace for Decentralized Options Vaults</h1>
                     <p className="pr-0 mb-8 text-base text-gray-600 sm:text-lg xl:text-xl lg:pr-20">Build </p>
-                    <Link href="#_" className="relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 text-base font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0" data-primary="indigo-600" data-rounded="rounded-md">Signup Today!</a>
+                    <Link href="#_" className="relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 text-base font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0" data-primary="indigo-600" data-rounded="rounded-md">Signup Today!</Link>
 
                     <div className="flex-col hidden mt-12 sm:flex lg:mt-24">
                         <p className="mb-4 text-sm font-medium tracking-widest text-gray-500 uppercase">Integrates With</p>
