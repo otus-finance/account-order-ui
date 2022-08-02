@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
@@ -20,7 +21,7 @@ const Home: NextPage = () => {
             className="flex justify-between items-center px-4 text-gray-800 xl:px-16"
           >
             <div className="flex items-center w-1/3">
-              <img
+              <Image
                 src="https://usewindy.com/img/logo.svg"
                 alt="Windy"
                 className="block mr-3 w-10 max-w-full h-auto align-middle"
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
               target="_blank"
             >
               <span className="">A product by</span>
-              <img
+              <Image
                 className="block ml-2 max-w-full h-6 align-middle"
                 src="https://usewindy.com/img/bc_logo_full.svg"
                 alt="Beyond Code"
@@ -83,7 +84,7 @@ const Home: NextPage = () => {
 
             <div className="hidden overflow-visible w-1/2 sm:block">
               <div style={{width: '1248px'}} className="w-64">
-                <img
+                <Image
                   src="https://usewindy.com/img/hero_frame.svg"
                   alt="Windy Demo on the beyondco.de Website"
                   className="block max-w-full h-auto align-middle"
