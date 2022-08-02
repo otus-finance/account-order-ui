@@ -33,6 +33,7 @@ const Home: NextPage = () => {
               className="hidden justify-center items-center w-1/3 text-sm leading-5 cursor-pointer lg:flex"
               href="https://beyondco.de/"
               target="_blank"
+              rel="noreferrer"
             >
               <span className="">A product by</span>
               <Image
