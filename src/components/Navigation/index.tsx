@@ -33,12 +33,12 @@ export default function Navigation() {
                   </span>
                 </div>
                 <div className="hidden md:ml-12 md:flex md:space-x-8">
-                  <Link
+                  <a
                     href="/backtest"
                     className=" text-gray inline-flex items-center px-1 pt-1 text-sm font-medium"
                   >
                     Backtest Tool
-                  </Link>
+                  </a>
                 </div>
               </div>
               <div className="flex items-center">
