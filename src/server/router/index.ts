@@ -16,7 +16,7 @@ export const appRouter = createRouter()
           email: input.email,
         },
       });
-      return { success: true, vote: emailInDb };
+      return { success: true, emailInDb };
     },
   });
 

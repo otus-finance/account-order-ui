@@ -5,9 +5,9 @@ import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import { useRouter } from 'next/router';
 import { useState } from "react";
+import Navigation from "../components/Navigation";
 
 const Home: NextPage = () => {
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,32 +41,8 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Navigation />
       <section className="relative w-full bg-black tails-selected-element">
-        <div className="relative z-50 w-full h-24">
-          <div className="container flex items-center justify-center h-full max-w-6xl px-8 mx-auto sm:justify-between xl:px-0">
-            <Link
-              href="/"
-              className="relative flex items-center inline-block h-5 h-full font-black leading-none"
-            >
-              <span className="ml-3 text-2xl font-sans font-bold text-white">
-                Otus Finance
-              </span>
-            </Link>
-
-            <div className="absolute left-0 flex-col items-center justify-center hidden w-full mt-48 border-b border-gray-200 md:relative md:w-auto md:bg-transparent md:border-none md:mt-0 md:flex-row md:p-0 md:items-end md:flex md:justify-between">
-              <button
-                onClick={() => router.push('https://app.otus.finance')}
-                className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold text-black bg-green leading-none transition-all transition duration-100 duration-300 shadow-md fold-bold sm:w-full lg:shadow-none hover:shadow-xl"
-                data-primary="indigo-600"
-                data-rounded="rounded"
-              >
-                Launch App
-              </button>
-            </div>
-
-          </div>
-        </div>
-
         <div className="relative items-center justify-center w-full overflow-x-hidden sm:pt-8 md:pt-8">
           <div className="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto lg:flex-row xl:px-0">
             <div className="w-full py-20 pl-10 pr-10 lg:w-5/12 lg:py-32 lg:pr-0 tails-selected-element">
