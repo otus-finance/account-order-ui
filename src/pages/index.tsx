@@ -4,9 +4,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import { useRouter } from 'next/router';
+import { useState } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (e: any) => {
+
+    e.preventDefault();
+
+    // this is where your mailchimp request is made
+    try {
+
+      const res = await fetch("/api/subscribeUser", {
+        body: JSON.stringify({ email }),
+  
+        headers: {
+          "Content-Type": "application/json",
+        },
+  
+        method: "POST",
+      });
+    
+    } catch (error) {
+      
+    }
+
+  }
+
   return (
     <>
       <Head>
@@ -31,7 +58,7 @@ const Home: NextPage = () => {
 
             <div className="absolute left-0 flex-col items-center justify-center hidden w-full mt-48 border-b border-gray-200 md:relative md:w-auto md:bg-transparent md:border-none md:mt-0 md:flex-row md:p-0 md:items-end md:flex md:justify-between">
               <button
-                onClick={() => router.push('https://otus-finance.vercel.app')}
+                onClick={() => router.push('https://app.otus.finance')}
                 className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold text-black bg-green leading-none transition-all transition duration-100 duration-300 shadow-md fold-bold sm:w-full lg:shadow-none hover:shadow-xl"
                 data-primary="indigo-600"
                 data-rounded="rounded"
@@ -59,12 +86,16 @@ const Home: NextPage = () => {
               <p className="font-sans text-lg font-light text-gray sm:text-xl lg:pr-10">
                 Create or join the best performing options vaults. 
               </p>
-              <p className="font-sans mt-5 text-xs font-bold text-gray sm:text-xl lg:pr-10">
-                Get on the beta tester list. 
+              <p className="font-sans mt-5 text-3xs font-light text-gray sm:text-xl lg:pr-10">
+                Sign up for early access to create options vaults.
               </p>
-              <form className="flex justify-between w-full p-1 mt-2 border-1 border-white">
+              <form className="flex justify-between w-full mt-2 border-1 border-white" onSubmit={handleSubmit}>
                 <input
                   type="text"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   className="flex-1 w-auto pl-2 text-sm text-gray-400 outline-none focus:outline-none"
                   placeholder="Enter Your Email"
                 />
