@@ -11,25 +11,16 @@ const Home: NextPage = () => {
 
   const [email, setEmail] = useState("");
 
+  const registerUserMutation = trpc.useMutation(["register-user"]);
+
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
 
-    // this is where your mailchimp request is made
     try {
-
-      const res = await fetch("/api/subscribeUser", {
-        body: JSON.stringify({ email }),
-  
-        headers: {
-          "Content-Type": "application/json",
-        },
-  
-        method: "POST",
-      });
-    
+      registerUserMutation.mutate({ email });
     } catch (error) {
-      
+      console.log({ error });
     }
 
   }
@@ -67,10 +58,6 @@ const Home: NextPage = () => {
               </button>
             </div>
 
-            <div className="absolute top-0 right-0 z-50 block w-6 mt-8 mr-10 cursor-pointer select-none md:hidden sm:mt-10">
-              <span className="block w-full h-1 mt-2 duration-200 transform bg-gray-800 rounded-full sm:mt-1"></span>
-              <span className="block w-full h-1 mt-1 duration-200 transform bg-gray-800 rounded-full"></span>
-            </div>
           </div>
         </div>
 
@@ -96,7 +83,7 @@ const Home: NextPage = () => {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
-                  className="flex-1 w-auto pl-2 text-sm text-gray-400 outline-none focus:outline-none"
+                  className="flex-1 w-auto pl-2 text-sm text-gray bg-dark-gray outline-none focus:outline-none"
                   placeholder="Enter Your Email"
                 />
                 <button
