@@ -38,7 +38,7 @@ export default function Navigation() {
                     className=" text-gray inline-flex items-center px-1 pt-1 text-sm font-medium"
                   >
                     Backtest Tool
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="flex items-center">
