@@ -1,11 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import { trpc } from "../utils/trpc";
-import { useRouter } from 'next/router';
 import { useState } from "react";
 import Navigation from "../components/Navigation";
+import { XIcon, SpeakerphoneIcon } from '@heroicons/react/outline'
 
 const Home: NextPage = () => {
 
@@ -32,7 +30,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <>
+    <div className="h-screen bg-black">
       <Head>
         <title>Otus Finance</title>
         <meta
@@ -41,9 +39,11 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
       <Navigation />
-      <section className="relative w-full bg-black tails-selected-element">
-        <div className="relative items-center justify-center w-full overflow-x-hidden sm:pt-8 md:pt-8">
+      <section className="relative w-full tails-selected-element">
+
+        <div className="relative items-center justify-center w-full overflow-x-hidden sm:pt-4 md:pt-4">
           <div className="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto lg:flex-row xl:px-0">
             <div className="w-full py-20 pl-10 pr-10 lg:w-5/12 lg:py-32 lg:pr-0 tails-selected-element">
               <h1 className="text-4xl font-serif font-bold leading-tight text-white sm:text-4xl lg:pr-10">
@@ -92,14 +92,37 @@ const Home: NextPage = () => {
                 </button>
               </form>
             </div>
-            <div className="relative z-50 flex flex-col items-end justify-center w-full h-full lg:w-1/2 lg:pl-10">
-              <div className="container relative left-0 w-full max-w-4xl lg:absolute lg:w-screen bg-[url('https://cdn.devdojo.com/images/december2020/dashboard-dmm.jpeg')]">
+          </div>
+        </div>
+      </section>
+
+      <div className="fixed inset-x-0 bottom-0">
+        <div className="bg-green">
+          <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between flex-wrap">
+              <div className="w-0 flex-1 flex items-center">
+                <span className="flex p-2 rounded-lg bg-green">
+                  <SpeakerphoneIcon className="h-6 w-6 text-black" aria-hidden="true" />
+                </span>
+                <p className="ml-3 font-medium text-black truncate">
+                  <span className="md:hidden">We announced a new product!</span>
+                  <span className="hidden md:inline">Big news! We're excited to announce public alpha testing of our backtest tool.</span>
+                </p>
+              </div>
+              <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+                <a
+                  href="/backtest"
+                  className="flex cursor-pointer items-center justify-center px-4 py-2 border-transparent shadow-sm text-sm font-medium  text-white bg-black hover:bg-green"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+      
+    </div>
   );
 };
 

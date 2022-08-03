@@ -1,15 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-import { PlusSmIcon } from '@heroicons/react/solid'
+import { Disclosure } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 export default function Navigation() {
   const router = useRouter();
 
   return (
+    <>
     <Disclosure as="nav" className="bg-black">
       {({ open }) => (
         <>
@@ -27,18 +25,10 @@ export default function Navigation() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex-shrink-0 flex items-center">
+                <div onClick={() => router.push('https://alpha.otus.finance')} className="flex-shrink-0 flex items-center">
                   <span className="ml-3 text-2xl font-sans font-bold text-white">
                     Otus Finance
                   </span>
-                </div>
-                <div className="hidden md:ml-12 md:flex md:space-x-8">
-                  <a
-                    href="/backtest"
-                    className=" text-gray inline-flex items-center px-1 pt-1 text-sm font-medium"
-                  >
-                    Backtest Tool
-                  </a>
                 </div>
               </div>
               <div className="flex items-center">
@@ -71,5 +61,6 @@ export default function Navigation() {
         </>
       )}
     </Disclosure>
+    </>
   )
 }
