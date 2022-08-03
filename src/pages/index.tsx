@@ -74,7 +74,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className="relative items-center justify-center w-full overflow-x-hidden sm:pt-8 md:pt-12">
+        <div className="relative items-center justify-center w-full overflow-x-hidden sm:pt-8 md:pt-8">
           <div className="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto lg:flex-row xl:px-0">
             <div className="w-full py-20 pl-10 pr-10 lg:w-5/12 lg:py-32 lg:pr-0 tails-selected-element">
               <h1 className="text-4xl font-serif font-bold leading-tight text-white sm:text-4xl lg:pr-10">
@@ -83,13 +83,13 @@ const Home: NextPage = () => {
                 </span>
                 <span className="block">Built on Lyra.</span>
               </h1>
-              <p className="font-sans text-lg font-light text-gray sm:text-xl lg:pr-10">
+              <p className="font-sans text-md font-light text-gray sm:text-xl lg:pr-10 pt-10">
                 Create or join the best performing options vaults. 
               </p>
-              <p className="font-sans mt-5 text-3xs font-light text-gray sm:text-xl lg:pr-10">
+              <p className="font-sans mt-6 text-sm font-bold text-gray lg:pr-10">
                 Sign up for early access to create options vaults.
               </p>
-              <form className="flex justify-between w-full mt-2 border-1 border-white" onSubmit={handleSubmit}>
+              <form className="flex justify-between w-full mt-4 border-1 border-white" onSubmit={handleSubmit}>
                 <input
                   type="text"
                   value={email}
