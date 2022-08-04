@@ -4,6 +4,7 @@ import { trpc } from "../utils/trpc";
 import Navigation from "../components/Navigation";
 import { RangeSlider } from "../components/RangeSlider";
 import { useState } from 'react';
+import {BacktestChart} from "../components/BacktestChart";
 
 type SliderProp = {
   id: string; 
@@ -34,7 +35,7 @@ const strikeStrategySliders: SliderProp[] = [
   {
     id: 'targetDelta', 
     title: 'Target Delta',
-    min: 0,
+    min: -1,
     step: .1,
     max: 1
   },
@@ -114,6 +115,31 @@ const Backtest: NextPage = () => {
     }))
   }
 
+  const stats = [
+    {
+      name: 'APR',
+      stat: '-10%'
+    },
+    {
+      name: 'APR with Hedging',
+      stat: '18%'
+    },
+    {
+      name: 'Earnings',
+      stat: '$2000'
+    }
+  ]
+
+  const backtestQuery = trpc.useMutation(["backtest"]);
+
+  const runTest = async () => {
+    try {
+      const aprs = await backtestQuery.mutate({vaultStrategy, strikeStrategy, hedgeStrategy});
+      console.log({ aprs });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
 
   return (
     <div className="h-full bg-black">
@@ -198,9 +224,30 @@ const Backtest: NextPage = () => {
               </ul>
             </div>
           </div>
+
+          <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
+          
+            <button onClick={() => runTest()} className="btn w-full h-6 bg-green text-black font-sans font-bold">Test Strategy</button> 
+
+          </div>
+
         </div>
         <div className="flex-1 w-32 p-4">
-          03
+
+          <div>
+          <dl className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              {stats.map((item) => (
+                <div key={item.name} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <dt className="text-xs font-serif font-bold text-white truncate">{item.name}</dt>
+                  <dd className="mt-1 text-3xl font-light font-sans text-white">{item.stat}</dd>
+                </div>
+              ))}
+            </dl>
+          </div> 
+          <div className="mt-4 px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+
+          <BacktestChart />
+          </div>
         </div>
       </div>
       </div>

@@ -12,8 +12,9 @@ export const RangeSlider = ({ title, min, max, step, value, setValue }: RangeSli
 
   return (
     <>
-      <label htmlFor="default-range" className="block mb-2 text-xs font-bold text-white dark:text-gray">{ title }</label>
-      <input id="default-range" onChange={(e) => setValue(parseFloat(e.target.value))} min={min} max={max} step={step} type="range" value={value} className="w-full h-1 bg-green rounded-lg cursor-pointer dark:bg-green"></input>
+      <label htmlFor="default-range" className="block mb-2 text-xs font-bold text-white dark:text-gray">{ title }: { value }</label>
+      <input data-tooltip-target="tooltip-default" id="default-range" onChange={(e) => setValue(parseFloat(e.target.value))} min={min} max={max} step={step} type="range" value={value} className="w-full h-1 bg-green rounded-lg cursor-pointer dark:bg-green"></input>
+      
     </>
   )
 }
