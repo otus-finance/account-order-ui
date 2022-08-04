@@ -4,6 +4,7 @@ import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import Navigation from "../components/Navigation";
 import { XIcon, SpeakerphoneIcon } from '@heroicons/react/outline'
+import Link from "next/link";
 
 const Home: NextPage = () => {
 
@@ -70,7 +71,7 @@ const Home: NextPage = () => {
                 />
                 <button
                   type="submit"
-                  className="font-sans px-6 py-2 text-sm font-bold text-black bg-green"
+                  className="font-sans px-6 py-2 text-sm font-bold text-black bg-green hover:bg-dark-gray hover:text-white"
                 >
                   {
                     loading ?
@@ -110,12 +111,12 @@ const Home: NextPage = () => {
                 </p>
               </div>
               <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                <a
+                <Link
                   href="/backtest"
-                  className="flex cursor-pointer items-center justify-center px-4 py-2 border-transparent shadow-sm text-sm font-medium  text-white bg-black hover:bg-green"
+                  className="flex cursor-pointer items-center justify-center px-4 py-2 border-transparent shadow-sm text-sm font-medium  text-white bg-black hover:bg-dark-gray hover:text-white"
                 >
                   Learn more
-                </a>
+                </Link>
               </div>
             </div>
           </div>
