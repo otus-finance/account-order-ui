@@ -14,12 +14,12 @@ const Home: NextPage = () => {
 
   const registerUserMutation = trpc.useMutation(["register-user"]);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: any) => {
     setLoading(true);
     e.preventDefault();
 
     try {
-      const _email = await registerUserMutation.mutate({ email });
+      const _email = registerUserMutation.mutate({ email });
       console.log({ _email });
       setSubmitted(true);
     } catch (error) {
@@ -113,7 +113,7 @@ const Home: NextPage = () => {
               <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
                 <Link
                   href="/backtest"
-                  className="flex cursor-pointer items-center justify-center px-4 py-2 border-transparent shadow-sm text-sm font-medium  text-white bg-black hover:bg-dark-gray hover:text-white"
+                  className="flex cursor-pointer items-center justify-center px-4 py-2 text-sm font-medium  text-white bg-black hover:bg-dark-gray hover:text-white"
                 >
                   Learn more
                 </Link>

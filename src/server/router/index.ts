@@ -9,14 +9,16 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .mutation("backtest", {
     input: z.object({
+      isCall: z.boolean(),
       vaultStrategy: z.object({}),
       strikeStrategy: z.object({}),
       hedgeStrategy: z.object({})
     }),
     async resolve({ input }) {
-      const { vaultStrategy, strikeStrategy, hedgeStrategy } = input;
-      const aprs = calculate(vaultStrategy, strikeStrategy, hedgeStrategy);
-      return { aprs };
+      const { isCall, vaultStrategy, strikeStrategy, hedgeStrategy } = input;
+      const aprs = await calculate(isCall, vaultStrategy, strikeStrategy, hedgeStrategy);
+      console.log({ aprs })
+      return { success: true, aprs };
     },
   })
   .mutation("register-user", {

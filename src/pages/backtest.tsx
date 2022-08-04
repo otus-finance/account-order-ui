@@ -3,8 +3,9 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import Navigation from "../components/Navigation";
 import { RangeSlider } from "../components/RangeSlider";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {BacktestChart} from "../components/BacktestChart";
+import { Switch } from '@headlessui/react'
 
 type SliderProp = {
   id: string; 
@@ -78,8 +79,11 @@ type StrategyProps = {
 
 const Backtest: NextPage = () => {
 
+  const [loading, setLoading] = useState(false);
+
   const vsStrategy: StrategyProps = {
-    collateralPercent: 100
+    vaultFunds: 1000, 
+    collateralPercent: 1
   }
   const [vaultStrategy, setVaultStrategy] = useState(vsStrategy);
   const _setVaultStrategy = (id: string, value: number) => {
@@ -128,17 +132,48 @@ const Backtest: NextPage = () => {
       name: 'Earnings',
       stat: '$2000'
     }
-  ]
+  ];
+  
+  const [enabled, setEnabled] = useState(false); // false is sell put
+  const [optionType, setOptionType] = useState(3); // sell put
 
-  const backtestQuery = trpc.useMutation(["backtest"]);
+  useEffect(() => {
+    if(enabled) {
+      setOptionType(4); 
+    } else {
+      setOptionType(3);
+    }
+  }, [enabled]);
 
-  const runTest = async () => {
+  const backtestMutation = trpc.useMutation(["backtest"]);
+
+  const runTest = () => {
     try {
-      const aprs = await backtestQuery.mutate({vaultStrategy, strikeStrategy, hedgeStrategy});
-      console.log({ aprs });
+      console.log({ optionType, vaultStrategy, strikeStrategy, hedgeStrategy })
+      backtestMutation.mutate({
+        isCall: optionType == 3 ? true : false, 
+        vaultStrategy, 
+        strikeStrategy: { ...strikeStrategy, optionType }, 
+        hedgeStrategy
+      });
+      setLoading(true); 
     } catch (error) {
       console.log({ error });
     }
+  }
+
+  useEffect(() => {
+    if(backtestMutation.status) {
+      const status = backtestMutation.status; 
+      if(status == 'success') {
+        setLoading(false); 
+        console.log({ data: backtestMutation.data})
+      }
+    }
+  }, [backtestMutation.status])
+
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ')
   }
 
   return (
@@ -160,6 +195,38 @@ const Backtest: NextPage = () => {
             <h3 className="font-serif text-sm leading-6 font-bold text-white">Vault Strategy</h3>
             <div className="bg-black overflow-hidden mt-4">
               <ul role="list" className="divide-y divide-dark-gray">
+
+              <li key={'optionType'} className="px-6 py-4">
+
+              <Switch.Group as="div" className="flex items-center justify-between">
+                <span className="flex-grow flex flex-col">
+                  <Switch.Label as="span" className="text-xs font-bold text-white" passive>
+                    Option Type
+                  </Switch.Label>
+                  <Switch.Description as="span" className="text-xs text-white">
+                    { optionType == 3 ? 'Sell Put' : 'Sell Call' }
+                  </Switch.Description>
+                </span>
+                <Switch
+                  checked={enabled}
+                  onChange={setEnabled}
+                  className={classNames(
+                    enabled ? 'bg-green' : 'bg-dark-gray',
+                    'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={classNames(
+                      enabled ? 'translate-x-5' : 'translate-x-0',
+                      'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+                    )}
+                  />
+                </Switch>
+              </Switch.Group>
+
+              </li>
+                    
                 {vaultStrategySliders.map((slider: SliderProp) => (
                   <li key={slider.id} className="px-6 py-4">
                     
@@ -227,7 +294,21 @@ const Backtest: NextPage = () => {
 
           <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
           
-            <button onClick={() => runTest()} className="btn w-full h-6 bg-green text-black font-sans font-bold">Test Strategy</button> 
+            <button onClick={() => runTest()} className="btn w-full h-6 bg-green text-black font-sans font-bold">
+
+              {              
+                loading ?
+                  <>
+                  <svg role="status" className="inline mr-3 w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                  </svg>
+                  Loading...
+                  </> :
+                  <>Test Strategy</>
+              }
+
+            </button> 
 
           </div>
 
@@ -245,8 +326,7 @@ const Backtest: NextPage = () => {
             </dl>
           </div> 
           <div className="mt-4 px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
-
-          <BacktestChart />
+            <BacktestChart />
           </div>
         </div>
       </div>

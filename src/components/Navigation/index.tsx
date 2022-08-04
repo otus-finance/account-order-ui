@@ -26,7 +26,7 @@ export default function Navigation() {
                   </Disclosure.Button>
                 </div>
                 <div onClick={() => router.push('https://alpha.otus.finance')} className="flex-shrink-0 flex items-center">
-                  <span className="text-2xl font-sans font-bold text-white">
+                  <span className="cursor-pointer text-2xl font-sans font-bold text-white">
                     Otus Finance
                   </span>
                 </div>

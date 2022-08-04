@@ -257,21 +257,17 @@ const calculateFunds = (_fundsAvailable, _hedgeStrategy, _strikeStrategy, _vault
 }
 
 export const calculate = async (
+    isCall: boolean,
     vaultStrategy: VaultStrategyProps, 
     strikeStrategy: StrikeStrategyProps, 
     hedgeStrategy: HedgeStrategyProps
   ) => {
 
-  console.log({ vaultStrategy, strikeStrategy, hedgeStrategy })
-
+  const fundsAvailable = vaultStrategy.vaultFunds; // $50000 starting
 
   // const vaultStrategy = {
-    // const fundsAvailable = 50000; // $50000 starting
-    // const isCall = true; 
-  //  fundsAvailable = 50000
   //   collatBuffer: 1.2,
   //   collatPercent: .75,
-  //  isCall = true
   // };
 
   // const strikeStrategy = {
