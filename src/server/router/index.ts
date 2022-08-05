@@ -10,12 +10,24 @@ export const appRouter = createRouter()
   .mutation("backtest", {
     input: z.object({
       isCall: z.boolean(),
-      vaultStrategy: z.object({}),
-      strikeStrategy: z.object({}),
-      hedgeStrategy: z.object({})
+      vaultStrategy: z.object({
+        vaultFunds: z.number(),
+        collateralPercent: z.number()
+      }),
+      strikeStrategy: z.object({
+        targetDelta: z.number(),
+        maxDeltaGap: z.number(),
+        optionType: z.number()
+      }),
+      hedgeStrategy: z.object({
+        hedgePercentage: z.number(),
+        maxHedgeAttempts: z.number(),
+        leverageSize: z.number() 
+      })
     }),
     async resolve({ input }) {
       const { isCall, vaultStrategy, strikeStrategy, hedgeStrategy } = input;
+      console.log({ isCall, strikeStrategy })
       const aprs = await calculate(isCall, vaultStrategy, strikeStrategy, hedgeStrategy);
       console.log({ aprs })
       return { success: true, aprs };
