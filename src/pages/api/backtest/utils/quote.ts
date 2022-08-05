@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { UNIT } from './constants';
 import { getBlackScholesPrice, getDelta } from './blackScholes';
 import { parseUnits, formatUnits } from '@ethersproject/units';

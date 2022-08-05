@@ -1,3 +1,4 @@
+// @ts-nocheck
 function erf(x) {
   // constants
   const a1 = 0.254829592;
