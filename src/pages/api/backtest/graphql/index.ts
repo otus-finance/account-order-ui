@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { request, gql } from 'graphql-request'
 
 const KWENTA_API_URL = 'https://api.thegraph.com/subgraphs/name/kwenta/optimism-main'
