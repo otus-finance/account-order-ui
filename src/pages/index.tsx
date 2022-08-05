@@ -107,7 +107,7 @@ const Home: NextPage = () => {
                 </span>
                 <p className="ml-3 font-medium text-black truncate">
                   <span className="md:hidden">We announced a new product!</span>
-                  <span className="hidden md:inline">Big news! We&apos;'re excited to announce public alpha testing of our backtest tool.</span>
+                  <span className="hidden md:inline">Big news! We are excited to announce public alpha testing of our backtest tool.</span>
                 </p>
               </div>
               <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
