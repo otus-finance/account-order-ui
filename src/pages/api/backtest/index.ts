@@ -84,17 +84,14 @@ const getStrikeForMarketBoard = (isCall, strikeStrategy, additionalDataMarketsBo
 
         const outOfTheMoney = isCall ? (spotPriceStartWithMatchFormat < strikePriceFormat) : (spotPriceStartWithMatchFormat > strikePriceFormat); // out of money is good
 
-        console.log({ strikePriceFormat, spotPriceStartWithMatchFormat, delta })
         if(Math.abs(delta) > .1 && Math.abs(delta) < .9 && outOfTheMoney) {
           const premium = parseFloat(formatUnits(price)); 
 
-          console.log('chosen one', { delta, strikePriceFormat, premium, targetDelta: strikeStrategy.targetDelta, maxDeltaGap: strikeStrategy.maxDeltaGap })
           const deltaGap = Math.abs(strikeStrategy.targetDelta - delta); // Math.abs(strikeStrategy.targetDelta.sub(parseUnits(delta.toString())));
           return deltaGap < strikeStrategy.maxDeltaGap;
         }
 
       });
-      console.log({ strikeWithMatch })
       return { ...board, strikeWithMatch }
     })
     return { name, boards: selectedBoardStrikes}; 
@@ -109,9 +106,9 @@ const calculateStrikeProfitWithNoHedge = (isCall, fundsAvailable, selectedStrike
     const boardsWithStrikes = boards.filter(board => {
       const { strikeWithMatch } = board; 
       return strikeWithMatch != undefined; 
-    })
-
-    const profitForBoardStrike = boardsWithStrikes.map(board => {
+    })  
+    let tradefundsAvailable = fundsAvailable;
+    const profitForBoardStrike = boardsWithStrikes.map((board) => {
       const { strikeWithMatch, spotPriceAtExpiry } = board; 
 
       const { price, spotPriceAtStart, strikePrice } = strikeWithMatch; 
@@ -119,13 +116,17 @@ const calculateStrikeProfitWithNoHedge = (isCall, fundsAvailable, selectedStrike
       const numSpotPrice = parseFloat(formatUnits(_spotPriceAtExpiry)) / (10 ** 18);
       const strikeWithMatchFormat = parseFloat(formatUnits(strikePrice));
       const spotPriceStartWithMatchFormat = parseFloat(formatUnits(spotPriceAtStart));
-
-      const size = fundsAvailable / strikeWithMatchFormat;
+      const size = tradefundsAvailable / strikeWithMatchFormat;
 
       const premiumCollected = size * parseFloat(formatUnits(price)); 
 
       const outOfTheMoney = isCall ? (numSpotPrice < strikeWithMatchFormat) : (numSpotPrice > strikeWithMatchFormat); // out of money is good
-      return { ...board, outOfTheMoney, recoveredProfit: 0, premiumCollected, numSpotPrice, spotPriceStartWithMatchFormat, strikeWithMatchFormat, size }; 
+      
+      if(!outOfTheMoney) { // at a loss
+        const fundsLost = isCall ? (numSpotPrice - strikeWithMatchFormat) : (strikeWithMatchFormat - numSpotPrice)
+        tradefundsAvailable = tradefundsAvailable - (fundsLost * size); 
+      }
+      return { ...board, outOfTheMoney, tradefundsAvailable, recoveredProfit: 0, premiumCollected, numSpotPrice, spotPriceStartWithMatchFormat, strikeWithMatchFormat, size }; 
     });
 
     const updatedFunds = profitForBoardStrike.reduce((accum, board) => {
@@ -141,7 +142,7 @@ const calculateStrikeProfitWithNoHedge = (isCall, fundsAvailable, selectedStrike
         return accum;
       }
     }, fundsAvailable); 
-    return { ...market, profitForBoardStrike, updatedFunds };
+    return { ...market, profitForBoardStrike, updatedFunds, fundsAvailable };
   })
 }
 
@@ -155,7 +156,6 @@ const calculateApr = (fundsAvailable, strikesSelectedProfitability) => {
 
     const totalProfit = profitForBoards.reduce((accum, board) => {
       const { premiumCollected, recoveredProfit, outOfTheMoney } = board;  
-      console.log({ premiumCollected, recoveredProfit, outOfTheMoney })
       return accum + premiumCollected + recoveredProfit; 
     }, 0);
 
@@ -179,6 +179,10 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
       const { strikeWithMatch } = board; 
       return strikeWithMatch != undefined; 
     })
+
+    let tradefundsAvailable = fundsAvailable;
+
+    let _fundsAvailableForHedge = fundsAvailableForHedge; 
     const profitForBoardStrike = boardsWithStrikes.map(board => {
       const { strikeWithMatch, spotPriceAtExpiry, rateUpdates, boardId, timestamp_gte, timestamp_lte, expiryTimestamp } = board; 
       
@@ -188,13 +192,13 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
       const _spotPriceAtExpiry = parseUnits(spotPriceAtExpiry); 
       const numSpotPrice = parseFloat(formatUnits(_spotPriceAtExpiry)) / (10 ** 18);
       const strikeWithMatchFormat = parseFloat(formatUnits(strikeWithMatch.strikePrice));
-      const size = fundsAvailable / strikeWithMatchFormat;
+      const size = tradefundsAvailable / strikeWithMatchFormat;
 
       const premiumCollected = size * parseFloat(formatUnits(price)); 
 
       let counter = 0;
       let stopCounter = 0; 
-      let hedgeFundsWithLeverage = fundsAvailableForHedge * hedgeStrategy.leverageSize;
+      let hedgeFundsWithLeverage = _fundsAvailableForHedge * hedgeStrategy.leverageSize;
       let fees = 0; 
       let _close = 0; 
       let _high = 0; 
@@ -247,9 +251,14 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
         }
       }
 
+      tradefundsAvailable = tradefundsAvailable + recoveredProfit; 
+
+      console.log({ _fundsAvailableForHedge, tradefundsAvailable, recoveredProfit })
+
       const outOfTheMoney = isCall ? (numSpotPrice < strikeWithMatchFormat) : (numSpotPrice > strikeWithMatchFormat); // out of money is good
-      return { ...board, outOfTheMoney, recoveredProfit, premiumCollected, numSpotPrice, strikeWithMatchFormat, size, counter }; 
+      return { ...board, outOfTheMoney, tradefundsAvailable, recoveredProfit, premiumCollected, spotPriceStartWithMatchFormat, numSpotPrice, strikeWithMatchFormat, size, counter }; 
     });
+
     const updatedFunds = profitForBoardStrike.reduce((accum, board) => {
       const { outOfTheMoney, numSpotPrice, strikeWithMatchFormat, isCall, size } = board; 
 
@@ -271,6 +280,34 @@ const calculateFunds = (_fundsAvailable, _hedgeStrategy, _strikeStrategy, _vault
   const fundsForHedge = _fundsAvailable * _hedgeStrategy.hedgePercentage;
   const newFunds =  (_fundsAvailable - fundsForHedge) * _vaultStrategy.collateralPercent // parseUnits(_fundsAvailable.toString()).sub(fundsForHedge).mul(_vaultStrategy.collatPercent);
   return [newFunds, fundsForHedge];
+}
+
+const formatStrikesTraded = (profitForBoardStrikeNoHedge, profitForBoardStrikeHedge) => {
+  const expiries = [];
+
+  profitForBoardStrikeNoHedge.forEach((board, index) => {
+    const boardNoHedge = profitForBoardStrikeNoHedge[index];
+    const boardHedge = profitForBoardStrikeHedge[index];
+    const expiry = { 
+      boardId: parseInt(boardNoHedge.boardId), 
+      strikeId: boardNoHedge.strikeWithMatch.id,
+      startdate: boardNoHedge.timestamp_gte,
+      expiryDate: boardNoHedge.expiryTimestamp, 
+      totalFundsEndWithoutHedge: boardNoHedge.tradefundsAvailable,
+      totalFundsEndWithHedge: boardHedge.tradefundsAvailable, 
+      premium: boardHedge.premiumCollected, 
+      size: boardNoHedge.size, 
+      delta: boardHedge.strikeWithMatch.delta, 
+      strikePrice: boardNoHedge.strikeWithMatchFormat, 
+      spotPriceStart: boardNoHedge.spotPriceStartWithMatchFormat, 
+      spotPriceEnd: parseFloat(formatUnits(boardNoHedge.spotPriceAtExpiry))
+    }
+
+    expiries.push(expiry);
+
+  });
+
+  return expiries; 
 }
 
 export const calculate = async (
@@ -304,6 +341,16 @@ export const calculate = async (
   // calculate total apr with hedge
   const totalAPRForBoardsWithHedge = calculateApr(fundsAvailableForOptions, strikesSelectedProfitabilityWithHedge); 
 
-  return { noHedge: {strikesSelectedProfitabilityNoHedge, totalAPRForBoardsWithNoHedge}, hedge: {strikesSelectedProfitabilityWithHedge, totalAPRForBoardsWithHedge} }
+  // return { noHedge: {strikesSelectedProfitabilityNoHedge, totalAPRForBoardsWithNoHedge}, hedge: {strikesSelectedProfitabilityWithHedge, totalAPRForBoardsWithHedge} }
+ 
+  const strikesTraded = formatStrikesTraded(
+    strikesSelectedProfitabilityNoHedge[0].profitForBoardStrike, 
+    strikesSelectedProfitabilityWithHedge[0].profitForBoardStrike
+  );
 
+  return {
+    aprHedge: totalAPRForBoardsWithHedge,
+    aprNoHedge: totalAPRForBoardsWithNoHedge, 
+    strikesTraded
+  }
 }

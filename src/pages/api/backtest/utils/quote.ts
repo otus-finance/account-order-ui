@@ -19,11 +19,6 @@ export const getTimeToExpiryAnnualized = (timeToExpiry) => {
   return timeToExpiryAnnualized;
 }
 
-// const marketParams = option.market().__marketData.marketParameters;
-// const rate = marketParams.greekCacheParams.rateAndCarry;
-// const spotPrice = option.market().spotPrice;
-// const strikePrice = option.strike().strikePrice;
-
 // only need to get this at beginning of new strike
 export const getPrice = ({ isCall, rate, spotPrice, strikePrice, timeToExpiry }, newBaseIv, newSkew) => {
   const timeToExpiryAnnualized = getTimeToExpiryAnnualized(timeToExpiry);

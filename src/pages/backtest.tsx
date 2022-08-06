@@ -4,8 +4,9 @@ import { trpc } from "../utils/trpc";
 import Navigation from "../components/Navigation";
 import { RangeSlider } from "../components/RangeSlider";
 import { useEffect, useState } from 'react';
-import {BacktestChart} from "../components/BacktestChart";
+import {BacktestChart, BacktestProps, BacktestPropsValues} from "../components/BacktestChart";
 import { Switch } from '@headlessui/react'
+import { number } from "zod";
 
 type SliderProp = {
   id: string; 
@@ -179,12 +180,34 @@ const Backtest: NextPage = () => {
     }
   }
 
+  const _chartData: BacktestPropsValues[] = [{
+    boardId: 0, 
+    strikeId: 0,
+    startdate: 0,
+    expiryDate: 0,
+    totalFundsStartWithoutHedge: 0,
+    totalFundsEndWithoutHedge: 0,
+    totalFundsStartWithHedge: 0,
+    totalFundsEndWithHedge: 0,
+    premium: 0,
+    size: 0,
+    startingDelta: 0,
+    strikePrice: 0,
+    spotPriceStart: 0,
+    spotPriceEnd : 0,
+  }];
+  const [chartData, setChartData] = useState(_chartData);
+  const [stat, setStat] = useState({ noHedge: 0, hedge: 0 });
+
   useEffect(() => {
     if(backtestMutation.status) {
       const status = backtestMutation.status; 
       if(status == 'success') {
         setLoading(false); 
-        console.log({ data: backtestMutation.data})
+        const aprs = backtestMutation.data.aprs; 
+        setChartData(aprs.strikesTraded); 
+        setStat({ noHedge: aprs.aprNoHedge.sETH.apr, hedge: aprs.aprHedge.sETH.apr }); 
+
       }
     }
   }, [backtestMutation.status])
@@ -333,17 +356,27 @@ const Backtest: NextPage = () => {
         <div className="flex-1 w-32 p-4">
 
           <div>
-          <dl className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {stats.map((item) => (
-                <div key={item.name} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
-                  <dt className="text-xs font-serif font-bold text-white truncate">{item.name}</dt>
-                  <dd className="mt-1 text-3xl font-light font-sans text-white">{item.stat}</dd>
+          <dl className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div key={'nohedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <dt className="text-xs font-serif font-bold text-white truncate">No Hedge APR</dt>
+                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.noHedge.toFixed(2)}%</dd>
                 </div>
-              ))}
+                <div key={'hedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <dt className="text-xs font-serif font-bold text-white truncate">Hedge APR</dt>
+                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.hedge.toFixed(2)}%</dd>
+                </div>
+                <div key={'nohedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <dt className="text-xs font-serif font-bold text-white truncate">No Hedge APR</dt>
+                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.noHedge.toFixed(2)}%</dd>
+                </div>
+                <div key={'hedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <dt className="text-xs font-serif font-bold text-white truncate">Hedge APR</dt>
+                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.hedge.toFixed(2)}%</dd>
+                </div>
             </dl>
           </div> 
           <div className="mt-4 px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
-            <BacktestChart />
+            <BacktestChart data={chartData} />
           </div>
         </div>
       </div>
