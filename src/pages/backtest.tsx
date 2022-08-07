@@ -365,14 +365,6 @@ const Backtest: NextPage = () => {
                   <dt className="text-xs font-serif font-bold text-white truncate">Hedge APR</dt>
                   <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.hedge.toFixed(2)}%</dd>
                 </div>
-                <div key={'nohedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
-                  <dt className="text-xs font-serif font-bold text-white truncate">No Hedge APR</dt>
-                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.noHedge.toFixed(2)}%</dd>
-                </div>
-                <div key={'hedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
-                  <dt className="text-xs font-serif font-bold text-white truncate">Hedge APR</dt>
-                  <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.hedge.toFixed(2)}%</dd>
-                </div>
             </dl>
           </div> 
           <div className="mt-4 px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">

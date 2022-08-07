@@ -79,10 +79,18 @@ const CustomTooltip = ({ active, payload, label }) => {
   console.log({ active, payload, label })
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray text-white">
-        <p className="label">test</p>
-        <p className="intro">test</p>
-        <p className="desc">Anything you want can be displayed here.</p>
+      <div className="bg-black border border-1 border-gray text-white font-serif p-4">
+        {
+          payload.map(pay => {
+            return (
+              <>
+                <p className="font-serif font-bold font-xs">{pay.payload.premium}</p>
+                <p className="font-serif font-xs">{pay.payload.strikePrice}</p>
+                <p className="font-serif font-xs">{pay.payload.delta}</p>
+              </>
+            )
+          })
+        }
       </div>
     );
   }
@@ -106,10 +114,8 @@ export const BacktestChart = ({ data }: any) => {
           <YAxis />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
-          <Line type="monotone" dataKey="premium" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="strikePrice" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="totalFundsEndWithHedge" stroke="#fff" />
-          <Line type="monotone" dataKey="totalFundsEndWithoutHedge" stroke="#333" />
+          <Line type="monotone" dataKey="totalFundsEndWithHedge" stroke="#fff" name='Funds with Hedge' />
+          <Line type="monotone" dataKey="totalFundsEndWithoutHedge" stroke="#333" name='Funds with Without Hedge' />
         </LineChart>
     );
 }
