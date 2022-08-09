@@ -156,7 +156,7 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
 
     let _fundsAvailableForHedge = fundsAvailableForHedge; 
     const profitForBoardStrike = boardsWithStrikes.map(board => {
-      const { strikeWithMatch, spotPriceAtExpiry, rateUpdates, boardId, timestamp_gte, timestamp_lte, expiryTimestamp } = board; 
+      const { strikeWithMatch, spotPriceAtExpiry, rateUpdates } = board; 
       
       const { price, spotPriceAtStart, delta } = strikeWithMatch;
       const spotPriceStartWithMatchFormat = parseFloat(formatUnits(spotPriceAtStart));
@@ -170,13 +170,13 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
 
       let counter = 0;
       let stopCounter = 0; 
+
       let hedgeFundsWithLeverage = _fundsAvailableForHedge * hedgeStrategy.leverageSize;
       let fees = 0; 
       let _close = 0; 
-      let _high = 0; 
-
+      console.log({ maxHedgeAttempts: hedgeStrategy.maxHedgeAttempts })
       rateUpdates.forEach(update => {
-        const { close, high } = update;
+        const { close } = update;
         if(isCall) {
           if(close > strikeWithMatchFormat) {
             fees = counter == 0 ? fees + (hedgeFundsWithLeverage * kwentaFees) : fees;
