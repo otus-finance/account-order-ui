@@ -121,6 +121,8 @@ const calculateStrikeProfitWithNoHedge = (isCall, fundsAvailable, selectedStrike
         const fundsLost = isCall ? (numSpotPrice - strikeWithMatchFormat) : (strikeWithMatchFormat - numSpotPrice)
         tradefundsAvailable = tradefundsAvailable - (fundsLost * size); 
       }
+
+      tradefundsAvailable = tradefundsAvailable + premiumCollected; 
       return { ...board, outOfTheMoney, _fundsAvailableForHedge:0, tradefundsAvailable, recoveredProfit: 0, premiumCollected, numSpotPrice, spotPriceStartWithMatchFormat, strikeWithMatchFormat, size }; 
     });
 
@@ -174,43 +176,46 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
       let hedgeFundsWithLeverage = _fundsAvailableForHedge * hedgeStrategy.leverageSize;
       let fees = 0; 
       let _close = 0; 
-      console.log({ maxHedgeAttempts: hedgeStrategy.maxHedgeAttempts })
       rateUpdates.forEach(update => {
         const { close } = update;
-        if(isCall) {
-          if(close > strikeWithMatchFormat) {
-            fees = counter == 0 ? fees + (hedgeFundsWithLeverage * kwentaFees) : fees;
-            hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
-            _close = close; 
-            counter++;
-          }
-          if(counter > 0 && (close < strikeWithMatchFormat)) {
-            counter = 0; 
-            fees = fees + (hedgeFundsWithLeverage * kwentaFees);
-            let loss = strikeWithMatchFormat - close;
-            let lossWithLeverage = hedgeStrategy.leverageSize * loss;
-            hedgeFundsWithLeverage = hedgeFundsWithLeverage - lossWithLeverage - fees;
-            stopCounter++; 
-          }
-        } else {
-          if(strikeWithMatchFormat > close) {
-            fees = counter == 0 ? fees + (hedgeFundsWithLeverage * kwentaFees) : fees;
-            hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
-            _close = close; 
-            counter++; 
-            // calculate open fees and hedge size
-          }
-          // check how many times we stop the hedge counter
-          if(counter > 0 && (strikeWithMatchFormat < close)) {
-            counter = 0; 
-            fees = fees + (hedgeFundsWithLeverage * kwentaFees);
-            let loss = close - strikeWithMatchFormat;
-            let lossWithLeverage = hedgeStrategy.leverageSize * loss;
-            hedgeFundsWithLeverage = hedgeFundsWithLeverage - lossWithLeverage - fees;
-            stopCounter++; 
-            // calculate close fees and stop loss total - need to subtract from updatefunds
+        if(hedgeStrategy.maxHedgeAttempts >= counter) {
+          if(isCall) {
+            if(close > strikeWithMatchFormat) {
+              fees = counter == 0 ? fees + (hedgeFundsWithLeverage * kwentaFees) : fees;
+              hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
+              _close = close; 
+              counter++;
+            }
+            if(counter > 0 && (close < strikeWithMatchFormat)) {
+              counter = 0; 
+              fees = fees + (hedgeFundsWithLeverage * kwentaFees);
+              let loss = strikeWithMatchFormat - close;
+              let lossWithLeverage = hedgeStrategy.leverageSize * loss;
+              hedgeFundsWithLeverage = hedgeFundsWithLeverage - lossWithLeverage - fees;
+              stopCounter++; 
+            }
+          } else {
+            if(strikeWithMatchFormat > close) {
+              fees = counter == 0 ? fees + (hedgeFundsWithLeverage * kwentaFees) : fees;
+              hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
+              _close = close; 
+              counter++; 
+              // calculate open fees and hedge size
+            }
+            // check how many times we stop the hedge counter
+            if(counter > 0 && (strikeWithMatchFormat < close)) {
+              counter = 0; 
+              fees = fees + (hedgeFundsWithLeverage * kwentaFees);
+              let loss = close - strikeWithMatchFormat;
+              let lossWithLeverage = hedgeStrategy.leverageSize * loss;
+              hedgeFundsWithLeverage = hedgeFundsWithLeverage - lossWithLeverage - fees;
+              stopCounter++; 
+              // calculate close fees and stop loss total - need to subtract from updatefunds
+            }
           }
         }
+        console.log({ maxHedgeAttempts: hedgeStrategy.maxHedgeAttempts, counter })
+
       })
 
       let recoveredProfit = 0; 
@@ -222,8 +227,8 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
           recoveredProfit = (hedgeFundsWithLeverage * ((strikeWithMatchFormat - _close) / strikeWithMatchFormat));
         }
       }
-
-      tradefundsAvailable = tradefundsAvailable + recoveredProfit; 
+      console.log({ tradefundsAvailable, recoveredProfit })
+      tradefundsAvailable = tradefundsAvailable + recoveredProfit + premiumCollected; // need to add premium collected here
 
       const outOfTheMoney = isCall ? (numSpotPrice < strikeWithMatchFormat) : (numSpotPrice > strikeWithMatchFormat); // out of money is good
       return { ...board, outOfTheMoney,  _fundsAvailableForHedge, tradefundsAvailable, recoveredProfit, premiumCollected, spotPriceStartWithMatchFormat, numSpotPrice, strikeWithMatchFormat, size, counter }; 
@@ -254,9 +259,9 @@ const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitabilit
     let fundsAvailableForHedge = 0;  
 
     const profitForBoards = profitForBoardStrike.map(board => {
-      const { premiumCollected, boardId, outOfTheMoney, recoveredProfit, counter, _fundsAvailableForHedge } = board; 
+      const { premiumCollected, boardId, outOfTheMoney, recoveredProfit, counter, _fundsAvailableForHedge, tradefundsAvailable } = board; 
       fundsAvailableForHedge = _fundsAvailableForHedge;
-      return { boardId, premiumCollected, outOfTheMoney, recoveredProfit, counter }; 
+      return { boardId, premiumCollected, outOfTheMoney, recoveredProfit, tradefundsAvailable, counter }; 
     })  
 
     const totalProfit = profitForBoards.reduce((accum, board) => {
@@ -265,9 +270,8 @@ const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitabilit
     }, 0);
 
     const leftOverFundsPlusPremium = updatedFunds + totalProfit + fundsAvailableForHedge; 
-
-    const apr = ((leftOverFundsPlusPremium - originalFunds) / originalFunds) * (52 / profitForBoards.length) * 100;
-    console.log({ leftOverFundsPlusPremium, fundsAvailable, originalFunds, totalProfit, fundsAvailableForHedge })
+    console.log({ leftOverFundsPlusPremium, tradeFundsAvailable: profitForBoardStrike[profitForBoardStrike.length - 1].tradefundsAvailable })
+    const apr = ((profitForBoardStrike[profitForBoardStrike.length - 1].tradefundsAvailable - originalFunds) / originalFunds) * (52 / profitForBoards.length) * 100;
     return { 
       ...accum, 
       [market.name]: { totalProfit, apr } 
