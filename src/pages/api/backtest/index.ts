@@ -32,11 +32,6 @@ const getMarketsWithBoards = async () => {
   return historicalMarketsBoards;
 }
 
-/**
- * @notice gets pricing during board by blocks + strikes + and additional board data
- * @param historicalMarkets 
- * @returns 
- */
 const getAdditionalDataForBoard = async (isCall, historicalMarkets) => {
   const timeToExpiry = PERIOD_IN_SECONDS.ONE_WEEK; // should be around 1 week in time
 
@@ -44,8 +39,8 @@ const getAdditionalDataForBoard = async (isCall, historicalMarkets) => {
     const { boards, name } = market; 
     const _market = await lyra.market(name);
     const _updatedBoards = await Promise.all(boards.map(async board => {
-      const { timestamp_gte, timestamp_lte, boardId, boardBaseIVHistory } = board; 
 
+      const { timestamp_gte, timestamp_lte, boardId, boardBaseIVHistory } = board; 
       const _rateUpdates = await getCandleUpdates({ synth: 'ETH', timestamp_gte, timestamp_lte, period: 28800 }); 
       const rateUpdates = _rateUpdates.map(update => ({ ...update, close: parseFloat(update.close) }))
 
@@ -53,6 +48,7 @@ const getAdditionalDataForBoard = async (isCall, historicalMarkets) => {
       const marketParams = _additionalBoardData.market().__marketData.marketParameters;
       const rate = marketParams.greekCacheParams.rateAndCarry;
       const strikes = _additionalBoardData.strikes();
+
       const spotPrice = parseUnits(rateUpdates[0].close.toFixed(2).toString()); // get from block board price at the time
       const newBaseIv = parseUnits(boardBaseIVHistory[0].baseIv); // probably the least accurate
       const strikesWithPricing = await Promise.all(strikes.map(async (strike, index) => {
@@ -85,9 +81,8 @@ const getStrikeForMarketBoard = (isCall, strikeStrategy, additionalDataMarketsBo
         const outOfTheMoney = isCall ? (spotPriceStartWithMatchFormat < strikePriceFormat) : (spotPriceStartWithMatchFormat > strikePriceFormat); // out of money is good
 
         if(Math.abs(delta) > .1 && Math.abs(delta) < .9 && outOfTheMoney) {
-          const premium = parseFloat(formatUnits(price)); 
 
-          const deltaGap = Math.abs(strikeStrategy.targetDelta - delta); // Math.abs(strikeStrategy.targetDelta.sub(parseUnits(delta.toString())));
+          const deltaGap = Math.abs(strikeStrategy.targetDelta - delta);
           return deltaGap < strikeStrategy.maxDeltaGap;
         }
 
@@ -144,31 +139,6 @@ const calculateStrikeProfitWithNoHedge = (isCall, fundsAvailable, selectedStrike
     }, fundsAvailable); 
     return { ...market, profitForBoardStrike, updatedFunds, fundsAvailable };
   })
-}
-
-const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitability) => {
-  const marketProfit = strikesSelectedProfitability.reduce((accum, market) => {
-    const { profitForBoardStrike, updatedFunds } = market;
-    let fundsAvailableForHedge = 0;  
-    const profitForBoards = profitForBoardStrike.map(board => {
-      const { premiumCollected, boardId, outOfTheMoney, recoveredProfit, counter, _fundsAvailableForHedge } = board; 
-      fundsAvailableForHedge = _fundsAvailableForHedge;
-      return { boardId, premiumCollected, outOfTheMoney, recoveredProfit, counter }; 
-    })  
-
-    const totalProfit = profitForBoards.reduce((accum, board) => {
-      const { premiumCollected, recoveredProfit, outOfTheMoney } = board;  
-      return accum + premiumCollected + recoveredProfit; 
-    }, 0);
-
-    const leftOverFundsPlusPremium = updatedFunds + totalProfit + fundsAvailableForHedge; 
-    console.log({ originalFunds })
-    const apr = ((leftOverFundsPlusPremium - fundsAvailable) / originalFunds) * (52 / profitForBoards.length) * 100;
-    return { ...accum, [market.name]: { totalProfit, apr } }
-  }, {})
-
-  return marketProfit; 
-
 }
 
 const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fundsAvailableForHedge, selectedStrikeForMarketBoard) => {
@@ -278,6 +248,39 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
   })
 }
 
+const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitability) => {
+
+  const marketProfit = strikesSelectedProfitability.reduce((accum, market) => {
+
+    const { profitForBoardStrike, updatedFunds } = market;
+    let fundsAvailableForHedge = 0;  
+
+    const profitForBoards = profitForBoardStrike.map(board => {
+      const { premiumCollected, boardId, outOfTheMoney, recoveredProfit, counter, _fundsAvailableForHedge } = board; 
+      fundsAvailableForHedge = _fundsAvailableForHedge;
+      return { boardId, premiumCollected, outOfTheMoney, recoveredProfit, counter }; 
+    })  
+
+    const totalProfit = profitForBoards.reduce((accum, board) => {
+      const { premiumCollected, recoveredProfit, outOfTheMoney } = board;  
+      return accum + premiumCollected + recoveredProfit; 
+    }, 0);
+
+    const leftOverFundsPlusPremium = updatedFunds + totalProfit + fundsAvailableForHedge; 
+
+    const apr = ((leftOverFundsPlusPremium - fundsAvailable) / originalFunds) * (52 / profitForBoards.length) * 100;
+
+    return { 
+      ...accum, 
+      [market.name]: { totalProfit, apr } 
+    }
+
+  }, {})
+
+  return marketProfit; 
+
+}
+
 const calculateFunds = (_fundsAvailable, _hedgeStrategy, _strikeStrategy, _vaultStrategy) => {
   const fundsForHedge = _fundsAvailable * _hedgeStrategy.hedgePercentage;
   const newFunds =  (_fundsAvailable - fundsForHedge) / _vaultStrategy.collateralPercent // parseUnits(_fundsAvailable.toString()).sub(fundsForHedge).mul(_vaultStrategy.collatPercent);
@@ -298,8 +301,11 @@ const formatStrikesTraded = (profitForBoardStrikeNoHedge, profitForBoardStrikeHe
       expiryDate: (_expiryDate.getMonth() + 1) + ' / ' + _expiryDate.getDate(), 
       totalFundsEndWithoutHedge: boardNoHedge.tradefundsAvailable,
       totalFundsEndWithHedge: boardHedge.tradefundsAvailable + boardHedge._fundsAvailableForHedge, 
-      premium: boardHedge.premiumCollected, 
-      size: boardNoHedge.size, 
+      premium: boardHedge.premiumCollected.to, 
+      premiumNoHedge: boardNoHedge.premiumCollected, 
+      size: boardHedge.size, 
+      sizeNoHedge: boardNoHedge.size,
+      recoveredProfit: boardHedge.recoveredProfit,
       delta: boardHedge.strikeWithMatch.delta, 
       strikePrice: boardNoHedge.strikeWithMatchFormat, 
       spotPriceStart: boardNoHedge.spotPriceStartWithMatchFormat, 
