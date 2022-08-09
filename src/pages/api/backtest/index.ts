@@ -225,8 +225,6 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
 
       tradefundsAvailable = tradefundsAvailable + recoveredProfit; 
 
-      console.log({ _fundsAvailableForHedge, tradefundsAvailable, recoveredProfit })
-
       const outOfTheMoney = isCall ? (numSpotPrice < strikeWithMatchFormat) : (numSpotPrice > strikeWithMatchFormat); // out of money is good
       return { ...board, outOfTheMoney,  _fundsAvailableForHedge, tradefundsAvailable, recoveredProfit, premiumCollected, spotPriceStartWithMatchFormat, numSpotPrice, strikeWithMatchFormat, size, counter }; 
     });
@@ -268,8 +266,8 @@ const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitabilit
 
     const leftOverFundsPlusPremium = updatedFunds + totalProfit + fundsAvailableForHedge; 
 
-    const apr = ((leftOverFundsPlusPremium - fundsAvailable) / originalFunds) * (52 / profitForBoards.length) * 100;
-
+    const apr = ((leftOverFundsPlusPremium - originalFunds) / originalFunds) * (52 / profitForBoards.length) * 100;
+    console.log({ leftOverFundsPlusPremium, fundsAvailable, originalFunds, totalProfit, fundsAvailableForHedge })
     return { 
       ...accum, 
       [market.name]: { totalProfit, apr } 
@@ -300,7 +298,7 @@ const formatStrikesTraded = (profitForBoardStrikeNoHedge, profitForBoardStrikeHe
       startdate: boardNoHedge.timestamp_gte,
       expiryDate: (_expiryDate.getMonth() + 1) + ' / ' + _expiryDate.getDate(), 
       totalFundsEndWithoutHedge: boardNoHedge.tradefundsAvailable,
-      totalFundsEndWithHedge: boardHedge.tradefundsAvailable + boardHedge._fundsAvailableForHedge, 
+      totalFundsEndWithHedge: boardHedge.tradefundsAvailable, 
       premium: boardHedge.premiumCollected.toFixed(2), 
       premiumNoHedge: boardNoHedge.premiumCollected.toFixed(2), 
       size: boardHedge.size, 
