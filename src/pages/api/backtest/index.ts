@@ -176,6 +176,7 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
       let hedgeFundsWithLeverage = _fundsAvailableForHedge * hedgeStrategy.leverageSize;
       let fees = 0; 
       let _close = 0; 
+      let hadHedge = false; 
       rateUpdates.forEach(update => {
         const { close } = update;
         if(hedgeStrategy.maxHedgeAttempts >= counter) {
@@ -185,6 +186,7 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
               hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
               _close = close; 
               counter++;
+              hadHedge = true; 
             }
             if(counter > 0 && (close < strikeWithMatchFormat)) {
               counter = 0; 
@@ -200,6 +202,7 @@ const calculateStrikeProfitWitHedge = (isCall, hedgeStrategy, fundsAvailable, fu
               hedgeFundsWithLeverage = hedgeFundsWithLeverage - fees; 
               _close = close; 
               counter++; 
+              hadHedge = true; 
               // calculate open fees and hedge size
             }
             // check how many times we stop the hedge counter
@@ -265,7 +268,7 @@ const calculateApr = (originalFunds, fundsAvailable, strikesSelectedProfitabilit
     })  
 
     const totalProfit = profitForBoards.reduce((accum, board) => {
-      const { premiumCollected, recoveredProfit, outOfTheMoney } = board;  
+      const { premiumCollected, recoveredProfit } = board;  
       return accum + premiumCollected + recoveredProfit; 
     }, 0);
 
