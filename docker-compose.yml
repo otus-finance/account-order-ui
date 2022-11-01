@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_otus_finance_site
+    ports:
+      - 6432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: manager
+      POSTGRES_PASSWORD: manager
+      POSTGRES_DB: otus_finance_site
+      PGDATA: "/data/postgres"
+    expose:
+      - 6432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql_otus_finance_site/data

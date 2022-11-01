@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "format": "yarn prettier --write ."
+    "format": "yarn prettier --write .",
+    "compose": "docker-compose -f docker-compose.yml up -d",
+    "migrate": "prisma migrate dev",
+    "db-push": "prisma db push",
+    "studio": "prisma studio"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",

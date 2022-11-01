@@ -4,15 +4,13 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      sans: ['"IBM Plex Sans"', 'sans-serif'],
-      serif: ['"IBM Plex Mono"', 'serif'],
+      sans: ['"Rubik"', 'sans-serif'],
+      mono: ['"IBM Plex Mono"', 'serif'],
     },
-    colors: {
-      'black': '#1c1c1c',
-      'white': '#ffffff',
-      'gray': '#959595',
-      'dark-gray': '#343434',
-      'green': '#84FFC4'
+    extend: {
+      fontSize: {
+        xxs: ['0.625rem', '0.75rem']
+      },
     },
   },
   plugins: [],
