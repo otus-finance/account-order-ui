@@ -2,8 +2,9 @@
 import { createRouter } from "./context";
 import superjson from "superjson";
 import { z } from "zod";
-import { prisma } from "../db/client";
 import { calculate } from "../../pages/api/backtest";
+import { trpc } from "../../utils/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const appRouter = createRouter()
   .transformer(superjson)
@@ -22,7 +23,7 @@ export const appRouter = createRouter()
       hedgeStrategy: z.object({
         hedgePercentage: z.number(),
         maxHedgeAttempts: z.number(),
-        leverageSize: z.number() 
+        leverageSize: z.number()
       })
     }),
     async resolve({ input }) {
@@ -38,12 +39,34 @@ export const appRouter = createRouter()
       email: z.string()
     }),
     async resolve({ input }) {
-      const emailInDb = await prisma.user.create({
-        data: {
-          email: input.email,
+      const url = `${process.env.MAILER_LITE_URL}api/subscribers`;
+      console.log({ input, url })
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${process.env.MAILER_LITE_API}`
         },
+        body: JSON.stringify(
+          {
+            email: input.email
+          }
+        )
       });
-      return { success: true, emailInDb };
+
+      console.log({ response });
+
+      if (response.status == 422) {
+        const json = await response.json();
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: json.message
+        })
+      }
+
+      return response;
     },
   });
 

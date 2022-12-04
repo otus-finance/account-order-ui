@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
-import Navigation from "../components/Navigation";
+import { Navigation } from "../components/Navigation";
 import { RangeSlider } from "../components/RangeSlider";
 import { useEffect, useState } from 'react';
 import { BacktestChart, BacktestProps, BacktestPropsValues } from "../components/BacktestChart";
@@ -228,10 +228,10 @@ const Backtest: NextPage = () => {
       </Head>
       <Navigation />
       <section className="relative w-full tails-selected-element">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
           <div className="flex">
             <div className="flex-1 w-64 p-4">
-              <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
+              <div className="mt-4 border border-1 border-zinc-700 px-4 py-5 sm:px-6">
                 <h3 className="font-mono text-sm leading-6 font-bold text-white">Vault Strategy</h3>
                 <div className="bg-zinc-900 overflow-hidden mt-4">
                   <ul role="list" className="divide-y divide-dark-gray">
@@ -286,7 +286,7 @@ const Backtest: NextPage = () => {
                 </div>
               </div>
 
-              <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
+              <div className="mt-4 border border-1 border-zinc-700 px-4 py-5 sm:px-6">
                 <h3 className="font-mono text-sm leading-6 font-bold text-white">Strike Strategy</h3>
                 <div className="bg-zinc-900 overflow-hidden mt-4">
                   <ul role="list" className="divide-y divide-dark-gray">
@@ -309,7 +309,7 @@ const Backtest: NextPage = () => {
                 </div>
               </div>
 
-              <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
+              <div className="mt-4 border border-1 border-zinc-700 px-4 py-5 sm:px-6">
                 <h3 className="font-mono text-sm leading-6 font-bold text-white">Hedge Strategy</h3>
                 <div className="bg-zinc-900 overflow-hidden mt-4">
                   <ul role="list" className="divide-y divide-dark-gray">
@@ -332,7 +332,7 @@ const Backtest: NextPage = () => {
                 </div>
               </div>
 
-              <div className="mt-4 border border-1 border-dark-gray px-4 py-5 sm:px-6">
+              <div className="mt-4 border border-1 border-zinc-700 px-4 py-5 sm:px-6">
 
                 <button onClick={() => runTest()} className="btn w-full h-12 bg-emerald-600 text-zinc-900 font-sans font-bold">
 
@@ -357,17 +357,17 @@ const Backtest: NextPage = () => {
 
               <div>
                 <dl className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <div key={'nohedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <div key={'nohedge'} className="px-4 py-5 border border-1 border-zinc-700 overflow-hidden sm:p-6">
                     <dt className="text-xs font-mono font-bold text-white truncate">No Hedge APR</dt>
                     <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.noHedge.toFixed(2)}%</dd>
                   </div>
-                  <div key={'hedge'} className="px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+                  <div key={'hedge'} className="px-4 py-5 border border-1 border-zinc-700 overflow-hidden sm:p-6">
                     <dt className="text-xs font-mono font-bold text-white truncate">One Click Hedge APR</dt>
                     <dd className="mt-1 text-3xl font-light font-sans text-white">{stat.hedge.toFixed(2)}%</dd>
                   </div>
                 </dl>
               </div>
-              <div className="mt-4 px-4 py-5 border border-1 border-dark-gray overflow-hidden sm:p-6">
+              <div className="mt-4 px-4 py-5 border border-1 border-zinc-700 overflow-hidden sm:p-6">
                 <BacktestChart data={chartData} />
               </div>
             </div>
