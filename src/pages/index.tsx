@@ -47,7 +47,7 @@ const Home: NextPage = () => {
                 We provide the tools to successfully and easily manage an options vault built on Lyra and Synthetix Futures.
               </p>
               <p className="font-sans mt-6 text-sm font-normal text-zinc-200 lg:pr-10">
-                Sign up for early access to create and manage options vaults, or to be able to join new vaults.
+                Whitelist will open up soon get notified early!
               </p>
               <form className="flex justify-between w-full mt-4 border-1 border-white" onSubmit={handleSubmit}>
                 <input
