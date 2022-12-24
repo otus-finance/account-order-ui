@@ -66,6 +66,7 @@ export function formatNumber(
   // commas for number part e.g. 1,000,000
   // padded zeroes for dp precision e.g. 0.1000
   const parts = roundedVal.toString().split('.')
+  {/* @ts-ignore */ }
   const num = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') // add commas
   const dec = (parts[1] || '').padEnd(minDps, '0')
   const numStr = dec != null && dec.length > 0 ? num + '.' + dec : num
