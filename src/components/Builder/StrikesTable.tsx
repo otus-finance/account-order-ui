@@ -48,6 +48,7 @@ export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[]
     </thead>
     <tbody className="divide-y divide-zinc-700 bg-zinc-800">
       {strikes.map((strike: LyraStrike) => {
+        {/* @ts-ignore */ }
         const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
         const { size, premium, pricePerOption, isBuy, greeks } = quote;
 
