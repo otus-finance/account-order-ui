@@ -177,7 +177,7 @@ const Builder: NextPage = () => {
             <div className='font-bold'>
               Show me strategies if my bet is the market will be
               <span>
-                <div className='inline-block pl-1 pr-2'>
+                <div className='inline-block sm:pl-1 pr-2'>
 
                   <SelectDirectionType
                     selectedDirectionTypes={selectedDirectionTypes}
@@ -187,7 +187,7 @@ const Builder: NextPage = () => {
               </span>
               by
               <span>
-                <div className='inline-block pl-1 mt-2 sm:mt-0'>
+                <div className='inline-block sm:pl-1 mt-2 sm:mt-0 min-w-full sm:min-w-min'>
                   <SelectBuilderExpiration
                     liveBoards={selectedMarket?.liveBoards || []}
                     selectedExpirationDate={selectedExpirationDate}
