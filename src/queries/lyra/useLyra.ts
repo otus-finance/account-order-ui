@@ -11,6 +11,7 @@ export type LyraStrike = {
   selectedOptionType: number | 0
   isCall: boolean
   quote: Quote
+  __board: any
 } & Strike
 
 export type LyraStrikeMapping = {

@@ -8,7 +8,7 @@ export const LyraMarketOptions = ({ markets, selectedMarket, setSelectedMarket }
     {
       markets
         .filter(({ liveBoards }) => liveBoards.length > 0)
-        .map((market, index) => {
+        .map((market: LyraMarket, index: number) => {
           const { name } = market;
           const isSelected = selectedMarket?.name == name;
           const selectedClass = isSelected ? 'border-emerald-700' : 'border-zinc-700'

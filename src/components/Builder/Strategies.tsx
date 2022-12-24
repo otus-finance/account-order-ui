@@ -163,7 +163,7 @@ export const Strategies = (
 
   useEffect(() => {
     if (selectedExpirationDate != null && selectedDirectionTypes.length > 0) {
-      const _selectedDirectionTypesIds = selectedDirectionTypes.map(({ id }) => id);
+      const _selectedDirectionTypesIds = selectedDirectionTypes.map(({ id }: { id: number }) => id);
       const _filteredStrategies = strategies.filter(strategy => {
         return strategy.type.some(r => _selectedDirectionTypesIds.includes(r))
       })
@@ -177,7 +177,7 @@ export const Strategies = (
 
   return <>
     {
-      filteredStrategies.map((strategy, index) => {
+      filteredStrategies.map((strategy: Strategy, index: number) => {
 
         const { name, description, type, tags } = strategy;
 
@@ -190,7 +190,7 @@ export const Strategies = (
                 {name}
                 <div>
                   {
-                    tags.map((tag, index) => <span key={index} className="text-xs font-light rounded-sm bg-zinc-800 text-zinc-100 p-1 mr-1">{tag}</span>)
+                    tags.map((tag: StrategyTag, index: number) => <span key={index} className="text-xs font-light rounded-sm bg-zinc-800 text-zinc-100 p-1 mr-1">{tag}</span>)
                   }
                 </div>
               </div>

@@ -1,8 +1,9 @@
 import React from 'react'
 import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
 import { DebounceInput } from 'react-debounce-input';
+import { LyraStrike } from '../../queries/lyra/useLyra';
 
-export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: [], setStrikeSize: any }) => {
+export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[], setStrikeSize: any }) => {
 
   return <table className="min-w-full divide-y divide-zinc-700 ">
     <thead className="bg-zinc-800">
@@ -46,7 +47,7 @@ export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: [], setStrik
       </tr>
     </thead>
     <tbody className="divide-y divide-zinc-700 bg-zinc-800">
-      {strikes.map((strike) => {
+      {strikes.map((strike: LyraStrike) => {
         const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
         const { size, premium, pricePerOption, isBuy, greeks } = quote;
 

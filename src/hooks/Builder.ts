@@ -25,6 +25,7 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
         return { ...accum, [tick]: { profitAtTick } }
       }, {})
       const _chartData = _ticks.map((tick, index) => {
+        {/* @ts-ignore */ }
         const profitAtTick = _combo[tick].profitAtTick;
         return {
           name: index,
