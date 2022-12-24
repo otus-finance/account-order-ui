@@ -9,7 +9,7 @@ import { SelectBuilderExpiration } from '../components/Builder/SelectExpiration'
 import { LyraMarketOptions } from '../components/Builder/SelectMarket'
 import { Strategies, strategies } from '../components/Builder/Strategies'
 import { StrikesTable } from '../components/Builder/StrikesTable'
-import { Strategy } from '../components/Builder/types'
+import { Strategy, StrategyDirection } from '../components/Builder/types'
 import { Spinner } from '../components/UI/Components/Spinner'
 
 import LyraIcon from '../components/UI/Icons/Color/LYRA'
@@ -31,7 +31,7 @@ const Builder: NextPage = () => {
   const [selectedMarket, setSelectedMarket] = useState<LyraMarket | null>(null);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
 
-  const [selectedDirectionTypes, setSelectedDirectionTypes] = useState<any>([]);
+  const [selectedDirectionTypes, setSelectedDirectionTypes] = useState<StrategyDirection[]>([]);
   const [selectedExpirationDate, setSelectedExpirationDate] = useState<any>(null);
 
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null)
