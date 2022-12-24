@@ -14,7 +14,7 @@ export type PnlChartPoint = {
 }
 
 const assetInTrades = (asset: string, trades: LyraStrike[]): boolean => {
-  return trades[0]?.market.name == asset;
+  return trades[0]?.market == asset;
 }
 
 export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsset: number | undefined, builtTrades: []) => {
