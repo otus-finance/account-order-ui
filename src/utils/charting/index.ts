@@ -12,6 +12,7 @@ export const formatChartData = (asset: string, priceOfAsset: number, builtTrades
     return { ...accum, [tick]: { profitAtTick } }
   }, {})
   const _chartData = _ticks.map((tick, index) => {
+    {/* @ts-ignore */ }
     const profitAtTick = _combo[tick].profitAtTick;
     return {
       name: index,
