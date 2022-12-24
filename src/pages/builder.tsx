@@ -187,7 +187,7 @@ const Builder: NextPage = () => {
               </span>
               by
               <span>
-                <div className='inline-block pl-1'>
+                <div className='inline-block pl-1 mt-2 sm:mt-0'>
                   <SelectBuilderExpiration
                     liveBoards={selectedMarket?.liveBoards || []}
                     selectedExpirationDate={selectedExpirationDate}
