@@ -208,19 +208,9 @@ const Builder: NextPage = () => {
           </div>
 
           <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
-            <div className="col-start-1 col-end-3">
-              {/* <div className='font-bold text-sm'>
-                Make these trades on lyra.finance
-                 <div className='inline-block'>
-                  <button className='font-normal text-sm'>
-                    Share Trade Idea
-                  </button>
-                </div> 
-              </div> */}
 
-            </div>
 
-            <div className="col-end-7 col-span-2">
+            <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
               <div className="col-span-1 grid grid-cols-3 gap-3 mt-6">
 
                 <div className="bg-zinc-800 p-4 pt-1">
