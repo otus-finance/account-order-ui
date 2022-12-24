@@ -82,7 +82,7 @@ export const Navigation = () => {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              <Link href="/backtest">
+              <Link href="/builder">
                 <Disclosure.Button
                   className={linkStyleMobile('/builder', router.pathname)}
                 >
