@@ -31,6 +31,7 @@ export const BuilderPNLChart = ({ currentPrice, data }: { currentPrice: number, 
         <XAxis hide={false} dataKey="asset_price" tick={{ stroke: '#fff', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
         <YAxis hide={false} tickCount={100} tickSize={2} tick={{ stroke: '#f5f5f5', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
 
+        {/* @ts-ignore */}
         <Tooltip content={<CustomTooltip currentPrice={currentPrice} />} />
 
         <ReferenceLine y={0} stroke={'#e4e4e7'} strokeWidth={.25} />
