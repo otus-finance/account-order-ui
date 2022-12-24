@@ -154,7 +154,10 @@ export const strategies: Strategy[] = [
   }
 ]
 // filters == 
-export const Strategies = ({ selectedDirectionTypes, selectedExpirationDate, selectedStrategy, setSelectedStrategy }) => {
+export const Strategies = (
+  { selectedDirectionTypes, selectedExpirationDate, selectedStrategy, setSelectedStrategy }:
+    { selectedDirectionTypes: any, selectedExpirationDate: any, selectedStrategy: any, setSelectedStrategy: any }
+) => {
 
   const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
