@@ -31,7 +31,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const buildTextSelectedDirections = (directionTypes: []) => {
+const buildTextSelectedDirections = (directionTypes: StrategyDirection[]) => {
   return directionTypes.map(({ name }: { name: string }) => name).join(' ');
 }
 
@@ -41,13 +41,13 @@ export const SelectDirectionType = (
 ) => {
 
   const isSelected = (data: any) => {
-    return selectedDirectionTypes.find(_direction => (_direction.id == data.id));
+    return selectedDirectionTypes.find((_direction: StrategyDirection) => (_direction.id == data.id));
   }
 
   return <Listbox value={selectedDirectionTypes} onChange={(data) => {
     if (isSelected(data)) {
       // filter out 
-      const _directionTypesFiltered = selectedDirectionTypes.filter(_direction => (_direction.id != data.id));
+      const _directionTypesFiltered = selectedDirectionTypes.filter((_direction: StrategyDirection) => (_direction.id != data.id));
       setSelectedDirectionTypes(_directionTypesFiltered)
     } else {
       setSelectedDirectionTypes(selectedDirectionTypes.concat([data]))

@@ -173,7 +173,7 @@ export const Strategies = (
     }
   }, [selectedExpirationDate, selectedDirectionTypes])
 
-  const isSelected = (_strategy) => selectedStrategy?.id == _strategy.id;
+  const isSelected = (_strategy: Strategy) => selectedStrategy?.id == _strategy.id;
 
   return <>
     {

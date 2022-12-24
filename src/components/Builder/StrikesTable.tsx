@@ -1,5 +1,4 @@
 import React from 'react'
-import { ZERO_BN } from '../../constants/bn';
 import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
 import { DebounceInput } from 'react-debounce-input';
 
