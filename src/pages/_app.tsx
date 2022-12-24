@@ -5,11 +5,14 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import PlausibleProvider from 'next-plausible';
 import superjson from "superjson";
 import "../styles/globals.css";
+import Layout from "../components/UI/Layout";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <PlausibleProvider domain="alpha.otus.finance">
+  return <PlausibleProvider domain="otus.finance">
+    <Layout>
       <Component {...pageProps} />
-    </PlausibleProvider>;
+    </Layout>
+  </PlausibleProvider>;
 };
 
 const getBaseUrl = () => {

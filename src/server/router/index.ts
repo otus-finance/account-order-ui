@@ -2,36 +2,28 @@
 import { createRouter } from "./context";
 import superjson from "superjson";
 import { z } from "zod";
-import { calculate } from "../../pages/api/backtest";
-import { trpc } from "../../utils/trpc";
 import { TRPCError } from "@trpc/server";
+import fs from "fs";
+import { request } from "http";
+import { formatChartData } from "../../utils/charting";
 
 export const appRouter = createRouter()
   .transformer(superjson)
-  .mutation("backtest", {
+  .query("chart-data", {
     input: z.object({
-      isCall: z.boolean(),
-      vaultStrategy: z.object({
-        vaultFunds: z.number(),
-        collateralPercent: z.number()
-      }),
-      strikeStrategy: z.object({
-        targetDelta: z.number(),
-        maxDeltaGap: z.number(),
-        optionType: z.number()
-      }),
-      hedgeStrategy: z.object({
-        hedgePercentage: z.number(),
-        maxHedgeAttempts: z.number(),
-        leverageSize: z.number()
-      })
+      asset: z.string(),
+      priceOfAsset: z.number(),
+      builtTrades: z.array(z.any()),
     }),
     async resolve({ input }) {
-      const { isCall, vaultStrategy, strikeStrategy, hedgeStrategy } = input;
-      console.log({ isCall, strikeStrategy })
-      const aprs = await calculate(isCall, vaultStrategy, strikeStrategy, hedgeStrategy);
-      console.log({ aprs })
-      return { success: true, aprs };
+      const { asset, priceOfAsset, builtTrades } = input;
+      const chartData = formatChartData(asset, priceOfAsset, builtTrades);
+      return chartData;
+    }
+  })
+  .query("strategies", {
+    async resolve() {
+      if (!process.env.STRATEGIES_URL) return;
     },
   })
   .mutation("register-user", {
@@ -40,7 +32,6 @@ export const appRouter = createRouter()
     }),
     async resolve({ input }) {
       const url = `${process.env.MAILER_LITE_URL}api/subscribers`;
-      console.log({ input, url })
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -54,8 +45,6 @@ export const appRouter = createRouter()
           }
         )
       });
-
-      console.log({ response });
 
       if (response.status == 422) {
         const json = await response.json();
