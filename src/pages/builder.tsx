@@ -134,7 +134,7 @@ const Builder: NextPage = () => {
       // max profit 
 
       // net credit 
-      const creditDebit = strikes.reduce((accum, strike) => {
+      const creditDebit = strikes.reduce((accum: any, strike: any) => {
         const { quote: { premium } } = strike;
         accum = accum + fromBigNumber(premium)
         return accum;

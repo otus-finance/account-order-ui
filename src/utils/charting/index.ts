@@ -7,7 +7,7 @@ type Ticks = {
 
 export const formatChartData = (asset: string, priceOfAsset: number, builtTrades: any[]) => {
   const _ticks = ticks(asset, priceOfAsset);
-  const _combo: Ticks = _ticks.reduce((accum, tick) => {
+  const _combo: Ticks = _ticks.reduce((accum: any, tick: any) => {
     const profitAtTick = formatProfitAndLostAtTicks(tick, builtTrades);
     return { ...accum, [tick]: { profitAtTick } }
   }, {})

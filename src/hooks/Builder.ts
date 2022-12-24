@@ -20,7 +20,7 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
     console.log({ builtTrades })
     if (builtTrades && builtTrades?.length > 0 && asset && priceOfAsset) {
       const _ticks = ticks(asset, priceOfAsset);
-      const _combo: Ticks = _ticks.reduce((accum, tick) => {
+      const _combo: Ticks = _ticks.reduce((accum: any, tick: any) => {
         const profitAtTick = formatProfitAndLostAtTicks(tick, builtTrades);
         return { ...accum, [tick]: { profitAtTick } }
       }, {})
