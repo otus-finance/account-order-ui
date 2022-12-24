@@ -41,12 +41,14 @@ const Builder: NextPage = () => {
 
   useEffect(() => {
     if (selectedMarket != null && selectedMarket.spotPrice) {
+      setStrikes([])
       setCurrentPrice(fromBigNumber(selectedMarket.spotPrice))
       setSelectedExpirationDate(null);
       setSelectedStrategy(null)
-      setStrikes([])
     }
-  }, [selectedMarket])
+  }, [selectedMarket]);
+
+  const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
 
   const [netCreditDebit, setNetCreditDebit] = useState(null);
   const [maxProfit, setMaxProfit] = useState(null);
@@ -111,7 +113,6 @@ const Builder: NextPage = () => {
 
       })
       // if any _strikes are undefined, most likely strategy not valid for asset 
-      console.log('_strikes_strikes_strikes_strikes', { _strikes, hasinvalid: _strikes.find(_strike => _strike == undefined) })
       if (_strikes.filter(_strike => _strike == undefined).length > 0) {
         setStrikes([]);
         setIsValid(false);
@@ -120,7 +121,6 @@ const Builder: NextPage = () => {
         setIsValid(true);
       }
     } else {
-      console.log('filtering?')
       setStrikes([])
     }
   }, [currentPrice, selectedStrategy, selectedExpirationDate])
@@ -135,16 +135,15 @@ const Builder: NextPage = () => {
 
       // net credit 
       const creditDebit = strikes.reduce((accum: any, strike: any) => {
-        const { quote: { premium } } = strike;
-        accum = accum + fromBigNumber(premium)
-        return accum;
+        const { quote: { size, isBuy, pricePerOption } } = strike;
+        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+
+        return isBuy ? accum - totalPriceForOptions : accum + totalPriceForOptions;
       }, 0);
 
       setNetCreditDebit(creditDebit);
     }
   }, [strikes])
-
-  const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
 
   return (
     <div>
@@ -214,10 +213,10 @@ const Builder: NextPage = () => {
               <div className="col-span-1 grid grid-cols-3 gap-3 mt-6">
 
                 <div className="bg-zinc-800 p-4 pt-1">
-                  <span className="text-xs font-light text-zinc-100">Net Credit</span>
+                  <span className="text-xs font-light text-zinc-100">{netCreditDebit && netCreditDebit > 0 ? 'Net Credit' : 'Net (Debit)'}</span>
                   <div className='pt-4'>
                     <span className="text-base font-semibold text-white">
-                      {netCreditDebit && formatUSD(netCreditDebit)}
+                      {netCreditDebit && formatUSD(Math.abs(netCreditDebit))}
                     </span>
                   </div>
                 </div>

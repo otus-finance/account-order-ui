@@ -98,7 +98,6 @@ const parseMarketResponse = async (
 ): Promise<LyraMarket[]> => {
   return await Promise.all(
     markets.map(async (market) => {
-      console.log({ market })
       const { address, name, isPaused, tvl, liquidity, openInterest, spotPrice } = market
       const liveBoards: LyraBoard[] = parseMarketBoards(market.liveBoards())
 
@@ -120,7 +119,6 @@ const parseMarketResponse = async (
 }
 
 const parseMarketBoards = (boards: Board[]): LyraBoard[] => {
-  console.log({ boards })
   return boards.map((board) => {
     const { id, expiryTimestamp, baseIv } = board
     const marketName = board.market().name
