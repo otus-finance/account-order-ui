@@ -3,12 +3,16 @@ import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '
 import { DebounceInput } from 'react-debounce-input';
 import { LyraStrike } from '../../queries/lyra/useLyra';
 import { motion, AnimatePresence } from "framer-motion"
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
-export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[], setStrikeSize: any }) => {
+export const StrikesTable = ({ strikes, handleToggletrike, setStrikeSize }: { strikes: LyraStrike[], handleToggletrike: any, setStrikeSize: any }) => {
 
   return <table className="min-w-full divide-y divide-zinc-700 ">
     <thead className="bg-zinc-800">
       <tr>
+        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+          <span className="sr-only">Remove</span>
+        </th>
         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
           <span className="sr-only">Option Type</span>
         </th>
@@ -56,6 +60,13 @@ export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[]
 
           const { delta, theta } = greeks;
           return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={id}>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
+              <XMarkIcon
+                onClick={() => handleToggletrike(strike, false)}
+                className="cursor-pointer block h-4 w-4 font-bold text-pink-700 rounded-2xl"
+                aria-hidden="true"
+              />
+            </td>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
               {isBuy ? <span className='text-zinc-100 font-light p-1'>Buy</span> : <span className='text-zinc-100 font-light p-1'>Sell</span>}
               {isCall ? <span className='text-emerald-700 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}

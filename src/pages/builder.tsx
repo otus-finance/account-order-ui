@@ -152,7 +152,6 @@ const Builder: NextPage = () => {
   const handleToggletrike = (strike: LyraStrike, select: boolean) => {
 
     if (select) {
-      console.log('handleToggleStrike', { strikes })
       setStrikes((params: LyraStrike[]) => [...params, strike]);
     } else {
       setStrikes((params: LyraStrike[]) => {
@@ -288,7 +287,7 @@ const Builder: NextPage = () => {
                   <strong> Powered by lyra.finance </strong>
                 </div>
               </div>
-              <StrikesTable strikes={strikes} setStrikeSize={setStrikeSize} />
+              <StrikesTable strikes={strikes} handleToggletrike={handleToggletrike} setStrikeSize={setStrikeSize} />
             </div>
 
           </div>
