@@ -2,6 +2,7 @@ import React from 'react'
 import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
 import { DebounceInput } from 'react-debounce-input';
 import { LyraStrike } from '../../queries/lyra/useLyra';
+import { motion, AnimatePresence } from "framer-motion"
 
 export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[], setStrikeSize: any }) => {
 
@@ -47,58 +48,60 @@ export const StrikesTable = ({ strikes, setStrikeSize }: { strikes: LyraStrike[]
       </tr>
     </thead>
     <tbody className="divide-y divide-zinc-700 bg-zinc-800">
-      {strikes.map((strike: LyraStrike) => {
-        {/* @ts-ignore */ }
-        const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
-        const { size, premium, pricePerOption, isBuy, greeks } = quote;
+      <AnimatePresence>
+        {strikes.map((strike: LyraStrike) => {
+          {/* @ts-ignore */ }
+          const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
+          const { size, premium, pricePerOption, isBuy, greeks } = quote;
 
-        const { delta, theta } = greeks;
-        return <tr key={id}>
-          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
-            {isBuy ? <span className='text-zinc-100 font-light p-1'>Buy</span> : <span className='text-zinc-100 font-light p-1'>Sell</span>}
-            {isCall ? <span className='text-emerald-700 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}
-          </td>
-          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
-            {formatUSD(fromBigNumber(strikePrice))}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {formatPercentage(fromBigNumber(iv))}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {formatNumber(fromBigNumber(vega), { maxDps: 2 })}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {formatNumber(fromBigNumber(theta), { maxDps: 2 })}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {formatNumber(fromBigNumber(delta), { maxDps: 2 })}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            <DebounceInput
-              minLength={1}
-              debounceTimeout={300}
-              onChange={(e) => {
-                const value = e.target.value;
-                setStrikeSize({ size: value ? value : '0', strike: strike });
-              }}
-              className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' value={fromBigNumber(size)}
-            />
-          </td>
-          <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-            {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
-          </td>
-          <td className="whitespace-nowrap py-4 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
-            <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/s${market.toLowerCase()}-susd?expiry=${expiryTimestamp}`} className="border-2 border-emerald-700 text-emerald-700 font-medium w-full rounded-lg p-2 inline hover:bg-zinc-900">
-              <span className='content-center'>
-                {formatUSD(fromBigNumber(pricePerOption))}
-              </span>
-            </a>
-          </td>
-        </tr>
-      })}
+          const { delta, theta } = greeks;
+          return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={id}>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
+              {isBuy ? <span className='text-zinc-100 font-light p-1'>Buy</span> : <span className='text-zinc-100 font-light p-1'>Sell</span>}
+              {isCall ? <span className='text-emerald-700 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
+              {formatUSD(fromBigNumber(strikePrice))}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {formatPercentage(fromBigNumber(iv))}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {formatNumber(fromBigNumber(vega), { maxDps: 2 })}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {formatNumber(fromBigNumber(theta), { maxDps: 2 })}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {formatNumber(fromBigNumber(delta), { maxDps: 2 })}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              <DebounceInput
+                minLength={1}
+                debounceTimeout={300}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setStrikeSize({ size: value ? value : '0', strike: strike });
+                }}
+                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' value={fromBigNumber(size)}
+              />
+            </td>
+            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+              {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
+              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/s${market.toLowerCase()}-susd?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                <span className='content-center'>
+                  {formatUSD(fromBigNumber(pricePerOption))}
+                </span>
+              </a>
+            </td>
+          </motion.tr>
+        })}
+      </AnimatePresence>
     </tbody>
   </table>
 

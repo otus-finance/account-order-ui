@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
-import { ResponsiveContainer } from "recharts"
 import ETHIcon from "../UI/Icons/Color/ETH"
 import { OptionType, PriceAt, Strategy, StrategyTag, StrategyType } from "./types"
-
+import { motion } from "framer-motion"
 
 export const strategies: Strategy[] = [
   {
@@ -183,7 +182,8 @@ export const Strategies = (
 
         const isSelectedStyle = isSelected(strategy) ? 'border-emerald-700' : 'border-zinc-700'
 
-        return <div onClick={() => setSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/3 flex-none flex flex-col border  hover:border-emerald-700 mt-4 mb-8 ${isSelectedStyle}`}>
+        return <motion.div whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }} onClick={() => setSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/3 flex-none flex flex-col border  hover:border-emerald-700 mt-4 mb-8 ${isSelectedStyle}`}>
           <div className="grid grid-cols-1 p-6">
             <div className="grid grid-cols-3 place-content-between">
               <div className="col-span-2 text-xl font-bold">
@@ -227,7 +227,7 @@ export const Strategies = (
             </div>
 
           </div>
-        </div>
+        </motion.div>
       })
     }
   </>

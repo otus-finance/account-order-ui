@@ -7,6 +7,7 @@ import { MarketDetails } from '../components/Builder/MarketDetails'
 import { SelectDirectionType } from '../components/Builder/SelectDirectionType'
 import { SelectBuilderExpiration } from '../components/Builder/SelectExpiration'
 import { LyraMarketOptions } from '../components/Builder/SelectMarket'
+import { SelectStrikesTable } from '../components/Builder/SelectStrikesTable'
 import { Strategies, strategies } from '../components/Builder/Strategies'
 import { StrikesTable } from '../components/Builder/StrikesTable'
 import { Strategy, StrategyDirection } from '../components/Builder/types'
@@ -16,6 +17,7 @@ import LyraIcon from '../components/UI/Icons/Color/LYRA'
 import { useBuilderProfitLossChart } from '../hooks/Builder'
 import { useLyraMarket, LyraMarket, LyraStrike, useLyra, getStrikeQuote } from '../queries/lyra/useLyra'
 import { formatUSD, fromBigNumber, toBN } from '../utils/formatters/numbers'
+import { motion } from "framer-motion"
 
 type StrikeSizeUpdate = {
   size: string,
@@ -47,8 +49,6 @@ const Builder: NextPage = () => {
       setSelectedStrategy(null)
     }
   }, [selectedMarket]);
-
-  const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
 
   const [netCreditDebit, setNetCreditDebit] = useState(null);
   const [maxProfit, setMaxProfit] = useState(null);
@@ -145,6 +145,24 @@ const Builder: NextPage = () => {
     }
   }, [strikes])
 
+  const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
+
+  const [isBuildingNewStrategy, setIsBuildingNewStrategy] = useState<boolean>(false);
+
+  const handleToggletrike = (strike: LyraStrike, select: boolean) => {
+
+    if (select) {
+      console.log('handleToggleStrike', { strikes })
+      setStrikes((params: LyraStrike[]) => [...params, strike]);
+    } else {
+      setStrikes((params: LyraStrike[]) => {
+        return params.filter(({ id }: { id: number }) => {
+          return id !== strike.id;
+        })
+      });
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -195,19 +213,13 @@ const Builder: NextPage = () => {
                 </div>
               </span>
             </div>
-            {/* <div className='overflow-x-scroll grid grid-cols-1 sm:grid-cols-3 mt-8'>
-              <Strategies />
-            </div> */}
 
             <div className="flex flex-nowrap overflow-x-scroll mt-8 gap-6">
-
               <Strategies selectedDirectionTypes={selectedDirectionTypes} selectedExpirationDate={selectedExpirationDate} selectedStrategy={selectedStrategy} setSelectedStrategy={setSelectedStrategy} />
-
             </div>
           </div>
 
           <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
-
 
             <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
               <div className="col-span-1 grid grid-cols-3 gap-3 mt-6">
@@ -238,9 +250,36 @@ const Builder: NextPage = () => {
                     </span>
                   </div>
                 </div>
+              </div>
+
+            </div>
+
+            <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
+
+              <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
+
+                {
+                  selectedStrategy &&
+                  <div onClick={() => setIsBuildingNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+                    {isBuildingNewStrategy ? 'Reset Strategy' : 'Use Strategy as Template'}
+                  </div>
+                }
 
               </div>
+
             </div>
+
+
+            {
+              selectedStrategy && isBuildingNewStrategy &&
+              <motion.div className='col-span-6' animate={selectedStrategy && isBuildingNewStrategy ? "open" : "closed"} variants={{
+                open: { opacity: 1, x: 0 },
+                closed: { opacity: 0, x: "-100%" },
+              }}>
+                <SelectStrikesTable selectedExpirationDate={selectedExpirationDate} handleToggletrike={handleToggletrike} strikes={strikes} />
+              </motion.div>
+
+            }
 
             <div className='col-span-6 '>
               <div className="flex items-center pt-2 pb-2">
@@ -251,6 +290,7 @@ const Builder: NextPage = () => {
               </div>
               <StrikesTable strikes={strikes} setStrikeSize={setStrikeSize} />
             </div>
+
           </div>
 
           <div className='col-span-3 sm:col-span-3 mt-8'>

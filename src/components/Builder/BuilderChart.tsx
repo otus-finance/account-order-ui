@@ -18,7 +18,7 @@ export const BuilderPNLChart = ({ currentPrice, data }: { currentPrice: number, 
 
   return (
     <ResponsiveContainer width="99%"
-      height={320}>
+      height={300}>
       <LineChart
         data={data}
         margin={{

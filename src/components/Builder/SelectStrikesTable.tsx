@@ -1,0 +1,182 @@
+import React, { useEffect, useState } from 'react'
+import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
+import { DebounceInput } from 'react-debounce-input';
+import { LyraBoard, LyraMarket, LyraStrike } from '../../queries/lyra/useLyra';
+import { OptionType } from './types';
+import { motion, AnimatePresence } from "framer-motion"
+
+const style = 'cursor-pointer text-white-700 rounded-2xl bg-zinc-800 border border-zinc-700 text-center p-1 mr-1 text-sm font-light'
+
+const calculateOptionType = (isBuy: boolean, isCall: boolean) => {
+  if (isBuy && isCall) {
+    return 0
+  } else if (isBuy && !isCall) {
+    return 1
+  } else if (!isBuy && isCall) {
+    return 3
+  }
+  //short put
+  return 4
+}
+
+type SelectedStrike = {
+  id: number,
+  isCall: boolean,
+  isBuy: boolean;
+}
+
+export const SelectStrikesTable = ({ strikes, selectedExpirationDate, handleToggletrike }: { strikes: LyraStrike[], selectedExpirationDate: LyraBoard, handleToggletrike: any }) => {
+
+  const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
+
+  const [isBuy, setIsBuy] = useState(false);
+  const [isCall, setIsCall] = useState(false);
+
+  const [optionType, setOptionType] = useState<OptionType>(0);
+
+  useEffect(() => {
+    setOptionType(calculateOptionType(isBuy, isCall));
+  }, [isBuy, isCall, optionType])
+
+  useEffect(() => {
+    if (selectedExpirationDate) {
+      const { strikesByOptionTypes } = selectedExpirationDate;
+      if (strikesByOptionTypes && strikesByOptionTypes[optionType]) {
+        const _strikes = strikesByOptionTypes[optionType];
+        setAvailableStrikes(_strikes);
+      }
+    }
+  }, [selectedExpirationDate, optionType]);
+
+  const [selectedStrikeIds, setSelectedStrikeIds] = useState<SelectedStrike[]>([]);
+
+  useEffect(() => {
+    setSelectedStrikeIds(strikes.map(({ id, isCall, quote: { isBuy } }: { id: number, isCall: boolean, quote: { isBuy: boolean } }) => {
+      console.log({ id, isCall, isBuy })
+      return { id, isCall, isBuy }
+    }))
+  }, [strikes])
+
+  return <div className='grid grid-cols-1 sm:grid-cols-4 mb-8'>
+    <div className='col-span-1 grid grid-cols-4 mt-6'>
+      <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+        Buy
+      </div>
+      <div onClick={() => setIsBuy(false)} className={`${!isBuy ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+        Sell
+      </div>
+      <div onClick={() => setIsCall(true)} className={`${isCall ? 'border-emerald-700 bg-zinc-900' : ''} ${style} ml-2`}>
+        Call
+      </div>
+      <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+        Put
+      </div>
+    </div>
+
+    <div className='col-span-4 mt-4 mb-4'>
+      <table className="min-w-full divide-y divide-zinc-700 ">
+        <thead className="bg-zinc-800">
+          <tr>
+            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-xs font-light uppercase text-white sm:pl-6">
+              Strike
+            </th>
+            <th
+              scope="col"
+              className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
+            >
+              IV
+            </th>
+            <th
+              scope="col"
+              className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
+            >
+              Vega
+            </th>
+            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+              Theta
+            </th>
+            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+              Delta
+            </th>
+            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+              Gamma
+            </th>
+            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+              Size
+            </th>
+            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+              Credit/(Debit)
+            </th>
+            <th scope="col" className="relative py-3.5">
+              <span className="sr-only">Price</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-700 bg-zinc-800">
+          <AnimatePresence>
+            {availableStrikes && availableStrikes.map((strike: LyraStrike) => {
+              {/* @ts-ignore */ }
+              const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
+              const { size, premium, pricePerOption, isBuy, greeks } = quote;
+              console.log({ selectedStrikeIds, id, isCall, isBuy, active: selectedStrikeIds.includes({ id, isBuy, isCall }) })
+
+              const { delta, theta } = greeks;
+              return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={id}>
+                <td className="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
+                  {formatUSD(fromBigNumber(strikePrice))}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {formatPercentage(fromBigNumber(iv))}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {formatNumber(fromBigNumber(vega), { maxDps: 2 })}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {formatNumber(fromBigNumber(theta), { maxDps: 2 })}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {formatNumber(fromBigNumber(delta), { maxDps: 2 })}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {fromBigNumber(size)}
+                </td>
+                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                  {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
+                </td>
+                <td className="whitespace-nowrap py-2 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
+                  {
+                    selectedStrikeIds.filter((selected: SelectedStrike) => {
+                      if (selected.id == id) {
+                        return selected.isBuy == isBuy && selected.isCall == isCall
+                      }
+                      return false;
+                    }).length > 0 ?
+                      <a onClick={() => handleToggletrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                        <span className='content-center'>
+                          Remove
+                        </span>
+                      </a> :
+                      <a onClick={() => handleToggletrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                        <span className='content-center'>
+                          Select
+                        </span>
+                      </a>
+                  }
+
+                </td>
+              </motion.tr>
+            })}
+          </AnimatePresence>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+}
+
+const isCreditOrDebit = (isBuy: boolean, usd: string): string => {
+  return isBuy ? `(${usd})` : usd
+}
