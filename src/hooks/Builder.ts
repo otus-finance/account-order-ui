@@ -112,7 +112,7 @@ export const useBuilder = () => {
             }
           }
         }))
-        console.log({ _strikes })
+
         dispatch({
           type: 'SET_SHARED_BUILD',
           strikes: _strikes,
@@ -234,9 +234,9 @@ export const useBuilder = () => {
     if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
       const { strikesByOptionTypes } = selectedExpirationDate;
       // if a trade has 2 of same they need to be merged and include size update quote 
-      const _strikes = selectedStrategy.trade.map((trade, index) => {
+      const _strikes = selectedStrategy.trade.map((trade: any) => {
         const { optionType, priceAt, order } = trade;
-        const _optionTypeStrikes: [] = strikesByOptionTypes[optionType];
+        const _optionTypeStrikes: LyraStrike[] | undefined = strikesByOptionTypes[optionType] || undefined;
         let found = 0;
         return _optionTypeStrikes.find(strike => {
           const { strikePrice, isCall } = strike;
