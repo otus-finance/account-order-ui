@@ -212,7 +212,7 @@ export const useBuilder = () => {
 
       const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
 
-      const _updateStrikes: LyraStrike[] = strikes.map((strike: LyraStrike) => {
+      const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
         const { id } = strike;
         if (id == _id) {
           return { ...strike, quote: _quote }
