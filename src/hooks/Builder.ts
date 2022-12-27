@@ -92,7 +92,7 @@ export const useBuilder = () => {
         const strikesOptionTypesKeys = Object.keys(_expirationDate.strikesByOptionTypes);
 
         const _strikesByIdAndOptionTypes: Record<number, Record<number, LyraStrike>> =
-          strikesOptionTypesKeys.reduce((accum: any, key: string, index: number) => {
+          strikesOptionTypesKeys.reduce((accum: any, key: any) => {
             const strikes = _expirationDate.strikesByOptionTypes ? _expirationDate.strikesByOptionTypes[key] : [];
             const strikesById = strikes?.reduce((accum: any, strike: LyraStrike) => {
               return { ...accum, [strike.id]: strike }
