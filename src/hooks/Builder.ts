@@ -236,21 +236,23 @@ export const useBuilder = () => {
       // if a trade has 2 of same they need to be merged and include size update quote 
       const _strikes = selectedStrategy.trade.map((trade: any) => {
         const { optionType, priceAt, order } = trade;
-        const _optionTypeStrikes: LyraStrike[] | undefined = strikesByOptionTypes[optionType] || undefined;
-        let found = 0;
-        return _optionTypeStrikes.find(strike => {
-          const { strikePrice, isCall } = strike;
-          const _strikePrice = fromBigNumber(strikePrice);
-          let foundMatch = extrensicValueFilter(priceAt, isCall, currentPrice || 0, _strikePrice);
-          if (foundMatch && order == found) {
-            return true;
-          } if (foundMatch && order != found) {
-            found++;
-          } else {
-            return false;
-          }
-        });
-
+        if (strikesByOptionTypes) {
+          const _optionTypeStrikes: LyraStrike[] | undefined = strikesByOptionTypes[optionType];
+          let found = 0;
+          {/* @ts-ignore */ }
+          return _optionTypeStrikes.find(strike => {
+            const { strikePrice, isCall } = strike;
+            const _strikePrice = fromBigNumber(strikePrice);
+            let foundMatch = extrensicValueFilter(priceAt, isCall, currentPrice || 0, _strikePrice);
+            if (foundMatch && order == found) {
+              return true;
+            } if (foundMatch && order != found) {
+              found++;
+            } else {
+              return false;
+            }
+          });
+        }
       })
       // if any _strikes are undefined, most likely strategy not valid for asset 
       if (_strikes.filter((_strike: any) => _strike == undefined).length > 0) {
