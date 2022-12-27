@@ -44,7 +44,7 @@ export const SelectDirectionType = () => {
     return selectedDirectionTypes.find((_direction: StrategyDirection) => (_direction.id == data.id));
   }
 
-  return <Listbox value={selectedDirectionTypes} onChange={(data) => {
+  return <Listbox value={selectedDirectionTypes} onChange={(data: any) => {
     if (isSelected(data)) {
       // filter out 
       const _directionTypesFiltered = selectedDirectionTypes.filter((_direction: StrategyDirection) => (_direction.id != data.id));
