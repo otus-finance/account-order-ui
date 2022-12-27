@@ -3,6 +3,7 @@ import { PnlChartPoint } from "../hooks/BuilderChart"
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
 export type BuilderProviderState = {
+  showStrikesSelect: boolean,
   isPrebuilt: boolean
   markets: LyraMarket[] | null
   isMarketLoading: any | null | undefined
@@ -14,7 +15,7 @@ export type BuilderProviderState = {
   strikes: LyraStrike[]
   positionPnl: any | null | undefined // netcreditdebit max profit max loss
   isValid: boolean
-  isBuildingNewStrategy: any | null | undefined
+  isBuildingNewStrategy: boolean
   generateURL: any | null | undefined  // probably move this to state component management
   isSharedStrategy: boolean,
   errorInSharedStrategy: boolean,
@@ -26,10 +27,12 @@ export type BuilderProviderState = {
   handleUpdateQuote: (any: any) => void
   handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void
   handleUpdatePrebuilt: (any: boolean) => void
+  handleBuildNewStrategy: (any: boolean) => void
 }
 
 
 export const builderInitialState: BuilderProviderState = {
+  showStrikesSelect: false,
   isPrebuilt: true,
   markets: [],
   isMarketLoading: false,
@@ -56,10 +59,19 @@ export const builderInitialState: BuilderProviderState = {
   handleSelectedStrategy: (any) => void any,
   handleUpdateQuote: (any) => void any,
   handleToggleSelectedStrike: (any) => void any,
-  handleUpdatePrebuilt: (any) => void any
+  handleUpdatePrebuilt: (any) => void any,
+  handleBuildNewStrategy: (any) => void any
 }
 
 export type BuilderAction =
+  | {
+    type: 'SET_BUILD_NEW_STRATEGY',
+    isBuildingNewStrategy: BuilderProviderState['isBuildingNewStrategy']
+  }
+  | {
+    type: 'SET_STRIKES_SELECT_SHOW',
+    showStrikesSelect: BuilderProviderState['showStrikesSelect']
+  }
   | {
     type: 'SET_PREBUILT',
     isPrebuilt: BuilderProviderState['isPrebuilt']
@@ -94,7 +106,10 @@ export type BuilderAction =
   }
   | {
     type: 'SET_STRATEGY',
-    selectedStrategy: BuilderProviderState['selectedStrategy']
+    selectedStrategy: BuilderProviderState['selectedStrategy'],
+    strikes: BuilderProviderState['strikes'],
+    isBuildingNewStrategy: BuilderProviderState['isBuildingNewStrategy'],
+    hasLoadedSharedStrategy: BuilderProviderState['hasLoadedSharedStrategy'],
   }
   | {
     type: 'SET_STRIKES',
@@ -140,6 +155,10 @@ export function builderReducer(
   action: BuilderAction
 ): BuilderProviderState {
   switch (action.type) {
+    case 'SET_BUILD_NEW_STRATEGY':
+      return { ...state, isBuildingNewStrategy: action.isBuildingNewStrategy }
+    case 'SET_STRIKES_SELECT_SHOW':
+      return { ...state, showStrikesSelect: action.showStrikesSelect }
     case 'SET_PREBUILT':
       return { ...state, isPrebuilt: action.isPrebuilt }
     case 'SET_MARKETS':
@@ -161,7 +180,13 @@ export function builderReducer(
     case 'SET_EXPIRATION_DATE':
       return { ...state, selectedExpirationDate: action.selectedExpirationDate }
     case 'SET_STRATEGY':
-      return { ...state, selectedStrategy: action.selectedStrategy }
+      return {
+        ...state,
+        selectedStrategy: action.selectedStrategy,
+        strikes: action.strikes,
+        isBuildingNewStrategy: action.isBuildingNewStrategy,
+        hasLoadedSharedStrategy: action.hasLoadedSharedStrategy
+      }
     case 'SET_STRIKES':
       return { ...state, strikes: action.strikes, isValid: action.isValid }
     case 'UPDATE_STRIKES':

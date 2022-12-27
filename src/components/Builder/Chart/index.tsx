@@ -6,7 +6,7 @@ import { BuilderPNLChart } from './BuilderChart';
 export const Chart = () => {
 
   const { selectedMarket, strikes, currentPrice, isValid } = useBuilderContext();
-  console.log({ isValid, strikes })
+
   const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
 
   return <div className='col-span-3 sm:col-span-3 mt-8'>

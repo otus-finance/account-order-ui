@@ -10,16 +10,19 @@ import { motion } from "framer-motion"
 export const Strikes = () => {
 
   const {
-    isPrebuilt,
+    isBuildingNewStrategy,
+    showStrikesSelect,
+    hasLoadedSharedStrategy,
     strikes,
     selectedMarket,
     selectedStrategy,
     selectedExpirationDate,
     isSharedStrategy,
-    positionPnl: { netCreditDebit, maxLoss, maxProfit }
+    positionPnl: { netCreditDebit, maxLoss, maxProfit },
+    handleBuildNewStrategy
   } = useBuilderContext();
 
-  const [isBuildingNewStrategy, setIsBuildingNewStrategy] = useState<boolean>(false);
+  // const [isBuildingNewStrategy, setIsBuildingNewStrategy] = useState<boolean>(false);
   const [generateURL, setGenerateURL] = useState<boolean>(false);
 
   return <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
@@ -65,7 +68,7 @@ export const Strikes = () => {
 
         {
           (selectedStrategy || isSharedStrategy) &&
-          <div onClick={() => setIsBuildingNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+          <div onClick={() => handleBuildNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
             {isBuildingNewStrategy ? 'Reset Strategy' : 'Use Strategy as Template'}
           </div>
         }
@@ -76,8 +79,8 @@ export const Strikes = () => {
 
 
     {
-      selectedStrategy && isBuildingNewStrategy &&
-      <motion.div className='col-span-6' animate={selectedStrategy && isBuildingNewStrategy ? "open" : "closed"} variants={{
+      showStrikesSelect &&
+      <motion.div className='col-span-6' animate={showStrikesSelect ? "open" : "closed"} variants={{
         open: { opacity: 1, x: 0 },
         closed: { opacity: 0, x: "-100%" },
       }}>
@@ -101,7 +104,7 @@ export const Strikes = () => {
       <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
 
         {
-          selectedStrategy && isBuildingNewStrategy && strikes.length > 0 &&
+          ((selectedStrategy && isBuildingNewStrategy) || (hasLoadedSharedStrategy && isBuildingNewStrategy)) && strikes.length > 0 &&
           <div onClick={() => setGenerateURL(!generateURL)} className="cursor-pointer border border-orange-500  hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
             Share Strategy
           </div>

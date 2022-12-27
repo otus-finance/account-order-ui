@@ -20,6 +20,7 @@ export const useBuilder = () => {
   );
 
   const {
+    showStrikesSelect,
     isPrebuilt,
     markets,
     isMarketLoading,
@@ -164,6 +165,30 @@ export const useBuilder = () => {
   }, [strikes])
 
   useEffect(() => {
+
+    if (selectedStrategy && isBuildingNewStrategy) {
+      dispatch({
+        type: 'SET_STRIKES_SELECT_SHOW',
+        showStrikesSelect: true
+      })
+    }
+
+    if (isBuildingNewStrategy) {
+      dispatch({
+        type: 'SET_STRIKES_SELECT_SHOW',
+        showStrikesSelect: true
+      })
+    } else {
+      dispatch({
+        type: 'SET_STRIKES_SELECT_SHOW',
+        showStrikesSelect: false
+      })
+    }
+
+
+  }, [selectedStrategy, isSharedStrategy, hasLoadedSharedStrategy, isBuildingNewStrategy])
+
+  useEffect(() => {
     if (selectedMarket) {
       dispatch({
         type: 'SET_CURRENT_PRICE',
@@ -171,6 +196,13 @@ export const useBuilder = () => {
       } as BuilderAction)
     }
   }, [selectedMarket])
+
+  const handleBuildNewStrategy = (_isBuildNewStrategy: boolean) => {
+    dispatch({
+      type: 'SET_BUILD_NEW_STRATEGY',
+      isBuildingNewStrategy: _isBuildNewStrategy
+    })
+  }
 
   const handleSelectedMarket = (market: LyraMarket) => {
     dispatch({
@@ -200,7 +232,10 @@ export const useBuilder = () => {
   const handleSelectedStrategy = (strategy: any) => {
     dispatch({
       type: 'SET_STRATEGY',
-      selectedStrategy: strategy
+      selectedStrategy: strategy,
+      strikes: [],
+      isBuildingNewStrategy: false,
+      hasLoadedSharedStrategy: false
     })
   }
 
@@ -230,7 +265,7 @@ export const useBuilder = () => {
   }
 
   const filterStrikes = useCallback(() => {
-    console.log({ selectedStrategy, selectedExpirationDate, currentPrice })
+
     if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
       const { strikesByOptionTypes } = selectedExpirationDate;
       // if a trade has 2 of same they need to be merged and include size update quote 
@@ -256,7 +291,6 @@ export const useBuilder = () => {
       })
       // if any _strikes are undefined, most likely strategy not valid for asset 
       if (_strikes.filter((_strike: any) => _strike == undefined).length > 0) {
-        console.log('something happened here 1')
         dispatch({
           type: 'SET_STRIKES',
           strikes: [],
@@ -270,8 +304,6 @@ export const useBuilder = () => {
         })
       }
     } else {
-      console.log('something happened here2 ')
-
       dispatch({
         type: 'SET_STRIKES',
         strikes: [],
@@ -286,18 +318,31 @@ export const useBuilder = () => {
     }
   }, [filterStrikes, currentPrice, selectedStrategy, selectedExpirationDate]);
 
-  const handleToggleSelectedStrike = (strike: LyraStrike, selected: boolean) => {
+  const handleToggleSelectedStrike = (selectedStrike: LyraStrike, selected: boolean) => {
     if (selected) {
       dispatch({
         type: 'SET_STRIKES',
-        strikes: [...strikes, strike],
+        strikes: [...strikes, selectedStrike],
         isValid: true
       })
     } else {
       dispatch({
         type: 'SET_STRIKES',
-        strikes: strikes.filter(({ id }: { id: number }) => {
-          return id !== strike.id;
+        strikes: strikes.filter((_strike: LyraStrike) => {
+
+          // return id !== selectedStrike.id;
+
+          const { id, isCall, quote: { isBuy } } = _strike
+          // return selectedStrike.id !== id && selectedStrike.quote.isBuy != isBuy && !selectedStrike.isCall == isCall
+          if (selectedStrike.id !== id) {
+            return true;
+          } else if (selectedStrike.quote.isBuy !== isBuy) {
+            return true;
+          } else if (selectedStrike.isCall !== isCall) {
+            return true;
+          } else {
+            return false
+          }
         }),
         isValid: true
       })
@@ -312,6 +357,7 @@ export const useBuilder = () => {
   }
 
   return {
+    showStrikesSelect,
     isPrebuilt,
     markets,
     isMarketLoading,
@@ -334,6 +380,7 @@ export const useBuilder = () => {
     handleToggleSelectedStrike,
     handleSelectedStrategy,
     handleUpdateQuote,
-    handleUpdatePrebuilt
+    handleUpdatePrebuilt,
+    handleBuildNewStrategy
   } as BuilderProviderState
 }
