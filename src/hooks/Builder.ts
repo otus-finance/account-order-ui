@@ -253,7 +253,7 @@ export const useBuilder = () => {
 
       })
       // if any _strikes are undefined, most likely strategy not valid for asset 
-      if (_strikes.filter(_strike => _strike == undefined).length > 0) {
+      if (_strikes.filter((_strike: any) => _strike == undefined).length > 0) {
         console.log('something happened here 1')
         dispatch({
           type: 'SET_STRIKES',
