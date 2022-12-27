@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
-import { DebounceInput } from 'react-debounce-input';
-import { LyraBoard, LyraMarket, LyraStrike } from '../../queries/lyra/useLyra';
-import { OptionType } from './types';
+import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../../utils/formatters/numbers'
+import { LyraStrike } from '../../../queries/lyra/useLyra';
+import { OptionType } from '../types';
 import { motion, AnimatePresence } from "framer-motion"
+import { calculateOptionType } from '../../../utils/formatters/optiontypes';
+import { useBuilderContext } from '../../../context/BuilderContext';
 
 const style = 'cursor-pointer text-white-700 rounded-2xl bg-zinc-800 border border-zinc-700 text-center p-1 mr-1 text-sm font-light'
-
-const calculateOptionType = (isBuy: boolean, isCall: boolean) => {
-  if (isBuy && isCall) {
-    return 0
-  } else if (isBuy && !isCall) {
-    return 1
-  } else if (!isBuy && isCall) {
-    return 3
-  }
-  //short put
-  return 4
-}
 
 type SelectedStrike = {
   id: number,
@@ -25,13 +14,14 @@ type SelectedStrike = {
   isBuy: boolean;
 }
 
-export const SelectStrikesTable = ({ strikes, selectedExpirationDate, handleToggletrike }: { strikes: LyraStrike[], selectedExpirationDate: LyraBoard, handleToggletrike: any }) => {
+export const SelectStrikesTable = () => {
+
+  const { strikes, selectedExpirationDate, handleToggleSelectedStrike } = useBuilderContext();
 
   const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
 
   const [isBuy, setIsBuy] = useState(false);
   const [isCall, setIsCall] = useState(false);
-
   const [optionType, setOptionType] = useState<OptionType>(0);
 
   useEffect(() => {
@@ -52,7 +42,6 @@ export const SelectStrikesTable = ({ strikes, selectedExpirationDate, handleTogg
 
   useEffect(() => {
     setSelectedStrikeIds(strikes.map(({ id, isCall, quote: { isBuy } }: { id: number, isCall: boolean, quote: { isBuy: boolean } }) => {
-      console.log({ id, isCall, isBuy })
       return { id, isCall, isBuy }
     }))
   }, [strikes])
@@ -118,7 +107,6 @@ export const SelectStrikesTable = ({ strikes, selectedExpirationDate, handleTogg
               {/* @ts-ignore */ }
               const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
               const { size, premium, pricePerOption, isBuy, greeks } = quote;
-              console.log({ selectedStrikeIds, id, isCall, isBuy, active: selectedStrikeIds.includes({ id, isBuy, isCall }) })
 
               const { delta, theta } = greeks;
               return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={id}>
@@ -154,12 +142,12 @@ export const SelectStrikesTable = ({ strikes, selectedExpirationDate, handleTogg
                       }
                       return false;
                     }).length > 0 ?
-                      <a onClick={() => handleToggletrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Remove
                         </span>
                       </a> :
-                      <a onClick={() => handleToggletrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Select
                         </span>

@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
-import { StrategyDirection, StrategyType } from './types'
+import { StrategyDirection, StrategyType } from '../types'
+import { useBuilderContext } from '../../../context/BuilderContext'
 
 
 const DirectionType: StrategyDirection[] = [
@@ -35,10 +36,9 @@ const buildTextSelectedDirections = (directionTypes: StrategyDirection[]) => {
   return directionTypes.map(({ name }: { name: string }) => name).join(' ');
 }
 
-export const SelectDirectionType = (
-  { selectedDirectionTypes, setSelectedDirectionTypes }:
-    { selectedDirectionTypes: any, setSelectedDirectionTypes: any }
-) => {
+export const SelectDirectionType = () => {
+
+  const { selectedDirectionTypes, handleSelectedDirectionTypes } = useBuilderContext()
 
   const isSelected = (data: any) => {
     return selectedDirectionTypes.find((_direction: StrategyDirection) => (_direction.id == data.id));
@@ -48,9 +48,9 @@ export const SelectDirectionType = (
     if (isSelected(data)) {
       // filter out 
       const _directionTypesFiltered = selectedDirectionTypes.filter((_direction: StrategyDirection) => (_direction.id != data.id));
-      setSelectedDirectionTypes(_directionTypesFiltered)
+      handleSelectedDirectionTypes(_directionTypesFiltered)
     } else {
-      setSelectedDirectionTypes(selectedDirectionTypes.concat([data]))
+      handleSelectedDirectionTypes(selectedDirectionTypes.concat([data]))
     }
 
   }}>

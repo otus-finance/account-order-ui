@@ -6,9 +6,70 @@ import { TRPCError } from "@trpc/server";
 import fs from "fs";
 import { request } from "http";
 import { formatChartData } from "../../utils/charting";
+import { nanoid, customAlphabet } from 'nanoid'
+
+const characters =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const getHash = customAlphabet(characters, 4);
 
 export const appRouter = createRouter()
   .transformer(superjson)
+  .query("builder-id", {
+    input: z.object({
+      hash: z.string()
+    }),
+    async resolve({ input, ctx }) {
+      return ctx.prisma.url.findFirst({ where: { hash: input.hash }, include: { trades: true } })
+    }
+  })
+  .mutation("builder-id", {
+    input: z.object({
+      generatedBy: z?.string(),
+      expiry: z.number(),
+      board: z.number(),
+      asset: z.string(),
+      trades: z.array(
+        z.object({
+          strikeId: z.number(),
+          size: z.number(),
+          optionType: z.number()
+        })
+      )
+    }),
+    async resolve({ input, ctx }) {
+      const hash = getHash();
+
+      const url = await ctx.prisma.url.create(
+        {
+          data: {
+            hash: hash,
+            generatedBy: input?.generatedBy,
+            asset: input.asset,
+            expiry: input.expiry,
+            board: input.board
+          }
+        }
+      )
+
+      const _trades = input.trades.map(_trade => {
+        return {
+          strikeId: _trade.strikeId,
+          size: _trade.size,
+          optionType: _trade.optionType,
+          urlId: url.id
+        }
+      });
+
+      await ctx.prisma.trade.createMany(
+        {
+          data: _trades
+        }
+      );
+
+      return hash;
+
+    }
+  })
   .query("chart-data", {
     input: z.object({
       asset: z.string(),

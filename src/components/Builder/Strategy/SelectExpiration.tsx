@@ -1,18 +1,18 @@
 import React, { Fragment } from 'react'
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
-import { LyraBoard } from '../../queries/lyra/useLyra'
+import { LyraBoard } from '../../../queries/lyra/useLyra'
+import { useBuilderContext } from '../../../context/BuilderContext'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const SelectBuilderExpiration = (
-  { liveBoards, selectedExpirationDate, setSelectedExpirationDate }:
-    { liveBoards: any, selectedExpirationDate: any, setSelectedExpirationDate: any }
-) => {
+export const SelectBuilderExpiration = () => {
 
-  return <Listbox value={selectedExpirationDate} onChange={setSelectedExpirationDate}>
+  const { selectedMarket, selectedExpirationDate, handleSelectedExpirationDate } = useBuilderContext();
+
+  return <Listbox value={selectedExpirationDate} onChange={handleSelectedExpirationDate}>
     {({ open }) => (
       <>
         <div className="relative sm:pl-2">
@@ -36,7 +36,7 @@ export const SelectBuilderExpiration = (
             leaveTo="opacity-0"
           >
             <Listbox.Options className="rounded-xs absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {liveBoards.map((board: LyraBoard) => (
+              {selectedMarket?.liveBoards.map((board: LyraBoard) => (
                 <Listbox.Option
                   key={board.id}
                   className={({ active }) =>

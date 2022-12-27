@@ -1,16 +1,18 @@
 import React from 'react'
+import { useBuilderContext } from '../../../context/BuilderContext';
 
-import { LyraMarket } from '../../queries/lyra/useLyra'
-import { formatUSD, fromBigNumber } from '../../utils/formatters/numbers'
+import { formatUSD, fromBigNumber } from '../../../utils/formatters/numbers'
 
-export const MarketDetails = ({ market }: { market: LyraMarket | null }) => {
+export const MarketDetails = () => {
+
+  const { selectedMarket } = useBuilderContext();
 
   return <div className='grid grid-cols-1 divider '>
 
     <div className="grid grid-cols-2 border-b border-zinc-700 p-2">
       <div className='font-light text-xs uppercase'>Open Interest</div>
       <div className='font-bold text-xs uppercase'>
-        <strong>{market && market.openInterest && formatUSD(fromBigNumber(market.openInterest))}  </strong>
+        <strong>{selectedMarket && selectedMarket.openInterest && formatUSD(fromBigNumber(selectedMarket.openInterest))}  </strong>
       </div>
     </div>
 
@@ -19,7 +21,7 @@ export const MarketDetails = ({ market }: { market: LyraMarket | null }) => {
       <div className='font-light text-xs uppercase'>Free Liquidity</div>
 
       <div className='font-light text-xs uppercase'>
-        <strong>{market && market.liquidity.freeLiquidity && formatUSD(fromBigNumber(market.liquidity.freeLiquidity))}  </strong>
+        <strong>{selectedMarket && selectedMarket.liquidity.freeLiquidity && formatUSD(fromBigNumber(selectedMarket.liquidity.freeLiquidity))}  </strong>
       </div>
     </div>
     <div className="grid grid-cols-2 border-b border-zinc-700 p-2">
@@ -27,7 +29,7 @@ export const MarketDetails = ({ market }: { market: LyraMarket | null }) => {
       <div className='font-light text-xs uppercase'>Spot Price</div>
 
       <div className='font-light text-xs uppercase'>
-        <strong>{market && market.spotPrice && formatUSD(fromBigNumber(market.spotPrice))}  </strong>
+        <strong>{selectedMarket && selectedMarket.spotPrice && formatUSD(fromBigNumber(selectedMarket.spotPrice))}  </strong>
       </div>
     </div>
     <div className="grid grid-cols-2 border-b border-zinc-700 p-2">
@@ -36,7 +38,7 @@ export const MarketDetails = ({ market }: { market: LyraMarket | null }) => {
 
       <div className='font-light text-xs uppercase'>
 
-        <strong>{market && market.tvl && formatUSD(fromBigNumber(market.tvl))}  </strong>
+        <strong>{selectedMarket && selectedMarket.tvl && formatUSD(fromBigNumber(selectedMarket.tvl))}  </strong>
 
       </div>
     </div>

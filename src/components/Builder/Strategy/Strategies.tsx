@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
-import ETHIcon from "../UI/Icons/Color/ETH"
-import { OptionType, PriceAt, Strategy, StrategyTag, StrategyType } from "./types"
+import ETHIcon from "../../UI/Icons/Color/ETH"
+import { OptionType, PriceAt, Strategy, StrategyTag, StrategyType } from "../types"
 import { motion } from "framer-motion"
+import { useBuilderContext } from "../../../context/BuilderContext"
+import BTCIcon from "../../UI/Icons/Color/BTC"
 
 export const strategies: Strategy[] = [
   {
@@ -153,10 +155,9 @@ export const strategies: Strategy[] = [
   }
 ]
 // filters == 
-export const Strategies = (
-  { selectedDirectionTypes, selectedExpirationDate, selectedStrategy, setSelectedStrategy }:
-    { selectedDirectionTypes: any, selectedExpirationDate: any, selectedStrategy: any, setSelectedStrategy: any }
-) => {
+export const Strategies = () => {
+  // setSelectedStrategy is now handleSelectedStrategy
+  const { selectedMarket, selectedDirectionTypes, selectedExpirationDate, selectedStrategy, handleSelectedStrategy } = useBuilderContext();
 
   const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
@@ -183,7 +184,7 @@ export const Strategies = (
         const isSelectedStyle = isSelected(strategy) ? 'border-emerald-700' : 'border-zinc-700'
 
         return <motion.div whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }} onClick={() => setSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/3 flex-none flex flex-col border  hover:border-emerald-700 mt-4 mb-8 ${isSelectedStyle}`}>
+          whileTap={{ scale: 0.97 }} onClick={() => handleSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/3 flex-none flex flex-col border  hover:border-emerald-700 mt-4 mb-8 ${isSelectedStyle}`}>
           <div className="grid grid-cols-1 p-6">
             <div className="grid grid-cols-3 place-content-between">
               <div className="col-span-2 text-xl font-bold">
@@ -196,7 +197,11 @@ export const Strategies = (
               </div>
               <div className="col-span-1">
                 <div className="float-right">
-                  <ETHIcon />
+                  {
+                    selectedMarket?.name == 'ETH' ?
+                      <ETHIcon /> :
+                      <BTCIcon />
+                  }
                 </div>
               </div>
             </div>

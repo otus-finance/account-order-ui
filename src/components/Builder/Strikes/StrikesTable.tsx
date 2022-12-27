@@ -1,11 +1,14 @@
 import React from 'react'
-import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../utils/formatters/numbers'
+import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../../utils/formatters/numbers'
 import { DebounceInput } from 'react-debounce-input';
-import { LyraStrike } from '../../queries/lyra/useLyra';
+import { LyraStrike } from '../../../queries/lyra/useLyra';
 import { motion, AnimatePresence } from "framer-motion"
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useBuilderContext } from '../../../context/BuilderContext';
 
-export const StrikesTable = ({ strikes, handleToggletrike, setStrikeSize }: { strikes: LyraStrike[], handleToggletrike: any, setStrikeSize: any }) => {
+export const StrikesTable = () => {
+
+  const { strikes, handleToggleSelectedStrike, handleUpdateQuote } = useBuilderContext();
 
   return <table className="min-w-full divide-y divide-zinc-700 ">
     <thead className="bg-zinc-800">
@@ -62,7 +65,7 @@ export const StrikesTable = ({ strikes, handleToggletrike, setStrikeSize }: { st
           return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={id}>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
               <XMarkIcon
-                onClick={() => handleToggletrike(strike, false)}
+                onClick={() => handleToggleSelectedStrike(strike, false)}
                 className="cursor-pointer block h-4 w-4 font-bold text-pink-700 rounded-2xl"
                 aria-hidden="true"
               />
@@ -95,7 +98,7 @@ export const StrikesTable = ({ strikes, handleToggletrike, setStrikeSize }: { st
                 debounceTimeout={300}
                 onChange={(e) => {
                   const value = e.target.value;
-                  setStrikeSize({ size: value ? value : '0', strike: strike });
+                  handleUpdateQuote({ size: value ? value : '0', strike: strike });
                 }}
                 className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' value={fromBigNumber(size)}
               />

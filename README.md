@@ -5,3 +5,11 @@ This is an app bootstrapped according to the [init.tips](https://init.tips) stac
 # Otus Finance Site
 
 # Otus Finance Backtest & Forward Testing Tool
+
+# Builder
+
+> Shorten url for Builder
+
+- Asset
+- Strikes (asset, size, optiontype, strikeid)
+- Twitter URL

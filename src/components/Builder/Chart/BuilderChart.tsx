@@ -11,8 +11,8 @@ import {
   ReferenceDot,
   ResponsiveContainer
 } from "recharts";
-import { PnlChartPoint } from "../../hooks/Builder";
-import { formatUSD, fromBigNumber } from "../../utils/formatters/numbers";
+import { PnlChartPoint } from "../../../hooks/BuilderChart";
+import { formatUSD } from "../../../utils/formatters/numbers";
 
 export const BuilderPNLChart = ({ currentPrice, data }: { currentPrice: number, data: PnlChartPoint[] | [] }) => {
 
