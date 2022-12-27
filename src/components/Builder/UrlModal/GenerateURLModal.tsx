@@ -36,7 +36,7 @@ export default function GenerateURLModal(
       })
     }, {
       onSuccess: async (data) => {
-        navigator.clipboard.writeText(data)
+        navigator.clipboard.writeText(`https://otus.finance/builder?strategy=${data}`)
       }
     })
   }
