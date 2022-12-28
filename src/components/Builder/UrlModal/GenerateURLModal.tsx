@@ -128,15 +128,13 @@ export default function GenerateURLModal(
 
                   </button>
                 </div>
-
-                <div className='className="inline-flex w-full justify-center rounded-2xl border border-emerald-700  hover:border-emerald-800 bg-zinc-900 p-2 col-span-3 font-semibold text-sm text-white text-center"'>
-
-                  {
-                    urlToCopy != '' ?
-                      urlToCopy :
-                      null
-                  }
-                </div>
+                {
+                  urlToCopy != '' ?
+                    <div className='inline-flex w-full justify-center rounded-2xl border border-emerald-700  hover:border-emerald-800 p-2 col-span-3 font-semibold text-sm text-white text-center mt-4'>
+                      {urlToCopy}
+                    </div> :
+                    null
+                }
 
               </Dialog.Panel>
             </Transition.Child>
