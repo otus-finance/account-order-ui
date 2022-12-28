@@ -17,7 +17,7 @@ export default function GenerateURLModal(
 
   const [twitter, setTwitter] = useState('');
   const [textCopied, setTextCopied] = useState(false);
-
+  const [error, setError] = useState('')
   const buildURL = trpc.useMutation('builder-id');
 
   const handleBuildURL = () => {
@@ -42,6 +42,7 @@ export default function GenerateURLModal(
           await navigator.clipboard.writeText(`https://otus.finance/builder/${data}`)
           setTextCopied(true);
         } catch (error) {
+          setError(error)
           setTextCopied(false);
         }
       }
@@ -123,7 +124,7 @@ export default function GenerateURLModal(
                     {
                       buildURL.isError ?
                         'Error' :
-                        ''
+                        error
                     }
 
 
