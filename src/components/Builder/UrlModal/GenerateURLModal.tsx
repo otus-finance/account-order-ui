@@ -112,7 +112,9 @@ export default function GenerateURLModal(
                           textCopied ?
                             'Copied to Clipboard' :
                             'Fail to copy to Clipboard' :
-                          'Error'
+                          buildURL.isError ?
+                            'Error' :
+                            ''
                     }
 
                   </button>
