@@ -105,17 +105,27 @@ export default function GenerateURLModal(
                     className="inline-flex w-full justify-center rounded-2xl border border-emerald-700  hover:border-emerald-800 bg-zinc-900 p-2 col-span-3 font-semibold text-sm text-white text-center"
                     onClick={handleBuildURL}
                   >
+
                     {
                       buildURL.isLoading ?
                         <Spinner /> :
-                        buildURL.isSuccess ?
-                          textCopied ?
-                            'Copied to Clipboard' :
-                            'Fail to copy to Clipboard' :
-                          buildURL.isError ?
-                            'Error' :
-                            ''
+                        null
                     }
+
+                    {
+                      buildURL.isSuccess ?
+                        textCopied ?
+                          'Copied to Clipboard' :
+                          'Fail to copy to Clipboard' :
+                        'Generate Url'
+                    }
+
+                    {
+                      buildURL.isError ?
+                        'Error' :
+                        ''
+                    }
+
 
                   </button>
                 </div>
