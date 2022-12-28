@@ -16,6 +16,8 @@ export default function GenerateURLModal(
   const { selectedMarket, selectedExpirationDate, strikes } = useBuilderContext();
 
   const [twitter, setTwitter] = useState('');
+  const [textCopied, setTextCopied] = useState(false);
+
   const buildURL = trpc.useMutation('builder-id');
 
   const handleBuildURL = () => {
@@ -36,7 +38,12 @@ export default function GenerateURLModal(
       })
     }, {
       onSuccess: async (data) => {
-        navigator.clipboard.writeText(`https://otus.finance/builder?strategy=${data}`)
+        try {
+          await navigator.clipboard.writeText(`https://otus.finance/builder/${data}`)
+          setTextCopied(true);
+        } catch (error) {
+          setTextCopied(false);
+        }
       }
     })
   }
@@ -101,7 +108,7 @@ export default function GenerateURLModal(
                     {
                       buildURL.isLoading ?
                         <Spinner /> :
-                        buildURL.isSuccess ?
+                        buildURL.isSuccess && textCopied ?
                           'Copied to Clipboard' :
                           'Generate URL'
                     }
