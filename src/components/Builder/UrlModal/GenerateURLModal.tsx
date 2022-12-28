@@ -42,7 +42,7 @@ export default function GenerateURLModal(
           await navigator.clipboard.writeText(`https://otus.finance/builder/${data}`)
           setTextCopied(true);
         } catch (error: any) {
-          setUrlToCopy(data)
+          setUrlToCopy(`https://otus.finance/builder/${data}`)
         }
       }
     })
