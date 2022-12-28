@@ -14,8 +14,8 @@ export const Strikes = () => {
   return <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
 
     {/* profit loss data */}
-    <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
-      <div className="col-span-1 grid grid-cols-3 gap-3 mt-6">
+    <div className="sm:col-start-1 sm:col-end-4 col-span-3">
+      <div className="sm:col-span-1 grid grid-cols-3 gap-3 mt-6">
 
         <div className="bg-zinc-800 p-4 pt-1">
           <span className="text-xs font-light text-zinc-100">{netCreditDebit && netCreditDebit > 0 ? 'Net Credit' : 'Net (Debit)'}</span>
@@ -47,7 +47,7 @@ export const Strikes = () => {
 
     </div>
 
-    <div className='col-span-6 '>
+    <div className='col-span-6 mt-2'>
       <div className="flex items-center pt-2 pb-2">
         <LyraIcon />
         <div className='pl-2 font-light text-xs uppercase'>
