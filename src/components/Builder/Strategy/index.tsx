@@ -8,7 +8,7 @@ export const Strategy = () => {
     <div className='font-bold'>
       Show me strategies if my bet is the market will be
       <span>
-        <div className='inline-block sm:pl-1 pr-2'>
+        <div className='inline-block pl-1 pr-2'>
           <SelectDirectionType />
         </div>
       </span>
