@@ -12,12 +12,10 @@ export const Strikes = () => {
   const {
     isBuildingNewStrategy,
     showStrikesSelect,
-    hasLoadedSharedStrategy,
     strikes,
     selectedMarket,
     selectedStrategy,
     selectedExpirationDate,
-    isSharedStrategy,
     positionPnl: { netCreditDebit, maxLoss, maxProfit },
     handleBuildNewStrategy
   } = useBuilderContext();
@@ -67,7 +65,7 @@ export const Strikes = () => {
       <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
 
         {
-          (selectedStrategy || isSharedStrategy) &&
+          selectedStrategy &&
           <div onClick={() => handleBuildNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
             {isBuildingNewStrategy ? 'Reset Strategy' : 'Use Strategy as Template'}
           </div>
@@ -104,7 +102,7 @@ export const Strikes = () => {
       <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
 
         {
-          ((selectedStrategy && isBuildingNewStrategy) || (hasLoadedSharedStrategy && isBuildingNewStrategy)) && strikes.length > 0 &&
+          (selectedStrategy && isBuildingNewStrategy) && strikes.length > 0 &&
           <div onClick={() => setGenerateURL(!generateURL)} className="cursor-pointer border border-orange-500  hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
             Share Strategy
           </div>

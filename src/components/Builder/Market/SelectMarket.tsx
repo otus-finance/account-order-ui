@@ -5,8 +5,12 @@ import { LyraBoard, LyraMarket } from '../../../queries/lyra/useLyra'
 import { useBuilderContext } from '../../../context/BuilderContext'
 import { Spinner } from '../../UI/Components/Spinner'
 
-export const LyraMarketOptions = () => {
-  const { markets, isMarketLoading, selectedMarket, handleSelectedMarket } = useBuilderContext();
+//   const { markets, isMarketLoading, selectedMarket, handleSelectedMarket } = useBuilderContext();
+
+export const LyraMarketOptions = (
+  { markets, isMarketLoading, selectedMarket, handleSelectedMarket }:
+    { markets: LyraMarket[] | null, isMarketLoading: boolean, selectedMarket: LyraMarket | null, handleSelectedMarket?: any }
+) => {
 
   return isMarketLoading ?
     <div className='mt-4'><Spinner /></div> :
@@ -21,7 +25,7 @@ export const LyraMarketOptions = () => {
             return <div
               key={index}
               onClick={() => {
-                handleSelectedMarket(market);
+                handleSelectedMarket && handleSelectedMarket(market);
               }}
               className={`col-span-1 p-1 border hover:border-emerald-700 sm:mr-4 mt-4 cursor-pointer ${selectedClass}`}>
               <div className="flex items-center p-1">

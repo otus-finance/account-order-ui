@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { StrategyDirection } from '../components/Builder/types';
 import { getStrikeQuote, LyraBoard, LyraMarket, LyraStrike, useLyra, useLyraMarket } from '../queries/lyra/useLyra';
@@ -11,7 +10,6 @@ import {
 } from '../reducers'
 import { fromBigNumber, toBN } from '../utils/formatters/numbers';
 import { extrensicValueFilter } from '../utils/formatters/optiontypes';
-import { trpc } from '../utils/trpc';
 
 export const useBuilder = () => {
   const [state, dispatch] = useReducer(
@@ -33,10 +31,7 @@ export const useBuilder = () => {
     positionPnl,
     isValid,
     isBuildingNewStrategy,
-    generateURL,
-    isSharedStrategy,
-    errorInSharedStrategy,
-    hasLoadedSharedStrategy
+    generateURL
   } = state;
 
   const lyra = useLyra();
@@ -56,90 +51,6 @@ export const useBuilder = () => {
       })
     }
   }, [data, isLoading])
-
-  const { query: { strategy } } = useRouter();
-
-  const [strategyHash, setStrategyHash] = useState<string>('');
-
-  useEffect(() => {
-    if (strategy != null && !Array.isArray(strategy)) {
-      setStrategyHash(strategy);
-    }
-  }, [strategy]);
-
-  const buildURL = trpc.useQuery(['builder-id', { hash: strategyHash }], {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-    staleTime: 1000 * 60 * 60 * 24,
-  });
-
-  const buildSharedStrategy = useCallback(async () => {
-    if (buildURL.data && markets && markets.length > 0 && !isSharedStrategy && !hasLoadedSharedStrategy) {
-      const { asset, board, expiry, generatedBy, hash, trades } = buildURL.data;
-      const _selectedMarket = markets.find((market) => market.name == asset);
-
-      if (!_selectedMarket) {
-        dispatch({
-          type: 'SET_ERROR_SHARED_BUILD',
-          errorInSharedStrategy: true
-        } as BuilderAction)
-        return;
-      }; // dispatch something else
-
-      const _expirationDate = _selectedMarket?.liveBoards.find(liveBoard => liveBoard.id == board);
-
-      if (_expirationDate && _expirationDate.strikesByOptionTypes) {
-        const strikesOptionTypesKeys = Object.keys(_expirationDate.strikesByOptionTypes);
-
-        const _strikesByIdAndOptionTypes: Record<number, Record<number, LyraStrike>> =
-          strikesOptionTypesKeys.reduce((accum: any, key: any) => {
-            const strikes = _expirationDate.strikesByOptionTypes ? _expirationDate.strikesByOptionTypes[key] : [];
-            const strikesById = strikes?.reduce((accum: any, strike: LyraStrike) => {
-              return { ...accum, [strike.id]: strike }
-            }, {})
-            return { ...accum, [parseInt(key)]: strikesById }
-          }, {})
-
-        const _strikes: any = await Promise.all(trades.map(async trade => {
-          const { optionType, strikeId, size } = trade;
-          const strikesByOptionTypesMapping = _strikesByIdAndOptionTypes[optionType];
-          if (strikesByOptionTypesMapping) {
-            const strike = strikesByOptionTypesMapping[strikeId];
-            if (strike) {
-              const { isCall, quote: { isBuy } } = strike;
-              const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size.toString()), strike)
-              return { ...strike, quote: _quote }
-            }
-          }
-        }))
-
-        dispatch({
-          type: 'SET_SHARED_BUILD',
-          strikes: _strikes,
-          selectedMarket: _selectedMarket,
-          selectedExpirationDate: _expirationDate,
-          isSharedStrategy: true,
-          errorInSharedStrategy: false,
-          isValid: true,
-          hasLoadedSharedStrategy: true
-        } as BuilderAction)
-
-      } else {
-        dispatch({
-          type: 'SET_ERROR_SHARED_BUILD',
-          errorInSharedStrategy: true
-        } as BuilderAction)
-      }
-
-    }
-  }, [buildURL, markets, lyra, isSharedStrategy, hasLoadedSharedStrategy])
-
-  useEffect(() => {
-    if (buildURL.data && markets && markets.length > 0 && !isSharedStrategy) {
-      buildSharedStrategy()
-    }
-  }, [buildSharedStrategy, buildURL, markets, isSharedStrategy])
 
   useEffect(() => {
     if (strikes.length > 0) {
@@ -186,7 +97,7 @@ export const useBuilder = () => {
     }
 
 
-  }, [selectedStrategy, isSharedStrategy, hasLoadedSharedStrategy, isBuildingNewStrategy])
+  }, [selectedStrategy, isBuildingNewStrategy])
 
   useEffect(() => {
     if (selectedMarket) {
@@ -234,8 +145,7 @@ export const useBuilder = () => {
       type: 'SET_STRATEGY',
       selectedStrategy: strategy,
       strikes: [],
-      isBuildingNewStrategy: false,
-      hasLoadedSharedStrategy: false
+      isBuildingNewStrategy: false
     })
   }
 
@@ -371,9 +281,6 @@ export const useBuilder = () => {
     isValid,
     isBuildingNewStrategy,
     generateURL,
-    isSharedStrategy,
-    errorInSharedStrategy,
-    hasLoadedSharedStrategy,
     handleSelectedMarket,
     handleSelectedExpirationDate,
     handleSelectedDirectionTypes,

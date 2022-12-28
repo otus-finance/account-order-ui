@@ -17,9 +17,6 @@ export type BuilderProviderState = {
   isValid: boolean
   isBuildingNewStrategy: boolean
   generateURL: any | null | undefined  // probably move this to state component management
-  isSharedStrategy: boolean,
-  errorInSharedStrategy: boolean,
-  hasLoadedSharedStrategy: boolean,
   handleSelectedMarket: (any: LyraMarket | null) => void
   handleSelectedDirectionTypes: (any: StrategyDirection[]) => void
   handleSelectedExpirationDate: (any: LyraBoard | null) => void
@@ -50,9 +47,6 @@ export const builderInitialState: BuilderProviderState = {
   isValid: false,
   isBuildingNewStrategy: false,
   generateURL: false,
-  isSharedStrategy: false,
-  errorInSharedStrategy: false,
-  hasLoadedSharedStrategy: false,
   handleSelectedMarket: (any) => void any,
   handleSelectedDirectionTypes: (any) => void any,
   handleSelectedExpirationDate: (any) => void any,
@@ -109,7 +103,6 @@ export type BuilderAction =
     selectedStrategy: BuilderProviderState['selectedStrategy'],
     strikes: BuilderProviderState['strikes'],
     isBuildingNewStrategy: BuilderProviderState['isBuildingNewStrategy'],
-    hasLoadedSharedStrategy: BuilderProviderState['hasLoadedSharedStrategy'],
   }
   | {
     type: 'SET_STRIKES',
@@ -126,25 +119,10 @@ export type BuilderAction =
     currentPrice: BuilderProviderState['currentPrice'],
     selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
     selectedStrategy: BuilderProviderState['selectedStrategy'],
-    isSharedStrategy: BuilderProviderState['isSharedStrategy']
   }
   | {
     type: 'SET_POSITION_PNL',
     positionPnl: BuilderProviderState['positionPnl']
-  }
-  | {
-    type: 'SET_SHARED_BUILD'
-    strikes: BuilderProviderState['strikes'],
-    selectedMarket: BuilderProviderState['selectedMarket'],
-    selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
-    isSharedStrategy: BuilderProviderState['isSharedStrategy'],
-    errorInSharedStrategy: BuilderProviderState['errorInSharedStrategy'],
-    isValid: BuilderProviderState['isValid'],
-    hasLoadedSharedStrategy: BuilderProviderState['hasLoadedSharedStrategy'],
-  }
-  | {
-    type: 'SET_ERROR_SHARED_BUILD'
-    errorInSharedStrategy: BuilderProviderState['errorInSharedStrategy'],
   }
   | {
     type: 'RESET_BUILDER_PROVIDER',
@@ -185,7 +163,6 @@ export function builderReducer(
         selectedStrategy: action.selectedStrategy,
         strikes: action.strikes,
         isBuildingNewStrategy: action.isBuildingNewStrategy,
-        hasLoadedSharedStrategy: action.hasLoadedSharedStrategy
       }
     case 'SET_STRIKES':
       return { ...state, strikes: action.strikes, isValid: action.isValid }
@@ -198,26 +175,9 @@ export function builderReducer(
         currentPrice: action.currentPrice,
         selectedExpirationDate: action.selectedExpirationDate,
         selectedStrategy: action.selectedStrategy,
-        isSharedStrategy: action.isSharedStrategy
       }
     case 'SET_POSITION_PNL':
       return { ...state, positionPnl: action.positionPnl }
-    case 'SET_SHARED_BUILD':
-      return {
-        ...state,
-        strikes: action.strikes,
-        selectedMarket: action.selectedMarket,
-        selectedExpirationDate: action.selectedExpirationDate,
-        isSharedStrategy: action.isSharedStrategy,
-        errorInSharedStrategy: action.errorInSharedStrategy,
-        isValid: action.isValid,
-        hasLoadedSharedStrategy: action.hasLoadedSharedStrategy
-      }
-    case 'SET_ERROR_SHARED_BUILD':
-      return {
-        ...state,
-        errorInSharedStrategy: action.errorInSharedStrategy
-      }
     case 'RESET_BUILDER_PROVIDER':
       return builderInitialState
     default:
