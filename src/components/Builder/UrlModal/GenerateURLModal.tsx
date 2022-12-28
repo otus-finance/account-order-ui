@@ -108,9 +108,11 @@ export default function GenerateURLModal(
                     {
                       buildURL.isLoading ?
                         <Spinner /> :
-                        buildURL.isSuccess && textCopied ?
-                          'Copied to Clipboard' :
-                          'Generate URL'
+                        buildURL.isSuccess ?
+                          textCopied ?
+                            'Copied to Clipboard' :
+                            'Fail to copy to Clipboard' :
+                          'Error'
                     }
 
                   </button>
