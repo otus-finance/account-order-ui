@@ -41,8 +41,8 @@ export default function GenerateURLModal(
         try {
           await navigator.clipboard.writeText(`https://otus.finance/builder/${data}`)
           setTextCopied(true);
-        } catch (error) {
-          setError(error)
+        } catch (error: any) {
+          setError(JSON.stringify(error))
           setTextCopied(false);
         }
       }
