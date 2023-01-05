@@ -32,6 +32,8 @@ const Builder: NextPage = () => {
 
 const SharedOptionsBuild = () => {
   const {
+    errorReason,
+    errorInSharedStrategy,
     markets,
     isMarketLoading,
     selectedMarket,
@@ -39,8 +41,6 @@ const SharedOptionsBuild = () => {
   } = useSharedBuild();
 
   return <div className="grid sm:grid-cols-3 grid-cols-1 sm:gap-8">
-    {/* build your own strategy
-    markets | shared by twitter */}
 
     <div className='col-span-3 sm:col-span-1'>
       <LyraMarketOptions markets={markets} isMarketLoading={isMarketLoading} selectedMarket={selectedMarket} />
@@ -57,9 +57,18 @@ const SharedOptionsBuild = () => {
       </Link>
     </div>
 
-    <Strikes />
+    {
+      errorInSharedStrategy ?
+        <div className='col-span-3 sm:col-span-3 border border-zinc-700 p-4'>
+          <span className='text-sm text-rose-500'>Error in shared strategy: {errorReason}</span>
+        </div> :
+        <>
+          <Strikes />
+          <Chart />
+        </>
 
-    <Chart />
+    }
+
 
 
   </div>
@@ -70,7 +79,6 @@ const Chart = () => {
   const { selectedMarket, strikes, currentPrice, errorInSharedStrategy } = useSharedBuild();
 
   const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
-  console.log({ chartData, currentPrice, selectedMarket, strikes })
   return <div className='col-span-3 sm:col-span-3 mt-8'>
     {
       chartData.length > 0 && currentPrice > 0 && !errorInSharedStrategy && <BuilderPNLChart currentPrice={currentPrice} data={chartData} />

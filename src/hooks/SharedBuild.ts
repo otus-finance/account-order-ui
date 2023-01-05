@@ -20,6 +20,8 @@ export const useSharedBuild = () => {
   );
 
   const {
+    errorInSharedStrategy,
+    errorReason,
     markets,
     isMarketLoading,
     selectedMarket,
@@ -48,7 +50,6 @@ export const useSharedBuild = () => {
   }, [data, isLoading])
 
   const { query: { id: strategy } } = useRouter();
-  console.log({ strategy })
 
   const [strategyHash, setStrategyHash] = useState<string>('');
 
@@ -67,8 +68,17 @@ export const useSharedBuild = () => {
   });
 
   const buildSharedStrategy = useCallback(async () => {
-    if (buildURL.data && markets && markets.length > 0 && strikes.length == 0) {
-      const { asset, board, expiry, generatedBy, hash, trades } = buildURL.data;
+    if (buildURL.data && markets && markets.length > 0 && strikes.length == 0 && !errorInSharedStrategy) {
+      const { asset, board, expiry, trades } = buildURL.data;
+
+      if (expiry * 1000 > Date.now()) {
+        dispatch({
+          type: 'SET_IS_EXPIRED',
+          errorReason: 'Expired Board',
+          errorInSharedStrategy: true
+        })
+      }
+
       const _selectedMarket = markets.find((market) => market.name == asset);
 
       if (!_selectedMarket) {
@@ -106,25 +116,33 @@ export const useSharedBuild = () => {
           }
         }))
 
-        dispatch({
-          type: 'SET_SHARED_BUILD',
-          strikes: _strikes,
-          selectedMarket: _selectedMarket,
-          selectedExpirationDate: _expirationDate,
-        } as SharedBuildAction)
+        if (!_strikes.some((_strike: any) => _strike == undefined)) {
+          dispatch({
+            type: 'SET_SHARED_BUILD',
+            strikes: _strikes,
+            selectedMarket: _selectedMarket,
+            selectedExpirationDate: _expirationDate,
+          } as SharedBuildAction)
+        } else {
+          dispatch({
+            type: 'SET_ERROR_SHARED_BUILD',
+            errorReason: 'Invalid Strikes',
+            errorInSharedStrategy: true
+          } as SharedBuildAction)
+        }
 
       } else {
         dispatch({
           type: 'SET_ERROR_SHARED_BUILD',
+          errorReason: 'Market Not Found',
           errorInSharedStrategy: true
         } as SharedBuildAction)
       }
     }
-  }, [buildURL, markets, lyra, strikes])
+  }, [buildURL, markets, lyra, strikes, errorInSharedStrategy])
 
   useEffect(() => {
     if (selectedMarket) {
-      console.log({ selectedMarket })
       dispatch({
         type: 'SET_CURRENT_PRICE',
         currentPrice: fromBigNumber(selectedMarket.spotPrice),
@@ -133,10 +151,10 @@ export const useSharedBuild = () => {
   }, [selectedMarket])
 
   useEffect(() => {
-    if (buildURL.data && markets && markets.length > 0 && strikes.length == 0) {
+    if (buildURL.data && markets && markets.length > 0 && strikes.length == 0 && !errorInSharedStrategy) {
       buildSharedStrategy()
     }
-  }, [buildSharedStrategy, buildURL, markets, strikes])
+  }, [buildSharedStrategy, buildURL, markets, strikes, errorInSharedStrategy])
 
 
   useEffect(() => {
@@ -145,6 +163,7 @@ export const useSharedBuild = () => {
 
       // net credit 
       const creditDebit = strikes.reduce((accum: any, strike: any) => {
+
         const { quote: { size, isBuy, pricePerOption } } = strike;
         const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
 
@@ -163,6 +182,8 @@ export const useSharedBuild = () => {
   }, [strikes])
 
   return {
+    errorInSharedStrategy,
+    errorReason,
     markets,
     isMarketLoading,
     selectedMarket,

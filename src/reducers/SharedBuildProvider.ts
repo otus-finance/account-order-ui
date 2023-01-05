@@ -10,6 +10,7 @@ export type SharedBuildProviderState = {
   selectedExpirationDate: LyraBoard | null
   strikes: LyraStrike[]
   positionPnl: any | null | undefined // netcreditdebit max profit max loss
+  errorReason: string
   currentPrice: number
 }
 
@@ -25,6 +26,7 @@ export const sharedBuildInitialState: SharedBuildProviderState = {
     maxLoss: 0,
     maxPorfit: 0
   },
+  errorReason: '',
   currentPrice: 0
 }
 
@@ -54,7 +56,13 @@ export type SharedBuildAction =
   }
   | {
     type: 'SET_ERROR_SHARED_BUILD'
-    errorInSharedStrategy: SharedBuildProviderState['errorInSharedStrategy'],
+    errorReason: SharedBuildProviderState['errorReason'],
+    errorInSharedStrategy: SharedBuildProviderState['errorInSharedStrategy']
+  }
+  | {
+    type: 'SET_IS_EXPIRED'
+    errorReason: SharedBuildProviderState['errorReason'],
+    errorInSharedStrategy: SharedBuildProviderState['errorInSharedStrategy']
   }
   | {
     type: 'RESET_BUILDER_PROVIDER',
@@ -84,6 +92,13 @@ export function sharedBuildReducer(
     case 'SET_ERROR_SHARED_BUILD':
       return {
         ...state,
+        errorReason: action.errorReason,
+        errorInSharedStrategy: action.errorInSharedStrategy
+      }
+    case 'SET_IS_EXPIRED':
+      return {
+        ...state,
+        errorReason: action.errorReason,
         errorInSharedStrategy: action.errorInSharedStrategy
       }
     case 'RESET_BUILDER_PROVIDER':

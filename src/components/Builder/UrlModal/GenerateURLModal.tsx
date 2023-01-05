@@ -102,7 +102,7 @@ export default function GenerateURLModal(
                   <button
                     type="button"
                     disabled={(selectedExpirationDate == null || selectedMarket == null) || buildURL.isSuccess}
-                    className="inline-flex w-full justify-center rounded-2xl border border-emerald-700  hover:border-emerald-800 bg-zinc-900 p-2 col-span-3 font-semibold text-sm text-white text-center"
+                    className="inline-flex w-full justify-center rounded-2xl border border-emerald-700  hover:border-emerald-800 bg-zinc-900 p-2 col-span-3 font-normal text-sm text-white text-center"
                     onClick={handleBuildURL}
                   >
 

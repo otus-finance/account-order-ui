@@ -6,9 +6,8 @@ import { useSharedBuildContext } from '../../context/SharedBuildContext';
 
 export const StrikesTable = () => {
 
-  // const { strikes, handleToggleSelectedStrike, handleUpdateQuote } = useBuilderContext();
+  const { strikes, errorInSharedStrategy } = useSharedBuildContext();
 
-  const { strikes } = useSharedBuildContext();
   return <table className="min-w-full divide-y divide-zinc-700 ">
     <thead className="bg-zinc-800">
       <tr>
