@@ -42,8 +42,7 @@ const Home: NextPage = () => {
 
             <h1 className="text-4xl font-sans font-semibold text-white sm:text-5xl sm:leading-[56px] lg:pr-14">
               <span className="relative inline-block">
-                <div>Decentralized,</div>
-                <div>Community </div>
+                <div>The Community </div>
                 <div>Managed Vaults</div>
                 <div>Marketplace</div>
               </span>
