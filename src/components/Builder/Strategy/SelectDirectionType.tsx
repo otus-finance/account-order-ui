@@ -4,7 +4,6 @@ import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
 import { StrategyDirection, StrategyType } from '../types'
 import { useBuilderContext } from '../../../context/BuilderContext'
 
-
 const DirectionType: StrategyDirection[] = [
   {
     id: StrategyType.Bearish,

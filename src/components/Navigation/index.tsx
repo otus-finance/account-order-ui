@@ -27,7 +27,7 @@ export const Navigation = () => {
     <Disclosure as="nav" className="border-b border-zinc-800 bg-zinc-900">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-2 sm:px-4 md:px-6 lg:px-8">
             <div className="flex h-20 items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -45,6 +45,15 @@ export const Navigation = () => {
                         Builder
                       </a>
                     </Link>
+
+                    <a href="https://discord.gg/Z5VKakW3RW" className='p-3 text-sm font-normal text-white hover:text-zinc-500'>
+                      Discord
+                    </a>
+
+                    <a href="https://www.twitter.com/otusfinance" className='p-3 text-sm font-normal text-white hover:text-zinc-500'>
+                      Twitter
+                    </a>
+
                   </div>
                 </div>
 
@@ -53,7 +62,7 @@ export const Navigation = () => {
                 <div className="flex items-center">
                   <button
                     disabled={false}
-                    className={`items-center text-white text-xs font-normal px-8 py-2 border border-emerald-600 bg-zinc-800 shadow-sm hover:bg-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
+                    className={`items-center text-white text-xs font-normal px-8 py-2 border border-emerald-600 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
                     onClick={() => router.push('https://app.otus.finance')}
                   >
                     Launch App
@@ -62,7 +71,7 @@ export const Navigation = () => {
               </div>
               <div className="-mr-2 flex sm:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="text-white inline-flex items-center justify-center rounded-md p-2 hover:bg-zinc-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button className="text-white inline-flex items-center justify-center rounded-md p-2 hover:bg-zinc-800 hover:text-white focus:outline-none focus:ring-1 focus:ring-inset focus:ring-zinc-200">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon
@@ -90,11 +99,11 @@ export const Navigation = () => {
                 </Disclosure.Button>
               </Link>
             </div>
-            <div className="border-gray border-t pt-4 pb-3">
+            <div className="border-zinc-800 border-t pt-4 pb-3">
               <div className="flex items-center px-5">
                 <button
                   disabled={false}
-                  className={`w-full items-center text-white text-xs font-normal px-8 py-2 border border-zinc-700 bg-zinc-800 shadow-sm hover:bg-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
+                  className={`w-full items-center text-white text-xs font-normal px-8 py-2 border border-zinc-700 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
                   onClick={() => router.push('https://app.otus.finance')}
                 >
                   Launch App
