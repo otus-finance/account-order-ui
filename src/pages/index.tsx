@@ -119,7 +119,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-8 gap-4 sm:gap-12 py-8 pb-14">
+        <div className="grid grid-cols-8 gap-4 sm:gap-12 py-8 pb-16">
           <div className="col-span-4 sm:col-span-3">
             <div>
               <h1 className="text-white text-xl font-semibold">Available On</h1>
