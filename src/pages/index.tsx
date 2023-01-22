@@ -36,7 +36,7 @@ const Home: NextPage = () => {
 
       <div className="relative mx-auto max-w-6xl sm:pt-10">
 
-        <div className="grid grid-cols-2 gap-12 pt-8 md:pt-32 pb-16">
+        <div className="grid grid-cols-2 gap-12 pt-16 md:pt-32 pb-16">
 
           <div className="col-span-2 md:col-span-1">
 
