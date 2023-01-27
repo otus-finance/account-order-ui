@@ -62,7 +62,7 @@ export const Navigation = () => {
                 <div className="flex items-center">
                   <button
                     disabled={false}
-                    className={`items-center text-white text-xs font-normal px-8 py-2 border border-emerald-600 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
+                    className={`items-center text-white text-sm font-normal px-8 py-2 rounded-md bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2`}
                     onClick={() => router.push('https://app.otus.finance')}
                   >
                     Launch App
@@ -120,7 +120,7 @@ export const Navigation = () => {
               <div className="flex items-center px-5">
                 <button
                   disabled={false}
-                  className={`w-full items-center text-white text-xs font-normal px-8 py-2 border border-zinc-700 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-sm`}
+                  className={`w-full items-center text-white text-md font-normal px-8 py-2 border-zinc-700 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-md`}
                   onClick={() => router.push('https://app.otus.finance')}
                 >
                   Launch App
