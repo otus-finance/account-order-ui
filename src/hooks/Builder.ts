@@ -34,7 +34,6 @@ export const useBuilder = () => {
     generateURL
   } = state;
 
-  const lyra = useLyra();
   const { data, isLoading } = useLyraMarket();
 
   useEffect(() => {
@@ -150,12 +149,12 @@ export const useBuilder = () => {
   }
 
   const handleUpdateQuote = async (strikeUpdate: { strike: LyraStrike, size: string }) => {
-    if (lyra && strikeUpdate && strikes.length > 0) {
+    if (strikeUpdate && strikes.length > 0) {
       const { strike: _strike, size } = strikeUpdate;
       const { id: _id, quote, isCall } = _strike;
       const { isBuy } = quote;
 
-      const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
+      const _quote = await getStrikeQuote(isCall, isBuy, toBN(size), _strike);
 
       const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
         const { id } = strike;
