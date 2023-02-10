@@ -97,10 +97,10 @@ export const StrikesTable = () => {
                 minLength={1}
                 debounceTimeout={300}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  handleUpdateQuote({ size: value ? value : '0', strike: strike });
+                  const value = parseInt(e.target.value);
+                  handleUpdateQuote({ size: value.toString(), strike: strike });
                 }}
-                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' value={fromBigNumber(size)}
+                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' min={1} value={fromBigNumber(size)}
               />
             </td>
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
