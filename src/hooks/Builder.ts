@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer } from 'react'
 import { StrategyDirection } from '../components/Builder/types';
-import { getStrikeQuote, LyraBoard, LyraMarket, LyraStrike, useLyra, useLyraMarket } from '../queries/lyra/useLyra';
+import { getStrikeQuote, LyraBoard, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
 
 import {
   BuilderProviderState,
