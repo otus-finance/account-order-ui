@@ -31,7 +31,6 @@ export const useSharedBuild = () => {
     positionPnl
   } = state;
 
-  const lyra = useLyra();
   const { data, isLoading } = useLyraMarket();
 
   useEffect(() => {
@@ -110,7 +109,7 @@ export const useSharedBuild = () => {
             const strike = strikesByOptionTypesMapping[strikeId];
             if (strike) {
               const { isCall, quote: { isBuy } } = strike;
-              const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size.toString()), strike)
+              const _quote = await getStrikeQuote(isCall, isBuy, toBN(size.toString()), strike)
               return { ...strike, quote: _quote }
             }
           }
@@ -139,7 +138,7 @@ export const useSharedBuild = () => {
         } as SharedBuildAction)
       }
     }
-  }, [buildURL, markets, lyra, strikes, errorInSharedStrategy])
+  }, [buildURL, markets, strikes, errorInSharedStrategy])
 
   useEffect(() => {
     if (selectedMarket) {
