@@ -1,5 +1,4 @@
 import { Strategy, StrategyDirection } from "../components/Builder/types"
-import { PnlChartPoint } from "../hooks/BuilderChart"
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
 export type BuilderProviderState = {
