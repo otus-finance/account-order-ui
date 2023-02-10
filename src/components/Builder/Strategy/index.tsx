@@ -20,7 +20,7 @@ export const Strategy = () => {
       </span>
     </div>
 
-    <div className="flex flex-nowrap overflow-x-scroll mt-8 gap-6">
+    <div className="flex flex-nowrap overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 mt-8 gap-6">
       <Strategies />
     </div>
   </div>
