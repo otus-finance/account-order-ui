@@ -69,8 +69,6 @@ const SharedOptionsBuild = () => {
 
     }
 
-
-
   </div>
 }
 

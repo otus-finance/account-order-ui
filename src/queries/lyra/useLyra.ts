@@ -6,6 +6,8 @@ import { MONTHS } from '../../constants/dates'
 import { ONE_BN } from '../../constants/bn'
 import { fromBigNumber } from '../../utils/formatters/numbers'
 
+const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
+
 export type LyraStrike = {
   market: string
   selectedOptionType: number | 0
@@ -38,14 +40,11 @@ export type LyraMarket = {
   liveBoards: LyraBoard[]
 }
 
-export const useLyra = () => {
-  const provider = new ethers.providers.InfuraProvider(10, process.env.INFURA_ID);
-  const lyra = new Lyra({ provider });
-  return lyra;
-}
+const provider = new ethers.providers.InfuraProvider(10, INFURA_ID_PUBLIC);
+
+const lyra = new Lyra({ provider })
 
 export const useLyraMarket = () => {
-  const lyra = useLyra();
 
   return useQuery<LyraMarket[] | null>(
     ['lyraMarkets'],
@@ -62,7 +61,6 @@ export const useLyraMarket = () => {
 }
 
 export const useStrikes = (market: string, strikeId: number) => {
-  const lyra = useLyra();
 
   return useQuery<Strike>(
     ['lyraStrike', market, strikeId],
@@ -79,12 +77,12 @@ export const useStrikes = (market: string, strikeId: number) => {
 }
 
 export const getStrikeQuote = async (
-  lyra: Lyra,
   isCall: boolean,
   isBuy: boolean,
   size: BigNumber,
   trade: LyraStrike
 ) => {
+
   const marketName = trade.market
   const _strike = await lyra.strike(marketName, trade.id)
   const quote = await _strike.quote(isCall, isBuy, size)
@@ -132,8 +130,6 @@ const parseMarketBoards = (boards: Board[]): LyraBoard[] => {
 }
 
 const sortStrikes = (a: Strike, b: Strike) => {
-  // return a.strikePrice.lte(b.strikePrice) ? 1 : 0
-
   return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice)
 }
 

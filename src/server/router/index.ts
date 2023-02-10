@@ -3,10 +3,8 @@ import { createRouter } from "./context";
 import superjson from "superjson";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import fs from "fs";
-import { request } from "http";
 import { formatChartData } from "../../utils/charting";
-import { nanoid, customAlphabet } from 'nanoid'
+import { customAlphabet } from 'nanoid'
 
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

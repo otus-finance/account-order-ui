@@ -43,14 +43,14 @@ export const ticks = (asset: string, price: number) => {
 }
 
 export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
-  const pnl = strikes.reduce((accum: number, strike: any) => {
+  const pnl = strikes.reduce((totalPnl: number, strike: any) => {
     const { strikePrice, isCall, quote: { size, isBuy, pricePerOption } } = strike;
 
     const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
     const totalSumOfFees = isBuy ? -totalPriceForOptions : totalPriceForOptions;
     const profitAtTick = calculateProfitAtTick(totalSumOfFees, strikePrice, tick, isCall, isBuy, fromBigNumber(size)) // can be negative or positive dependent on option type
-    accum = accum + profitAtTick;
-    return accum;
+    totalPnl = totalPnl + profitAtTick;
+    return totalPnl;
   }, 0);
   return pnl;
 }
