@@ -1,9 +1,11 @@
+import Lyra, { Chain } from "@lyrafinance/lyra-js"
 import { Strategy, StrategyDirection } from "../components/Builder/types"
-import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
+import { LyraBoard, LyraChain, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
 export type BuilderProviderState = {
-  showStrikesSelect: boolean,
-  isPrebuilt: boolean
+  lyra: Lyra | null
+  showStrikesSelect: boolean
+  selectedChain: LyraChain | null
   markets: LyraMarket[] | null
   isMarketLoading: any | null | undefined
   currentPrice: number
@@ -15,21 +17,22 @@ export type BuilderProviderState = {
   positionPnl: any | null | undefined // netcreditdebit max profit max loss
   isValid: boolean
   isBuildingNewStrategy: boolean
-  generateURL: any | null | undefined  // probably move this to state component management
+  setLyra: (lyra: Lyra) => void
+  handleSelectedChain: (any: LyraChain) => void
   handleSelectedMarket: (any: LyraMarket | null) => void
   handleSelectedDirectionTypes: (any: StrategyDirection[]) => void
   handleSelectedExpirationDate: (any: LyraBoard | null) => void
   handleSelectedStrategy: (any: Strategy | null) => void
   handleUpdateQuote: (any: any) => void
   handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void
-  handleUpdatePrebuilt: (any: boolean) => void
   handleBuildNewStrategy: (any: boolean) => void
 }
 
 
 export const builderInitialState: BuilderProviderState = {
+  lyra: null,
   showStrikesSelect: false,
-  isPrebuilt: true,
+  selectedChain: null,
   markets: [],
   isMarketLoading: false,
   currentPrice: 0,
@@ -45,14 +48,14 @@ export const builderInitialState: BuilderProviderState = {
   },
   isValid: false,
   isBuildingNewStrategy: false,
-  generateURL: false,
+  setLyra: (any) => void any,
+  handleSelectedChain: (any) => void any,
   handleSelectedMarket: (any) => void any,
   handleSelectedDirectionTypes: (any) => void any,
   handleSelectedExpirationDate: (any) => void any,
   handleSelectedStrategy: (any) => void any,
   handleUpdateQuote: (any) => void any,
   handleToggleSelectedStrike: (any) => void any,
-  handleUpdatePrebuilt: (any) => void any,
   handleBuildNewStrategy: (any) => void any
 }
 
@@ -66,8 +69,16 @@ export type BuilderAction =
     showStrikesSelect: BuilderProviderState['showStrikesSelect']
   }
   | {
-    type: 'SET_PREBUILT',
-    isPrebuilt: BuilderProviderState['isPrebuilt']
+    type: 'SET_CHAIN',
+    selectedChain: BuilderProviderState['selectedChain'],
+    selectedMarket: BuilderProviderState['selectedMarket'],
+    strikes: BuilderProviderState['strikes'],
+    selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
+    selectedStrategy: BuilderProviderState['selectedStrategy'],
+  }
+  | {
+    type: 'SET_LYRA',
+    lyra: BuilderProviderState['lyra'],
   }
   | {
     type: 'SET_MARKETS_LOADING',
@@ -136,8 +147,18 @@ export function builderReducer(
       return { ...state, isBuildingNewStrategy: action.isBuildingNewStrategy }
     case 'SET_STRIKES_SELECT_SHOW':
       return { ...state, showStrikesSelect: action.showStrikesSelect }
-    case 'SET_PREBUILT':
-      return { ...state, isPrebuilt: action.isPrebuilt }
+    case 'SET_CHAIN':
+      return {
+        ...state, selectedChain: action.selectedChain,
+        selectedMarket: action.selectedMarket,
+        strikes: action.strikes,
+        selectedExpirationDate: action.selectedExpirationDate,
+        selectedStrategy: action.selectedStrategy,
+      }
+    case 'SET_LYRA':
+      return {
+        ...state, lyra: action.lyra
+      }
     case 'SET_MARKETS':
       return { ...state, markets: action.markets, isMarketLoading: action.isMarketLoading }
     case 'SET_MARKETS_LOADING':

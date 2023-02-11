@@ -1,6 +1,8 @@
+import Lyra, { Chain } from '@lyrafinance/lyra-js';
+import { ethers } from 'ethers';
 import { useCallback, useEffect, useReducer } from 'react'
 import { StrategyDirection } from '../components/Builder/types';
-import { getStrikeQuote, LyraBoard, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
+import { getStrikeQuote, LyraBoard, LyraChain, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
 
 import {
   BuilderProviderState,
@@ -11,6 +13,18 @@ import {
 import { fromBigNumber, toBN } from '../utils/formatters/numbers';
 import { extrensicValueFilter } from '../utils/formatters/optiontypes';
 
+const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
+const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
+const optimismUrl = `https://optimism-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
+
+const getLyra = async (chain: LyraChain) => {
+  const url = chain.name === Chain.Optimism ? optimismUrl : arbitrumUrl;
+  const provider = new ethers.providers.JsonRpcProvider(url);
+  await provider.getNetwork()
+  {/* @ts-ignore  different types in JsonRpcProvider in lyra-js */ }
+  return new Lyra({ provider });
+}
+
 export const useBuilder = () => {
   const [state, dispatch] = useReducer(
     builderReducer,
@@ -18,8 +32,9 @@ export const useBuilder = () => {
   );
 
   const {
+    lyra,
+    selectedChain,
     showStrikesSelect,
-    isPrebuilt,
     markets,
     isMarketLoading,
     currentPrice,
@@ -31,12 +46,61 @@ export const useBuilder = () => {
     positionPnl,
     isValid,
     isBuildingNewStrategy,
-    generateURL
   } = state;
 
-  const { data, isLoading } = useLyraMarket();
+  const handleSelectedChain = (chain: LyraChain) => {
+    dispatch({
+      type: 'SET_CHAIN',
+      selectedChain: chain,
+      selectedMarket: null,
+      strikes: [],
+      selectedExpirationDate: null,
+      selectedStrategy: null,
+    })
+  }
+
+  const updateSelectedChain = useCallback(async () => {
+
+    if (selectedChain) {
+      const lyra = await getLyra(selectedChain);
+      dispatch({
+        type: 'SET_LYRA',
+        lyra: lyra,
+      })
+    }
+  }, [selectedChain])
 
   useEffect(() => {
+    try {
+      updateSelectedChain()
+    } catch (error) {
+      console.warn({ error })
+    }
+
+  }, [updateSelectedChain, selectedChain])
+
+  useEffect(() => {
+    if (!selectedChain) {
+      dispatch({
+        type: 'SET_CHAIN',
+        selectedChain: {
+          name: Chain.Optimism,
+          chainId: 10
+        },
+        selectedMarket: null,
+        strikes: [],
+        selectedExpirationDate: null,
+        selectedStrategy: null,
+      })
+    }
+
+  }, [selectedChain])
+
+
+  const { data, isLoading } = useLyraMarket(lyra);
+
+  useEffect(() => {
+    console.log({ data })
     if (data && data?.length > 0) {
       dispatch({
         type: 'SET_MARKETS',
@@ -154,7 +218,7 @@ export const useBuilder = () => {
       const { id: _id, quote, isCall } = _strike;
       const { isBuy } = quote;
 
-      const _quote = await getStrikeQuote(isCall, isBuy, toBN(size), _strike);
+      const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
 
       const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
         const { id } = strike;
@@ -239,10 +303,7 @@ export const useBuilder = () => {
         type: 'SET_STRIKES',
         strikes: strikes.filter((_strike: LyraStrike) => {
 
-          // return id !== selectedStrike.id;
-
           const { id, isCall, quote: { isBuy } } = _strike
-          // return selectedStrike.id !== id && selectedStrike.quote.isBuy != isBuy && !selectedStrike.isCall == isCall
           if (selectedStrike.id !== id) {
             return true;
           } else if (selectedStrike.quote.isBuy !== isBuy) {
@@ -258,16 +319,10 @@ export const useBuilder = () => {
     }
   }
 
-  const handleUpdatePrebuilt = (_isPrebuilt: boolean) => {
-    dispatch({
-      type: 'SET_PREBUILT',
-      isPrebuilt: _isPrebuilt
-    })
-  }
-
   return {
+    lyra,
+    selectedChain,
     showStrikesSelect,
-    isPrebuilt,
     markets,
     isMarketLoading,
     currentPrice,
@@ -279,14 +334,13 @@ export const useBuilder = () => {
     positionPnl,
     isValid,
     isBuildingNewStrategy,
-    generateURL,
+    handleSelectedChain,
     handleSelectedMarket,
     handleSelectedExpirationDate,
     handleSelectedDirectionTypes,
     handleToggleSelectedStrike,
     handleSelectedStrategy,
     handleUpdateQuote,
-    handleUpdatePrebuilt,
     handleBuildNewStrategy
   } as BuilderProviderState
 }

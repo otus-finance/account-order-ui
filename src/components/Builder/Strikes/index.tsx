@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useBuilderContext } from '../../../context/BuilderContext';
 import { formatUSD } from '../../../utils/formatters/numbers';
 import LyraIcon from '../../UI/Icons/Color/LYRA';
-import GenerateURLModal from '../UrlModal/GenerateURLModal';
 import { SelectStrikesTable } from './SelectStrikesTable';
 import { StrikesTable } from './StrikesTable';
 import { motion } from "framer-motion"
@@ -19,9 +18,6 @@ export const Strikes = () => {
     positionPnl: { netCreditDebit, maxLoss, maxProfit },
     handleBuildNewStrategy
   } = useBuilderContext();
-
-  // const [isBuildingNewStrategy, setIsBuildingNewStrategy] = useState<boolean>(false);
-  const [generateURL, setGenerateURL] = useState<boolean>(false);
 
   return <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
 
@@ -75,7 +71,6 @@ export const Strikes = () => {
 
     </div>
 
-
     {
       showStrikesSelect &&
       <motion.div className='col-span-6' animate={showStrikesSelect ? "open" : "closed"} variants={{
@@ -97,28 +92,6 @@ export const Strikes = () => {
       <StrikesTable />
     </div>
 
-    <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
-
-      <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
-
-        {
-          (selectedStrategy && isBuildingNewStrategy) && strikes.length > 0 &&
-          <div onClick={() => setGenerateURL(!generateURL)} className="cursor-pointer border border-orange-500  hover:bg-zinc-800 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
-            Share Strategy
-          </div>
-        }
-
-        {
-          selectedMarket && selectedExpirationDate && strikes.length > 0 &&
-          <GenerateURLModal
-            open={generateURL}
-            setOpen={setGenerateURL}
-          />
-        }
-
-      </div>
-
-    </div>
   </div>
 }
 

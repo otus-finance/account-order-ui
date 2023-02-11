@@ -1,12 +1,15 @@
 import { useQuery } from 'react-query'
 
-import Lyra, { Board, Market, MarketLiquidity, Quote, Strike } from '@lyrafinance/lyra-js'
+import Lyra, { Board, Market, MarketLiquidity, Chain, Quote, Strike } from '@lyrafinance/lyra-js'
 import { BigNumber, ethers } from 'ethers'
 import { MONTHS } from '../../constants/dates'
 import { ONE_BN } from '../../constants/bn'
 import { fromBigNumber } from '../../utils/formatters/numbers'
 
-const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
+export type LyraChain = {
+  name: Chain
+  chainId: number
+}
 
 export type LyraStrike = {
   market: string
@@ -40,15 +43,12 @@ export type LyraMarket = {
   liveBoards: LyraBoard[]
 }
 
-const provider = new ethers.providers.InfuraProvider(10, INFURA_ID_PUBLIC);
-
-const lyra = new Lyra({ provider })
-
-export const useLyraMarket = () => {
+export const useLyraMarket = (lyra: Lyra | null) => {
 
   return useQuery<LyraMarket[] | null>(
-    ['lyraMarkets'],
+    ['lyraMarkets', lyra?.chainId],
     async () => {
+      if (!lyra) return null;
       const response: Market[] = await lyra.markets()
       return response ? parseMarketResponse(response) : null
     },
@@ -60,29 +60,13 @@ export const useLyraMarket = () => {
   )
 }
 
-export const useStrikes = (market: string, strikeId: number) => {
-
-  return useQuery<Strike>(
-    ['lyraStrike', market, strikeId],
-    async () => {
-      const response = await lyra.strike(market, strikeId)
-      return response
-    },
-    {
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-}
-
 export const getStrikeQuote = async (
+  lyra: Lyra,
   isCall: boolean,
   isBuy: boolean,
   size: BigNumber,
   trade: LyraStrike
 ) => {
-
   const marketName = trade.market
   const _strike = await lyra.strike(marketName, trade.id)
   const quote = await _strike.quote(isCall, isBuy, size)

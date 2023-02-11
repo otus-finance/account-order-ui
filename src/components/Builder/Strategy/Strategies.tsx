@@ -198,10 +198,11 @@ export const Strategies = () => {
               <div className="col-span-1">
                 <div className="float-right">
                   {
-                    selectedMarket?.name == 'ETH' ?
+                    selectedMarket?.name == 'sETH-sUSD' || selectedMarket?.name == 'ETH-USDC' ?
                       <ETHIcon /> :
                       <BTCIcon />
                   }
+
                 </div>
               </div>
             </div>

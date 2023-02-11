@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { LyraStrike } from '../queries/lyra/useLyra'
-import { formatProfitAndLostAtTicks, ticks } from '../utils/charting'
+import { formatProfitAndLostAtTicks, ticks, Ticks } from '../utils/charting'
 
-type Ticks = {
-  [key: number]: { profitAtTick: number }
-}
+
 
 export type PnlChartPoint = {
   name: number

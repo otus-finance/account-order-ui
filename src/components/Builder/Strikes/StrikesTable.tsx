@@ -8,7 +8,7 @@ import { useBuilderContext } from '../../../context/BuilderContext';
 
 export const StrikesTable = () => {
 
-  const { strikes, handleToggleSelectedStrike, handleUpdateQuote } = useBuilderContext();
+  const { selectedChain, strikes, handleToggleSelectedStrike, handleUpdateQuote } = useBuilderContext();
 
   return <table className="min-w-full divide-y divide-zinc-700 ">
     <thead className="bg-zinc-800">
@@ -107,7 +107,7 @@ export const StrikesTable = () => {
               {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
             </td>
             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
-              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/s${market.toLowerCase()}-susd?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/${selectedChain?.name}/${market.toLowerCase()}?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                 <span className='content-center'>
                   {formatUSD(fromBigNumber(pricePerOption))}
                 </span>

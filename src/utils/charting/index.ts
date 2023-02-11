@@ -1,26 +1,8 @@
 import { BigNumber } from "ethers";
 import { fromBigNumber } from "../formatters/numbers";
 
-type Ticks = {
+export type Ticks = {
   [key: number]: { profitAtTick: number }
-}
-
-export const formatChartData = (asset: string, priceOfAsset: number, builtTrades: any[]) => {
-  const _ticks = ticks(asset, priceOfAsset);
-  const _combo: Ticks = _ticks.reduce((accum: any, tick: any) => {
-    const profitAtTick = formatProfitAndLostAtTicks(tick, builtTrades);
-    return { ...accum, [tick]: { profitAtTick } }
-  }, {})
-  const _chartData = _ticks.map((tick, index) => {
-    {/* @ts-ignore */ }
-    const profitAtTick = _combo[tick].profitAtTick;
-    return {
-      name: index,
-      asset_price: Math.floor(tick),
-      combo_payoff: profitAtTick
-    }
-  })
-  return _chartData;
 }
 
 export const ticks = (asset: string, price: number) => {

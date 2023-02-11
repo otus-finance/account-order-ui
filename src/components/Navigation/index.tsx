@@ -40,20 +40,11 @@ export const Navigation = () => {
 
                 <div className="hidden sm:ml-16 sm:block">
                   <div className="flex space-x-4">
-                    <Link href="/builder">
-                      <a className={linkStyle('/builder', router.pathname)}>
+                    <Link href="/">
+                      <a className={linkStyle('/', router.pathname)}>
                         Options Trade Builder
                       </a>
                     </Link>
-
-                    <a href="https://discord.gg/Z5VKakW3RW" className='p-3 text-sm font-normal text-white hover:text-zinc-500'>
-                      Discord
-                    </a>
-
-                    <a href="https://www.twitter.com/otusfinance" className='p-3 text-sm font-normal text-white hover:text-zinc-500'>
-                      Twitter
-                    </a>
-
                   </div>
                 </div>
 
