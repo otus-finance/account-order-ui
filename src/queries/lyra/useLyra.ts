@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import Lyra, { Board, Market, MarketLiquidity, Chain, Quote, Strike } from '@lyrafinance/lyra-js'
+import Lyra, { Board, Market, Chain, Quote, Strike } from '@lyrafinance/lyra-js'
 import { BigNumber, ethers } from 'ethers'
 import { MONTHS } from '../../constants/dates'
 import { ONE_BN } from '../../constants/bn'
@@ -39,7 +39,7 @@ export type LyraMarket = {
   tvl: BigNumber
   openInterest: BigNumber
   spotPrice: BigNumber
-  liquidity: MarketLiquidity
+  liquidity: any
   liveBoards: LyraBoard[]
 }
 
