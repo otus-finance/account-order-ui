@@ -1,5 +1,5 @@
 import Lyra, { Chain } from "@lyrafinance/lyra-js"
-import { Strategy, StrategyDirection } from "../components/Builder/types"
+import { Strategy, StrategyDirection } from "../utils/types"
 import { LyraBoard, LyraChain, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
 export type BuilderProviderState = {

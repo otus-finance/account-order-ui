@@ -1,7 +1,7 @@
 import Lyra, { Chain } from '@lyrafinance/lyra-js';
 import { ethers } from 'ethers';
 import { useCallback, useEffect, useReducer } from 'react'
-import { StrategyDirection } from '../components/Builder/types';
+import { StrategyDirection } from '../utils/types';
 import { getStrikeQuote, LyraBoard, LyraChain, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
 
 import {

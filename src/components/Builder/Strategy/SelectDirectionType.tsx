@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
-import { StrategyDirection, StrategyType } from '../types'
+import { StrategyDirection, StrategyType } from '../../../utils/types'
 import { useBuilderContext } from '../../../context/BuilderContext'
 
 const DirectionType: StrategyDirection[] = [

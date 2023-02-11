@@ -1,8 +1,8 @@
-# Otus website
+# Otus Options Calculator
 
 ## Getting started
 
-Create your own `.env.local` file with:
+Create your own `.env` file from `.env.example` with your own Infura ID
 
 Fill in the missing keys and run `yarn install` to install the dependencies.
 

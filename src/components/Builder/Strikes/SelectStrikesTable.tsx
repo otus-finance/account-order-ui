@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../../utils/formatters/numbers'
 import { LyraStrike } from '../../../queries/lyra/useLyra';
-import { OptionType } from '../types';
+import { OptionType } from '../../../utils/types';
 import { motion, AnimatePresence } from "framer-motion"
 import { calculateOptionType } from '../../../utils/formatters/optiontypes';
 import { useBuilderContext } from '../../../context/BuilderContext';

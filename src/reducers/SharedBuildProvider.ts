@@ -1,4 +1,4 @@
-import { Strategy, StrategyDirection } from "../components/Builder/types"
+import { Strategy, StrategyDirection } from "../utils/types"
 import { PnlChartPoint } from "../hooks/BuilderChart"
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
