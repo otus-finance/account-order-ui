@@ -212,7 +212,7 @@ export const useBuilder = () => {
   }
 
   const handleUpdateQuote = async (strikeUpdate: { strike: LyraStrike, size: string }) => {
-    if (strikeUpdate && strikes.length > 0) {
+    if (strikeUpdate && strikes.length > 0 && lyra) {
       const { strike: _strike, size } = strikeUpdate;
       const { id: _id, quote, isCall } = _strike;
       const { isBuy } = quote;
