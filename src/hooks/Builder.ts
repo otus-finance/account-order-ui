@@ -116,10 +116,27 @@ export const useBuilder = () => {
 
   useEffect(() => {
     if (strikes.length > 0) {
+
       // max profit 
+      const profit = strikes.reduce((total: number, strike: any) => {
+        const { quote: { size, isBuy, pricePerOption } } = strike;
+        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+
+        return isBuy ? Infinity : total + totalPriceForOptions;
+      }, 0)
+
+      // max loss 
+      const loss = strikes.reduce((total: number, strike: any) => {
+        const { quote, quote: { size, isBuy, pricePerOption, strikePrice } } = strike;
+        console.log({ quote })
+        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+        const totalCollateralUsed = fromBigNumber(strikePrice) * fromBigNumber(size);
+        return isBuy ? total + totalPriceForOptions : totalCollateralUsed;
+      }, 0)
+
 
       // net credit 
-      const creditDebit = strikes.reduce((accum: any, strike: any) => {
+      const creditDebit = strikes.reduce((accum: number, strike: any) => {
         const { quote: { size, isBuy, pricePerOption } } = strike;
         const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
 
@@ -130,8 +147,8 @@ export const useBuilder = () => {
         type: 'SET_POSITION_PNL',
         positionPnl: {
           netCreditDebit: creditDebit,
-          maxLoss: 0,
-          maxProfit: 0
+          maxLoss: loss,
+          maxProfit: profit
         },
       } as BuilderAction)
     }
