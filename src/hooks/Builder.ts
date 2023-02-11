@@ -117,39 +117,25 @@ export const useBuilder = () => {
   useEffect(() => {
     if (strikes.length > 0) {
 
-      // max profit 
-      const profit = strikes.reduce((total: number, strike: any) => {
-        const { quote: { size, isBuy, pricePerOption } } = strike;
-        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+      const pnl = strikes.reduce((accum: any, strike: any) => {
+        const { quote: { size, isBuy, pricePerOption, strikePrice } } = strike;
 
-        return isBuy ? Infinity : total + totalPriceForOptions;
-      }, 0)
-
-      // max loss 
-      const loss = strikes.reduce((total: number, strike: any) => {
-        const { quote, quote: { size, isBuy, pricePerOption, strikePrice } } = strike;
-        console.log({ quote })
         const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
         const totalCollateralUsed = fromBigNumber(strikePrice) * fromBigNumber(size);
-        return isBuy ? total + totalPriceForOptions : totalCollateralUsed;
-      }, 0)
 
+        const { netCreditDebit, maxLoss, maxProfit } = accum;
 
-      // net credit 
-      const creditDebit = strikes.reduce((accum: number, strike: any) => {
-        const { quote: { size, isBuy, pricePerOption } } = strike;
-        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+        const _netCreditDebit = isBuy ? netCreditDebit - totalPriceForOptions : netCreditDebit + totalPriceForOptions;
+        const _maxLoss = isBuy ? maxLoss + totalPriceForOptions : totalCollateralUsed;
+        const _maxProfit = isBuy ? Infinity : maxProfit + totalPriceForOptions;
 
-        return isBuy ? accum - totalPriceForOptions : accum + totalPriceForOptions;
-      }, 0);
+        return { netCreditDebit: _netCreditDebit, maxLoss: _maxLoss, maxProfit: _maxProfit }
+      }, { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 });
+
 
       dispatch({
         type: 'SET_POSITION_PNL',
-        positionPnl: {
-          netCreditDebit: creditDebit,
-          maxLoss: loss,
-          maxProfit: profit
-        },
+        positionPnl: pnl,
       } as BuilderAction)
     }
   }, [strikes])
