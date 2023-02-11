@@ -10,13 +10,6 @@ export const MarketDetails = () => {
   return <div className='grid grid-cols-1 divider '>
 
     <div className="grid grid-cols-2 border-b border-zinc-700 p-2">
-      <div className='font-light text-xs uppercase'>Open Interest</div>
-      <div className='font-bold text-xs uppercase'>
-        <strong>{selectedMarket && selectedMarket.openInterest && formatUSD(fromBigNumber(selectedMarket.openInterest))}  </strong>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-2 border-b border-zinc-700 p-2">
 
       <div className='font-light text-xs uppercase'>Free Liquidity</div>
 
