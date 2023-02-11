@@ -58,27 +58,6 @@ export const Strategies = () => {
               </div>
             </div>
 
-            <div className="col-span-1 mt-4">
-              {/* <ResponsiveContainer>
-            </ResponsiveContainer> */}
-            </div>
-
-            {/* <div className="col-span-1 grid grid-cols-3 gap-3  mt-6">
-              <div className="bg-zinc-800 p-2 pt-1">
-                <span className="text-xs font-light text-zinc-100">Net Credit</span>
-                <div>
-                  <span className="text-base font-semibold text-white">$7.12</span>
-
-                </div>
-              </div>
-              <div className="bg-zinc-800 p-2 pt-1">
-                <span className="text-xs font-light text-zinc-100">Max Loss</span>
-              </div>
-              <div className="bg-zinc-800 p-2 pt-1">
-                <span className="text-xs font-light text-zinc-100">Max Profit</span>
-              </div>
-            </div> */}
-
             <div className="col-span-1 mt-6 mb-6">
               <p className="text-xs leading-5 font-normal">{description}</p>
             </div>

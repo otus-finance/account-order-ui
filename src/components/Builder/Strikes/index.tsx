@@ -35,9 +35,9 @@ export const Strikes = () => {
         </div>
 
         <div className="bg-zinc-800 p-4 pt-1">
-          <span className="text-xs font-light text-zinc-100">Max Loss</span>
+          <span className="text-xs font-light text-pink-700">Max Loss</span>
           <div className='pt-4'>
-            <span className="text-base font-semibold text-white">
+            <span className="text-base font-semibold text-pink-700">
               {maxLoss && formatUSD(maxLoss)}
             </span>
           </div>
