@@ -56,6 +56,7 @@ export const useBuilder = () => {
       strikes: [],
       selectedExpirationDate: null,
       selectedStrategy: null,
+      positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 }
     })
   }
 
@@ -91,6 +92,7 @@ export const useBuilder = () => {
         strikes: [],
         selectedExpirationDate: null,
         selectedStrategy: null,
+        positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 }
       })
     }
 
@@ -187,6 +189,7 @@ export const useBuilder = () => {
       strikes: [],
       selectedExpirationDate: null,
       selectedStrategy: null,
+      positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 }
     } as BuilderAction)
 
   }
@@ -201,7 +204,8 @@ export const useBuilder = () => {
   const handleSelectedExpirationDate = (expirationDate: LyraBoard) => {
     dispatch({
       type: 'SET_EXPIRATION_DATE',
-      selectedExpirationDate: expirationDate
+      selectedExpirationDate: expirationDate,
+      positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 }
     } as BuilderAction)
   }
 

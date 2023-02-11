@@ -73,6 +73,7 @@ export type BuilderAction =
     strikes: BuilderProviderState['strikes'],
     selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
     selectedStrategy: BuilderProviderState['selectedStrategy'],
+    positionPnl: BuilderProviderState['positionPnl']
   }
   | {
     type: 'SET_LYRA',
@@ -93,6 +94,7 @@ export type BuilderAction =
     strikes: BuilderProviderState['strikes'],
     selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
     selectedStrategy: BuilderProviderState['selectedStrategy'],
+    positionPnl: BuilderProviderState['positionPnl']
   }
   | {
     type: 'SET_CURRENT_PRICE',
@@ -105,6 +107,7 @@ export type BuilderAction =
   | {
     type: 'SET_EXPIRATION_DATE',
     selectedExpirationDate: BuilderProviderState['selectedExpirationDate'],
+    positionPnl: BuilderProviderState['positionPnl']
   }
   | {
     type: 'SET_STRATEGY',
@@ -152,6 +155,7 @@ export function builderReducer(
         strikes: action.strikes,
         selectedExpirationDate: action.selectedExpirationDate,
         selectedStrategy: action.selectedStrategy,
+        positionPnl: action.positionPnl
       }
     case 'SET_LYRA':
       return {
@@ -168,13 +172,16 @@ export function builderReducer(
         strikes: action.strikes,
         selectedExpirationDate: action.selectedExpirationDate,
         selectedStrategy: action.selectedStrategy,
+        positionPnl: action.positionPnl
       }
     case 'SET_CURRENT_PRICE':
       return { ...state, currentPrice: action.currentPrice }
     case 'SET_DIRECTION_TYPES':
       return { ...state, selectedDirectionTypes: action.selectedDirectionTypes }
     case 'SET_EXPIRATION_DATE':
-      return { ...state, selectedExpirationDate: action.selectedExpirationDate }
+      return {
+        ...state, selectedExpirationDate: action.selectedExpirationDate, positionPnl: action.positionPnl
+      }
     case 'SET_STRATEGY':
       return {
         ...state,
