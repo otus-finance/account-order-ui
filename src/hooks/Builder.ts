@@ -100,7 +100,6 @@ export const useBuilder = () => {
   const { data, isLoading } = useLyraMarket(lyra);
 
   useEffect(() => {
-    console.log({ data })
     if (data && data?.length > 0) {
       dispatch({
         type: 'SET_MARKETS',
