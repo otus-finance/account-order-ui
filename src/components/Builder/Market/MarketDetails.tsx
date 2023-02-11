@@ -21,7 +21,7 @@ export const MarketDetails = () => {
       <div className='font-light text-xs uppercase'>Free Liquidity</div>
 
       <div className='font-light text-xs uppercase'>
-        <strong>{selectedMarket && selectedMarket.liquidity.freeLiquidity && formatUSD(fromBigNumber(selectedMarket.liquidity.freeLiquidity))}  </strong>
+        <strong>{selectedMarket && selectedMarket.liquidity && formatUSD(fromBigNumber(selectedMarket.liquidity))}  </strong>
       </div>
     </div>
     <div className="grid grid-cols-2 border-b border-zinc-700 p-2">

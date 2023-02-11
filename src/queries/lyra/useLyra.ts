@@ -39,7 +39,7 @@ export type LyraMarket = {
   tvl: BigNumber
   openInterest: BigNumber
   spotPrice: BigNumber
-  liquidity: any
+  liquidity: BigNumber
   liveBoards: LyraBoard[]
 }
 
@@ -80,8 +80,9 @@ const parseMarketResponse = async (
 ): Promise<LyraMarket[]> => {
   return await Promise.all(
     markets.map(async (market) => {
-      const { address, name, isPaused, tvl, liquidity, openInterest, spotPrice } = market
+      const { address, name, isPaused, openInterest, spotPrice } = market;
       const liveBoards: LyraBoard[] = parseMarketBoards(market.liveBoards())
+      const { tvl, freeLiquidity } = await market.liquidity();
 
       const liveBoardsWithQuotedStrikes: any[] = await parseBoardStrikes(
         liveBoards
@@ -93,7 +94,7 @@ const parseMarketResponse = async (
         tvl,
         openInterest,
         spotPrice,
-        liquidity,
+        liquidity: freeLiquidity,
         liveBoards: liveBoardsWithQuotedStrikes,
       }
     })
