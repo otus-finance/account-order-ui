@@ -17,7 +17,6 @@ export type BuilderProviderState = {
   positionPnl: any | null | undefined // netcreditdebit max profit max loss
   isValid: boolean
   isBuildingNewStrategy: boolean
-  setLyra: (lyra: Lyra) => void
   handleSelectedChain: (any: LyraChain) => void
   handleSelectedMarket: (any: LyraMarket | null) => void
   handleSelectedDirectionTypes: (any: StrategyDirection[]) => void
@@ -48,7 +47,6 @@ export const builderInitialState: BuilderProviderState = {
   },
   isValid: false,
   isBuildingNewStrategy: false,
-  setLyra: (any) => void any,
   handleSelectedChain: (any) => void any,
   handleSelectedMarket: (any) => void any,
   handleSelectedDirectionTypes: (any) => void any,
