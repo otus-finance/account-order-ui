@@ -82,29 +82,13 @@ export const Navigation = () => {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              <Link href="/builder">
+              <Link href="/">
                 <Disclosure.Button
-                  className={linkStyleMobile('/builder', router.pathname)}
+                  className={linkStyleMobile('/', router.pathname)}
                 >
                   Options Trade Builder
                 </Disclosure.Button>
               </Link>
-
-              <a href="https://discord.gg/Z5VKakW3RW">
-                <Disclosure.Button
-                  className={linkStyleMobile('/builder', router.pathname)}
-                >
-                  Discord
-                </Disclosure.Button>
-              </a>
-
-              <a href="https://discord.gg/Z5VKakW3RW">
-                <Disclosure.Button
-                  className={linkStyleMobile('/builder', router.pathname)}
-                >
-                  Twitter
-                </Disclosure.Button>
-              </a>
 
             </div>
             <div className="border-zinc-800 border-t pt-4 pb-3">
