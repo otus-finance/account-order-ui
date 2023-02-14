@@ -19,7 +19,7 @@ export const strategies: Strategy[] = [
     id: 0,
     name: 'Iron Condor',
     type: [StrategyType.Bearish, StrategyType.Bullish, StrategyType.Neutral], // bearish bullish volatile calm 
-    tags: [StrategyTag.LimitedLoss, StrategyTag.UnlimitedGain], // [limited loss, unlimited gain] limited gain unlimited loss 
+    tags: [StrategyTag.LimitedLoss, StrategyTag.LimitedGain], // [limited loss, unlimited gain] limited gain unlimited loss 
     description: 'A bet on volatility 🌊🤪. You are neutral of direction but require price/IV to increase. You are bullish on volatility.',
     trade: [
       { optionType: OptionType.LONG_PUT, priceAt: PriceAt.OTM, order: 0 },

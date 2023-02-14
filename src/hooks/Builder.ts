@@ -1,7 +1,7 @@
-import Lyra, { Chain } from '@lyrafinance/lyra-js';
+import Lyra, { Chain, OptionType } from '@lyrafinance/lyra-js';
 import { ethers } from 'ethers';
 import { useCallback, useEffect, useReducer } from 'react'
-import { StrategyDirection } from '../utils/types';
+import { Strategy, StrategyDirection } from '../utils/types';
 import { getStrikeQuote, LyraBoard, LyraChain, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
 
 import {
@@ -11,7 +11,7 @@ import {
   builderReducer,
 } from '../reducers'
 import { fromBigNumber, toBN } from '../utils/formatters/numbers';
-import { extrensicValueFilter } from '../utils/formatters/optiontypes';
+import { extrensicValueFilter, calculateOptionType } from '../utils/formatters/optiontypes';
 
 const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
 const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
@@ -119,8 +119,22 @@ export const useBuilder = () => {
   useEffect(() => {
     if (strikes.length > 0) {
 
+      let strikesByOptionTypes: Record<number, number> = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+      }
+
       const pnl = strikes.reduce((accum: any, strike: any) => {
-        const { quote: { size, isBuy, pricePerOption, strikePrice } } = strike;
+        const { quote, quote: { size, isBuy, isCall, pricePerOption, strikePrice } } = strike;
+        console.log({ quote });
+
+        let _optionType = calculateOptionType(isBuy, isCall);
+        let _strikeOptions = strikesByOptionTypes[_optionType] || 0;
+
+        strikesByOptionTypes[_optionType] = _strikeOptions + 1;
 
         const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
         const totalCollateralUsed = fromBigNumber(strikePrice) * fromBigNumber(size);
@@ -137,10 +151,10 @@ export const useBuilder = () => {
 
       dispatch({
         type: 'SET_POSITION_PNL',
-        positionPnl: pnl,
+        positionPnl: checkCappedPNL(pnl, strikesByOptionTypes),
       } as BuilderAction)
     }
-  }, [strikes])
+  }, [strikes, selectedStrategy]);
 
   useEffect(() => {
 
@@ -349,4 +363,28 @@ export const useBuilder = () => {
     handleUpdateQuote,
     handleBuildNewStrategy
   } as BuilderProviderState
+}
+
+
+const checkCappedPNL = (pnl: { netCreditDebit: number, maxLoss: number, maxProfit: number }, strikesByOptionTypes: Record<number, number>) => {
+
+  const { netCreditDebit, maxLoss, maxProfit } = pnl;
+
+  if (
+    maxProfit === Infinity &&
+    strikesByOptionTypes[3] && strikesByOptionTypes[3] > 0 &&
+    strikesByOptionTypes[0] == strikesByOptionTypes[3]
+  ) {
+    return { ...pnl, maxProfit: netCreditDebit }
+  }
+
+  if (
+    maxLoss === Infinity &&
+    strikesByOptionTypes[4] && strikesByOptionTypes[4] > 0 &&
+    strikesByOptionTypes[1] == strikesByOptionTypes[4]
+  ) {
+    return { ...pnl, maxProfit: netCreditDebit }
+  }
+
+  return pnl;
 }
