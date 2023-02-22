@@ -2,6 +2,8 @@
 import type { AppType } from "next/dist/shared/lib/utils";
 import * as Sentry from "@sentry/nextjs";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/globals.css";
 import Layout from "../components/UI/Layout";
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -50,6 +52,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <Layout>
           <Component {...pageProps} />
         </Layout >
+        <ToastContainer />
       </QueryClientProvider>
     </RainbowKitProvider>
   </WagmiConfig>;
