@@ -1,5 +1,7 @@
 // src/pages/_app.tsx
 import type { AppType } from "next/dist/shared/lib/utils";
+import * as Sentry from "@sentry/nextjs";
+
 import "../styles/globals.css";
 import Layout from "../components/UI/Layout";
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -12,6 +14,13 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { optimism, arbitrum } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
+
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+  tracesSampleRate: 1.0,
+});
 
 const { chains, provider } = configureChains(
   [optimism, arbitrum],
@@ -43,8 +52,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         </Layout >
       </QueryClientProvider>
     </RainbowKitProvider>
-  </WagmiConfig>
-    ;
+  </WagmiConfig>;
 };
 
 export default MyApp; 
