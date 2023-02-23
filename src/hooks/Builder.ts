@@ -116,48 +116,65 @@ export const useBuilder = () => {
     }
   }, [data, isLoading])
 
+  const calculateStrategyPNL = useCallback(() => {
+    let strikesByOptionTypes: Record<number, number> = {
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+    }
+
+    const pnl = strikes.reduce((accum: any, strike: any) => {
+      const { quote, quote: { size, isBuy, isCall, pricePerOption, strikePrice } } = strike;
+
+      let _optionType = calculateOptionType(isBuy, isCall);
+      let _strikeOptions = strikesByOptionTypes[_optionType] || 0;
+
+      strikesByOptionTypes[_optionType] = _strikeOptions + 1;
+
+      // max cost
+      const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+      // collateralrequired
+      const _strikeCollateralRequired = fromBigNumber(strikePrice) * fromBigNumber(size);
+
+      const { netCreditDebit, maxLoss, maxProfit, maxCost, collateralRequired } = accum;
+
+      const _netCreditDebit = isBuy ? netCreditDebit - _totalPriceForOptions : netCreditDebit + _totalPriceForOptions;
+      const _maxLoss = isBuy ? maxLoss + _totalPriceForOptions : _strikeCollateralRequired;
+      const _maxProfit = isBuy ? Infinity : maxProfit + _totalPriceForOptions;
+
+
+      const _maxCost = isBuy ? _totalPriceForOptions + maxCost : maxCost;
+      const _collateralRequired = isBuy ? collateralRequired : _strikeCollateralRequired + collateralRequired;
+
+      return {
+        netCreditDebit: _netCreditDebit,
+        maxLoss: _maxLoss,
+        maxProfit: _maxProfit,
+        collateralRequired: _collateralRequired, // min collateral required
+        maxCost: _maxCost // max cost buy put buy call
+      }
+    }, {
+      netCreditDebit: 0,
+      maxLoss: 0,
+      maxProfit: 0,
+      collateralRequired: 0, // min collateral required
+      maxCost: 0 // max cost buy put buy call
+    });
+
+    dispatch({
+      type: 'SET_POSITION_PNL',
+      positionPnl: checkCappedPNL(pnl, strikesByOptionTypes),
+    } as BuilderAction);
+
+  }, [strikes])
+
   useEffect(() => {
     if (strikes.length > 0) {
-
-      let strikesByOptionTypes: Record<number, number> = {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-      }
-
-      const pnl = strikes.reduce((accum: any, strike: any) => {
-        const { quote, quote: { size, isBuy, isCall, pricePerOption } } = strike;
-
-        let _optionType = calculateOptionType(isBuy, isCall);
-        let _strikeOptions = strikesByOptionTypes[_optionType] || 0;
-
-        strikesByOptionTypes[_optionType] = _strikeOptions + 1;
-
-        const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
-
-        const { netCreditDebit } = accum;
-
-        const _netCreditDebit = isBuy ? netCreditDebit - totalPriceForOptions : netCreditDebit + totalPriceForOptions;
-
-        return { netCreditDebit: _netCreditDebit }
-      }, { netCreditDebit: 0 });
-
-      dispatch({
-        type: 'SET_POSITION_PNL',
-        positionPnl: { ...positionPnl, ...pnl },
-      } as BuilderAction)
+      calculateStrategyPNL();
     }
-  }, [strikes, selectedStrategy]);
-
-  const handleSetPnl = (maxProfit: number, maxLoss: number) => {
-    // console.log({ maxProfit, maxLoss })
-    // dispatch({
-    //   type: 'SET_POSITION_PNL',
-    //   positionPnl: { ...positionPnl, maxProfit, maxLoss }
-    // } as BuilderAction)
-  }
+  }, [strikes, selectedStrategy, calculateStrategyPNL]);
 
   useEffect(() => {
 
@@ -370,7 +387,11 @@ export const useBuilder = () => {
 }
 
 
-const checkCappedPNL = (pnl: { netCreditDebit: number, maxLoss: number, maxProfit: number }, strikesByOptionTypes: Record<number, number>) => {
+const checkCappedPNL = (pnl: {
+  netCreditDebit: number,
+  maxLoss: number,
+  maxProfit: number,
+}, strikesByOptionTypes: Record<number, number>) => {
 
   const { netCreditDebit, maxLoss, maxProfit } = pnl;
 

@@ -19,7 +19,6 @@ export const StrikeTrade = () => {
 
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
-  console.log({ isConnected, chain });
 
   const { openConnectModal } = useConnectModal();
 
@@ -28,8 +27,16 @@ export const StrikeTrade = () => {
   const {
     selectedChain,
     lyra,
-    strikes
+    strikes,
+    positionPnl
   } = useBuilderContext();
+
+  const {
+    netCreditDebit,
+    collateralRequired,
+    totalFundsRequired,
+    maxCost
+  } = positionPnl
 
   const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useAccountContext();
 
@@ -135,22 +142,23 @@ export const StrikeTrade = () => {
       <div className='text-xs text-zinc-200 py-2'>
         Min. Premium Received
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>$10</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(netCreditDebit)}</div>
 
       <div className=' col-span-1 text-xs text-zinc-200  py-2'>
         Collateral Required
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>$1400</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(collateralRequired)}</div>
 
       <div className=' col-span-1 text-xs text-zinc-200  py-2'>
         Max Cost
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>$10</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(maxCost)}</div>
 
       <div className='text-xs text-zinc-200 py-4 border-t border-zinc-700'>
         Total Funds Required
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700 py-4'>$1410</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700 py-4'>{formatUSD(collateralRequired + maxCost)}</div>
+
 
       <div className='text-xs text-zinc-200 py-4 border-t border-zinc-700'>
         {quoteAsset?.symbol} Balance

@@ -41,9 +41,12 @@ export const builderInitialState: BuilderProviderState = {
   selectedStrategy: null,
   strikes: [],
   positionPnl: {
-    netCreditDebit: 0,
+    netCreditDebit: 0, // min. premium received
     maxLoss: 0,
-    maxPorfit: 0
+    maxPorfit: 0,
+    collateralRequired: 0, // min collateral required
+    totalFundsRequired: 0, // collateral required + cost
+    maxCost: 0 // max cost buy put buy call
   },
   isValid: false,
   isBuildingNewStrategy: false,
