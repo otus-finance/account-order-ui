@@ -163,7 +163,7 @@ export const StrikeTrade = () => {
       {/* is loading */}
       {
         isLoading &&
-        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           <Spinner />
         </div>
       }
@@ -171,7 +171,7 @@ export const StrikeTrade = () => {
       {/* insufficient balance */}
       {
         isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.balance.isZero() &&
-        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Insufficient Balance
         </div>
       }

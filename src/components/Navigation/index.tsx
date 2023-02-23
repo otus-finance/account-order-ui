@@ -4,7 +4,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import LogoIcon from '../UI/Icons/Logo/OTUS'
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Web3Button } from '../UI/Web3Button';
 
 const linkStyle = (path: string, activePath: string) => {
   if (path == activePath) {
@@ -53,7 +54,7 @@ export const Navigation = () => {
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex items-center">
 
-                  <ConnectButton />
+                  <Web3Button />
                 </div>
               </div>
               <div className="-mr-2 flex sm:hidden">
@@ -90,7 +91,7 @@ export const Navigation = () => {
             <div className="border-zinc-800 border-t pt-4 pb-3">
               <div className="flex items-center px-5">
 
-                <ConnectButton />
+                <Web3Button />
               </div>
             </div>
           </Disclosure.Panel>
