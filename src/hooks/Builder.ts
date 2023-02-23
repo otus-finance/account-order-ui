@@ -128,8 +128,7 @@ export const useBuilder = () => {
       }
 
       const pnl = strikes.reduce((accum: any, strike: any) => {
-        const { quote, quote: { size, isBuy, isCall, pricePerOption, strikePrice } } = strike;
-        console.log({ quote });
+        const { quote, quote: { size, isBuy, isCall, pricePerOption } } = strike;
 
         let _optionType = calculateOptionType(isBuy, isCall);
         let _strikeOptions = strikesByOptionTypes[_optionType] || 0;
@@ -137,24 +136,28 @@ export const useBuilder = () => {
         strikesByOptionTypes[_optionType] = _strikeOptions + 1;
 
         const totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
-        const totalCollateralUsed = fromBigNumber(strikePrice) * fromBigNumber(size);
 
-        const { netCreditDebit, maxLoss, maxProfit } = accum;
+        const { netCreditDebit } = accum;
 
         const _netCreditDebit = isBuy ? netCreditDebit - totalPriceForOptions : netCreditDebit + totalPriceForOptions;
-        const _maxLoss = isBuy ? maxLoss + totalPriceForOptions : totalCollateralUsed;
-        const _maxProfit = isBuy ? Infinity : maxProfit + totalPriceForOptions;
 
-        return { netCreditDebit: _netCreditDebit, maxLoss: _maxLoss, maxProfit: _maxProfit }
-      }, { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 });
-
+        return { netCreditDebit: _netCreditDebit }
+      }, { netCreditDebit: 0 });
 
       dispatch({
         type: 'SET_POSITION_PNL',
-        positionPnl: checkCappedPNL(pnl, strikesByOptionTypes),
+        positionPnl: { ...positionPnl, ...pnl },
       } as BuilderAction)
     }
   }, [strikes, selectedStrategy]);
+
+  const handleSetPnl = (maxProfit: number, maxLoss: number) => {
+    // console.log({ maxProfit, maxLoss })
+    // dispatch({
+    //   type: 'SET_POSITION_PNL',
+    //   positionPnl: { ...positionPnl, maxProfit, maxLoss }
+    // } as BuilderAction)
+  }
 
   useEffect(() => {
 
@@ -354,6 +357,7 @@ export const useBuilder = () => {
     positionPnl,
     isValid,
     isBuildingNewStrategy,
+    // handleSetPnl,
     handleSelectedChain,
     handleSelectedMarket,
     handleSelectedExpirationDate,
