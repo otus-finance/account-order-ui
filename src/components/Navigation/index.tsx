@@ -3,7 +3,7 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import LogoIcon from '../UI/Icons/OTUS'
+import LogoIcon from '../UI/Icons/Logo/OTUS'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const linkStyle = (path: string, activePath: string) => {

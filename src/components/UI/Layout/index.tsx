@@ -1,11 +1,11 @@
-import React, { ReactChild } from 'react'
+import React, { ReactElement } from 'react'
 
 import { Navigation } from "../../../components/Navigation";
 import { FooterNav } from "../../../components/Navigation/footer";
 
 
 interface Props {
-  children: ReactChild
+  children: ReactElement
 }
 
 export default function Layout({ children }: Props) {
