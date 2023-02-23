@@ -12,10 +12,12 @@ import Modal from '../../UI/Modal';
 import { StrikeTrade } from '../StrikeTrade';
 import ArbitrumIcon from '../../UI/Icons/Color/ONE';
 import OptimismIcon from '../../UI/Icons/Color/OP';
+import { AccountContextProvider } from '../../../context/AccountContext';
 
 export const Strikes = () => {
 
   const {
+    lyra,
     selectedChain,
     isBuildingNewStrategy,
     showStrikesSelect,
@@ -100,33 +102,42 @@ export const Strikes = () => {
       <StrikesTable />
     </div>
 
-    <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
 
-      <div className="col-span-1 grid grid-cols-3 gap-3 mt-3">
-        {
-          strikes.length > 0 &&
-          <div onClick={() => openTradeModal()} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
-            Trade
-          </div>
-        }
-      </div>
-    </div>
+    {
+      lyra && strikes[0] &&
+      <>
+        <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
 
-    <Modal
-      title={
-        <div className="flex items-center p-1">
-          {selectedChain?.name == Chain.Arbitrum && <ArbitrumIcon />}
-          {selectedChain?.name == Chain.Optimism && <OptimismIcon />}
-          <div className="pl-2">
-            <strong className='capitalize'>Confirm Trade</strong>
+          <div className="col-span-1 grid grid-cols-3 gap-3 mt-3">
+            {
+              strikes.length > 0 &&
+              <div onClick={() => openTradeModal()} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+                Trade
+              </div>
+            }
           </div>
         </div>
-      }
-      setOpen={setOpen}
-      open={open}
-    >
-      <StrikeTrade />
-    </Modal>
+
+        <Modal
+          title={
+            <div className="flex items-center p-1">
+              {selectedChain?.name == Chain.Arbitrum && <ArbitrumIcon />}
+              {selectedChain?.name == Chain.Optimism && <OptimismIcon />}
+              <div className="pl-2">
+                <strong className='capitalize'>Confirm Trade</strong>
+              </div>
+            </div>
+          }
+          setOpen={setOpen}
+          open={open}
+        >
+          <AccountContextProvider lyra={lyra} strike={strikes[0]}>
+            <StrikeTrade />
+          </AccountContextProvider>
+        </Modal>
+      </>
+    }
+
   </div>
 }
 

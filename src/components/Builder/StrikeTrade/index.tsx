@@ -13,6 +13,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { useLyraTrade } from '../../../hooks';
 import useTransaction from '../../../hooks/Transaction';
 import { Spinner } from '../../UI/Components/Spinner';
+import { useAccountContext } from '../../../context/AccountContext';
 
 export const StrikeTrade = () => {
 
@@ -30,7 +31,7 @@ export const StrikeTrade = () => {
     strikes
   } = useBuilderContext();
 
-  const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useLyraTrade(lyra, strikes[0] || null);
+  const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useAccountContext();
 
   const execute = useTransaction(lyra?.provider || null, lyra?.network || null);
 
