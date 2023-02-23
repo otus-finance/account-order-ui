@@ -30,7 +30,7 @@ export const StrikeTrade = () => {
     strikes
   } = useBuilderContext();
 
-  const { isLoading, quoteAsset, marketAddress, tradeInit, fetchMarketQuoteBalance } = useLyraTrade(lyra, strikes[0] || null);
+  const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useLyraTrade(lyra, strikes[0] || null);
 
   const execute = useTransaction(lyra?.provider || null, lyra?.network || null);
 
@@ -180,7 +180,7 @@ export const StrikeTrade = () => {
       {/* wallet connected / correct chain / quote asset not approved */}
       {
         isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleApproveQuote()} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={() => handleApproveQuote()} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 bg-zinc-900 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Approve Quote
         </div>
       }
@@ -188,7 +188,7 @@ export const StrikeTrade = () => {
       {/* wallet connected / correct chain / quote asset approved */}
       {
         isConnected && chain?.id === selectedChain?.chainId && quoteAsset && !quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border border-emerald-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border border-emerald-700 hover:border-emerald-700 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Execute Trade
         </div>
       }
@@ -197,7 +197,7 @@ export const StrikeTrade = () => {
       {
         isConnected && chain?.id != selectedChain?.chainId &&
 
-        <div onClick={openChainModal} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={openChainModal} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Wrong network
         </div>
       }
@@ -205,7 +205,7 @@ export const StrikeTrade = () => {
       {/* wallet not connected */}
       {
         !isLoading && !isConnected && openConnectModal &&
-        <div onClick={openConnectModal} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+        <div onClick={openConnectModal} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Connect Wallet
         </div>
       }
