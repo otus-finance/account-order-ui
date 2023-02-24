@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useBuilderContext } from '../../../context/BuilderContext';
 import { formatUSD, fromBigNumber } from '../../../utils/formatters/numbers';
 import { MAX_BN } from '../../../constants/bn';
@@ -34,11 +34,12 @@ export const StrikeTrade = () => {
   const {
     netCreditDebit,
     collateralRequired,
-    totalFundsRequired,
     maxCost
   } = positionPnl
 
   const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useAccountContext();
+
+  const [isLoadingTx, setLoadingTx] = useState(false);
 
   const execute = useTransaction(lyra?.provider || null, lyra?.network || null);
 
@@ -54,14 +55,21 @@ export const StrikeTrade = () => {
       return null;
     }
 
+    setLoadingTx(true);
+
     const tx = await tradeInit.approveQuote(address, MAX_BN);
+
     await execute(tx, {
       onComplete: async () => {
-        fetchMarketQuoteBalance()
+        fetchMarketQuoteBalance();
+        setLoadingTx(false);
         // logEvent(LogEvent.TradeApproveSuccess, {
         //   isBase: false,
         // })
       },
+      onError: async () => {
+        setLoadingTx(false);
+      }
     });
 
   }, [fetchMarketQuoteBalance, execute, address, tradeInit])
@@ -78,6 +86,8 @@ export const StrikeTrade = () => {
       return null;
     }
 
+    setLoadingTx(true);
+
     const trades = await Promise.all(strikes.map(async strike => {
       const { market, quote: { isCall, isBuy, size } } = strike;
       const _trade = await lyra.trade(address, market, strike.id, isCall, isBuy, size, 0.1 / 100);
@@ -89,7 +99,17 @@ export const StrikeTrade = () => {
     })
 
     await Promise.all(txs.map(async tx => {
-      await execute(tx, {});
+      await execute(tx, {
+        onComplete: async () => {
+          setLoadingTx(false);
+          // logEvent(LogEvent.TradeApproveSuccess, {
+          //   isBase: false,
+          // })
+        },
+        onError: async () => {
+          setLoadingTx(false);
+        }
+      });
     }))
 
   }, [strikes, lyra, address, execute])
@@ -189,7 +209,7 @@ export const StrikeTrade = () => {
       {/* wallet connected / correct chain / quote asset not approved */}
       {
         isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleApproveQuote()} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 bg-zinc-900 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
+        <div onClick={() => handleApproveQuote()} className="cursor-pointer border border-zinc-800 hover:bg-emerald-600 bg-zinc-900 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
           Approve Quote
         </div>
       }
@@ -197,8 +217,8 @@ export const StrikeTrade = () => {
       {/* wallet connected / correct chain / quote asset approved */}
       {
         isConnected && chain?.id === selectedChain?.chainId && quoteAsset && !quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border border-emerald-700 hover:border-emerald-700 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
-          Execute Trade
+        <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border border-emerald-700 hover:bg-emerald-600 bg-zinc-900 p-2 col-span-3 font-normal text-sm text-white text-center rounded-2xl">
+          {isLoadingTx ? <Spinner /> : 'Execute Trade'}
         </div>
       }
 
