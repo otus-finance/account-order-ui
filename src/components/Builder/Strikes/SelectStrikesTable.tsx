@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { calculateOptionType } from '../../../utils/formatters/optiontypes';
 import { useBuilderContext } from '../../../context/BuilderContext';
 
-const style = 'cursor-pointer text-white-700 rounded-2xl bg-zinc-800 border border-zinc-700 text-center p-1 mr-1 text-sm font-light'
+const style = 'border cursor-pointer text-white-700 rounded-2xl bg-zinc-800 text-center p-1 mr-1 text-sm font-light'
 
 type SelectedStrike = {
   id: number,
@@ -48,16 +48,16 @@ export const SelectStrikesTable = () => {
 
   return <div className='grid grid-cols-1 sm:grid-cols-4 mb-8'>
     <div className='col-span-1 grid grid-cols-4 mt-6'>
-      <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+      <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Buy
       </div>
-      <div onClick={() => setIsBuy(false)} className={`${!isBuy ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+      <div onClick={() => setIsBuy(false)} className={`${!isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Sell
       </div>
-      <div onClick={() => setIsCall(true)} className={`${isCall ? 'border-emerald-700 bg-zinc-900' : ''} ${style} ml-2`}>
+      <div onClick={() => setIsCall(true)} className={`${isCall ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style} ml-2`}>
         Call
       </div>
-      <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-700 bg-zinc-900' : ''} ${style}`}>
+      <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Put
       </div>
     </div>
