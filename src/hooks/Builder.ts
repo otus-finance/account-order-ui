@@ -144,7 +144,6 @@ export const useBuilder = () => {
       const _maxLoss = isBuy ? maxLoss + _totalPriceForOptions : _strikeCollateralRequired;
       const _maxProfit = isBuy ? Infinity : maxProfit + _totalPriceForOptions;
 
-
       const _maxCost = isBuy ? _totalPriceForOptions + maxCost : maxCost;
       const _collateralRequired = isBuy ? collateralRequired : _strikeCollateralRequired + collateralRequired;
 

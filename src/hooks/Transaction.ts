@@ -1,5 +1,5 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
-import { IconType } from '../components/UI/Icons/IconSVG'
+import { HeroIcon, IconType } from '../components/UI/Icons/IconSVG'
 
 import {
   closeToast,
@@ -47,7 +47,9 @@ const reportError = (
   // Remove parentheses from error message
   const rawMessage = error?.data?.message ?? error?.message
   let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong'
+  console.log({ message })
   if (transactionReceipt?.transactionHash) {
+    console.log('is url?');
     message += '. Click to view failed transaction.'
   }
   // Uppercase first letter
@@ -55,11 +57,11 @@ const reportError = (
 
   // Log error to Sentry
   logError(message, { error, transactionReceipt, network })
-
+  console.log({ error: message })
   const args: CreateToastOptions = {
     variant: 'error',
     description: message,
-    icon: IconType.ExclamationTriangleIcon,
+    icon: HeroIcon(IconType.ExclamationTriangleIcon),
     href: transactionReceipt ? getExplorerUrl(network, transactionReceipt.transactionHash) : undefined,
     autoClose: false,
   }
@@ -196,7 +198,7 @@ export default function useTransaction(provider: ethers.providers.JsonRpcProvide
           description: `Your ${description} was successful`,
           href: txHref,
           autoClose: DEFAULT_TOAST_TIMEOUT,
-          icon: IconType.CheckIcon,
+          icon: HeroIcon(IconType.CheckIcon),
         }
         if (toastId) {
           updateToast(toastId, args)
@@ -211,7 +213,7 @@ export default function useTransaction(provider: ethers.providers.JsonRpcProvide
           )} seconds, view your transaction progress`,
           href: txHref,
           autoClose: DEFAULT_TOAST_TIMEOUT,
-          icon: IconType.ExclamationTriangleIcon,
+          icon: HeroIcon(IconType.ExclamationTriangleIcon),
         }
         if (toastId) {
           updateToast(toastId, args)
