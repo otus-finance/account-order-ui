@@ -3,7 +3,9 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import LogoIcon from '../UI/Icons/OTUS'
+import LogoIcon from '../UI/Icons/Logo/OTUS'
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Web3Button } from '../UI/Web3Button';
 
 const linkStyle = (path: string, activePath: string) => {
   if (path == activePath) {
@@ -51,13 +53,8 @@ export const Navigation = () => {
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex items-center">
-                  <button
-                    disabled={false}
-                    className={`items-center text-white text-sm font-normal px-8 py-2 rounded-md bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2`}
-                    onClick={() => router.push('https://app.otus.finance')}
-                  >
-                    Launch App
-                  </button>
+
+                  <Web3Button />
                 </div>
               </div>
               <div className="-mr-2 flex sm:hidden">
@@ -93,13 +90,8 @@ export const Navigation = () => {
             </div>
             <div className="border-zinc-800 border-t pt-4 pb-3">
               <div className="flex items-center px-5">
-                <button
-                  disabled={false}
-                  className={`w-full items-center text-white text-md font-normal px-8 py-2 border-zinc-700 bg-zinc-800 shadow-sm hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 rounded-md`}
-                  onClick={() => router.push('https://app.otus.finance')}
-                >
-                  Launch App
-                </button>
+
+                <Web3Button />
               </div>
             </div>
           </Disclosure.Panel>

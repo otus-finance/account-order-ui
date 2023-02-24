@@ -97,7 +97,7 @@ export const StrikesTable = () => {
                 minLength={1}
                 debounceTimeout={300}
                 onChange={(e) => {
-                  const value = parseInt(e.target.value);
+                  const value = parseFloat(e.target.value);
                   handleUpdateQuote({ size: value.toString(), strike: strike });
                 }}
                 className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' min={1} value={fromBigNumber(size)}

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useBuilderContext } from '../context/BuilderContext'
 import { LyraStrike } from '../queries/lyra/useLyra'
 import { formatProfitAndLostAtTicks, ticks, Ticks } from '../utils/charting'
-
-
 
 export type PnlChartPoint = {
   name: number
@@ -19,6 +18,8 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
 
   const [data, setData] = useState<PnlChartPoint[] | []>([]);
 
+  // const { handleSetPnl } = useBuilderContext();
+
   const formattedChartData = useCallback(() => {
     if (builtTrades && builtTrades?.length > 0 && asset && priceOfAsset && assetInTrades(asset, builtTrades)) {
       const _ticks = ticks(asset, priceOfAsset);
@@ -26,10 +27,12 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
       const _combo: Ticks = _ticks.reduce((accum: any, tick: any) => {
         const profitAtTick = formatProfitAndLostAtTicks(tick, builtTrades);
         return { ...accum, [tick]: { profitAtTick } }
-      }, {})
+      }, {});
+
       const _chartData = _ticks.map((tick, index) => {
         {/* @ts-ignore */ }
         const profitAtTick = _combo[tick].profitAtTick;
+
         return {
           name: index,
           asset_price: Math.floor(tick),
@@ -38,6 +41,8 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
           positive_combo_payoff: profitAtTick > 0 ? profitAtTick : null
         }
       })
+      // setMaxPNL
+      // handleSetPnl(maxProfit, maxLoss);
       setData(_chartData);
     } else {
       setData([])
