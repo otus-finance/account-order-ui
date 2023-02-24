@@ -121,8 +121,7 @@ export default function useTransaction(provider: ethers.providers.JsonRpcProvide
 
     try {
       console.time('tx')
-      // update to send multiple transactions ? 
-      tx = await signer.sendTransaction(await populatedTx)
+      tx = await signer.sendTransaction(populatedTx)
       console.timeEnd('tx')
     } catch (e) {
       console.timeEnd('tx')

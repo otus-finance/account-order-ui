@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useBuilderContext } from '../../../context/BuilderContext';
-import { formatUSD, fromBigNumber } from '../../../utils/formatters/numbers';
-import { MAX_BN } from '../../../constants/bn';
+import { formatUSD, fromBigNumber, toBN } from '../../../utils/formatters/numbers';
+import { MAX_BN, ZERO_BN } from '../../../constants/bn';
 
 import {
   useConnectModal,
@@ -90,7 +90,19 @@ export const StrikeTrade = () => {
 
     const trades = await Promise.all(strikes.map(async strike => {
       const { market, quote: { isCall, isBuy, size } } = strike;
-      const _trade = await lyra.trade(address, market, strike.id, isCall, isBuy, size, 0.1 / 100);
+
+      let _tradeOptions = { iterations: 3, setToCollateral: ZERO_BN, setToFullCollateral: false };
+
+      if (!isBuy) {
+        if (isCall) {
+          const _collateral = fromBigNumber(size) * fromBigNumber(strike.strikePrice) * 2.5;
+          _tradeOptions = { ..._tradeOptions, setToCollateral: toBN(_collateral.toString()) }
+        } else {
+          _tradeOptions = { ..._tradeOptions, setToFullCollateral: true }
+        }
+      }
+
+      const _trade = await lyra.trade(address, market, strike.id, isCall, isBuy, size, 0.1 / 100, _tradeOptions);
       return _trade;
     }));
 
@@ -98,19 +110,15 @@ export const StrikeTrade = () => {
       return trade.tx;
     })
 
-    await Promise.all(txs.map(async tx => {
-      await execute(tx, {
-        onComplete: async () => {
-          setLoadingTx(false);
-          // logEvent(LogEvent.TradeApproveSuccess, {
-          //   isBase: false,
-          // })
-        },
-        onError: async () => {
-          setLoadingTx(false);
-        }
-      });
-    }))
+    try {
+      await Promise.all(txs.map(async tx => {
+        await execute(tx, {});
+      }))
+      setLoadingTx(false);
+    } catch (error) {
+      setLoadingTx(false);
+    }
+
 
   }, [strikes, lyra, address, execute])
 
