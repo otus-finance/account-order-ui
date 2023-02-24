@@ -142,7 +142,7 @@ export const StrikeTrade = () => {
       <div className='text-xs text-zinc-200 py-2'>
         Min. Premium Received
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(netCreditDebit)}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}</div>
 
       <div className=' col-span-1 text-xs text-zinc-200  py-2'>
         Collateral Required
