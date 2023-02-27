@@ -163,7 +163,7 @@ export const strategies: Strategy[] = [
     ]
   },
   {
-    id: 13,
+    id: 15,
     name: 'Long Strangle',
     type: [StrategyType.Volatile],
     tags: [StrategyTag.LimitedLoss, StrategyTag.UnlimitedGain],
@@ -174,7 +174,7 @@ export const strategies: Strategy[] = [
     ]
   },
   {
-    id: 14,
+    id: 16,
     name: 'Long Straddle',
     type: [StrategyType.Volatile],
     tags: [StrategyTag.LimitedLoss, StrategyTag.UnlimitedGain],
