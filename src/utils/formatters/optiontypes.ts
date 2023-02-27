@@ -43,9 +43,5 @@ export const isITM = (isCall: boolean, currentPrice: number, strikePrice: number
 }
 
 export const isATM = (isCall: boolean, currentPrice: number, strikePrice: number) => {
-  if (isCall) {
-    return strikePrice == currentPrice;
-  } else {
-    return strikePrice == currentPrice;
-  }
+  return strikePrice < currentPrice + currentPrice * .05 && strikePrice > currentPrice - currentPrice * .05
 }
