@@ -18,12 +18,12 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
-// const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-// Sentry.init({
-//   dsn: SENTRY_DSN,
-//   tracesSampleRate: 1.0,
-// });
+Sentry.init({
+  dsn: SENTRY_DSN,
+  tracesSampleRate: 1.0,
+});
 
 const { chains, provider } = configureChains(
   [optimism, arbitrum],
