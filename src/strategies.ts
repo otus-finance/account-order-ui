@@ -158,8 +158,30 @@ export const strategies: Strategy[] = [
     tags: [StrategyTag.UnlimitedLoss, StrategyTag.LimitedGain],
     description: 'A bet on calm 🐌⛵. You sell both calls and puts with the same expiration and strike, expecting a small move in volatility regardless of direction. You keep the premium but open yourself to risk of large movements.',
     trade: [
-      { optionType: OptionType.SHORT_PUT_QUOTE, priceAt: PriceAt.OTM, order: 0 },
-      { optionType: OptionType.SHORT_CALL_QUOTE, priceAt: PriceAt.OTM, order: 0 },
+      { optionType: OptionType.SHORT_PUT_QUOTE, priceAt: PriceAt.ATM, order: 0 },
+      { optionType: OptionType.SHORT_CALL_QUOTE, priceAt: PriceAt.ATM, order: 0 },
+    ]
+  },
+  {
+    id: 15,
+    name: 'Long Strangle',
+    type: [StrategyType.Volatile],
+    tags: [StrategyTag.LimitedLoss, StrategyTag.UnlimitedGain],
+    description: 'A bet on Volatility 🐌⛵. You usually buy OTM puts and calls and are long volatility, expecting things to move significantly in either direction.',
+    trade: [
+      { optionType: OptionType.LONG_PUT, priceAt: PriceAt.OTM, order: 0 },
+      { optionType: OptionType.LONG_CALL, priceAt: PriceAt.OTM, order: 1 },
+    ]
+  },
+  {
+    id: 16,
+    name: 'Long Straddle',
+    type: [StrategyType.Volatile],
+    tags: [StrategyTag.LimitedLoss, StrategyTag.UnlimitedGain],
+    description: 'A bet on volatility 🐌⛵. You buy both calls and puts with the same expiration and strike, expecting a large move in volatility regardless of direction.',
+    trade: [
+      { optionType: OptionType.LONG_PUT, priceAt: PriceAt.ATM, order: 0 },
+      { optionType: OptionType.LONG_CALL, priceAt: PriceAt.ATM, order: 0 },
     ]
   }
 ]
