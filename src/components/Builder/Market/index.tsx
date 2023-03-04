@@ -6,11 +6,8 @@ import { LyraMarketOptions } from './SelectMarket';
 export const Market = () => {
 
   const { markets, isMarketLoading, selectedMarket, handleSelectedMarket } = useBuilderContext();
-  return <div className='grid grid-cols-2 col-span-2 my-8 gap-8'>
-    <div className='col-span-2 sm:col-span-1'>
-      <div className='font-bold'>
-        I want to see strategies for
-      </div>
+  return <div className='grid grid-cols-3 bg-zinc-800 shadow-sm rounded-sm p-2'>
+    <div className='col-span-1'>
       <LyraMarketOptions
         markets={markets}
         isMarketLoading={isMarketLoading}
@@ -19,7 +16,7 @@ export const Market = () => {
       />
     </div>
 
-    <div className='bg-zinc-800 col-span-2 sm:col-span-1 shadow-sm mt-6 p-4'>
+    <div className='col-span-2'>
       <MarketDetails />
     </div>
   </div>

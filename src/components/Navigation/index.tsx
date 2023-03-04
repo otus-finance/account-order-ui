@@ -29,7 +29,7 @@ export const Navigation = () => {
     <Disclosure as="nav" className="border-b border-zinc-800 bg-zinc-900">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-6xl px-2 sm:px-4 md:px-6 lg:px-8">
+          <div className="mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
             <div className="flex h-20 items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -44,7 +44,12 @@ export const Navigation = () => {
                   <div className="flex space-x-4">
                     <Link href="/">
                       <a className={linkStyle('/', router.pathname)}>
-                        Options Trade Builder
+                        Trade
+                      </a>
+                    </Link>
+                    <Link href="/">
+                      <a className={linkStyle('/vaults', router.pathname)}>
+                        Vaults
                       </a>
                     </Link>
                   </div>
@@ -83,10 +88,16 @@ export const Navigation = () => {
                 <Disclosure.Button
                   className={linkStyleMobile('/', router.pathname)}
                 >
-                  Options Trade Builder
+                  Trade
                 </Disclosure.Button>
               </Link>
-
+              <Link href="/">
+                <Disclosure.Button
+                  className={linkStyleMobile('/', router.pathname)}
+                >
+                  Trade
+                </Disclosure.Button>
+              </Link>
             </div>
             <div className="border-zinc-800 border-t pt-4 pb-3">
               <div className="flex items-center px-5">

@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultWallets,
+  midnightTheme,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
@@ -51,7 +52,7 @@ const queryClient = new QueryClient()
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains}>
+    <RainbowKitProvider chains={chains} initialChain={optimism}>
       <QueryClientProvider client={queryClient}>
         <Layout>
           <Component {...pageProps} />

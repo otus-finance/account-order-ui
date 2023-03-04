@@ -4,8 +4,8 @@ import { SelectBuilderExpiration } from './SelectExpiration';
 import { Strategies } from './Strategies';
 
 export const Strategy = () => {
-  return <div className='col-span-3 sm:col-span-3 mt-4'>
-    <div className='font-bold'>
+  return <div className='col-span-3 sm:col-span-3 p-6'>
+    <div className='font-normal text-sm'>
       Show me strategies if my bet is the market will be
       <span>
         <div className='inline-block pl-1 pr-2'>

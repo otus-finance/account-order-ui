@@ -13,7 +13,7 @@ const Builder: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="mx-auto max-w-6xl py-6 text-white">
+      <div className="mx-auto max-w-7xl py-6 text-white">
         <BuilderContextProvider>
           <OptionsBuilder />
         </BuilderContextProvider>

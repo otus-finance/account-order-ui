@@ -14,6 +14,8 @@ import { useLyraTrade } from '../../../hooks';
 import useTransaction from '../../../hooks/Transaction';
 import { Spinner } from '../../UI/Components/Spinner';
 import { useAccountContext } from '../../../context/AccountContext';
+import { formatName } from '../Market/SelectMarket';
+import { DebounceInput } from 'react-debounce-input';
 
 export const StrikeTrade = () => {
 
@@ -25,12 +27,13 @@ export const StrikeTrade = () => {
   const { openChainModal } = useChainModal();
 
   const {
+    selectedMarket,
     selectedChain,
     lyra,
     strikes,
     positionPnl
   } = useBuilderContext();
-
+  console.log({ selectedMarket })
   const {
     netCreditDebit,
     collateralRequired,
@@ -122,80 +125,132 @@ export const StrikeTrade = () => {
 
   }, [strikes, lyra, address, execute])
 
+  const { handleUpdateQuote } = useBuilderContext();
+
   return <div className='col-span-2 sm:col-span-2 grid grid-cols-2'>
 
-    <div className="col-span-2 my-8">
-      <table className="min-w-full divide-y divide-zinc-700">
-        <thead className="bg-zinc-800">
-          <tr>
-            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-xs font-light uppercase text-white">
-              Option Type
-            </th>
-            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-xs font-light uppercase text-white sm:pl-6">
-              Strike
-            </th>
-            <th scope="col" className="px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
-              Size
-            </th>
-            <th scope="col" className="px-3 py-3.5 text-xs font-light uppercase text-white sm:table-cell text-right">
-              Credit/(Debit)
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-zinc-700 bg-zinc-800">
-          {
-            strikes.map(strike => {
-              const { quote: { size, premium, isCall, isBuy }, strikePrice } = strike;
-              return <tr key={strike.id}>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
-                  {isBuy ? <span className='text-zinc-100 font-light p-1'>Buy</span> : <span className='text-zinc-100 font-light p-1'>Sell</span>}
-                  {isCall ? <span className='text-emerald-700 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}
-                </td>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
-                  {formatUSD(fromBigNumber(strikePrice))}
-                </td>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">{fromBigNumber(size)}</td>
-                <td className="whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell text-right">
-                  {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
-                </td>
-              </tr>
-            })
-          }
+    <div className="col-span-2">
 
-        </tbody>
-      </table>
+      {
+        strikes.map((strike, index) => {
+          const { quote: { size, pricePerOption, isCall, isBuy }, strikePrice } = strike;
+          return <div key={index} className="border-b border-zinc-800">
+            <div className='p-2'>
+              <div className='text-white font-semibold text-md p-2'>
+                {`${isBuy ? 'Buy' : 'Sell'} ${formatName(selectedMarket?.name)} ${formatUSD(strikePrice, { dps: 2 })}  ${isCall ? 'Call' : 'Put'} `}
+              </div>
+              <div className="flex items-center justify-between p-2">
+                <p className="truncate font-sans text-xs font-normal text-white">
+                  Contracts
+                </p>
+                <div className="ml-2 flex flex-shrink-0">
+                  <label htmlFor="size" className="sr-only">
+                    Size
+                  </label>
+                  <div className="mt-1">
+                    <DebounceInput
+                      minLength={1}
+                      debounceTimeout={300}
+                      onChange={async (e) => {
+                        if (e.target.value == '') return
+                        const value = parseFloat(e.target.value);
+                        handleUpdateQuote({ size: value.toString(), strike: strike });
+                      }}
+                      type="number"
+                      name="size"
+                      id="size"
+                      value={fromBigNumber(size)}
+                      className="block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-sm  sm:text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-2">
+                <p className="truncate font-sans text-xs font-normal text-white">
+                  Price Per Option
+                </p>
+                <div className="ml-2 flex flex-shrink-0">
+                  <p className="inline-flex font-mono text-xs font-normal leading-5 text-white">
+                    {formatUSD(fromBigNumber(pricePerOption))}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        })
+      }
+    </div>
+
+    <div className="col-span-2 ">
+      <div className='p-2'>
+        <div className='flex gap-8'>
+          <div className='p-2 text-xs text-zinc-200 hover:font-semibold cursor-pointer'>Market</div>
+          <div className='p-2 text-xs text-zinc-200 hover:font-semibold cursor-pointer'>Limit</div>
+          <div className='p-2 text-xs text-zinc-200 hover:font-semibold cursor-pointer'>Trigger</div>
+        </div>
+      </div>
+    </div>
+
+    <div className="col-span-2 border-b border-zinc-800">
+      <div className='p-4'>
+
+        <div className='border border-zinc-800 p-2'>
+          <div className="flex items-center justify-between p-2">
+            <div>
+              <p className="truncate font-sans text-xs font-normal text-white">
+                Price Per Option
+              </p>
+              <div>
+                test
+              </div>
+            </div>
+
+            <div className="ml-2 flex flex-shrink-0">
+              <p className="inline-flex font-mono text-xs font-normal leading-5 text-white">
+                Current Price: $10.22
+              </p>
+              <div>
+                USD
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div className='col-span-2 grid grid-cols-2'>
-      <div className='text-xs text-zinc-200 py-2'>
+
+      <div className='text-xs text-zinc-200'>
         Min. Premium Received
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}</div>
 
-      <div className=' col-span-1 text-xs text-zinc-200  py-2'>
+      <div className=' col-span-1 text-xs text-zinc-200'>
         Collateral Required
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(collateralRequired)}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(collateralRequired)}</div>
 
-      <div className=' col-span-1 text-xs text-zinc-200  py-2'>
+      <div className=' col-span-1 text-xs text-zinc-200'>
         Max Cost
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right  py-2'>{formatUSD(maxCost)}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(maxCost)}</div>
 
-      <div className='text-xs text-zinc-200 py-4 border-t border-zinc-700'>
+      <div className='text-xs text-zinc-200 border-t border-zinc-700'>
         Total Funds Required
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700 py-4'>{formatUSD(collateralRequired + maxCost)}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700'>{formatUSD(collateralRequired + maxCost)}</div>
 
 
-      <div className='text-xs text-zinc-200 py-4 border-t border-zinc-700'>
+      <div className='text-xs text-zinc-200 border-t border-zinc-700'>
         {quoteAsset?.symbol} Balance
       </div>
-      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700 py-4'>{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance))}</div>
+      <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700'>{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance))}</div>
 
     </div>
 
-    <div className="col-span-2 mt-3">
+    <div className="col-span-2 p-4">
 
       {/* is loading */}
       {

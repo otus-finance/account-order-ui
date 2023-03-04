@@ -9,7 +9,7 @@ export const ticks = (asset: string, price: number) => {
   const ticks = [];
 
   let multiple = asset == 'ETH-USDC' || asset == 'sETH-sUSD' ? 1.5 : 1.1;
-  let tickSize = asset == 'ETH-USDC' || asset == 'sETH-sUSD' ? 5 : 10;
+  let tickSize = asset == 'ETH-USDC' || asset == 'sETH-sUSD' ? 1 : 10;
 
 
   let lowerBound = price / multiple;
@@ -26,7 +26,7 @@ export const ticks = (asset: string, price: number) => {
 }
 
 export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
-  
+
   const pnl = strikes.reduce((totalPnl: number, strike: any) => {
     const { strikePrice, isCall, quote: { size, isBuy, pricePerOption } } = strike;
 

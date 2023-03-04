@@ -17,57 +17,13 @@ import { AccountContextProvider } from '../../../context/AccountContext';
 export const Strikes = () => {
 
   const {
-    lyra,
-    selectedChain,
     isBuildingNewStrategy,
     showStrikesSelect,
-    strikes,
     selectedStrategy,
-    positionPnl: { netCreditDebit, maxLoss, maxProfit },
     handleBuildNewStrategy
   } = useBuilderContext();
 
-  const [open, setOpen] = useState(false);
-
-  const openTradeModal = () => {
-    setOpen(!open);
-  }
-
-  return <div className='col-span-3 sm:col-span-3 mt-4 grid grid-cols-6'>
-
-    {/* profit loss data */}
-    <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
-      <div className="col-span-1 grid grid-cols-3 gap-3 mt-6">
-
-        <div className="bg-zinc-800 p-4 pt-1">
-          <span className="text-xs font-light text-zinc-100">{netCreditDebit && netCreditDebit > 0 ? 'Net Credit' : 'Net (Debit)'}</span>
-          <div className='pt-4'>
-            <span className="text-base font-semibold text-white">
-              {netCreditDebit && formatUSD(Math.abs(netCreditDebit))}
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-zinc-800 p-4 pt-1">
-          <span className="text-xs font-light text-pink-700">Max Loss</span>
-          <div className='pt-4'>
-            <span className="text-base font-semibold text-pink-700">
-              {maxLoss && formatUSD(maxLoss)}
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-zinc-800 p-4 pt-1">
-          <span className="text-xs font-light text-emerald-700">Max Profit</span>
-          <div className='pt-4'>
-            <span className="text-base font-semibold text-emerald-700">
-              {maxProfit && formatUSD(maxProfit)}
-            </span>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  return <div className='col-span-3 sm:col-span-3 p-6 grid grid-cols-6'>
 
     {/* custom strategy button */}
     <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
@@ -92,7 +48,7 @@ export const Strikes = () => {
 
     }
 
-    <div className='col-span-6 '>
+    <div className='col-span-6 overflow-x-scroll scrollbar scrollbar-thumb-zinc-700 scrollbar-track-zinc-500 rounded-sm'>
       <div className="flex items-center pt-2 pb-2">
         <LyraIcon />
         <div className='pl-2 font-light text-xs uppercase'>
@@ -101,42 +57,6 @@ export const Strikes = () => {
       </div>
       <StrikesTable />
     </div>
-
-
-    {
-      lyra && strikes[0] &&
-      <>
-        <div className="sm:col-end-7 sm:col-span-2 col-start-1 col-end-7">
-
-          <div className="col-span-1 grid grid-cols-3 gap-3 mt-3">
-            {
-              strikes.length > 0 &&
-              <div onClick={() => openTradeModal()} className="cursor-pointer border border-zinc-700 hover:border-emerald-700 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
-                Trade
-              </div>
-            }
-          </div>
-        </div>
-
-        <Modal
-          title={
-            <div className="flex items-center p-1">
-              {selectedChain?.name == Chain.Arbitrum && <ArbitrumIcon />}
-              {selectedChain?.name == Chain.Optimism && <OptimismIcon />}
-              <div className="pl-2">
-                <strong className='capitalize'>Confirm Trade</strong>
-              </div>
-            </div>
-          }
-          setOpen={setOpen}
-          open={open}
-        >
-          <AccountContextProvider lyra={lyra} strike={strikes[0]}>
-            <StrikeTrade />
-          </AccountContextProvider>
-        </Modal>
-      </>
-    }
 
   </div>
 }

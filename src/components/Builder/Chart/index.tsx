@@ -9,7 +9,7 @@ export const Chart = () => {
 
   const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, strikes);
 
-  return <div className='col-span-3 sm:col-span-3 mt-8'>
+  return <div className='col-span-3 sm:col-span-3 p-4 bg-black rounded-sm'>
     {
       chartData.length > 0 && currentPrice > 0 && isValid && <BuilderPNLChart currentPrice={currentPrice} data={chartData} />
     }

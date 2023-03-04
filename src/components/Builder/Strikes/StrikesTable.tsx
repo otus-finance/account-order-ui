@@ -10,7 +10,7 @@ export const StrikesTable = () => {
 
   const { selectedChain, strikes, handleToggleSelectedStrike, handleUpdateQuote } = useBuilderContext();
 
-  return <table className="min-w-full divide-y divide-zinc-700 ">
+  return <table className="min-w-full divide-y divide-zinc-700 rounded-sm">
     <thead className="bg-zinc-800">
       <tr>
         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -28,7 +28,7 @@ export const StrikesTable = () => {
         >
           IV
         </th>
-        <th
+        {/* <th
           scope="col"
           className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
         >
@@ -42,7 +42,7 @@ export const StrikesTable = () => {
         </th>
         <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
           Gamma
-        </th>
+        </th> */}
         <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
           Size
         </th>
@@ -80,7 +80,7 @@ export const StrikesTable = () => {
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               {formatPercentage(fromBigNumber(iv))}
             </td>
-            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
+            {/* <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               {formatNumber(fromBigNumber(vega), { maxDps: 2 })}
             </td>
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
@@ -91,7 +91,7 @@ export const StrikesTable = () => {
             </td>
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               {formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
-            </td>
+            </td> */}
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               <DebounceInput
                 minLength={1}
@@ -100,7 +100,8 @@ export const StrikesTable = () => {
                   const value = parseFloat(e.target.value);
                   handleUpdateQuote({ size: value.toString(), strike: strike });
                 }}
-                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' min={1} value={fromBigNumber(size)}
+                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' min={1}
+                value={fromBigNumber(size)}
               />
             </td>
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">

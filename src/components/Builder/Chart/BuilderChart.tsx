@@ -18,26 +18,26 @@ export const BuilderPNLChart = ({ currentPrice, data }: { currentPrice: number, 
 
   return (
     <ResponsiveContainer width="99%"
-      height={300}>
+      height={200}>
       <LineChart
         data={data}
         margin={{
           top: 2,
-          left: 0,
-          right: 0,
-          bottom: 0
+          left: 8,
+          right: 8,
+          bottom: 8
         }}
       >
-        <XAxis hide={false} dataKey="asset_price" tick={{ stroke: '#fff', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
-        <YAxis hide={false} tickCount={100} tickSize={2} tick={{ stroke: '#f5f5f5', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
+        <XAxis hide={true} dataKey="asset_price" tick={{ stroke: '#fff', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
+        <YAxis hide={true} tickCount={100} tickSize={2} tick={{ stroke: '#f5f5f5', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
 
         {/* @ts-ignore */}
         <Tooltip content={<CustomTooltip currentPrice={currentPrice} />} />
 
         <ReferenceLine y={0} stroke={'#e4e4e7'} strokeWidth={.25} />
 
-        <Line type="monotone" connectNulls={false} dataKey="negative_combo_payoff" stroke={'#831843'} dot={false} strokeWidth={4} />
-        <Line type="monotone" connectNulls={false} dataKey="positive_combo_payoff" stroke={'#047857'} dot={false} strokeWidth={4} />
+        <Line type="monotone" connectNulls={false} dataKey="negative_combo_payoff" stroke={'#831843'} dot={false} strokeWidth={2} />
+        <Line type="monotone" connectNulls={false} dataKey="positive_combo_payoff" stroke={'#047857'} dot={false} strokeWidth={2} />
 
       </LineChart>
 

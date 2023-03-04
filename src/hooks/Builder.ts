@@ -12,6 +12,7 @@ import {
 } from '../reducers'
 import { fromBigNumber, toBN } from '../utils/formatters/numbers';
 import { extrensicValueFilter, calculateOptionType } from '../utils/formatters/optiontypes';
+import { useNetwork } from 'wagmi';
 
 const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
 const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
@@ -24,6 +25,17 @@ const getLyra = async (chain: LyraChain) => {
   {/* @ts-ignore  different types in JsonRpcProvider in lyra-js */ }
   return new Lyra({ provider });
 }
+
+const chains: LyraChain[] = [
+  {
+    name: Chain.Optimism,
+    chainId: 10
+  },
+  {
+    name: Chain.Arbitrum,
+    chainId: 42161
+  }
+]
 
 export const useBuilder = () => {
   const [state, dispatch] = useReducer(
@@ -48,7 +60,10 @@ export const useBuilder = () => {
     isBuildingNewStrategy,
   } = state;
 
+  const network = useNetwork();
+
   const handleSelectedChain = (chain: LyraChain) => {
+    console.log({ chain })
     dispatch({
       type: 'SET_CHAIN',
       selectedChain: chain,
@@ -59,6 +74,16 @@ export const useBuilder = () => {
       positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 }
     })
   }
+
+  useEffect(() => {
+    if (network.chain && selectedChain?.name !== network.chain.name.toLowerCase()) {
+      const _chain = chains.find(chain => {
+        return chain.name === network.chain?.name.toLowerCase();
+      })
+      if (!_chain) return;
+      handleSelectedChain(_chain);
+    }
+  }, [selectedChain, network])
 
   const updateSelectedChain = useCallback(async () => {
 
