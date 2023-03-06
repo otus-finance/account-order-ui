@@ -1,9 +1,10 @@
 import Lyra, { Chain } from "@lyrafinance/lyra-js"
-import { Strategy, StrategyDirection } from "../utils/types"
+import { BuilderType, Strategy, StrategyDirection } from "../utils/types"
 import { LyraBoard, LyraChain, LyraMarket, LyraStrike } from "../queries/lyra/useLyra"
 
 export type BuilderProviderState = {
   lyra: Lyra | null
+  builderType: BuilderType,
   showStrikesSelect: boolean
   selectedChain: LyraChain | null
   markets: LyraMarket[] | null
@@ -17,6 +18,7 @@ export type BuilderProviderState = {
   positionPnl: any | null | undefined // netcreditdebit max profit max loss
   isValid: boolean
   isBuildingNewStrategy: boolean
+  handleSelectBuilderType: (any: BuilderType) => void
   handleSelectedChain: (any: LyraChain) => void
   handleSelectedMarket: (any: LyraMarket | null) => void
   handleSelectedDirectionTypes: (any: StrategyDirection[]) => void
@@ -30,6 +32,7 @@ export type BuilderProviderState = {
 
 export const builderInitialState: BuilderProviderState = {
   lyra: null,
+  builderType: BuilderType.Builder,
   showStrikesSelect: false,
   selectedChain: null,
   markets: [],
@@ -50,6 +53,7 @@ export const builderInitialState: BuilderProviderState = {
   },
   isValid: false,
   isBuildingNewStrategy: false,
+  handleSelectBuilderType: (any) => void any,
   handleSelectedChain: (any) => void any,
   handleSelectedMarket: (any) => void any,
   handleSelectedDirectionTypes: (any) => void any,
@@ -85,6 +89,10 @@ export type BuilderAction =
   | {
     type: 'SET_MARKETS_LOADING',
     isMarketLoading: BuilderProviderState['isMarketLoading'],
+  }
+  | {
+    type: 'SET_BUILDER_TYPE',
+    builderType: BuilderProviderState['builderType'],
   }
   | {
     type: 'SET_MARKETS',
@@ -168,6 +176,8 @@ export function builderReducer(
       return { ...state, markets: action.markets, isMarketLoading: action.isMarketLoading }
     case 'SET_MARKETS_LOADING':
       return { ...state, isMarketLoading: action.isMarketLoading }
+    case 'SET_BUILDER_TYPE':
+      return { ...state, builderType: action.builderType }
     case 'SET_MARKET':
       return {
         ...state,
