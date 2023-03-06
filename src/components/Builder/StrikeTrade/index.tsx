@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { Dispatch, useCallback, useState } from 'react'
 import { useBuilderContext } from '../../../context/BuilderContext';
 import { formatUSD, fromBigNumber, toBN } from '../../../utils/formatters/numbers';
 import { MAX_BN, ZERO_BN } from '../../../constants/bn';
@@ -90,7 +90,6 @@ export const StrikeTrade = () => {
                     </div>
                   </div>
                 </div>
-
               </div>
             })
           }
@@ -131,7 +130,6 @@ export const StrikeTrade = () => {
           </div>
         </div>
 
-
         {/* limit / market / trigger button header  */}
         <TradeType />
 
@@ -149,7 +147,7 @@ enum TradeTypes {
 const TradeType = () => {
   const [typeSelected, setTypeSelected] = useState(TradeTypes.Market);
   return <>
-    <TradeTypeSelect typeSelected={typeSelected} />
+    <TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
     {
       TradeTypes.Market === typeSelected && <TradeMarket />
     }
@@ -162,14 +160,14 @@ const TradeType = () => {
   </>
 }
 
-const TradeTypeSelect = ({ typeSelected }: { typeSelected: TradeTypes }) => {
+const TradeTypeSelect = ({ typeSelected, setTypeSelected }: { typeSelected: TradeTypes, setTypeSelected: Dispatch<TradeTypes> }) => {
 
   return <div className="col-span-1">
     <div className='p-2 pt-4'>
       <div className='flex gap-8'>
-        <div className={`p-2 text-xs  hover:text-white cursor-pointer ${typeSelected === TradeTypes.Market ? 'text-white underline' : 'text-zinc-300'}`}>Market</div>
-        <div className='p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed'>Limit</div>
-        <div className='p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed'>Trigger</div>
+        <div onClick={() => setTypeSelected(TradeTypes.Market)} className={`p-2 text-xs  hover:text-white cursor-pointer ${typeSelected === TradeTypes.Market ? 'text-white underline' : 'text-zinc-300'}`}>Market</div>
+        <div onClick={() => setTypeSelected(TradeTypes.Limit)} className={`p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed ${typeSelected === TradeTypes.Limit ? 'text-white underline' : 'text-zinc-300'}`}>Limit</div>
+        <div onClick={() => setTypeSelected(TradeTypes.Trigger)} className={`p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed ${typeSelected === TradeTypes.Trigger ? 'text-white underline' : 'text-zinc-300'}`}>Trigger</div>
       </div>
     </div>
   </div>
@@ -281,58 +279,65 @@ const TradeMarket = () => {
     {/* button for connectin wallet 
         executing trade through otus account 
         executing trade through lyra  */}
-    <div className="col-span-1 p-4 py-6">
+    <div className="col-span-1 px-4">
+      <div className='p-4 border border-zinc-800'>
+        <p className='text-zinc-200 text-xs'>
+          Trade using Lyra SDK
+        </p>
+      </div>
+      {/* wallet action buttons */}
+      <div className='py-4'>
+        {/* is loading */}
+        {
+          isLoading &&
+          <div onClick={() => console.warn('Add funds')} className="cursor-disabled border-2 border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
+            <Spinner />
+          </div>
+        }
 
-      {/* is loading */}
-      {
-        isLoading &&
-        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border-2 border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
-          <Spinner />
-        </div>
-      }
-
-      {/* insufficient balance */}
-      {
-        isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.balance.isZero() &&
-        <div onClick={() => console.warn('Add funds')} className="cursor-disabled border-2 border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
-          Insufficient Balance
-        </div>
-      }
+        {/* insufficient balance */}
+        {
+          isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.balance.isZero() &&
+          <div onClick={() => console.warn('Add funds')} className="cursor-disabled border-2 border-zinc-800 hover:border-emerald-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
+            Insufficient Balance
+          </div>
+        }
 
 
-      {/* wallet connected / correct chain / quote asset not approved */}
-      {
-        isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleApproveQuote()} className="cursor-pointer border-2 border-zinc-800 hover:bg-emerald-600 bg-zinc-900 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
-          Approve Quote
-        </div>
-      }
+        {/* wallet connected / correct chain / quote asset not approved */}
+        {
+          isConnected && chain?.id === selectedChain?.chainId && quoteAsset && quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
+          <div onClick={() => handleApproveQuote()} className="cursor-pointer border-2 border-zinc-800 hover:bg-emerald-600 bg-zinc-900 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
+            Approve Quote
+          </div>
+        }
 
-      {/* wallet connected / correct chain / quote asset approved */}
-      {
-        isConnected && chain?.id === selectedChain?.chainId && quoteAsset && !quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
-        <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border-2 border-emerald-700 hover:bg-emerald-700 bg-zinc-900 p-2 py-3 col-span-3 text-sm font-normal text-white text-center rounded-full">
-          {isLoadingTx ? <Spinner /> : 'Execute Trade'}
-        </div>
-      }
+        {/* wallet connected / correct chain / quote asset approved */}
+        {
+          isConnected && chain?.id === selectedChain?.chainId && quoteAsset && !quoteAsset.tradeAllowance.isZero() && !quoteAsset.balance.isZero() &&
+          <div onClick={() => handleExecuteMultiTrade()} className="cursor-pointer border-2 border-emerald-700 hover:bg-emerald-700 bg-zinc-900 p-2 py-3 col-span-3 text-sm font-normal text-white text-center rounded-full">
+            {isLoadingTx ? <Spinner /> : 'Execute Trade'}
+          </div>
+        }
 
-      {/* wallet connected but wrong chain */}
-      {
-        isConnected && chain?.id != selectedChain?.chainId &&
+        {/* wallet connected but wrong chain */}
+        {
+          isConnected && chain?.id != selectedChain?.chainId &&
 
-        <div onClick={openChainModal} className="cursor-pointer border-2 border-zinc-700 hover:border-emerald-700 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
-          Wrong network
-        </div>
-      }
+          <div onClick={openChainModal} className="cursor-pointer border-2 border-zinc-700 hover:border-emerald-700 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
+            Wrong network
+          </div>
+        }
 
-      {/* wallet not connected */}
-      {
-        !isLoading && !isConnected && openConnectModal &&
-        <div onClick={openConnectModal} className="cursor-pointer border-2 border-zinc-700 hover:border-emerald-700 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
-          Connect Wallet
-        </div>
-      }
+        {/* wallet not connected */}
+        {
+          !isLoading && !isConnected && openConnectModal &&
+          <div onClick={openConnectModal} className="cursor-pointer border-2 border-zinc-700 hover:border-emerald-700 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full">
+            Connect Wallet
+          </div>
+        }
 
+      </div>
 
     </div>
 
@@ -341,41 +346,79 @@ const TradeMarket = () => {
 
 {/* limit market trigger details  */ }
 const TradeLimit = () => {
-  return <div className="col-span-1 border-b border-zinc-800">
-    <div className='p-4'>
+  return <>
 
-      <div className='border border-zinc-800 p-2'>
-        <div className="flex items-center justify-between p-2">
-          <div>
-            <p className="truncate font-sans text-xs font-normal text-white">
-              Price Per Option
+    <div className="col-span-1 px-4 pb-4">
+      <div className='p-4 border border-zinc-800'>
+        <p className='text-zinc-200 text-xs leading-5'>
+          Create a margin account to trade Lyra options with limit orders. Set limit price orders or limit votality orders. Coming Soon.
+        </p>
+      </div>
+      {/* wallet action buttons */}
+
+      <div className='py-4'>
+        <div className='bg-black border border-zinc-800 py-4 p-2'>
+          <div className="flex items-center justify-between px-2">
+            <p className="truncate font-sans text-xs font-normal text-zinc-400">
+              Entry Price Per Option
             </p>
-            <div>
-              test
+            <div className="ml-2 flex flex-shrink-0">
+              <p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
+                Current Price: $10.22
+              </p>
             </div>
           </div>
 
-          <div className="ml-2 flex flex-shrink-0">
-            <p className="inline-flex font-mono text-xs font-normal leading-5 text-white">
-              Current Price: $10.22
-            </p>
-            <div>
-              USD
+          <div className="flex items-center justify-between px-2 pt-2">
+            <DebounceInput
+              minLength={1}
+              debounceTimeout={300}
+              onChange={async (e) => {
+                if (e.target.value == '') return
+                const value = parseFloat(e.target.value);
+                console.log({ size: value.toString() });
+              }}
+              type="number"
+              name="size"
+              id="size"
+              value={10.00}
+              className="block ring-transparent outline-none w-24 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+            />
+            <div className="ml-2 flex flex-shrink-0">
+              <p className="inline-flex font-normal text-2xl text-white">
+                USD
+              </p>
             </div>
           </div>
         </div>
       </div>
 
+      <div className='pb-4'>
+        <div className="cursor-pointer border-2 border-emerald-700 hover:bg-emerald-700 bg-zinc-900 p-2 py-3 col-span-3 text-sm font-normal text-white text-center rounded-full">
+          Place Order
+        </div>
+      </div>
+
+      <div className='p-4 border border-zinc-800 font-normal text-zinc-200 text-xs'>
+        Order will be executed if Price &lt;= $10
+      </div>
+
     </div>
-  </div>
+  </>
+
+
 }
 
 const TradeTrigger = () => {
-  return <div>trigger</div>
-}
-
-const isCreditOrDebit = (isBuy: boolean, usd: string): string => {
-  return isBuy ? `(${usd})` : usd
+  return <>
+    <div className="col-span-1 px-4 pb-4">
+      <div className='p-4 border border-zinc-800'>
+        <p className='text-zinc-200 text-xs leading-5'>
+          Take profit and stop loss orders can be set after opening a position through a margin account. You can find this option under the positions table. Coming Soon.
+        </p>
+      </div>
+    </div>
+  </>
 }
 
 
