@@ -6,7 +6,7 @@ import { LyraMarketOptions } from './SelectMarket';
 export const Market = () => {
 
   const { markets, isMarketLoading, selectedMarket, handleSelectedMarket } = useBuilderContext();
-  return <div className='grid grid-cols-3 bg-zinc-800 shadow-sm rounded-sm p-2'>
+  return <div className='grid grid-cols-3 bg-zinc-800 shadow-xl rounded-sm p-2'>
     <div className='col-span-1'>
       <LyraMarketOptions
         markets={markets}
