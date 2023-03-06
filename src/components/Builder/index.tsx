@@ -21,7 +21,7 @@ export const OptionsBuilder = () => {
 
   return <div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
 
-    <div className='col-span-2'>
+    <div className='col-span-3 sm:col-span-2'>
 
       <div className='border border-zinc-800 rounded-sm shadow-sm'>
         <div className='p-6'>
@@ -46,7 +46,7 @@ export const OptionsBuilder = () => {
         </div>
       </div>
 
-      <div>
+      <div className='hidden sm:block'>
 
         <AccountInfoSelect />
 
@@ -58,9 +58,7 @@ export const OptionsBuilder = () => {
 
     </div>
 
-
-
-    <div className='col-span-1'>
+    <div className='col-span-3 sm:col-span-1'>
       <div className=' border border-zinc-800 rounded-sm shadow-sm'>
         {
           lyra && strikes[0] ? <>
@@ -89,6 +87,13 @@ export const OptionsBuilder = () => {
       </div>
     </div>
 
+    <div className='col-span-3 sm:hidden'>
+      <AccountInfoSelect />
+
+      <div className='border border-zinc-800 rounded-sm p-6'>
+        <AccountInfo />
+      </div>
+    </div>
   </div>
 
 }

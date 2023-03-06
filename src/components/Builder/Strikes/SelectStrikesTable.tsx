@@ -47,7 +47,7 @@ export const SelectStrikesTable = () => {
     }))
   }, [strikes])
 
-  return <div className='grid grid-cols-1 sm:grid-cols-4 mb-8'>
+  return <div className='grid grid-cols-1 sm:grid-cols-4'>
     <div className='flex justify-between mt-6'>
 
       <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
@@ -72,7 +72,6 @@ export const SelectStrikesTable = () => {
 
     </div>
 
-
     <div className='col-span-4 mt-4 mb-4'>
       <table className="min-w-full divide-y divide-zinc-700 ">
         <thead className="bg-zinc-800">
@@ -82,7 +81,7 @@ export const SelectStrikesTable = () => {
             </th>
             <th
               scope="col"
-              className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
+              className="px-3 py-3.5 text-left text-xs font-light uppercase text-white"
             >
               IV
             </th>
@@ -104,7 +103,7 @@ export const SelectStrikesTable = () => {
             <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
               Size
             </th>
-            <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
+            <th scope="col" className="px-3 py-3.5 text-left text-xs font-light uppercase text-white">
               Credit/(Debit)
             </th>
             <th scope="col" className="relative py-3.5">
@@ -124,7 +123,7 @@ export const SelectStrikesTable = () => {
                 <td className="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
                   {formatUSD(fromBigNumber(strikePrice))}
                 </td>
-                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                <td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
                   {formatPercentage(fromBigNumber(iv))}
                 </td>
                 <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
@@ -142,7 +141,7 @@ export const SelectStrikesTable = () => {
                 <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
                   {fromBigNumber(size)}
                 </td>
-                <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+                <td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
                   {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
                 </td>
                 <td className="whitespace-nowrap py-2 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">

@@ -21,7 +21,7 @@ export const Strikes = () => {
 
     {
       builderType === BuilderType.Custom &&
-      <div className='col-span-6'>
+      <div className='col-span-6 overflow-x-scroll scrollbar scrollbar-thumb-zinc-700 scrollbar-track-zinc-500  mb-8'>
         <SelectStrikesTable />
       </div>
 
@@ -41,7 +41,7 @@ export const Strikes = () => {
 
     {
       showStrikesSelect && builderType === BuilderType.Builder &&
-      <motion.div className='col-span-6' animate={showStrikesSelect ? "open" : "closed"} variants={{
+      <motion.div className='col-span-6 overflow-x-scroll scrollbar scrollbar-thumb-zinc-700 scrollbar-track-zinc-500  mb-8' animate={showStrikesSelect ? "open" : "closed"} variants={{
         open: { opacity: 1, x: 0 },
         closed: { opacity: 0, x: "-100%" },
       }}>
