@@ -7,23 +7,21 @@ import {
   accountInitialState,
 } from '../reducers'
 
-// ready
-const AccountContext = createContext<AccountProviderState>(
+const LyraAccountContext = createContext<AccountProviderState>(
   accountInitialState
 )
 
-// not ready
-export const AccountContextProvider = ({ children, lyra, strike }: { children: ReactElement, lyra: Lyra, strike: LyraStrike }) => {
+export const LyraAccountContextProvider = ({ children, lyra, strike }: { children: ReactElement, lyra: Lyra, strike: LyraStrike }) => {
   const accountProviderState = useLyraTrade(lyra, strike)
 
   return (
-    <AccountContext.Provider value={accountProviderState}>
+    <LyraAccountContext.Provider value={accountProviderState}>
       {children}
-    </AccountContext.Provider>
+    </LyraAccountContext.Provider>
   )
 }
 
 // ready
 export function useAccountContext() {
-  return useContext(AccountContext)
+  return useContext(LyraAccountContext)
 }

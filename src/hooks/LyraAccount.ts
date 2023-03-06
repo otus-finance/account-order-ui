@@ -1,11 +1,8 @@
-import Lyra, { AccountQuoteBalance, Chain, OptionType, Trade } from '@lyrafinance/lyra-js';
-import { ethers, PopulatedTransaction } from 'ethers';
+import Lyra from '@lyrafinance/lyra-js';
 import { useCallback, useEffect, useReducer, useState } from 'react'
-import { Strategy, StrategyDirection } from '../utils/types';
-import { getStrikeQuote, LyraBoard, LyraChain, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
+import { LyraStrike } from '../queries/lyra/useLyra';
 
 import {
-  useSigner,
   useAccount
 } from 'wagmi';
 
