@@ -43,10 +43,9 @@ export const StrikesTable = () => {
       <AnimatePresence>
         {strikes.map((strike: LyraStrike, index: number) => {
           {/* @ts-ignore */ }
-          const { strikePrice, iv, vega, gamma, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
+          const { strikePrice, iv, quote, id, isCall, market, __board: { expiryTimestamp } } = strike;
           const { size, premium, pricePerOption, isBuy, greeks } = quote;
 
-          const { delta, theta } = greeks;
           return <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} key={`ss${id}-${index}`}>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
               <XMarkIcon

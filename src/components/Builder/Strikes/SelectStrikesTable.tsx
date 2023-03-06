@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { formatUSD, formatNumber, formatPercentage, fromBigNumber, toBN } from '../../../utils/formatters/numbers'
 import { LyraStrike } from '../../../queries/lyra/useLyra';
-import { OptionType } from '../../../utils/types';
+import { BuilderType, OptionType } from '../../../utils/types';
 import { motion, AnimatePresence } from "framer-motion"
 import { calculateOptionType } from '../../../utils/formatters/optiontypes';
 import { useBuilderContext } from '../../../context/BuilderContext';
+import { SelectBuilderExpiration } from '../Strategy/SelectExpiration';
 
-const style = 'border cursor-pointer text-white-700 rounded-2xl bg-zinc-800 text-center p-1 mr-1 text-sm font-light'
+const style = 'border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center w-24 px-6 p-2 mr-1 text-sm font-light'
 
 type SelectedStrike = {
   id: number,
@@ -16,7 +17,7 @@ type SelectedStrike = {
 
 export const SelectStrikesTable = () => {
 
-  const { strikes, selectedExpirationDate, handleToggleSelectedStrike } = useBuilderContext();
+  const { builderType, strikes, selectedExpirationDate, handleToggleSelectedStrike } = useBuilderContext();
 
   const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
 
@@ -47,7 +48,8 @@ export const SelectStrikesTable = () => {
   }, [strikes])
 
   return <div className='grid grid-cols-1 sm:grid-cols-4 mb-8'>
-    <div className='col-span-1 grid grid-cols-4 mt-6'>
+    <div className='flex justify-between mt-6'>
+
       <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Buy
       </div>
@@ -60,7 +62,16 @@ export const SelectStrikesTable = () => {
       <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Put
       </div>
+
+      {
+        builderType === BuilderType.Custom &&
+        <div className=''>
+          <SelectBuilderExpiration />
+        </div>
+      }
+
     </div>
+
 
     <div className='col-span-4 mt-4 mb-4'>
       <table className="min-w-full divide-y divide-zinc-700 ">
