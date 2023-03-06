@@ -6,19 +6,17 @@ import { LyraMarketOptions } from './SelectMarket';
 export const Market = () => {
 
   const { markets, isMarketLoading, selectedMarket, handleSelectedMarket } = useBuilderContext();
-  return <div className='grid grid-cols-3 bg-zinc-800 shadow-xl rounded-sm p-2'>
-    <div className='col-span-1'>
-      <LyraMarketOptions
-        markets={markets}
-        isMarketLoading={isMarketLoading}
-        selectedMarket={selectedMarket}
-        handleSelectedMarket={handleSelectedMarket}
-      />
-    </div>
+  return <div className='flex justify-between bg-zinc-800 shadow-xl rounded-sm p-1'>
 
-    <div className='col-span-2'>
-      <MarketDetails />
-    </div>
+    <LyraMarketOptions
+      markets={markets}
+      isMarketLoading={isMarketLoading}
+      selectedMarket={selectedMarket}
+      handleSelectedMarket={handleSelectedMarket}
+    />
+
+    <MarketDetails />
+
   </div>
 
 }

@@ -21,7 +21,7 @@ export const LyraMarketOptions = (
 
   return isMarketLoading ?
     <div><Spinner /></div> :
-    markets && <div className='grid grid-cols-2'>
+    markets && <div className='flex'>
       {
         markets
           .filter(({ liveBoards }: { liveBoards: LyraBoard[] }) => liveBoards.length > 0)
@@ -34,13 +34,13 @@ export const LyraMarketOptions = (
               onClick={() => {
                 handleSelectedMarket && handleSelectedMarket(market);
               }}
-              className={`col-span-1 p-1 border hover:border-emerald-700 hover:bg-zinc-900 rounded-sm first:mr-2 last:ml-2 cursor-pointer ${selectedClass}`}>
-              <div className="flex items-center p-1 py-0">
-                {name == 'sETH-sUSD' && <ETHIcon />}
-                {name == 'ETH-USDC' && <ETHIcon />}
+              className={`p-2 px-3 border hover:border-emerald-700 hover:bg-zinc-900 rounded-sm first:mr-1  cursor-pointer ${selectedClass}`}>
+              <div className="flex items-center">
+                {name == 'sETH-sUSD' && <ETHIcon className="h-8 w-8" />}
+                {name == 'ETH-USDC' && <ETHIcon className="h-8 w-8" />}
 
-                {name == 'sBTC-sUSD' && <BTCIcon />}
-                {name == 'WBTC-USDC' && <BTCIcon />}
+                {name == 'sBTC-sUSD' && <BTCIcon className="h-8 w-8" />}
+                {name == 'WBTC-USDC' && <BTCIcon className="h-8 w-8" />}
                 <div className="pl-2">
                   <strong className='text-md'>{formatName(name)}</strong>
                 </div>
