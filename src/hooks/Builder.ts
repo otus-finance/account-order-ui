@@ -1,7 +1,7 @@
 import Lyra, { Chain, OptionType } from '@lyrafinance/lyra-js';
 import { ethers } from 'ethers';
 import { useCallback, useEffect, useReducer } from 'react'
-import { Strategy, StrategyDirection } from '../utils/types';
+import { BuilderType, Strategy, StrategyDirection } from '../utils/types';
 import { getStrikeQuote, LyraBoard, LyraChain, LyraMarket, LyraStrike, useLyraMarket } from '../queries/lyra/useLyra';
 
 import {
@@ -45,6 +45,7 @@ export const useBuilder = () => {
 
   const {
     lyra,
+    builderType,
     selectedChain,
     showStrikesSelect,
     markets,
@@ -122,7 +123,6 @@ export const useBuilder = () => {
     }
 
   }, [selectedChain])
-
 
   const { data, isLoading } = useLyraMarket(lyra);
 
@@ -232,6 +232,13 @@ export const useBuilder = () => {
       } as BuilderAction)
     }
   }, [selectedMarket])
+
+  const handleSelectBuilderType = (_type: BuilderType) => {
+    dispatch({
+      type: 'SET_BUILDER_TYPE',
+      builderType: _type
+    })
+  }
 
   const handleBuildNewStrategy = (_isBuildNewStrategy: boolean) => {
     dispatch({
@@ -386,6 +393,7 @@ export const useBuilder = () => {
 
   return {
     lyra,
+    builderType,
     selectedChain,
     showStrikesSelect,
     markets,
@@ -399,7 +407,7 @@ export const useBuilder = () => {
     positionPnl,
     isValid,
     isBuildingNewStrategy,
-    // handleSetPnl,
+    handleSelectBuilderType,
     handleSelectedChain,
     handleSelectedMarket,
     handleSelectedExpirationDate,
