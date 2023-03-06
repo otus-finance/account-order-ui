@@ -192,7 +192,7 @@ const TradeMarket = () => {
 
   const { openChainModal } = useChainModal();
   const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useLyraAccountContext();
-
+  console.log({ isLoading })
   const [isLoadingTx, setLoadingTx] = useState(false);
 
   const execute = useTransaction(lyra?.provider || null, lyra?.network || null);

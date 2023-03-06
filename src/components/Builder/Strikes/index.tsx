@@ -1,18 +1,10 @@
-import React, { useCallback, useState } from 'react';
-import { Chain } from '@lyrafinance/lyra-js';
+import React from 'react';
 import { useBuilderContext } from '../../../context/BuilderContext';
-import { formatUSD } from '../../../utils/formatters/numbers';
 import LyraIcon from '../../UI/Icons/Color/LYRA';
 import { SelectStrikesTable } from './SelectStrikesTable';
 import { StrikesTable } from './StrikesTable';
 import { motion } from "framer-motion"
 
-import Modal from '../../UI/Modal';
-
-import { StrikeTrade } from '../StrikeTrade';
-import ArbitrumIcon from '../../UI/Icons/Color/ONE';
-import OptimismIcon from '../../UI/Icons/Color/OP';
-import { AccountContextProvider } from '../../../context/LyraAccountContext';
 import { BuilderType } from '../../../utils/types';
 
 export const Strikes = () => {

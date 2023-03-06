@@ -24,12 +24,13 @@ export type AccountAction =
   | {
     type: 'SET_TRADE_INIT',
     tradeInit: AccountProviderState['tradeInit'],
-    marketAddress: AccountProviderState['marketAddress']
+    marketAddress: AccountProviderState['marketAddress'],
+    isLoading: AccountProviderState['isLoading']
   }
   | {
     type: 'SET_QUOTE_ASSET',
     quoteAsset: AccountProviderState['quoteAsset'],
-    isLoading: false
+    isLoading: AccountProviderState['isLoading']
   }
   | {
     type: 'RESET_ACCOUNT_PROVIDER',
@@ -43,7 +44,7 @@ export function accountReducer(
     case 'SET_LOADING':
       return { ...state, isLoading: action.isLoading }
     case 'SET_TRADE_INIT':
-      return { ...state, tradeInit: action.tradeInit, marketAddress: action.marketAddress }
+      return { ...state, tradeInit: action.tradeInit, marketAddress: action.marketAddress, isLoading: action.isLoading }
     case 'SET_QUOTE_ASSET':
       return { ...state, quoteAsset: action.quoteAsset, isLoading: action.isLoading }
     case 'RESET_ACCOUNT_PROVIDER':

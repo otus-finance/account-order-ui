@@ -40,7 +40,8 @@ export const useLyraTrade = (lyra: Lyra | null, strike: LyraStrike | null) => {
       dispatch({
         type: "SET_TRADE_INIT",
         tradeInit: trade,
-        marketAddress: trade.marketAddress
+        marketAddress: trade.marketAddress,
+        isLoading: false
       } as AccountAction)
     }
   }, [lyra, address, strike])
