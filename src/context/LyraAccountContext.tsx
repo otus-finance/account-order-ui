@@ -22,6 +22,6 @@ export const LyraAccountContextProvider = ({ children, lyra, strike }: { childre
 }
 
 // ready
-export function useAccountContext() {
+export function useLyraAccountContext() {
   return useContext(LyraAccountContext)
 }
