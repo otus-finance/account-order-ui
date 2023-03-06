@@ -40,7 +40,7 @@ export const LyraMarketOptions = (
                 {name == 'ETH-USDC' && <ETHIcon />}
 
                 {name == 'sBTC-sUSD' && <BTCIcon />}
-                {name == 'BTC-USDC' && <BTCIcon />}
+                {name == 'WBTC-USDC' && <BTCIcon />}
                 <div className="pl-2">
                   <strong className='text-md'>{formatName(name)}</strong>
                 </div>
