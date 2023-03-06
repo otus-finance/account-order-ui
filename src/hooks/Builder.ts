@@ -62,9 +62,8 @@ export const useBuilder = () => {
   } = state;
 
   const network = useNetwork();
-
   const handleSelectedChain = (chain: LyraChain) => {
-    console.log({ chain })
+
     dispatch({
       type: 'SET_CHAIN',
       selectedChain: chain,
@@ -77,9 +76,13 @@ export const useBuilder = () => {
   }
 
   useEffect(() => {
-    if (network.chain && selectedChain?.name !== network.chain.name.toLowerCase()) {
+
+    if (!network.chain) return;
+    let networkChainName = network.chain?.name.toLowerCase().split(' ')[0];
+
+    if (selectedChain?.name !== networkChainName) {
       const _chain = chains.find(chain => {
-        return chain.name === network.chain?.name.toLowerCase();
+        return chain.name === networkChainName;
       })
       if (!_chain) return;
       handleSelectedChain(_chain);
@@ -292,7 +295,6 @@ export const useBuilder = () => {
       const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
 
       const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
-        console.log(strike)
         const { id } = strike;
         if (id == _id && isCall == strike.isCall) {
           return { ...strike, quote: _quote }
