@@ -46,3 +46,8 @@ export type StrategyDirection = {
   id: StrategyType,
   name: string
 }
+
+export enum BuilderType {
+  Builder,
+  Custom
+}

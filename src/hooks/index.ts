@@ -1,2 +1,2 @@
 export { useBuilder } from './Builder'
-export { useLyraTrade } from './Account'
+export { useLyraTrade } from './LyraAccount'
