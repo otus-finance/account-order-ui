@@ -19,7 +19,7 @@ import { DebounceInput } from 'react-debounce-input';
 
 export const StrikeTrade = () => {
 
-
+  const { quoteAsset } = useLyraAccountContext();
 
   const {
     selectedMarket,
@@ -96,39 +96,44 @@ export const StrikeTrade = () => {
           }
         </div>
 
+        {/* cost summary premium summary */}
+        <div className='col-span-1 border-b border-zinc-800'>
+          <div className='grid grid-cols-2 p-4'>
+            <div className='text-xs text-zinc-200'>
+              Balance
+            </div>
+            <div className='text-xs text-white font-semibold col-span-1 text-right'>{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance), { dps: 2 })} {quoteAsset?.symbol}</div>
+          </div>
+        </div>
+
+
+        <div className='col-span-1 border-b border-zinc-800'>
+          <div className='grid grid-cols-2 p-4 gap-2'>
+            <div className='text-xs text-zinc-200'>
+              Min. Premium Received
+            </div>
+            <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}</div>
+
+            <div className=' col-span-1 text-xs text-zinc-200'>
+              Collateral Required
+            </div>
+            <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(collateralRequired)}</div>
+
+            <div className=' col-span-1 text-xs text-zinc-200'>
+              Max Cost
+            </div>
+            <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(maxCost)}</div>
+
+            <div className='text-xs text-zinc-200'>
+              Total Funds Required
+            </div>
+            <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(collateralRequired + maxCost)}</div>
+          </div>
+        </div>
+
+
         {/* limit / market / trigger button header  */}
         <TradeType />
-
-        {/* cost summary premium summary */}
-        {/* <div className='col-span-1 grid grid-cols-2'>
-
-          <div className='text-xs text-zinc-200'>
-            Min. Premium Received
-          </div>
-          <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}</div>
-
-          <div className=' col-span-1 text-xs text-zinc-200'>
-            Collateral Required
-          </div>
-          <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(collateralRequired)}</div>
-
-          <div className=' col-span-1 text-xs text-zinc-200'>
-            Max Cost
-          </div>
-          <div className='text-xs text-white font-semibold col-span-1 text-right'>{formatUSD(maxCost)}</div>
-
-          <div className='text-xs text-zinc-200 border-t border-zinc-700'>
-            Total Funds Required
-          </div>
-          <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700'>{formatUSD(collateralRequired + maxCost)}</div>
-
-
-          <div className='text-xs text-zinc-200 border-t border-zinc-700'>
-            {quoteAsset?.symbol} Balance
-          </div>
-          <div className='text-xs text-white font-semibold col-span-1 text-right border-t border-zinc-700'>{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance))}</div>
-
-        </div> */}
 
       </div>
     }
@@ -372,3 +377,8 @@ const TradeTrigger = () => {
 const isCreditOrDebit = (isBuy: boolean, usd: string): string => {
   return isBuy ? `(${usd})` : usd
 }
+
+
+
+
+

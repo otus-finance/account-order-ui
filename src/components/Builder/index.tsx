@@ -88,16 +88,6 @@ export const OptionsBuilder = () => {
         }
       </div>
     </div>
-    {/* 
-    <Chain />
-
-    <Market />
-
-    <Strategy />
-
-    <Strikes />
-
-    <Chart /> */}
 
   </div>
 
