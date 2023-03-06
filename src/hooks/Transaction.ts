@@ -47,7 +47,7 @@ const reportError = (
   // Remove parentheses from error message
   const rawMessage = error?.data?.message ?? error?.message
   let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong'
-  console.log({ message })
+
   if (transactionReceipt?.transactionHash) {
     console.log('is url?');
     message += '. Click to view failed transaction.'
@@ -57,7 +57,7 @@ const reportError = (
 
   // Log error to Sentry
   logError(message, { error, transactionReceipt, network })
-  console.log({ error: message })
+
   const args: CreateToastOptions = {
     variant: 'error',
     description: message,

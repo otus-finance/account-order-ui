@@ -49,7 +49,6 @@ export const Web3Button = () => {
                   </button>
                 );
               }
-              console.log(chain.iconUrl);
               return (
                 <div className="flex gap-4">
                   <button

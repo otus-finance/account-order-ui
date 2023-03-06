@@ -163,7 +163,7 @@ const TradeType = () => {
 }
 
 const TradeTypeSelect = ({ typeSelected }: { typeSelected: TradeTypes }) => {
-  console.log({ typeSelected })
+
   return <div className="col-span-1">
     <div className='p-2 pt-4'>
       <div className='flex gap-8'>
@@ -192,7 +192,7 @@ const TradeMarket = () => {
 
   const { openChainModal } = useChainModal();
   const { isLoading, quoteAsset, tradeInit, fetchMarketQuoteBalance } = useLyraAccountContext();
-  console.log({ isLoading })
+
   const [isLoadingTx, setLoadingTx] = useState(false);
 
   const execute = useTransaction(lyra?.provider || null, lyra?.network || null);
