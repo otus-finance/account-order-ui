@@ -37,9 +37,7 @@ export const OptionsBuilder = () => {
         {
           builderType === BuilderType.Builder &&
           <div className='border-b border-zinc-800'>
-
             <Strategy />
-
           </div>
         }
 
@@ -70,7 +68,7 @@ export const OptionsBuilder = () => {
               <StrikeTrade />
             </LyraAccountContextProvider>
 
-            <div className='p-4 rounded-sm'>
+            <div className='p-4 rounded-sm border-t border-zinc-800'>
               <Chart />
             </div>
           </> :

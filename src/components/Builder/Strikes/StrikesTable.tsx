@@ -28,21 +28,6 @@ export const StrikesTable = () => {
         >
           IV
         </th>
-        {/* <th
-          scope="col"
-          className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
-        >
-          Vega
-        </th>
-        <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
-          Theta
-        </th>
-        <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
-          Delta
-        </th>
-        <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
-          Gamma
-        </th> */}
         <th scope="col" className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell">
           Size
         </th>
@@ -80,18 +65,6 @@ export const StrikesTable = () => {
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               {formatPercentage(fromBigNumber(iv))}
             </td>
-            {/* <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-              {formatNumber(fromBigNumber(vega), { maxDps: 2 })}
-            </td>
-            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-              {formatNumber(fromBigNumber(theta), { maxDps: 2 })}
-            </td>
-            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-              {formatNumber(fromBigNumber(delta), { maxDps: 2 })}
-            </td>
-            <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
-              {formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
-            </td> */}
             <td className="hidden whitespace-nowrap px-3 py-4 text-xs text-zinc-200 sm:table-cell">
               <DebounceInput
                 minLength={1}
@@ -100,7 +73,7 @@ export const StrikesTable = () => {
                   const value = parseFloat(e.target.value);
                   handleUpdateQuote({ size: value.toString(), strike: strike });
                 }}
-                className="p-1 border border-zinc-700 bg-zinc-800 w-16" type='number' min={1}
+                className="p-1 border border-zinc-700 bg-zinc-900 w-12 rounded-sm" type='number' min={1}
                 value={fromBigNumber(size)}
               />
             </td>
@@ -108,7 +81,7 @@ export const StrikesTable = () => {
               {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
             </td>
             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
-              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/${selectedChain?.name}/${market.toLowerCase()}?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/${selectedChain?.name}/${market.toLowerCase()}?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-700 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                 <span className='content-center'>
                   {formatUSD(fromBigNumber(pricePerOption))}
                 </span>

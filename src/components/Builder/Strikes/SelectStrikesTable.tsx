@@ -142,12 +142,12 @@ export const SelectStrikesTable = () => {
                       }
                       return false;
                     }).length > 0 ?
-                      <a onClick={() => handleToggleSelectedStrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-700 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Remove
                         </span>
                       </a> :
-                      <a onClick={() => handleToggleSelectedStrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-2xl p-2 inline border border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Select
                         </span>
