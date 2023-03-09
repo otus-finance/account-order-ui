@@ -14,7 +14,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { optimism, arbitrum } from 'wagmi/chains';
+import { optimism, arbitrum, localhost } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -27,7 +27,7 @@ Sentry.init({
 });
 
 const { chains, provider } = configureChains(
-  [optimism, arbitrum],
+  [optimism, arbitrum, localhost],
   [
     infuraProvider({
       // @ts-ignore
@@ -52,7 +52,7 @@ const queryClient = new QueryClient()
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains} initialChain={optimism}>
+    <RainbowKitProvider chains={chains}>
       <QueryClientProvider client={queryClient}>
         <Layout>
           <Component {...pageProps} />
