@@ -50,16 +50,16 @@ export const SelectStrikesTable = () => {
   return <div className='grid grid-cols-1 sm:grid-cols-4'>
     <div className='flex justify-between mt-6'>
 
-      <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
+      <div onClick={() => setIsBuy(true)} className={`${isBuy ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Buy
       </div>
-      <div onClick={() => setIsBuy(false)} className={`${!isBuy ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
+      <div onClick={() => setIsBuy(false)} className={`${!isBuy ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Sell
       </div>
-      <div onClick={() => setIsCall(true)} className={`${isCall ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style} ml-2`}>
+      <div onClick={() => setIsCall(true)} className={`${isCall ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style} ml-2`}>
         Call
       </div>
-      <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-700 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
+      <div onClick={() => setIsCall(false)} className={`${!isCall ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-700'} ${style}`}>
         Put
       </div>
 
@@ -152,12 +152,12 @@ export const SelectStrikesTable = () => {
                       }
                       return false;
                     }).length > 0 ?
-                      <a onClick={() => handleToggleSelectedStrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-700 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, false)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-600 hover:border-emerald-600 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Remove
                         </span>
                       </a> :
-                      <a onClick={() => handleToggleSelectedStrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-zinc-900 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+                      <a onClick={() => handleToggleSelectedStrike(strike, true)} className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-zinc-900 hover:border-emerald-600 hover:bg-zinc-800 bg-zinc-800">
                         <span className='content-center'>
                           Select
                         </span>

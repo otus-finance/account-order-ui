@@ -32,10 +32,10 @@ export const Strategies = () => {
 
         const { name, description, type, tags } = strategy;
 
-        const isSelectedStyle = isSelected(strategy) ? 'border-emerald-800' : 'border-zinc-800'
+        const isSelectedStyle = isSelected(strategy) ? 'border-emerald-600' : 'border-zinc-800'
 
         return <motion.div whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }} onClick={() => handleSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border  hover:border-emerald-700 mt-2 mb-8 rounded-sm ${isSelectedStyle}`}>
+          whileTap={{ scale: 0.97 }} onClick={() => handleSelectedStrategy(strategy)} key={index} className={`cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border  hover:border-emerald-600 mt-2 mb-8 rounded-sm ${isSelectedStyle}`}>
           <div className="grid grid-cols-1 p-4">
             <div className="grid grid-cols-3 place-content-between">
               <div className="col-span-2 text-xl font-bold">

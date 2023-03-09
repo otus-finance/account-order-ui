@@ -56,7 +56,7 @@ export const StrikesTable = () => {
             </td>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
               {isBuy ? <span className='text-zinc-100 font-light p-1'>Buy</span> : <span className='text-zinc-100 font-light p-1'>Sell</span>}
-              {isCall ? <span className='text-emerald-700 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}
+              {isCall ? <span className='text-emerald-600 font-light p-1 block'>Call</span> : <span className='text-pink-700 font-light p-1 block'>Put</span>}
             </td>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
               {formatUSD(fromBigNumber(strikePrice))}
@@ -80,7 +80,7 @@ export const StrikesTable = () => {
               {isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
             </td>
             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
-              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/${selectedChain?.name}/${market.toLowerCase()}?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-700 hover:border-emerald-700 hover:bg-zinc-800 bg-zinc-800">
+              <a target='_blank' rel="noreferrer" href={`https://app.lyra.finance/#/trade/${selectedChain?.name}/${market.toLowerCase()}?expiry=${expiryTimestamp}`} className="text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-600 hover:border-emerald-600 hover:bg-zinc-800 bg-zinc-800">
                 <span className='content-center'>
                   {formatUSD(fromBigNumber(pricePerOption))}
                 </span>

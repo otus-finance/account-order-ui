@@ -32,7 +32,7 @@ export const Strikes = () => {
       <div className="col-span-1 grid grid-cols-3 gap-3 mt-2">
         {
           selectedStrategy && builderType === BuilderType.Builder &&
-          <div onClick={() => handleBuildNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-700 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
+          <div onClick={() => handleBuildNewStrategy(!isBuildingNewStrategy)} className="cursor-pointer border border-zinc-800 hover:border-emerald-600 bg-zinc-900 p-2 col-span-3 font-semibold text-xs text-white text-center rounded-2xl">
             {isBuildingNewStrategy ? 'Reset Strategy' : 'Use Strategy as Template'}
           </div>
         }

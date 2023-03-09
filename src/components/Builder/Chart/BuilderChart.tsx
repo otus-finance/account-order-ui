@@ -70,7 +70,7 @@ const CustomTooltip = ({ currentPrice, active, payload, label }: { currentPrice:
         <div>
           {
             payload[0].value > 0 ?
-              <p className="font-mono text-xs font-bold leading-5 text-emerald-700">
+              <p className="font-mono text-xs font-bold leading-5 text-emerald-600">
                 {formatUSD(payload[0].value)}
               </p> :
               <p className="font-mono text-xs font-bold leading-5 text-pink-900">
