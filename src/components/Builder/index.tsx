@@ -1,5 +1,4 @@
 import React from 'react'
-import { Chain } from './Chain'
 import { Chart } from './Chart'
 import { Market } from './Market'
 import { Strategy } from './Strategy'
@@ -10,6 +9,9 @@ import { useBuilderContext } from '../../context/BuilderContext'
 import { StrikeTrade } from './StrikeTrade'
 import { BuilderType } from '../../utils/types'
 import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid'
+import { AccountPosition } from '../Account'
+import { useAccount } from 'wagmi'
+import { AccountOrderActions } from '../Account/AccountOrderActions'
 
 export const OptionsBuilder = () => {
 
@@ -47,19 +49,17 @@ export const OptionsBuilder = () => {
       </div>
 
       <div className='hidden sm:block'>
-
-        <AccountInfoSelect />
-
-        <div className='border border-zinc-800 rounded-sm p-6'>
-          <AccountInfo />
-        </div>
-
+        <AccountPosition />
       </div>
 
     </div>
 
     <div className='col-span-3 sm:col-span-1'>
-      <div className=' border border-zinc-800 rounded-sm shadow-sm'>
+
+      <AccountOrderActions />
+
+      <div className='border border-zinc-800 rounded-sm shadow-sm'>
+
         {
           lyra && strikes[0] ? <>
             <LyraAccountContextProvider lyra={lyra} strike={strikes[0]}>
@@ -85,14 +85,12 @@ export const OptionsBuilder = () => {
             </div>
         }
       </div>
+
     </div>
 
-    <div className='col-span-3 sm:hidden'>
-      <AccountInfoSelect />
 
-      <div className='border border-zinc-800 rounded-sm p-6'>
-        <AccountInfo />
-      </div>
+    <div className='col-span-3 sm:hidden'>
+      <AccountPosition />
     </div>
   </div>
 
@@ -110,22 +108,4 @@ const BuilderSelect = () => {
       Custom
     </div>
   </div>
-}
-
-const AccountInfoSelect = () => {
-  return <div className='flex items-center gap-8 text-sm px-6 pt-6 pb-2'>
-    <div className='cursor-pointer text-zinc-300 hover:text-white'>
-      Positions
-    </div>
-    <div className='cursor-pointer text-zinc-300 hover:text-white'>
-      Orders
-    </div>
-    <div className='cursor-pointer text-zinc-300 hover:text-white'>
-      Trades
-    </div>
-  </div>
-}
-
-const AccountInfo = () => {
-  return <>test</>
 }
