@@ -15,8 +15,8 @@ import { extrensicValueFilter, calculateOptionType } from '../utils/formatters/o
 import { useNetwork } from 'wagmi';
 
 const INFURA_ID_PUBLIC = process.env.NEXT_PUBLIC_INFURA_ID;
-const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
-const optimismUrl = `https://optimism-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
+export const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
+export const optimismUrl = `https://optimism-mainnet.infura.io/v3/${INFURA_ID_PUBLIC}`;
 
 const getLyra = async (chain: LyraChain) => {
   const url = chain.name === Chain.Optimism ? optimismUrl : arbitrumUrl;
