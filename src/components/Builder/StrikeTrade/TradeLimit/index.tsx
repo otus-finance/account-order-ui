@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useBuilderContext } from '../../../../context/BuilderContext';
 
 
@@ -8,11 +8,17 @@ import { DebounceInput } from 'react-debounce-input';
 import { AccountOrderContextProvider, useAccountOrderContext } from '../../../../context/AccountOrderContext';
 import { WalletConnect } from '../Common/WalletConnect';
 import { CreateAccount } from '../../../Account/AccountOrderActions';
+import { formatPercentage, formatUSD, fromBigNumber, toBN } from '../../../../utils/formatters/numbers';
+import { ethers } from 'ethers';
+import { OrderTypes } from '../../../../hooks/AccountOrder';
+import { calculateOptionType } from '../../../../utils/formatters/optiontypes';
 
 {/* limit market trigger details  */ }
 export const TradeLimit = () => {
 
   const { address } = useAccount();
+
+
 
   return <div className="col-span-1 px-4 pb-2">
     <div className='p-4 border border-zinc-800'>
@@ -36,10 +42,14 @@ export const TradeLimit = () => {
 
 }
 
-enum OrderTypes {
-  LIMIT_PRICE,
-  LIMIT_VOL
+const getOrderDirection = (isBuy: boolean, isCall: boolean, orderType: OrderTypes) => {
+  if (orderType === OrderTypes.LIMIT_VOL) {
+    return isBuy ? '>=' : '<'
+  } else {
+    return isBuy ? '<=' : '>'
+  }
 }
+
 
 const TradeLimitActions = () => {
   {/* can only place order for single strike at a time */ }
@@ -50,16 +60,64 @@ const TradeLimitActions = () => {
 
   const { strikes } = useBuilderContext();
 
-  const { accountOrder } = useAccountOrderContext();
-
-  console.log({ accountOrder, strikes })
+  const { accountOrder, accountBalance, accountAllowance, order, setOrder, placeOrder } = useAccountOrderContext();
 
   const [orderType, setOrderType] = useState(OrderTypes.LIMIT_PRICE);
+  const [orderDirectionMessage, setOrderDirectionMessage] = useState('');
+
+  const setOrderWithValues = useCallback(() => {
+    if (strikes.length === 1 && strikes[0] && order) {
+      const { market, quote: { isBuy, isCall, size }, id } = strikes[0];
+      console.log({ market })
+      if (!market) return;
+      console.log({ market, isBuy, isCall, id, size: fromBigNumber(size) })
+      console.log({ market })
+      const _market = ethers.utils.formatBytes32String(market.substring(1, 4));
+      console.log({ _market })
+      const _optionType = calculateOptionType(isBuy, isCall);
+      const _strikeId = toBN(id.toString());
+
+      if (!(order.size.eq(size) && order.strikeId.eq(_strikeId) && order.optionType == _optionType)) {
+        setOrder({
+          ...order,
+          market: _market,
+          optionType: _optionType,
+          strikeId: _strikeId,
+          size: size,
+          tradeDirection: toBN('0') // open
+        })
+      }
+
+    }
+  }, [order, setOrder, strikes])
+
+  useEffect(() => {
+    if (strikes.length === 1 && strikes[0] && order) {
+      setOrderWithValues();
+    }
+  }, [setOrderWithValues, order, strikes])
+
+  useEffect(() => {
+
+    if (order && orderType != order.orderType) {
+      setOrder({ ...order, orderType })
+    }
+  }, [setOrder, order, orderType])
+
+  useEffect(() => {
+    if (strikes.length === 1 && strikes[0] && order) {
+      const { quote: { isBuy, isCall } } = strikes[0];
+      const _orderTypeText = OrderTypes.LIMIT_VOL === orderType ? 'Implied Volatility' : 'Price';
+      const _orderDirection = getOrderDirection(isBuy, isCall, orderType);
+      const __orderLimitTarget = OrderTypes.LIMIT_VOL === orderType ? formatPercentage(fromBigNumber(order.targetVolatility)) : formatUSD(fromBigNumber(order.targetPrice));
+      setOrderDirectionMessage(`Order will be executed if ${_orderTypeText} ${_orderDirection} ${__orderLimitTarget}`)
+    }
+  }, [order, strikes, orderType]);
 
   return <>
     {/* wallet action buttons */}
     {
-      strikes.length === 1 ?
+      strikes.length === 1 && order ?
         <>
           <div className='pt-6'>
             <div className='flex justify-between'>
@@ -90,7 +148,7 @@ const TradeLimitActions = () => {
                   </p>
                   <div className="ml-2 flex flex-shrink-0">
                     <p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
-                      Current Price: $10.22
+                      Current Price: {strikes[0] ? formatUSD(fromBigNumber(strikes[0].quote.pricePerOption)) : ''}
                     </p>
                   </div>
                 </div>
@@ -102,11 +160,12 @@ const TradeLimitActions = () => {
                     onChange={async (e) => {
                       if (e.target.value == '') return
                       const value = parseFloat(e.target.value);
+                      setOrder({ ...order, targetPrice: toBN(value.toString()) })
                     }}
                     type="number"
                     name="size"
                     id="size"
-                    value={10.00}
+                    value={fromBigNumber(order?.targetPrice)}
                     className="block ring-transparent outline-none w-24 bg-transparent pr-2 text-left text-white font-normal text-2xl"
                   />
                   <div className="ml-2 flex flex-shrink-0">
@@ -130,7 +189,7 @@ const TradeLimitActions = () => {
                   </p>
                   <div className="ml-2 flex flex-shrink-0">
                     <p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
-                      Current Volatility: 60.20%
+                      Current Volatility: {strikes[0] ? formatPercentage(fromBigNumber(strikes[0].quote.iv)) : ''}
                     </p>
                   </div>
                 </div>
@@ -141,12 +200,13 @@ const TradeLimitActions = () => {
                     debounceTimeout={300}
                     onChange={async (e) => {
                       if (e.target.value == '') return
-                      const value = parseFloat(e.target.value);
+                      const value = parseFloat(e.target.value) / 100;
+                      setOrder({ ...order, targetVolatility: toBN(value.toString()) })
                     }}
                     type="number"
                     name="size"
                     id="size"
-                    value={90}
+                    value={fromBigNumber(order.targetVolatility) * 100}
                     className="block ring-transparent outline-none w-24 bg-transparent pr-2 text-left text-white font-normal text-2xl"
                   />
                   <div className="ml-2 flex flex-shrink-0">
@@ -161,21 +221,21 @@ const TradeLimitActions = () => {
 
 
           </div>
+          {
+            orderDirectionMessage &&
+            <div className='p-4 border border-zinc-800 font-normal text-zinc-200 text-xs'>
+              {orderDirectionMessage}
+            </div>
+          }
 
-          <div className='p-4 border border-zinc-800 font-normal text-zinc-200 text-xs'>
-            Order will be executed if Price &lt;= $10
-          </div>
+
           <div className='py-6'>
             {
-              accountOrder &&
-              <div className="cursor-pointer border-2 bg-emerald-600 border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 p-2 py-3 col-span-3 text-sm font-semibold text-white text-center rounded-full">
-                Place Order
-              </div>
-            }
-
-            {
-              !accountOrder &&
-              <CreateAccount />
+              accountOrder ?
+                <div onClick={() => placeOrder?.()} className="cursor-pointer border-2 bg-emerald-600 border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 p-2 py-3 col-span-3 text-sm font-semibold text-white text-center rounded-full">
+                  Place Order
+                </div> :
+                <CreateAccount />
             }
 
           </div>
