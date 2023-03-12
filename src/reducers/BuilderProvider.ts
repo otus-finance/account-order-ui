@@ -36,7 +36,7 @@ export const builderInitialState: BuilderProviderState = {
   showStrikesSelect: false,
   selectedChain: null,
   markets: [],
-  isMarketLoading: false,
+  isMarketLoading: true,
   currentPrice: 0,
   selectedMarket: null,
   selectedDirectionTypes: [],
