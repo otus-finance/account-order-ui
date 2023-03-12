@@ -10,8 +10,8 @@ import { WalletConnect } from '../Common/WalletConnect';
 import { CreateAccount } from '../../../Account/AccountOrderActions';
 import { formatPercentage, formatUSD, fromBigNumber, toBN } from '../../../../utils/formatters/numbers';
 import { ethers } from 'ethers';
-import { OrderTypes } from '../../../../hooks/AccountOrder';
 import { calculateOptionType } from '../../../../utils/formatters/optiontypes';
+import { OrderTypes } from '../../../../utils/types';
 
 {/* limit market trigger details  */ }
 export const TradeLimit = () => {
