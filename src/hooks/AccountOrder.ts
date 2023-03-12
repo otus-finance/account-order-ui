@@ -178,8 +178,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
       let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong'
       console.log({ error })
     },
-    onMutate: ({ args, overrides }) => {
-      console.log('Mutate', { args, overrides });
+    onMutate: () => {
       depositToastId = createPendingToast({
         description: `Confirm your deposit`,
         autoClose: false,
