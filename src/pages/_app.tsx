@@ -14,7 +14,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { optimism, arbitrum, localhost } from 'wagmi/chains';
+import { optimism, arbitrum, hardhat } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -27,7 +27,7 @@ Sentry.init({
 });
 
 const { chains, provider } = configureChains(
-  [optimism, arbitrum, localhost],
+  [optimism, arbitrum, hardhat],
   [
     infuraProvider({
       // @ts-ignore
