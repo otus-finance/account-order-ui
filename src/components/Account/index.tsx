@@ -2,7 +2,9 @@
 import { useAccount } from 'wagmi'
 import { Spinner } from '../UI/Components/Spinner'
 import { Dispatch, useState } from 'react'
-import { AccountOrderContextProvider } from '../../context/AccountOrderContext'
+import { AccountOrderContextProvider, useAccountOrderContext } from '../../context/AccountOrderContext'
+import { Order } from '../../queries/otus/account'
+import { formatPercentage, formatUSD, fromBigNumber } from '../../utils/formatters/numbers'
 
 enum AccountTab {
   Positions,
@@ -16,7 +18,7 @@ export const AccountPosition = () => {
 
   const { address } = useAccount();
 
-  return <AccountOrderContextProvider owner={address || ''}>
+  return <AccountOrderContextProvider owner={address}>
     <>
       <AccountInfoSelect selectedAccountTab={selectedAccountTab} setSelectedAccountTab={setSelectedAccountTab} />
       <div className='border border-zinc-800 rounded-sm p-6'>
@@ -24,8 +26,6 @@ export const AccountPosition = () => {
       </div>
     </>
   </AccountOrderContextProvider>
-
-  return <div>test</div>
 
 }
 
@@ -50,10 +50,33 @@ const AccountInfoSelect = ({ selectedAccountTab, setSelectedAccountTab }: { sele
 }
 
 const AccountInfo = ({ selectedAccountTab }: { selectedAccountTab: AccountTab }) => {
-  return <AccountOrders />
+
+  const { accountOrder, isLoading } = useAccountOrderContext();
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  return <>
+
+    {
+      selectedAccountTab === AccountTab.Positions ?
+        <AccountPositions orders={accountOrder?.orders || []} /> : null
+    }
+
+    {
+      selectedAccountTab === AccountTab.Orders ?
+        <AccountOrders orders={accountOrder?.orders || []} /> : null
+    }
+
+    {
+      selectedAccountTab === AccountTab.Trades ?
+        <AccountTrades orders={accountOrder?.orders || []} /> : null
+    }
+  </>
 }
 
-const AccountOrders = () => {
+const AccountOrders = ({ orders }: { orders: Array<Order> }) => {
   return <table className="min-w-full divide-y divide-zinc-700 rounded-sm">
     <thead className="bg-zinc-800">
       <tr>
@@ -65,6 +88,9 @@ const AccountOrders = () => {
         </th>
         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-xs font-light">
           Status
+        </th>
+        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-xs font-light">
+          Committed Margin
         </th>
         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-xs font-light">
           Option Type
@@ -87,11 +113,76 @@ const AccountOrders = () => {
       </tr>
     </thead>
     <tbody className="divide-y divide-zinc-700 bg-zinc-800">
+      {
+        orders.map((order: Order, index: number) => {
 
+          const {
+            id,
+            orderId,
+            committedMargin,
+            gelatoTaskId,
+            market,
+            collatPercent,
+            optionType,
+            strikeId,
+            size,
+            positionId,
+            tradeDirection,
+            targetPrice,
+            targetVolatility,
+            status
+          } = order;
+
+          return <tr key={index}>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {orderId}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              Order Type
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {status}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {formatUSD(fromBigNumber(committedMargin))}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {optionType}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {fromBigNumber(strikeId)}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {fromBigNumber(size)}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {fromBigNumber(tradeDirection)}
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              Target Price
+            </td>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+              {formatPercentage(fromBigNumber(targetVolatility))}
+            </td>
+
+          </tr>
+        })
+      }
     </tbody>
   </table>
 }
 
-const AccountPositions = () => { }
+const AccountPositions = ({ orders }: { orders: Array<Order> }) => {
+  return <table className="min-w-full divide-y divide-zinc-700 rounded-sm"></table>
+}
 
-const AccountTrades = () => { }
+const AccountTrades = ({ orders }: { orders: Array<Order> }) => {
+  return <table className="min-w-full divide-y divide-zinc-700 rounded-sm"></table>
+}
+
+
+// need get order id
+
+// need get optiontype 
+
+// need trade direction 

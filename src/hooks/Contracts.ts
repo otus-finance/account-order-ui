@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadAppContracts } from './helpers/loadAppContracts'
 import { Contract, ethers } from 'ethers'
+import { Address, useNetwork } from 'wagmi'
 
 type ContractConfig = {
   deployedContracts: {
@@ -28,27 +29,24 @@ export const useContractConfig = () => {
 
 export const useAccountFactoryContract = () => {
   const contractsConfig = useContractConfig();
+  const [accountFactoryContract, setAccountFactoryContract] = useState<[Address | undefined, any]>([undefined, undefined]);
 
-  const [contract, setContract] = useState<Contract>();
+  const { chain } = useNetwork();
 
   const loadContracts = useCallback(async () => {
-    const provider = new ethers.providers.JsonRpcProvider()
-    const network = await provider.getNetwork();
 
-    if (provider && network && contractsConfig) {
-      const _contracts = contractsConfig.deployedContracts[network.chainId][0].contracts;
-      const _contract = new ethers.Contract(_contracts['AccountFactory'].address, _contracts['AccountFactory'].abi)
-
-      setContract(_contract);
+    if (contractsConfig && chain) {
+      const _contracts = contractsConfig.deployedContracts[chain.id][0].contracts;
+      setAccountFactoryContract([_contracts['AccountFactory'].address, _contracts['AccountFactory'].abi]);
     }
 
-  }, [contractsConfig])
+  }, [contractsConfig, chain])
 
   useEffect(() => {
-    if (contractsConfig && contract == null) {
+    if (contractsConfig && chain) {
       loadContracts();
     }
-  }, [loadContracts, contract, contractsConfig])
+  }, [loadContracts, contractsConfig, chain])
 
-  return contract;
+  return accountFactoryContract;
 }

@@ -1,3 +1,5 @@
+import { BigNumber, BigNumberish } from "ethers"
+
 export type StrategyStrikeTrade = {
   optionType: OptionType
   priceAt: PriceAt // change to enum
@@ -50,4 +52,27 @@ export type StrategyDirection = {
 export enum BuilderType {
   Builder,
   Custom
+}
+
+// place orders types 
+export enum OrderTypes {
+  MARKET,
+  LIMIT_PRICE,
+  LIMIT_VOL,
+  TAKE_PROFIT,
+  STOP_LOSS
+}
+
+export type StrikeTrade = {
+  orderType: OrderTypes;
+  market: string;
+  iterations: BigNumberish;
+  collatPercent: BigNumber;
+  optionType: BigNumberish;
+  strikeId: BigNumber;
+  size: BigNumber;
+  positionId: BigNumberish;
+  tradeDirection: BigNumberish;
+  targetPrice: BigNumber;
+  targetVolatility: BigNumber;
 }

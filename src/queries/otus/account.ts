@@ -1,6 +1,7 @@
+import { BigNumber, Bytes } from 'ethers';
 import request, { gql } from 'graphql-request';
 import { useQuery } from 'react-query';
-import { useNetwork } from 'wagmi';
+import { Address, useNetwork } from 'wagmi';
 import { getOtusEndpoint } from '../../utils/endpoints';
 
 const QUERY_KEYS = {
@@ -13,8 +14,28 @@ type AccountOrderData = {
   accountOrders: AccountOrder[]
 }
 
+export type Order = {
+  id: string
+  orderId: BigNumber
+  committedMargin: BigNumber
+  gelatoTaskId: Bytes
+  market: Bytes
+  collatPercent: BigNumber
+  optionType: number
+  strikeId: BigNumber
+  size: BigNumber
+  positionId: BigNumber
+  tradeDirection: BigNumber
+  targetPrice: BigNumber
+  targetVolatility: BigNumber
+  status: number | null
+}
+
 export type AccountOrder = {
-  id: number
+  id: Address
+  owner: Address
+  balance: BigNumber
+  orders: Array<Order>
 }
 
 export const useAccountWithOrders = (owner: any) => {
@@ -36,6 +57,19 @@ export const useAccountWithOrders = (owner: any) => {
               balance 
               orders {
                 id
+                orderId
+                committedMargin
+                gelatoTaskId
+                market
+                collatPercent
+                optionType
+                strikeId
+                size
+                positionId
+                tradeDirection
+                targetPrice
+                targetVolatility
+                status
               }
             }
           }
@@ -44,10 +78,7 @@ export const useAccountWithOrders = (owner: any) => {
       );
     },
     {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-      staleTime: 1000 * 60,
+      enabled: !!owner
     }
   )
 }

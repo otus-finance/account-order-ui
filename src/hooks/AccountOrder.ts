@@ -1,14 +1,15 @@
-import { Chain, Provider } from '@wagmi/core';
-import { BigNumber, BigNumberish, Contract, ethers } from 'ethers';
+import { Provider } from '@wagmi/core';
+import { Contract, ethers } from 'ethers';
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   Address,
   erc20ABI,
-  useBalance, useContractRead, useContractWrite, useNetwork, usePrepareContractWrite, useProvider, useSigner
+  useBalance, useContractWrite, useNetwork, usePrepareContractWrite, useProvider, useSigner, useWaitForTransaction
 } from 'wagmi';
-import { MAX_BN, ZERO_ADDRESS, ZERO_BN } from '../constants/bn';
+import { HeroIcon, IconType } from '../components/UI/Icons/IconSVG';
+import { createPendingToast, CreateToastOptions, ToastIcon, updatePendingToast, updateToast } from '../components/UI/Toast';
+import { ZERO_ADDRESS, ZERO_BN } from '../constants/bn';
 import { quote } from '../constants/quote';
-import { LyraMarket } from '../queries/lyra/useLyra';
 import { useAccountWithOrders } from '../queries/otus/account';
 
 import {
@@ -17,10 +18,14 @@ import {
   accountOrderInitialState,
   accountOrderReducer,
 } from '../reducers'
+import getExplorerUrl from '../utils/chains/getExplorerUrl';
 import { formatUSD, fromBigNumber, toBN } from '../utils/formatters/numbers';
+import { OrderTypes } from '../utils/types';
 import { useContractConfig } from './Contracts';
 
-export const useAccountOrder = (owner: Address) => {
+const DEFAULT_TOAST_TIMEOUT = 1000 * 5 // 5 seconds
+
+export const useAccountOrder = (owner: Address | undefined) => {
 
   const [state, dispatch] = useReducer(
     accountOrderReducer,
@@ -45,6 +50,7 @@ export const useAccountOrder = (owner: Address) => {
   }, [isLoading, isDataLoading])
 
   useEffect(() => {
+    console.log({ data })
     if (data) {
       // get first accountorder
       const { accountOrders } = data;
@@ -62,6 +68,12 @@ export const useAccountOrder = (owner: Address) => {
         isLoading: false
       })
 
+    } else {
+      dispatch({
+        type: 'SET_ACCOUNT_ORDER',
+        accountOrder: null,
+        isLoading: false
+      })
     }
   }, [data]);
 
@@ -131,6 +143,8 @@ export const useAccountOrder = (owner: Address) => {
   // deposit  
   const [depositAmount, setDepositAmount] = useState(0);
 
+  let depositToastId = '';
+
   const { config: accountOrderDepositConfig } = usePrepareContractWrite({
     address: accountOrder?.id,
     abi: chain?.id && contractsConfig?.deployedContracts[chain?.id][0]['contracts']['AccountOrder'].abi,
@@ -142,26 +156,66 @@ export const useAccountOrder = (owner: Address) => {
   const {
     isSuccess: isDepositSuccess,
     isLoading: isDepositLoading,
-    write: deposit
+    write: deposit,
+    data: depositData
   } = useContractWrite({
     ...accountOrderDepositConfig,
-    onSettled: (data, error) => {
-      console.log('Settled', { data, error })
+    onSuccess: (data, variables, context) => {
+      console.log('success1', { data });
+      console.log({ depositToastId, chain, variables, context })
+      if (depositToastId && chain) {
+        const txHref = getExplorerUrl(chain?.id, data.hash)
+
+        updatePendingToast(depositToastId, {
+          description: `Your deposit is pending, click to view on etherscan`,
+          href: txHref,
+          autoClose: DEFAULT_TOAST_TIMEOUT,
+        })
+      }
     },
-    onSuccess: (data) => {
-      console.log({ data })
-    },
-    onError: (error) => {
+    onError: (error, variables, context) => {
+      const rawMessage = error?.data?.message ?? error?.message
+      let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong'
       console.log({ error })
     },
     onMutate: ({ args, overrides }) => {
-      console.log('Mutate', { args, overrides })
+      console.log('Mutate', { args, overrides });
+      depositToastId = createPendingToast({
+        description: `Confirm your deposit`,
+        autoClose: false,
+        icon: ToastIcon.Error
+      });
     }
   });
 
-  // const { data, isError, isLoading } = useWaitForTransaction({
-  //   hash: '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
-  // })
+  const waitForDeposit = useWaitForTransaction({
+    hash: depositData?.hash,
+    onSuccess: (data) => {
+      if (chain && data.blockHash) {
+        const txHref = getExplorerUrl(chain?.id, data.blockHash)
+
+        console.log('Success', data, depositToastId);
+        const args: CreateToastOptions = {
+          variant: 'success',
+          description: `Your tx was successful`,
+          href: txHref,
+          autoClose: DEFAULT_TOAST_TIMEOUT,
+          icon: HeroIcon(IconType.CheckIcon),
+        }
+        // updatePendingToast(depositToastId, {
+        //   description: `Your deposit is pending, click to view on etherscan`,
+        //   href: txHref,
+        //   autoClose: false,
+        // })
+        updateToast(depositToastId, args)
+      }
+
+    },
+    onError(err) {
+      console.log('error', err);
+
+    },
+  })
 
   // withdraw
   const [withdrawAmount, setWithdrawAmount] = useState(0);
@@ -193,6 +247,9 @@ export const useAccountOrder = (owner: Address) => {
     userBalance,
     accountAllowance,
     order,
+    depositAmount,
+    withdrawAmount,
+    allowanceAmount,
     setOrder,
     setAllowanceAmount,
     setDepositAmount,
@@ -229,20 +286,6 @@ const useAccountAllowance = (tokenAddr: Address | undefined, abi: any, owner: Ad
   return accountAllowance;
 }
 
-export type StrikeTrade = {
-  orderType: number;
-  market: string;
-  iterations: BigNumberish;
-  collatPercent: BigNumber;
-  optionType: BigNumberish;
-  strikeId: BigNumber;
-  size: BigNumber;
-  positionId: BigNumberish;
-  tradeDirection: BigNumberish;
-  targetPrice: BigNumber;
-  targetVolatility: BigNumber;
-}
-
 const useLimitOrder = ({
   chainId,
   accountOrderAddr,
@@ -254,7 +297,7 @@ const useLimitOrder = ({
 }) => {
 
   const [order, setOrder] = useState<StrikeTrade>({
-    orderType: 0,
+    orderType: OrderTypes.LIMIT_PRICE,
     market: ethers.utils.formatBytes32String("ETH"),
     iterations: 3,
     collatPercent: toBN('1'),
@@ -267,31 +310,14 @@ const useLimitOrder = ({
     targetVolatility: toBN('1')
   });
 
-  useEffect(() => {
-    // if (selectedMarket.name) {
-    //   // setOrder({
-    //   //   orderType: number;
-    //   //   market: string;
-    //   //   iterations: BigNumber;
-    //   //   collatPercent: toBN("1");
-    //   //   optionType: toBN(".45");
-    //   //   strikeId: BigNumber;
-    //   //   size: BigNumber;
-    //   //   positionId: BigNumber;
-    //   //   tradeDirection: BigNumber;
-    //   //   targetPrice: BigNumber;
-    //   //   targetVolatility: BigNumber;
-    //   // })
-    // }
-  }, []);
-
+  // console.log({ order })
   const { config: placeOrderConfig } = usePrepareContractWrite({
     address: accountOrderAddr,
     abi: accountOrderAbi,
     functionName: 'placeOrder',
     args: [order],
     chainId: chainId,
-    overrides: { value: toBN("0.01") },
+    overrides: { value: toBN("0.003") },
     onSettled: (data, error) => {
       console.log('Settled', { data, error })
     },
@@ -311,36 +337,3 @@ const useLimitOrder = ({
   return { order, setOrder, placeOrder };
 
 }
-
-// const strikeTrade: AccountOrder.StrikeTradeStruct = buildOrder(
-//   2,
-//   toBN("2000"),
-//   toBN(".80"),
-//   strikes[2],
-//   0 // long call
-// );
-
-// const MARKET_KEY_ETH = ethers.utils.formatBytes32String("ETH");
-
-
-// const buildOrder = (
-//   orderType: number,
-//   _targetPrice: BigNumber,
-//   _targetVol: BigNumber,
-//   _strikeId: BigNumber,
-//   _optionType: number
-// ): AccountOrder.StrikeTradeStruct => {
-//   return {
-//     collatPercent: toBN(".45"),
-//     iterations: 3,
-//     market: MARKET_KEY_ETH,
-//     optionType: _optionType, // long call
-//     strikeId: _strikeId,
-//     size: toBN("3"),
-//     positionId: 0,
-//     orderType: orderType, // LIMIT_PRICE 1 LIMIT_VOL 2
-//     tradeDirection: 0, // OPEN
-//     targetPrice: _targetPrice,
-//     targetVolatility: _targetVol,
-//   };
-// };
