@@ -1,4 +1,5 @@
 import React, { createContext, ReactElement, useContext } from 'react'
+import { Address } from 'wagmi'
 import { useAccountOrder } from '../hooks'
 import {
   AccountOrderProviderState,
@@ -11,7 +12,7 @@ const AccountOrderContext = createContext<AccountOrderProviderState>(
 )
 
 // not ready
-export const AccountOrderContextProvider = ({ children, owner }: { children: ReactElement, owner: string }) => {
+export const AccountOrderContextProvider = ({ children, owner }: { children: ReactElement, owner: Address | undefined }) => {
   const accountOrderProviderState = useAccountOrder(owner);
 
   return (
