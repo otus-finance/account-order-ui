@@ -13,13 +13,18 @@ export const MarketDetails = () => {
       <strong>{selectedMarket && selectedMarket.spotPrice && formatUSD(fromBigNumber(selectedMarket.spotPrice))}  </strong>
     </div>
 
-    <div className='hidden sm:block px-4'>
-      <div className='font-light text-xs text-zinc-400'>Free Liquidity</div>
+    {
+      selectedMarket &&
+      <div className='hidden sm:block px-4'>
+        <div className='font-light text-xs text-zinc-400'>Free Liquidity</div>
 
-      <div className='font-light text-sm uppercase text-zinc-200'>
-        <strong>{selectedMarket && selectedMarket.liquidity && formatUSD(fromBigNumber(selectedMarket.liquidity))}  </strong>
+        <div className='font-light text-sm uppercase text-zinc-200'>
+          <strong>{selectedMarket && selectedMarket.liquidity && formatUSD(fromBigNumber(selectedMarket.liquidity))}  </strong>
+        </div>
       </div>
-    </div>
+    }
+
+
 
   </div>
 }
