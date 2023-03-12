@@ -1,3 +1,4 @@
+import { ArrowRightCircleIcon, CheckCircleIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { toast, ToastContentProps, ToastOptions, UpdateOptions } from 'react-toastify'
 import { Spinner } from '../Components/Spinner'
@@ -6,7 +7,7 @@ export type ToastVariant = 'info' | 'success' | 'error' | 'warning'
 
 type ToastRenderOptions = {
   variant?: ToastVariant
-  icon?: React.ReactNode
+  icon: ToastIcon
   description?: React.ReactNode
   hrefLabel?: React.ReactNode
   href?: string
@@ -14,12 +15,12 @@ type ToastRenderOptions = {
 }
 
 export type ToastProps = ToastContentProps & ToastRenderOptions
-
 export type CreateToastOptions = ToastRenderOptions & Omit<ToastOptions, 'type'>
 export type UpdateToastOptions = ToastRenderOptions & Omit<UpdateOptions, 'render'>
 
 export function createToast(options: CreateToastOptions): string {
-  const { icon, description, hrefLabel, href, target, variant, autoClose = false, ...toastOptions } = options
+  const { icon, description, hrefLabel, href, target, variant, autoClose = false, ...toastOptions } = options;
+
   const toastId = toast(
     ({ toastProps, closeToast }) => (
       <Toast
@@ -39,16 +40,18 @@ export function createToast(options: CreateToastOptions): string {
       closeOnClick: false,
       draggable: false,
       progressStyle: { background: 'rgba(255, 255, 255, 0.1)', height: '3.5px' },
+      className: 'bg-zinc-800',
     }
   )
-  return toastId as string
+
+  return toastId as string;
+
 }
 
 export function createPendingToast(options: Omit<CreateToastOptions, 'variant'>): string {
   const { autoClose = false } = options
   return createToast({
     variant: 'info',
-    icon: <Spinner />,
     autoClose,
     ...options,
   })
@@ -57,7 +60,6 @@ export function createPendingToast(options: Omit<CreateToastOptions, 'variant'>)
 export function updatePendingToast(toastId: string, options: Omit<UpdateToastOptions, 'variant'>): void {
   updateToast(toastId, {
     variant: 'info',
-    icon: <Spinner />,
     ...options,
   })
 }
@@ -130,15 +132,20 @@ export default function Toast({
   closeToast,
 }: ToastProps) {
   return (
-    <div className='flex' onClick={() => {
+    <div className='flex justify-between' onClick={() => {
       if (closeToast) {
         closeToast()
       }
     }}>
 
-      {
-        description && <span>{description}</span>
-      }
+
+      <div className='text-sm text-zinc-200'>
+        {
+          description && <span>{description}</span>
+        }
+      </div>
+
+
 
       {
         href && <a href={href}>{hrefLabel}</a>
@@ -153,11 +160,32 @@ export default function Toast({
         }
       }}>
 
-        {
-          icon && icon
-        }
+        <ToastIcons icon={icon} />
 
       </div>
+
     </div>
   )
+}
+
+export enum ToastIcon {
+  Success,
+  Error,
+  Pending,
+  Confirm
+}
+
+const ToastIcons = ({ icon }: { icon: ToastIcon }) => {
+  switch (icon) {
+    case ToastIcon.Success:
+      return <CheckCircleIcon className='text-white' />;
+    case ToastIcon.Error:
+      return <ExclamationTriangleIcon className='text-white' />;
+    case ToastIcon.Pending:
+      return <Spinner />;
+    case ToastIcon.Confirm:
+      return <ArrowRightCircleIcon className='text-white' />
+    default:
+      return <></>
+  }
 }
