@@ -12,6 +12,7 @@ import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid'
 import { AccountPosition } from '../Account'
 import { useAccount } from 'wagmi'
 import { AccountOrderActions } from '../Account/AccountOrderActions'
+import { Spinner } from '../UI/Components/Spinner'
 
 export const OptionsBuilder = () => {
 
@@ -19,9 +20,10 @@ export const OptionsBuilder = () => {
     lyra,
     strikes,
     builderType,
+    isMarketLoading,
   } = useBuilderContext();
 
-  return <div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
+  return isMarketLoading ? <Spinner /> : <div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
 
     <div className='col-span-3 sm:col-span-2'>
 

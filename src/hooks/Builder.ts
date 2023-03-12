@@ -139,7 +139,7 @@ export const useBuilder = () => {
     } else {
       dispatch({
         type: 'SET_MARKETS_LOADING',
-        isMarketLoading: isLoading
+        isMarketLoading: true
       })
     }
   }, [data, isLoading])
