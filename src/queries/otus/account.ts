@@ -16,7 +16,7 @@ type AccountOrderData = {
 
 export type Order = {
   id: string
-  orderId: BigNumber
+  orderId: number
   committedMargin: BigNumber
   gelatoTaskId: Bytes
   market: Bytes
