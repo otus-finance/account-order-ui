@@ -20,7 +20,7 @@ import {
 } from '../reducers'
 import getExplorerUrl from '../utils/chains/getExplorerUrl';
 import { formatUSD, fromBigNumber, toBN } from '../utils/formatters/numbers';
-import { OrderTypes } from '../utils/types';
+import { OrderTypes, StrikeTrade } from '../utils/types';
 import { useContractConfig } from './Contracts';
 
 const DEFAULT_TOAST_TIMEOUT = 1000 * 5 // 5 seconds
@@ -163,15 +163,15 @@ export const useAccountOrder = (owner: Address | undefined) => {
     onSuccess: (data, variables, context) => {
       console.log('success1', { data });
       console.log({ depositToastId, chain, variables, context })
-      if (depositToastId && chain) {
-        const txHref = getExplorerUrl(chain?.id, data.hash)
+      // if (depositToastId && chain) {
+      //   const txHref = getExplorerUrl(chain?.id, data.hash)
 
-        updatePendingToast(depositToastId, {
-          description: `Your deposit is pending, click to view on etherscan`,
-          href: txHref,
-          autoClose: DEFAULT_TOAST_TIMEOUT,
-        })
-      }
+      //   updatePendingToast(depositToastId, {
+      //     description: `Your deposit is pending, click to view on etherscan`,
+      //     href: txHref,
+      //     autoClose: DEFAULT_TOAST_TIMEOUT,
+      //   })
+      // }
     },
     onError: (error, variables, context) => {
       const rawMessage = error?.data?.message ?? error?.message
@@ -195,13 +195,13 @@ export const useAccountOrder = (owner: Address | undefined) => {
         const txHref = getExplorerUrl(chain?.id, data.blockHash)
 
         console.log('Success', data, depositToastId);
-        const args: CreateToastOptions = {
-          variant: 'success',
-          description: `Your tx was successful`,
-          href: txHref,
-          autoClose: DEFAULT_TOAST_TIMEOUT,
-          icon: HeroIcon(IconType.CheckIcon),
-        }
+        // const args: CreateToastOptions = {
+        //   variant: 'success',
+        //   description: `Your tx was successful`,
+        //   href: txHref,
+        //   autoClose: DEFAULT_TOAST_TIMEOUT,
+        //   // icon: HeroIcon(IconType.CheckIcon),
+        // }
         // updatePendingToast(depositToastId, {
         //   description: `Your deposit is pending, click to view on etherscan`,
         //   href: txHref,
@@ -261,7 +261,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
   } as AccountOrderProviderState;
 }
 
-const useAccountAllowance = (tokenAddr: Address | undefined, abi: any, owner: Address, accountOrderId: Address | undefined, provider: Provider) => {
+const useAccountAllowance = (tokenAddr: Address | undefined, abi: any, owner: Address | undefined, accountOrderId: Address | undefined, provider: Provider) => {
   const [accountAllowance, setAccountAllowance] = useState<number>(0);
 
   const getAllowance = useCallback(async () => {
