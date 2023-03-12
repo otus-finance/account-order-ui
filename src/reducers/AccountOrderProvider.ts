@@ -24,7 +24,7 @@ export type AccountOrderProviderState = {
   approveQuote: (() => void) | undefined
   deposit: (() => void) | undefined
   withdraw: (() => void) | undefined
-  placeOrder: ((any: any) => void) | undefined
+  placeOrder: (() => void) | undefined
 }
 
 export const accountOrderInitialState: AccountOrderProviderState = {
@@ -48,7 +48,7 @@ export const accountOrderInitialState: AccountOrderProviderState = {
   approveQuote: () => { },
   deposit: () => { },
   withdraw: () => { },
-  placeOrder: (any: any) => any
+  placeOrder: () => { }
 }
 
 export type AccountOrderAction =
