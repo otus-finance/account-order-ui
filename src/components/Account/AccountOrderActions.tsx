@@ -1,22 +1,18 @@
 import React, { Dispatch, useCallback, useState } from 'react'
 
-import useTransaction from '../../hooks/Transaction';
 import { Spinner } from '../UI/Components/Spinner'
 import { useAccountFactoryContract } from '../../hooks/Contracts'
-import { ethers } from 'ethers'
-import { Network } from '@lyrafinance/lyra-js'
 import { AccountOrderContextProvider, useAccountOrderContext } from '../../context/AccountOrderContext'
 import { Address, useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
 import Modal from '../UI/Modal';
 import { DebounceInput } from 'react-debounce-input';
-import { toBN } from '../../utils/formatters/numbers';
 import { WalletConnect } from '../Builder/StrikeTrade/Common/WalletConnect';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 export const AccountOrderActions = () => {
   const { address } = useAccount();
 
-  return <AccountOrderContextProvider owner={address || ''}>
+  return <AccountOrderContextProvider owner={address}>
     <AccountOrderInfo />
   </AccountOrderContextProvider>
 }
