@@ -173,8 +173,8 @@ export const useAccountOrder = (owner: Address | undefined) => {
       //   })
       // }
     },
-    onError: (error, variables, context) => {
-      const rawMessage = error?.data?.message ?? error?.message
+    onError: (error: Error, variables, context) => {
+      const rawMessage = error?.message
       let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong'
       console.log({ error })
     },
