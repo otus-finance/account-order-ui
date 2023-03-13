@@ -1,8 +1,9 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import React from 'react'
-import { BuilderContextProvider } from '../context/BuilderContext'
-import { OptionsBuilder } from '../components/Builder'
+import type { NextPage } from "next";
+import Head from "next/head";
+import React from "react";
+import { BuilderContextProvider } from "../context/BuilderContext";
+import { OptionsBuilder } from "../components/Builder";
+import Layout from "../components/UI/Layout";
 
 const Builder: NextPage = () => {
   return (
@@ -13,14 +14,15 @@ const Builder: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="mx-auto max-w-screen-2xl py-6 text-white">
-        <BuilderContextProvider>
-          <OptionsBuilder />
-        </BuilderContextProvider>
-      </div>
-
+      <BuilderContextProvider>
+        <Layout>
+          <div className="mx-auto max-w-screen-2xl py-6 text-white">
+            <OptionsBuilder />
+          </div>
+        </Layout>
+      </BuilderContextProvider>
     </div>
-  )
-}
+  );
+};
 
-export default Builder
+export default Builder;
