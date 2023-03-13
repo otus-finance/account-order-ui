@@ -1,4 +1,4 @@
-# Otus Account Order UI 
+# Otus Account Order UI
 
 ## Running locally
 
@@ -13,3 +13,34 @@ This is an app bootstrapped according to the [init.tips](https://init.tips) stac
 ## Adding strategies
 
 `src/strategies.ts` has notes on how to add a new strategy.
+
+-> Connect Wallet
+-> Query subgraph for account order address
+-> None
+--> Create Margin Account
+-> Has
+--> Not enough funds for trade
+--> Deposit Margin
+--> Has enough funds for trade
+--> Place order
+
+Account Actions TX
+
+New Account
+Deposit
+Withdraw
+
+Place Order
+Cancel Order
+
+Account Queries
+USD Balance (USDC and SUSD)
+User Wallet Balance
+
+// useUserAccount
+
+// send multi call tx (arb / op)
+https://github.com/mds1/multicall
+
+// build tx
+// useContractWrite to send
