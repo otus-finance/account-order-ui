@@ -1,11 +1,11 @@
-import { useQuery } from 'react-query';
+import { useQuery } from "react-query";
 
-import Lyra, { Board, Market, Chain, Quote, Strike } from '@lyrafinance/lyra-js';
-import { BigNumber, ethers } from 'ethers';
-import { MONTHS } from '../../constants/dates';
-import { ONE_BN } from '../../constants/bn';
-import { fromBigNumber } from '../../utils/formatters/numbers';
-import { arbitrum } from 'wagmi/chains';
+import Lyra, { Board, Market, Chain, Quote, Strike } from "@lyrafinance/lyra-js";
+import { BigNumber, ethers } from "ethers";
+import { MONTHS } from "../../constants/dates";
+import { ONE_BN } from "../../constants/bn";
+import { fromBigNumber } from "../../utils/formatters/numbers";
+import { arbitrum } from "wagmi/chains";
 
 export type LyraChain = {
 	name: Chain;
@@ -17,6 +17,7 @@ export type LyraStrike = {
 	selectedOptionType: number | 0;
 	isCall: boolean;
 	quote: Quote;
+	expiryTimestamp: number;
 } & Strike;
 
 export type LyraStrikeMapping = {
@@ -46,7 +47,7 @@ export type LyraMarket = {
 
 export const useLyraMarket = (lyra: Lyra | null) => {
 	return useQuery<LyraMarket[] | null>(
-		['lyraMarkets', lyra?.chainId],
+		["lyraMarkets", lyra?.chainId],
 		async () => {
 			if (!lyra) return null;
 			const response: Market[] = await lyra.markets();
@@ -139,18 +140,37 @@ const sortStrikes = (a: Strike, b: Strike) => {
 const parseBoardStrikes = async (boards: LyraBoard[]) => {
 	return await Promise.all(
 		boards.map(async (board) => {
-			const { strikes, marketName } = board;
+			const { strikes, marketName, expiryTimestamp } = board;
 
 			const strikesLongCallQuotes = await formatStrikeWithQuote(
+				expiryTimestamp,
 				marketName,
 				strikes,
 				true, // isCall
 				true // isBuy
 			);
-			const strikesLongPutQuotes = await formatStrikeWithQuote(marketName, strikes, false, true);
-			const strikesShortCallQuotes = await formatStrikeWithQuote(marketName, strikes, true, false);
-			const strikesShortPutQuotes = await formatStrikeWithQuote(marketName, strikes, false, false);
-
+			const strikesLongPutQuotes = await formatStrikeWithQuote(
+				expiryTimestamp,
+				marketName,
+				strikes,
+				false,
+				true
+			);
+			const strikesShortCallQuotes = await formatStrikeWithQuote(
+				expiryTimestamp,
+				marketName,
+				strikes,
+				true,
+				false
+			);
+			const strikesShortPutQuotes = await formatStrikeWithQuote(
+				expiryTimestamp,
+				marketName,
+				strikes,
+				false,
+				false
+			);
+			console.log({ strikesLongCallQuotes });
 			return {
 				...board,
 				strikesByOptionTypes: {
@@ -165,6 +185,7 @@ const parseBoardStrikes = async (boards: LyraBoard[]) => {
 };
 
 const formatStrikeWithQuote = async (
+	expiryTimestamp: number,
 	marketName: string,
 	strikes: Strike[],
 	isCall: boolean,
@@ -173,7 +194,7 @@ const formatStrikeWithQuote = async (
 	return await Promise.all(
 		strikes.map(async (strike: Strike) => {
 			const quote = await strike.quote(isCall, isLong, ONE_BN);
-			return { ...strike, isCall, quote, market: marketName };
+			return { ...strike, isCall, quote, market: marketName, expiryTimestamp };
 		})
 	);
 };

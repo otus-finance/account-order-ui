@@ -61,8 +61,7 @@ export const StrikesTable = () => {
 						{
 							/* @ts-ignore */
 						}
-						const { strikePrice, iv, quote, id, isCall, market } = strike;
-						const { expiryTimestamp } = strike.board();
+						const { strikePrice, iv, quote, id, isCall, market, expiryTimestamp } = strike;
 						const { size, premium, pricePerOption, isBuy } = quote;
 
 						return (
