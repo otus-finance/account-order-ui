@@ -1,39 +1,80 @@
-import React, { Dispatch, useState } from 'react'
-import { TradeLimit } from '../TradeLimit';
-import { TradeMarket } from '../TradeMarket';
-import { TradeTrigger } from '../TradeTrigger';
+import React, { Dispatch, useState } from "react";
+import { useLyraAccountContext } from "../../../../context/LyraAccountContext";
+import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
+import { TradeLimit } from "../TradeLimit";
+import { TradeMarket } from "../TradeMarket";
+import { TradeTrigger } from "../TradeTrigger";
 
 enum TradeTypes {
-  Market,
-  Limit,
-  Trigger
+	Market,
+	Limit,
+	Trigger,
 }
 
 export const TradeType = () => {
-  const [typeSelected, setTypeSelected] = useState(TradeTypes.Market);
-  return <>
-    <TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
-    {
-      TradeTypes.Market === typeSelected && <TradeMarket />
-    }
-    {
-      TradeTypes.Limit === typeSelected && <TradeLimit />
-    }
-    {
-      TradeTypes.Trigger === typeSelected && <TradeTrigger />
-    }
-  </>
-}
+	const [typeSelected, setTypeSelected] = useState(TradeTypes.Market);
 
-const TradeTypeSelect = ({ typeSelected, setTypeSelected }: { typeSelected: TradeTypes, setTypeSelected: Dispatch<TradeTypes> }) => {
+	const { quoteAsset } = useLyraAccountContext();
 
-  return <div className="col-span-1">
-    <div className='p-2 pt-4'>
-      <div className='flex gap-8'>
-        <div onClick={() => setTypeSelected(TradeTypes.Market)} className={`p-2 text-xs  hover:text-white cursor-pointer ${typeSelected === TradeTypes.Market ? 'text-white underline' : 'text-zinc-300'}`}>Market</div>
-        <div onClick={() => setTypeSelected(TradeTypes.Limit)} className={`p-2 text-xs text-zinc-300 hover:text-white cursor-pointer ${typeSelected === TradeTypes.Limit ? 'text-white underline' : 'text-zinc-300'}`}>Limit</div>
-        <div onClick={() => setTypeSelected(TradeTypes.Trigger)} className={`p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed ${typeSelected === TradeTypes.Trigger ? 'text-white underline' : 'text-zinc-300'}`}>Trigger</div>
-      </div>
-    </div>
-  </div>
-}
+	return (
+		<>
+			{typeSelected === TradeTypes.Market && (
+				<div className="col-span-1 border-b border-zinc-800">
+					<div className="grid grid-cols-2 p-4">
+						<div className="text-xs text-zinc-200">Wallet Balance</div>
+						<div className="text-xs text-white font-semibold col-span-1 text-right">
+							{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance), { dps: 2 })}{" "}
+							{quoteAsset?.symbol}
+						</div>
+					</div>
+				</div>
+			)}
+
+			<TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
+			{TradeTypes.Market === typeSelected && <TradeMarket />}
+			{TradeTypes.Limit === typeSelected && <TradeLimit />}
+			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
+		</>
+	);
+};
+
+const TradeTypeSelect = ({
+	typeSelected,
+	setTypeSelected,
+}: {
+	typeSelected: TradeTypes;
+	setTypeSelected: Dispatch<TradeTypes>;
+}) => {
+	return (
+		<div className="col-span-1">
+			<div className="p-2 pt-4">
+				<div className="flex gap-8">
+					<div
+						onClick={() => setTypeSelected(TradeTypes.Market)}
+						className={`p-2 text-xs  hover:text-white cursor-pointer ${
+							typeSelected === TradeTypes.Market ? "text-white underline" : "text-zinc-300"
+						}`}
+					>
+						Market
+					</div>
+					<div
+						onClick={() => setTypeSelected(TradeTypes.Limit)}
+						className={`p-2 text-xs text-zinc-300 hover:text-white cursor-pointer ${
+							typeSelected === TradeTypes.Limit ? "text-white underline" : "text-zinc-300"
+						}`}
+					>
+						Limit
+					</div>
+					<div
+						onClick={() => setTypeSelected(TradeTypes.Trigger)}
+						className={`p-2 text-xs text-zinc-300 hover:text-white cursor-not-allowed ${
+							typeSelected === TradeTypes.Trigger ? "text-white underline" : "text-zinc-300"
+						}`}
+					>
+						Trigger
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
