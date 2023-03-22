@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
-import { Listbox, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
-import { LyraBoard } from '../../../queries/lyra/useLyra';
-import { useBuilderContext } from '../../../context/BuilderContext';
+import React, { Fragment } from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
+import { LyraBoard } from "../../../queries/lyra/useLyra";
+import { useBuilderContext } from "../../../context/BuilderContext";
 
 function classNames(...classes: string[]) {
-	return classes.filter(Boolean).join(' ');
+	return classes.filter(Boolean).join(" ");
 }
 
 export const SelectBuilderExpiration = () => {
@@ -17,9 +17,9 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative sm:pl-2">
-						<Listbox.Button className="rounded-xs relative min-w-full w-full sm:w-48 cursor-default border border-zinc-700 bg-zinc-800 py-2 pl-3 pr-10 text-left text-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm rounded-sm">
+						<Listbox.Button className="rounded-xs relative min-w-full w-full sm:w-48 cursor-default border border-zinc-700 bg-zinc-800 py-2 pl-3 pr-10 text-left text-white shadow-lg focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm rounded-sm">
 							<span className="block truncate">
-								{selectedExpirationDate ? selectedExpirationDate.name : 'Expiration Date'}
+								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 								<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -39,8 +39,8 @@ export const SelectBuilderExpiration = () => {
 										key={index}
 										className={({ active }) =>
 											classNames(
-												active ? 'bg-emerald-600 text-white' : 'text-white',
-												'relative cursor-default select-none py-2 pl-3 pr-9'
+												active ? "bg-emerald-600 text-white" : "text-white",
+												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}
 										value={board}
@@ -50,8 +50,8 @@ export const SelectBuilderExpiration = () => {
 												<div className="flex items-center">
 													<span
 														className={classNames(
-															selected ? 'font-semibold' : 'font-normal',
-															'block truncate'
+															selected ? "font-semibold" : "font-normal",
+															"block truncate"
 														)}
 													>
 														{board.name}
@@ -61,8 +61,8 @@ export const SelectBuilderExpiration = () => {
 												{selected ? (
 													<span
 														className={classNames(
-															active ? 'text-white' : 'text-indigo-600',
-															'absolute inset-y-0 right-0 flex items-center pr-4'
+															active ? "text-white" : "text-indigo-600",
+															"absolute inset-y-0 right-0 flex items-center pr-4"
 														)}
 													>
 														<CheckIcon className="h-5 w-5" aria-hidden="true" />

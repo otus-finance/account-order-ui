@@ -60,7 +60,7 @@ export const StrikeTrade = () => {
 														name="size"
 														id="size"
 														value={fromBigNumber(size)}
-														className="block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-sm text-xs"
+														className="block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-lg text-xs"
 													/>
 												</div>
 											</div>

@@ -1,16 +1,16 @@
-import React, { Dispatch, useCallback, useState } from 'react';
+import React, { Dispatch, useCallback, useState } from "react";
 
-import { Spinner } from '../UI/Components/Spinner';
-import { useOtusAccountContracts } from '../../hooks/Contracts';
+import { Spinner } from "../UI/Components/Spinner";
+import { useOtusAccountContracts } from "../../hooks/Contracts";
 import {
 	AccountOrderContextProvider,
 	useAccountOrderContext,
-} from '../../context/AccountOrderContext';
-import { Address, useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
-import Modal from '../UI/Modal';
-import { DebounceInput } from 'react-debounce-input';
-import { WalletConnect } from '../Builder/StrikeTrade/Common/WalletConnect';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+} from "../../context/AccountOrderContext";
+import { Address, useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
+import Modal from "../UI/Modal";
+import { DebounceInput } from "react-debounce-input";
+import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export const AccountOrderActions = () => {
 	const { address } = useAccount();
@@ -27,7 +27,7 @@ const AccountOrderInfo = () => {
 	const { isLoading, accountOrder } = useAccountOrderContext();
 
 	return (
-		<div className="border border-zinc-800 rounded-sm shadow-sm mb-2 p-4">
+		<div className="border border-zinc-800 rounded-sm shadow-lg mb-2 p-4">
 			{isLoading ? (
 				<Spinner />
 			) : (
@@ -84,8 +84,8 @@ export const AccountManage = () => {
 						onClick={() => setAccountActionType(AccountActionType.DEPOSIT)}
 						className={`hover:border-emerald-600 text-white cursor-pointer p-2 font-normal text-center w-full rounded-l-full text-xs bg-zinc-900 border-2 ${
 							AccountActionType.DEPOSIT === accountActionType
-								? 'border-emerald-600'
-								: 'border-zinc-800 border-r-transparent'
+								? "border-emerald-600"
+								: "border-zinc-800 border-r-transparent"
 						}`}
 					>
 						Deposit
@@ -94,8 +94,8 @@ export const AccountManage = () => {
 						onClick={() => setAccountActionType(AccountActionType.WITHDRAW)}
 						className={`hover:border-emerald-600 text-white cursor-pointer p-2 font-normal text-center w-full rounded-r-full text-xs bg-zinc-900 border-2  ${
 							AccountActionType.WITHDRAW === accountActionType
-								? 'border-emerald-600'
-								: 'border-zinc-800 border-l-transparent'
+								? "border-emerald-600"
+								: "border-zinc-800 border-l-transparent"
 						}`}
 					>
 						Withdraw
@@ -133,7 +133,7 @@ export const AccountManage = () => {
 								minLength={1}
 								debounceTimeout={300}
 								onChange={async (e) => {
-									if (e.target.value == '') return;
+									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
 									setDepositAmount(value);
 								}}
@@ -150,7 +150,7 @@ export const AccountManage = () => {
 								minLength={1}
 								debounceTimeout={300}
 								onChange={async (e) => {
-									if (e.target.value == '') return;
+									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
 									setAllowanceAmount(value);
 								}}
@@ -167,7 +167,7 @@ export const AccountManage = () => {
 								minLength={1}
 								debounceTimeout={300}
 								onChange={async (e) => {
-									if (e.target.value == '') return;
+									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
 									setWithdrawAmount(value);
 								}}
@@ -191,7 +191,7 @@ export const AccountManage = () => {
 					onClick={() => approveQuote?.()}
 					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
 				>
-					{isApproveQuoteLoading ? <Spinner /> : 'Approve Quote'}
+					{isApproveQuoteLoading ? <Spinner /> : "Approve Quote"}
 				</div>
 			) : null}
 
@@ -202,7 +202,7 @@ export const AccountManage = () => {
 					onClick={() => deposit?.()}
 					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
 				>
-					{isDepositLoading ? <Spinner /> : 'Deposit'}
+					{isDepositLoading ? <Spinner /> : "Deposit"}
 				</div>
 			) : null}
 
@@ -211,7 +211,7 @@ export const AccountManage = () => {
 					onClick={() => withdraw?.()}
 					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
 				>
-					{isWithdrawLoading ? <Spinner /> : 'Withdraw'}
+					{isWithdrawLoading ? <Spinner /> : "Withdraw"}
 				</div>
 			) : null}
 		</>
@@ -264,9 +264,9 @@ export const CreateAccount = () => {
 					{isLoading ? (
 						<Spinner />
 					) : chain?.unsupported ? (
-						'Unsupported Chain'
+						"Unsupported Chain"
 					) : (
-						'Create Margin Account'
+						"Create Margin Account"
 					)}
 				</div>
 			) : null}
@@ -282,10 +282,10 @@ const useAccountFactory = (chainId: number | undefined) => {
 	const { config: accountFactoryConfig } = usePrepareContractWrite({
 		address:
 			otusContracts &&
-			otusContracts['AccountFactory'] &&
-			(otusContracts['AccountFactory'].address as Address),
-		abi: otusContracts && otusContracts['AccountFactory'] && otusContracts['AccountFactory'].abi,
-		functionName: 'newAccount',
+			otusContracts["AccountFactory"] &&
+			(otusContracts["AccountFactory"].address as Address),
+		abi: otusContracts && otusContracts["AccountFactory"] && otusContracts["AccountFactory"].abi,
+		functionName: "newAccount",
 		chainId: chainId,
 	});
 
