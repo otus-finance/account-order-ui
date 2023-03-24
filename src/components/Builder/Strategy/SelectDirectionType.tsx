@@ -3,29 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { StrategyDirection, StrategyType } from "../../../utils/types";
 import { useBuilderContext } from "../../../context/BuilderContext";
-
-const DirectionType: StrategyDirection[] = [
-	{
-		id: StrategyType.Bearish,
-		name: "🐻Bearish",
-	},
-	{
-		id: StrategyType.Bullish,
-		name: "🐂Bullish",
-	},
-	{
-		id: StrategyType.Volatile,
-		name: "🌊Volatile",
-	},
-	{
-		id: StrategyType.Calm,
-		name: "⛵Calm",
-	},
-	{
-		id: StrategyType.Neutral,
-		name: "✌Neutral",
-	},
-];
+import { DirectionType } from "../../../utils/direction";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");

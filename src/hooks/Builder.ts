@@ -22,6 +22,7 @@ import { extrensicValueFilter, calculateOptionType } from "../utils/formatters/o
 import { useNetwork } from "wagmi";
 import { optimism, arbitrum, hardhat, Chain } from "wagmi/chains";
 import { arbitrumUrl, optimismUrl } from "../constants/networks";
+import { DirectionType } from "../utils/direction";
 
 const getLyra = async (chain: Chain) => {
 	const provider = new ethers.providers.JsonRpcProvider(
@@ -127,6 +128,13 @@ export const useBuilder = () => {
 
 			if (data[0]) {
 				handleSelectedMarket(data[0]);
+				const market = data[0];
+				if (market.liveBoards[0]) {
+					handleSelectedExpirationDate(market.liveBoards[0]);
+					if (DirectionType[0] && DirectionType[1]) {
+						handleSelectedDirectionTypes([DirectionType[0], DirectionType[1]]);
+					}
+				}
 			}
 		} else {
 			dispatch({
