@@ -11,8 +11,6 @@ type ContractConfig = {
 
 export const useContractConfig = () => {
 	const [contractsConfig, setContractsConfig] = useState<ContractConfig>();
-	// const vaultProducts = useVaultProducts()
-	// const data = vaultProducts?.data;
 
 	useEffect(() => {
 		const loadFunc = async () => {
@@ -25,12 +23,16 @@ export const useContractConfig = () => {
 	return contractsConfig;
 };
 
+type ContractInterface = {
+	address: `0x${string}` | undefined;
+	abi: any;
+};
+
 export const useOtusAccountContracts = () => {
 	const contractsConfig = useContractConfig();
 
 	const { chain } = useNetwork();
-
-	const [otusContracts, setOtusContracts] = useState<Record<string, Contract>>();
+	const [otusContracts, setOtusContracts] = useState<Record<string, ContractInterface>>();
 
 	useEffect(() => {
 		if (contractsConfig && chain && contractsConfig.deployedContracts[chain.id]) {

@@ -71,33 +71,29 @@ export const SelectStrikesTable = () => {
 			<div className="flex justify-between mt-6">
 				<div
 					onClick={() => setIsBuy(true)}
-					className={`${
-						isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
+					className={`${isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
 				>
 					Buy
 				</div>
 				<div
 					onClick={() => setIsBuy(false)}
-					className={`${
-						!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
+					className={`${!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
 				>
 					Sell
 				</div>
 				<div
 					onClick={() => setIsCall(true)}
-					className={`${
-						isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style} ml-2`}
+					className={`${isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style} ml-2`}
 				>
 					Call
 				</div>
 				<div
 					onClick={() => setIsCall(false)}
-					className={`${
-						!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
+					className={`${!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
 				>
 					Put
 				</div>
@@ -180,11 +176,9 @@ export const SelectStrikesTable = () => {
 										gamma,
 										quote,
 										id,
-										isCall,
-										market,
-										__board: { expiryTimestamp },
+										isCall
 									} = strike;
-									const { size, premium, pricePerOption, isBuy, greeks } = quote;
+									const { size, premium, isBuy, greeks } = quote;
 
 									const { delta, theta } = greeks;
 									return (
