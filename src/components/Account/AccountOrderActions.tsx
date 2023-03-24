@@ -27,7 +27,7 @@ const AccountOrderInfo = () => {
 	const { isLoading, accountOrder } = useAccountOrderContext();
 
 	return (
-		<div className="border border-zinc-800 rounded-sm shadow-lg mb-2 p-4">
+		<div className="border-t border-zinc-800 bg-zinc-900 p-4 py-6">
 			{isLoading ? (
 				<Spinner />
 			) : (
@@ -42,7 +42,7 @@ const AccountOrderInfo = () => {
 			<Modal
 				setOpen={setOpen}
 				open={open}
-				title={<div className="font-normal text-sm">Manage Account Funds</div>}
+				title={<div className="font-normal text-md">Manage Account Funds</div>}
 			>
 				<AccountManage />
 			</Modal>
