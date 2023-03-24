@@ -77,3 +77,12 @@ export type StrikeTrade = {
 	targetPrice: BigNumber;
 	targetVolatility: BigNumber;
 };
+
+// vault types
+export type LiquidityPool = {
+	id: string;
+	isActive: boolean;
+	totalDeposits: BigNumber;
+	quoteAsset: string;
+	vaultCap: BigNumber;
+};
