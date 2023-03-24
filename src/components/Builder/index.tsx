@@ -50,8 +50,6 @@ export const OptionsBuilder = () => {
 			</div>
 
 			<div className="col-span-3 sm:col-span-1">
-				<AccountOrderActions />
-
 				<div className="border border-zinc-800 rounded-sm shadow-lg">
 					{lyra && strikes[0] ? (
 						<>
