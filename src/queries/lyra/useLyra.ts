@@ -83,10 +83,7 @@ const parseMarketResponse = async (markets: Market[]): Promise<LyraMarket[]> => 
 			{
 				/* @ts-ignore */
 			}
-			const liveBoards: LyraBoard[] =
-				lyra.chainId === arbitrum.id
-					? parseMarketBoardsArb(name, market.__data.liveBoards)
-					: parseMarketBoards(market.liveBoards());
+			const liveBoards: LyraBoard[] = parseMarketBoards(market.liveBoards());
 
 			const { tvl, freeLiquidity } = await market.liquidity();
 
@@ -170,7 +167,7 @@ const parseBoardStrikes = async (boards: LyraBoard[]) => {
 				false,
 				false
 			);
-			console.log({ strikesLongCallQuotes });
+
 			return {
 				...board,
 				strikesByOptionTypes: {

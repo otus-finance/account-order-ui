@@ -1,6 +1,6 @@
 import Lyra, { OptionType } from "@lyrafinance/lyra-js";
 import { ethers } from "ethers";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { BuilderType, Strategy, StrategyDirection } from "../utils/types";
 import {
 	getStrikeQuote,
@@ -279,29 +279,31 @@ export const useBuilder = () => {
 		});
 	};
 
-	const handleUpdateQuote = async (strikeUpdate: { strike: LyraStrike; size: string }) => {
-		if (strikeUpdate && strikes.length > 0 && lyra) {
-			const { strike: _strike, size } = strikeUpdate;
-			const { id: _id, quote, isCall } = _strike;
-			const { isBuy } = quote;
+	const handleUpdateQuote = useCallback(
+		async (strikeUpdate: { strike: LyraStrike; size: string }) => {
+			if (strikeUpdate && strikes.length > 0 && lyra) {
+				const { strike: _strike, size } = strikeUpdate;
+				const { id: _id, quote, isCall } = _strike;
+				const { isBuy } = quote;
 
-			const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
+				const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
 
-			const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
-				const { id } = strike;
-				if (id == _id && isCall == strike.isCall) {
-					return { ...strike, quote: _quote };
-				} else {
-					return strike;
-				}
-			});
-
-			dispatch({
-				type: "UPDATE_STRIKES",
-				strikes: _updateStrikes,
-			});
-		}
-	};
+				const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
+					const { id } = strike;
+					if (id == _id && isCall == strike.isCall) {
+						return { ...strike, quote: _quote };
+					} else {
+						return strike;
+					}
+				});
+				dispatch({
+					type: "UPDATE_STRIKES",
+					strikes: _updateStrikes,
+				});
+			}
+		},
+		[lyra, strikes]
+	);
 
 	const filterStrikes = useCallback(() => {
 		if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
@@ -389,6 +391,8 @@ export const useBuilder = () => {
 		}
 	};
 
+	const [activeStrike, setActiveStrike] = useState({ strikeId: 0, isCall: false });
+
 	return {
 		lyra,
 		builderType,
@@ -405,6 +409,8 @@ export const useBuilder = () => {
 		positionPnl,
 		isValid,
 		isBuildingNewStrategy,
+		activeStrike,
+		setActiveStrike,
 		handleSelectBuilderType,
 		handleSelectedChain,
 		handleSelectedMarket,
