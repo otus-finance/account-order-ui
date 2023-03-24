@@ -124,6 +124,10 @@ export const useBuilder = () => {
 				markets: data,
 				isMarketLoading: isLoading,
 			});
+
+			if (data[0]) {
+				handleSelectedMarket(data[0]);
+			}
 		} else {
 			dispatch({
 				type: "SET_MARKETS_LOADING",
