@@ -124,13 +124,13 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				<div className="flex items-center justify-between p-2">
 					<p className="truncate font-sans text-xs font-normal text-white">Price Per Option</p>
 					<div className="ml-2 flex flex-shrink-0">
-						<p className="inline-flex font-mono text-xs font-semibold  leading-5 text-white">
+						<span className="inline-flex font-mono text-xs font-semibold  leading-5 text-white">
 							{optionPriceLoading ? (
 								<Spinner size={"small"} />
 							) : (
 								formatUSD(fromBigNumber(pricePerOption), { dps: 2 })
 							)}
-						</p>
+						</span>
 					</div>
 				</div>
 				<div className="flex items-center justify-between p-2">
