@@ -1,6 +1,7 @@
 import React, { Dispatch, useState } from "react";
 import { useLyraAccountContext } from "../../../../context/LyraAccountContext";
 import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
+import { AccountOrderActions } from "../../../Account/AccountOrderActions";
 import { TradeLimit } from "../TradeLimit";
 import { TradeMarket } from "../TradeMarket";
 import { TradeTrigger } from "../TradeTrigger";
@@ -18,8 +19,16 @@ export const TradeType = () => {
 
 	return (
 		<>
+			<TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
+			{TradeTypes.Market === typeSelected && <TradeMarket />}
+			{TradeTypes.Limit === typeSelected && <TradeLimit />}
+			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
+
+			{TradeTypes.Limit === typeSelected && <AccountOrderActions />}
+			{TradeTypes.Trigger === typeSelected && <AccountOrderActions />}
+
 			{typeSelected === TradeTypes.Market && (
-				<div className="col-span-1 border-b border-zinc-800">
+				<div className="col-span-1 border-t border-zinc-800">
 					<div className="grid grid-cols-2 p-4">
 						<div className="text-xs text-zinc-200">Wallet Balance</div>
 						<div className="text-xs text-white font-semibold col-span-1 text-right">
@@ -29,11 +38,6 @@ export const TradeType = () => {
 					</div>
 				</div>
 			)}
-
-			<TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
-			{TradeTypes.Market === typeSelected && <TradeMarket />}
-			{TradeTypes.Limit === typeSelected && <TradeLimit />}
-			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
 		</>
 	);
 };
