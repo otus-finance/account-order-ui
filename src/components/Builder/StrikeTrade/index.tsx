@@ -65,7 +65,7 @@ export const StrikeTrade = () => {
 };
 
 const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
-	const { selectedMarket, handleUpdateQuote, setActiveStrike } = useBuilderContext();
+	const { selectedMarket, handleUpdateQuote, setActiveStrike, isUpdating } = useBuilderContext();
 
 	const {
 		quote: { size, pricePerOption, isCall, isBuy, premium },
@@ -102,7 +102,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 						<div className="mt-1">
 							<DebounceInput
 								minLength={1}
-								debounceTimeout={300}
+								debounceTimeout={400}
 								onChange={async (e) => {
 									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
@@ -112,11 +112,14 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 									setFormattedSize(value);
 								}}
 								min={0}
+								disabled={isUpdating}
 								type="number"
 								name="size"
 								id="size"
 								value={formattedSize}
-								className="block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-lg text-xs"
+								className={`block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-lg text-xs ${
+									isUpdating && "cursor-disabled"
+								}`}
 							/>
 						</div>
 					</div>

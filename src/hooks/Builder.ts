@@ -51,6 +51,7 @@ export const useBuilder = () => {
 		selectedExpirationDate,
 		selectedStrategy,
 		strikes,
+		isUpdating,
 		positionPnl,
 		isValid,
 		isBuildingNewStrategy,
@@ -295,6 +296,11 @@ export const useBuilder = () => {
 		async (strikeUpdate: { strike: LyraStrike; size: string }) => {
 			console.log({ strikeUpdate });
 			if (strikeUpdate && strikes.length > 0 && lyra) {
+				dispatch({
+					type: "SET_UPDATING_STRIKE",
+					isUpdating: true,
+				});
+
 				const { strike: _strike, size } = strikeUpdate;
 				const { id: _id, quote, isCall } = _strike;
 				const { isBuy } = quote;
@@ -312,6 +318,7 @@ export const useBuilder = () => {
 				dispatch({
 					type: "UPDATE_STRIKES",
 					strikes: _updateStrikes,
+					isUpdating: false,
 				});
 			}
 		},
@@ -423,6 +430,7 @@ export const useBuilder = () => {
 		isValid,
 		isBuildingNewStrategy,
 		activeStrike,
+		isUpdating,
 		setActiveStrike,
 		handleSelectBuilderType,
 		handleSelectedChain,

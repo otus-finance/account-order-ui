@@ -15,7 +15,7 @@ import { AccountOrderActions } from "../Account/AccountOrderActions";
 import { Spinner } from "../UI/Components/Spinner";
 
 export const OptionsBuilder = () => {
-	const { lyra, strikes, builderType, isMarketLoading } = useBuilderContext();
+	const { lyra, strikes, builderType, isMarketLoading, isValid } = useBuilderContext();
 
 	return isMarketLoading ? (
 		<Spinner />
@@ -72,6 +72,14 @@ export const OptionsBuilder = () => {
 										Select Strikes
 									</p>
 								</div>
+							</div>
+
+							<div className="flex items-center p-2">
+								{!isValid && (
+									<p className="font-mono text-sm font-normal leading-5 text-white">
+										Strikes for strategy not available for selected assets or expiry.
+									</p>
+								)}
 							</div>
 						</div>
 					)}

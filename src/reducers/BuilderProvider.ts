@@ -21,6 +21,7 @@ export type BuilderProviderState = {
 	isValid: boolean;
 	isBuildingNewStrategy: boolean;
 	activeStrike: any;
+	isUpdating: boolean;
 	setActiveStrike: Dispatch<any>;
 	handleSelectBuilderType: (any: BuilderType) => void;
 	handleSelectedChain: (any: Chain) => void;
@@ -57,6 +58,7 @@ export const builderInitialState: BuilderProviderState = {
 	isValid: false,
 	isBuildingNewStrategy: false,
 	activeStrike: { strikeId: 0, isCall: false },
+	isUpdating: false,
 	setActiveStrike: () => {},
 	handleSelectBuilderType: (any) => void any,
 	handleSelectedChain: (any) => void any,
@@ -139,6 +141,11 @@ export type BuilderAction =
 	| {
 			type: "UPDATE_STRIKES";
 			strikes: BuilderProviderState["strikes"];
+			isUpdating: BuilderProviderState["isUpdating"];
+	  }
+	| {
+			type: "SET_UPDATING_STRIKE";
+			isUpdating: BuilderProviderState["isUpdating"];
 	  }
 	| {
 			type: "RESET_MARKET";
@@ -221,7 +228,9 @@ export function builderReducer(
 		case "SET_STRIKES":
 			return { ...state, strikes: action.strikes, isValid: action.isValid };
 		case "UPDATE_STRIKES":
-			return { ...state, strikes: action.strikes };
+			return { ...state, strikes: action.strikes, isUpdating: action.isUpdating };
+		case "SET_UPDATING_STRIKE":
+			return { ...state, isUpdating: action.isUpdating };
 		case "RESET_MARKET":
 			return {
 				...state,
