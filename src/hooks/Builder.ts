@@ -293,6 +293,7 @@ export const useBuilder = () => {
 
 	const handleUpdateQuote = useCallback(
 		async (strikeUpdate: { strike: LyraStrike; size: string }) => {
+			console.log({ strikeUpdate });
 			if (strikeUpdate && strikes.length > 0 && lyra) {
 				const { strike: _strike, size } = strikeUpdate;
 				const { id: _id, quote, isCall } = _strike;
@@ -302,7 +303,7 @@ export const useBuilder = () => {
 
 				const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
 					const { id } = strike;
-					if (id == _id && isCall == strike.isCall) {
+					if (id == _id && isBuy == strike.quote.isBuy) {
 						return { ...strike, quote: _quote };
 					} else {
 						return strike;

@@ -7,8 +7,7 @@ import { useBuilderContext } from "../../../context/BuilderContext";
 import { Spinner } from "../../UI/Components/Spinner";
 
 export const StrikesTable = () => {
-	const { activeStrike, selectedChain, strikes, handleToggleSelectedStrike, handleUpdateQuote } =
-		useBuilderContext();
+	const { activeStrike, selectedChain, strikes, handleToggleSelectedStrike } = useBuilderContext();
 
 	return (
 		<table className="min-w-full divide-y divide-zinc-700 rounded-sm">
@@ -51,7 +50,6 @@ export const StrikesTable = () => {
 								index={index}
 								selectedChain={selectedChain}
 								handleToggleSelectedStrike={handleToggleSelectedStrike}
-								handleUpdateQuote={handleUpdateQuote}
 							/>
 						);
 					})}
@@ -67,14 +65,12 @@ const StrikeRow = ({
 	index,
 	selectedChain,
 	handleToggleSelectedStrike,
-	handleUpdateQuote,
 }: {
 	activeStrike: { strikeId: number; isCall: boolean };
 	strike: LyraStrike;
 	index: number;
 	selectedChain: any;
 	handleToggleSelectedStrike: any;
-	handleUpdateQuote: any;
 }) => {
 	const { strikePrice, iv, quote, id, isCall, market, expiryTimestamp } = strike;
 	const { size, premium, pricePerOption, isBuy } = quote;
