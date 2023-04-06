@@ -1,9 +1,9 @@
 import { Contract } from "ethers";
 import { Dispatch } from "react";
-// import { AccountOrder } from "../queries/otus/account"
-// import { StrikeTrade } from "../utils/types"
+import { LiquidityPool } from "../queries/otus/liquidityPool";
 
 export type SpreadLiquidityPoolProviderState = {
+	liquidityPool: LiquidityPool | null;
 	isLoading: boolean;
 	isApproveQuoteLoading: boolean;
 	isDepositLoading: boolean;
@@ -24,6 +24,7 @@ export type SpreadLiquidityPoolProviderState = {
 };
 
 export const spreadLiquidityPoolInitialState: SpreadLiquidityPoolProviderState = {
+	liquidityPool: null,
 	isLoading: true,
 	isApproveQuoteLoading: false,
 	isDepositLoading: false,
@@ -49,6 +50,11 @@ export type SpreadLiquidityPoolAction =
 			isLoading: SpreadLiquidityPoolProviderState["isLoading"];
 	  }
 	| {
+			type: "SET_SPREAD_LIQUIDITY_POOL";
+			liquidityPool: SpreadLiquidityPoolProviderState["liquidityPool"];
+			isLoading: SpreadLiquidityPoolProviderState["isLoading"];
+	  }
+	| {
 			type: "RESET_SPREAD_LIQUIDITY_PROVIDER";
 	  };
 
@@ -59,6 +65,8 @@ export function spreadLiquidityPoolReducer(
 	switch (action.type) {
 		case "SET_LOADING":
 			return { ...state, isLoading: action.isLoading };
+		case "SET_SPREAD_LIQUIDITY_POOL":
+			return { ...state, isLoading: action.isLoading, liquidityPool: action.liquidityPool };
 		case "RESET_SPREAD_LIQUIDITY_PROVIDER":
 			return spreadLiquidityPoolInitialState;
 		default:

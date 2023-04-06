@@ -1,8 +1,9 @@
 import { BigNumber } from "ethers";
 import request, { gql } from "graphql-request";
-import { useQuery } from "react-query";
+import { Query, UseQueryResult, useQuery } from "react-query";
 import { Address, useNetwork } from "wagmi";
 import { getOtusEndpoint } from "../../utils/endpoints";
+import { LPUser } from "./user";
 
 const QUERY_KEYS = {
 	POOL: {
@@ -14,19 +15,27 @@ type LiquidityPoolData = {
 	liquidityPools: LiquidityPool[];
 };
 
+type CollateralUpdate = {
+	id: Address;
+};
+
 export type LiquidityPool = {
 	id: Address;
-	pendingDeposits: Address;
+	pendingDeposits: BigNumber;
 	pendingWithdrawals: BigNumber;
 	lockedCollateral: BigNumber;
-	collateralUpdates: Array<any>;
-	lpUsers: Array<any>;
+	freeCollateral: BigNumber;
+	feesCollected: BigNumber;
+	cap: BigNumber;
+	minDepositWithdraw: BigNumber;
+	collateralUpdates: Array<CollateralUpdate>;
+	lpUsers: Array<LPUser>;
 };
 
 export const useLiquidityPool = () => {
 	const { chain } = useNetwork();
-	const otusSpreadLiquidityEndpoint = getOtusEndpoint(chain?.id);
 
+	const otusSpreadLiquidityEndpoint = getOtusEndpoint(chain?.id);
 	return useQuery<LiquidityPoolData | null>(
 		QUERY_KEYS.POOL.SpreadLiquidity,
 		async () => {
@@ -40,11 +49,16 @@ export const useLiquidityPool = () => {
 							pendingDeposits
 							pendingWithdrawals
 							lockedCollateral
-							collateralUpdates {
-								id
-							}
+							freeCollateral
+							feesCollected
+							cap
+							minDepositWithdraw
+							collateralUpdates
 							lpUsers {
 								id
+								user
+								lpTokenBalance
+								totalAmountDeposited
 							}
 						}
 					}
@@ -52,7 +66,7 @@ export const useLiquidityPool = () => {
 			);
 		},
 		{
-			enabled: false,
+			enabled: true,
 		}
 	);
 };

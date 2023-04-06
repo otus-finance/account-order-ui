@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useBuilderContext } from '../context/BuilderContext'
 import { LyraStrike } from '../queries/lyra/useLyra'
 import { formatProfitAndLostAtTicks, ticks, Ticks } from '../utils/charting'
+import { fromBigNumber } from '../utils/formatters/numbers'
 
 export type PnlChartPoint = {
   name: number
@@ -22,6 +23,7 @@ export const useBuilderProfitLossChart = (asset: string | undefined, priceOfAsse
 
   const formattedChartData = useCallback(() => {
     if (builtTrades && builtTrades?.length > 0 && asset && priceOfAsset && assetInTrades(asset, builtTrades)) {
+
       const _ticks = ticks(asset, priceOfAsset);
 
       const _combo: Ticks = _ticks.reduce((accum: any, tick: any) => {
