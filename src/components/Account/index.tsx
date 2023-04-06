@@ -9,6 +9,7 @@ import { Order } from "../../queries/otus/account";
 import { formatPercentage, formatUSD, fromBigNumber } from "../../utils/formatters/numbers";
 
 enum AccountTab {
+	SpreadPositions,
 	Positions,
 	Orders,
 	Trades,
@@ -43,6 +44,16 @@ const AccountInfoSelect = ({
 }) => {
 	return (
 		<div className="flex items-center gap-8 text-sm px-6 pt-6 pb-2">
+			<div
+				onClick={() => setSelectedAccountTab(AccountTab.SpreadPositions)}
+				className={`cursor-pointer hover:text-white ${
+					selectedAccountTab === AccountTab.SpreadPositions
+						? "text-white underline"
+						: "text-zinc-300"
+				}`}
+			>
+				Spread Positions
+			</div>
 			<div
 				onClick={() => setSelectedAccountTab(AccountTab.Positions)}
 				className={`cursor-pointer hover:text-white ${
