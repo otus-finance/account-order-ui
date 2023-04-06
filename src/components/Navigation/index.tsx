@@ -48,6 +48,9 @@ export const Navigation = () => {
 										<Link href="/vaults">
 											<a className={linkStyle("/vaults", router.pathname)}>Vaults</a>
 										</Link>
+										<Link href="/markets">
+											<a className={linkStyle("/markets", router.pathname)}>Ranged Markets</a>
+										</Link>
 									</div>
 								</div>
 							</div>
@@ -80,6 +83,11 @@ export const Navigation = () => {
 							<Link href="/vaults">
 								<Disclosure.Button className={linkStyleMobile("/vaults", router.pathname)}>
 									Vaults
+								</Disclosure.Button>
+							</Link>
+							<Link href="/markets">
+								<Disclosure.Button className={linkStyleMobile("/markets", router.pathname)}>
+									Ranged Markets
 								</Disclosure.Button>
 							</Link>
 						</div>

@@ -7,6 +7,9 @@ export { accountOrderInitialState, accountOrderReducer } from "./AccountOrderPro
 export type { AccountProviderState, AccountAction } from "./AccountProvider";
 export { accountInitialState, accountReducer } from "./AccountProvider";
 
+export type { MarketOrderProviderState, MarketOrderAction } from "./MarketOrderProvider";
+export { marketOrderInitialState, marketOrderReducer } from "./MarketOrderProvider";
+
 export type {
 	SpreadLiquidityPoolProviderState,
 	SpreadLiquidityPoolAction,

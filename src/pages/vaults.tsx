@@ -4,9 +4,10 @@ import React from "react";
 import { BuilderContextProvider } from "../context/BuilderContext";
 import { OptionsBuilder } from "../components/Builder";
 import Layout from "../components/UI/Layout";
-import LiquidityPool from "../components/Vaults/liquidityPool";
+import SpreadLiquidityPool from "../components/Vaults/SpreadLiquidityPool";
 import { toBN } from "../utils/formatters/numbers";
 import { SpreadLiquidityPoolContextProvider } from "../context/SpreadLiquidityPoolContext";
+import Vault from "../components/Vaults/RangedMarketTokens";
 
 const Builder: NextPage = () => {
 	return (
@@ -20,34 +21,10 @@ const Builder: NextPage = () => {
 			<SpreadLiquidityPoolContextProvider>
 				<Layout>
 					<div className="mx-auto max-w-screen-2xl py-6 text-white">
-						<div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-12">
-							<div className="col-span-1">
-								<div className="cursor-pointer rounded-sm border border-zinc-800 shadow-lg ">
-									<LiquidityPool
-										pool={{
-											id: "1",
-											isActive: true,
-											totalDeposits: toBN("0"),
-											quoteAsset: "USD",
-											vaultCap: toBN("0"),
-										}}
-									/>
-								</div>
+						<div className="grid grid-cols-5 gap-4">
+							<div className="col-start-2 col-span-3">
+								<SpreadLiquidityPool />
 							</div>
-
-							<div className="col-span-1">
-								<div className="cursor-pointer rounded-sm border border-zinc-800 shadow-lg "></div>
-							</div>
-
-							{/* <div className="col-span-1 border-zinc-800 p-4">
-              Delta Neutral Vault (Perps and Options)
-              <h2>Spread Liquidity Pool</h2>
-
-            </div>
-
-            <div className="col-span-1 border-zinc-800 p-4">
-              Pool using spreads
-            </div> */}
 						</div>
 					</div>
 				</Layout>
