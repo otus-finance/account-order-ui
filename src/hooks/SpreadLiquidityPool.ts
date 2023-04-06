@@ -40,21 +40,41 @@ const DEFAULT_TOAST_TIMEOUT = 1000 * 5; // 5 seconds
 export const useSpreadLiquidityPool = () => {
 	const [state, dispatch] = useReducer(spreadLiquidityPoolReducer, spreadLiquidityPoolInitialState);
 
-	const { isLoading } = state;
+	const { liquidityPool, isLoading } = state;
 
-	const { isLoading: isDataLoading, data } = useLiquidityPool();
+	const { isLoading: isDataLoading, data, refetch } = useLiquidityPool();
 	console.log({ data });
+	const { chain } = useNetwork();
+
+	useEffect(() => {
+		if (chain) {
+			refetch();
+		}
+	}, [refetch, chain]);
+
 	const { address: owner } = useAccount();
 
-	const { chain } = useNetwork();
-	console.log({ chain });
 	const provider = useProvider();
 
 	const [tokenAddr, setTokenAddr] = useState<Address>();
 
 	useEffect(() => {
 		if (data) {
-			console.log({ data });
+			const { liquidityPools } = data;
+
+			if (!liquidityPools[0]) {
+				dispatch({
+					type: "SET_SPREAD_LIQUIDITY_POOL",
+					liquidityPool: null,
+					isLoading: false,
+				});
+				return;
+			}
+			dispatch({
+				type: "SET_SPREAD_LIQUIDITY_POOL",
+				liquidityPool: liquidityPools[0],
+				isLoading: false,
+			});
 		}
 	}, [data]);
 
@@ -201,6 +221,7 @@ export const useSpreadLiquidityPool = () => {
 	} = useContractWrite(accountOrderWithdrawConfig);
 
 	return {
+		liquidityPool,
 		isLoading,
 		isApproveQuoteLoading,
 		isDepositLoading,
@@ -223,28 +244,28 @@ const usePoolAllowance = (
 	tokenAddr: Address | undefined,
 	abi: any,
 	owner: Address | undefined,
-	accountOrderId: Address | undefined,
+	liquidityPool: Address | undefined,
 	provider: Provider
 ) => {
 	const [accountAllowance, setAccountAllowance] = useState<number>(0);
 
 	const getAllowance = useCallback(async () => {
-		if (tokenAddr && abi && owner && accountOrderId && provider) {
+		if (tokenAddr && abi && owner && liquidityPool && provider) {
 			const _contract: Contract = new ethers.Contract(tokenAddr, abi, provider);
 			try {
-				let _allowance = await _contract.allowance(owner, accountOrderId);
+				let _allowance = await _contract.allowance(owner, liquidityPool);
 				setAccountAllowance(fromBigNumber(_allowance));
 			} catch (error) {
 				// log error
 			}
 		}
-	}, [tokenAddr, abi, owner, accountOrderId, provider]);
+	}, [tokenAddr, abi, owner, liquidityPool, provider]);
 
 	useEffect(() => {
-		if (tokenAddr && abi && owner && accountOrderId && provider) {
+		if (tokenAddr && abi && owner && liquidityPool && provider) {
 			getAllowance();
 		}
-	}, [getAllowance, tokenAddr, abi, owner, accountOrderId, provider]);
+	}, [getAllowance, tokenAddr, abi, owner, liquidityPool, provider]);
 
 	return accountAllowance;
 };
