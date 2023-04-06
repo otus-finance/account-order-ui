@@ -1,5 +1,4 @@
-import { Chain } from "@lyrafinance/lyra-js";
-import { NETWORK_CONFIGS } from "../constants/networks";
+import { Chain, NETWORK_CONFIGS } from "../constants/networks";
 import {
 	OTUS_ACCOUNT_ENDPOINT_ARBITRUM,
 	OTUS_ACCOUNT_ENDPOINT_LOCALHOST,

@@ -1,10 +1,8 @@
-import { Chain } from '@lyrafinance/lyra-js'
-
-import { NETWORK_CONFIGS, NetworkConfig } from '../../constants/networks'
+import { NETWORK_CONFIGS, NetworkConfig, Chain } from "../../constants/networks";
 
 const getNetworkConfig = (chain: Chain): NetworkConfig => {
-  const networkConfig = NETWORK_CONFIGS[chain]
-  return networkConfig;
-}
+	const networkConfig = NETWORK_CONFIGS[chain];
+	return networkConfig;
+};
 
-export default getNetworkConfig; 
+export default getNetworkConfig;
