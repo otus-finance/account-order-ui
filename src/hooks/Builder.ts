@@ -23,11 +23,23 @@ import { useNetwork } from "wagmi";
 import { optimism, arbitrum, hardhat, Chain } from "wagmi/chains";
 import { arbitrumUrl, optimismUrl } from "../constants/networks";
 import { DirectionType } from "../utils/direction";
+import { YEAR_SEC } from "../constants/dates";
+
+const getRPCUrl = (chain: Chain) => {
+	switch (chain) {
+		case hardhat:
+			return optimismUrl;
+		case arbitrum:
+			return arbitrumUrl;
+		case optimism:
+			return optimismUrl;
+		default:
+			return optimismUrl;
+	}
+};
 
 const getLyra = async (chain: Chain) => {
-	const provider = new ethers.providers.JsonRpcProvider(
-		chain.id === arbitrum.id ? arbitrumUrl : optimismUrl
-	);
+	const provider = new ethers.providers.JsonRpcProvider(getRPCUrl(chain));
 	await provider.getNetwork();
 	{
 		/* @ts-ignore  different types in JsonRpcProvider in lyra-js */
@@ -39,6 +51,12 @@ export const useBuilder = () => {
 	const [state, dispatch] = useReducer(builderReducer, builderInitialState);
 
 	const {
+		maxLossPost,
+		fee,
+		maxCost,
+		maxPremium,
+		validMaxLoss,
+		maxLoss,
 		lyra,
 		builderType,
 		selectedChain,
@@ -52,7 +70,6 @@ export const useBuilder = () => {
 		selectedStrategy,
 		strikes,
 		isUpdating,
-		positionPnl,
 		isValid,
 		isBuildingNewStrategy,
 	} = state;
@@ -68,7 +85,9 @@ export const useBuilder = () => {
 				strikes: [],
 				selectedExpirationDate: null,
 				selectedStrategy: null,
-				positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 },
+			});
+			dispatch({
+				type: "RESET_VALID_MAX_PNL",
 			});
 		}
 	}, [network, selectedChain]);
@@ -81,7 +100,9 @@ export const useBuilder = () => {
 			strikes: [],
 			selectedExpirationDate: null,
 			selectedStrategy: null,
-			positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 },
+		});
+		dispatch({
+			type: "RESET_VALID_MAX_PNL",
 		});
 	};
 
@@ -112,7 +133,9 @@ export const useBuilder = () => {
 				strikes: [],
 				selectedExpirationDate: null,
 				selectedStrategy: null,
-				positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 },
+			});
+			dispatch({
+				type: "RESET_VALID_MAX_PNL",
 			});
 		}
 	}, [selectedChain]);
@@ -145,73 +168,36 @@ export const useBuilder = () => {
 		}
 	}, [data, isLoading]);
 
-	const calculateStrategyPNL = useCallback(() => {
-		let strikesByOptionTypes: Record<number, number> = {
-			0: 0,
-			1: 0,
-			2: 0,
-			3: 0,
-			4: 0,
-		};
+	const calculateMaxPNL = useCallback(() => {
+		let [maxCost, maxPremium] = _calculateMaxPremiums(strikes);
 
-		const pnl = strikes.reduce(
-			(accum: any, strike: any) => {
-				const {
-					quote,
-					quote: { size, isBuy, isCall, pricePerOption, strikePrice },
-				} = strike;
+		let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(strikes);
 
-				let _optionType = calculateOptionType(isBuy, isCall);
-				let _strikeOptions = strikesByOptionTypes[_optionType] || 0;
+		const spreadCollateralLoanDuration = _furthestOutExpiry(strikes) - Date.now();
 
-				strikesByOptionTypes[_optionType] = _strikeOptions + 1;
+		let fee = 0;
 
-				// max cost
-				const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
-				// collateralrequired
-				const _strikeCollateralRequired = fromBigNumber(strikePrice) * fromBigNumber(size);
-
-				const { netCreditDebit, maxLoss, maxProfit, maxCost, collateralRequired } = accum;
-
-				const _netCreditDebit = isBuy
-					? netCreditDebit - _totalPriceForOptions
-					: netCreditDebit + _totalPriceForOptions;
-				const _maxLoss = isBuy ? maxLoss + _totalPriceForOptions : _strikeCollateralRequired;
-				const _maxProfit = isBuy ? Infinity : maxProfit + _totalPriceForOptions;
-
-				const _maxCost = isBuy ? _totalPriceForOptions + maxCost : maxCost;
-				const _collateralRequired = isBuy
-					? collateralRequired
-					: _strikeCollateralRequired + collateralRequired;
-
-				return {
-					netCreditDebit: _netCreditDebit,
-					maxLoss: _maxLoss,
-					maxProfit: _maxProfit,
-					collateralRequired: _collateralRequired, // min collateral required
-					maxCost: _maxCost, // max cost buy put buy call
-				};
-			},
-			{
-				netCreditDebit: 0,
-				maxLoss: 0,
-				maxProfit: 0,
-				collateralRequired: 0, // min collateral required
-				maxCost: 0, // max cost buy put buy call
-			}
-		);
+		if (validMaxLoss && spreadCollateralLoanDuration > 0) {
+			// get fee
+			fee = (spreadCollateralLoanDuration / (YEAR_SEC * 1000)) * collateralLoan * 0.2;
+		}
 
 		dispatch({
-			type: "SET_POSITION_PNL",
-			positionPnl: checkCappedPNL(pnl, strikesByOptionTypes),
-		} as BuilderAction);
+			type: "SET_VALID_MAX_PNL",
+			validMaxLoss,
+			maxLoss,
+			maxCost,
+			maxPremium,
+			fee,
+			maxLossPost: maxLoss + maxCost - maxPremium + fee,
+		});
 	}, [strikes]);
 
 	useEffect(() => {
 		if (strikes.length > 0) {
-			calculateStrategyPNL();
+			calculateMaxPNL();
 		}
-	}, [strikes, selectedStrategy, calculateStrategyPNL]);
+	}, [strikes, calculateMaxPNL]);
 
 	useEffect(() => {
 		if (selectedStrategy && isBuildingNewStrategy) {
@@ -264,8 +250,10 @@ export const useBuilder = () => {
 			strikes: [],
 			selectedExpirationDate: null,
 			selectedStrategy: null,
-			positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 },
 		} as BuilderAction);
+		dispatch({
+			type: "RESET_VALID_MAX_PNL",
+		});
 	};
 
 	const handleSelectedDirectionTypes = (directionTypes: StrategyDirection[]) => {
@@ -279,7 +267,6 @@ export const useBuilder = () => {
 		dispatch({
 			type: "SET_EXPIRATION_DATE",
 			selectedExpirationDate: expirationDate,
-			positionPnl: { netCreditDebit: 0, maxLoss: 0, maxProfit: 0 },
 		} as BuilderAction);
 	};
 
@@ -294,7 +281,6 @@ export const useBuilder = () => {
 
 	const handleUpdateQuote = useCallback(
 		async (strikeUpdate: { strike: LyraStrike; size: string }) => {
-			console.log({ strikeUpdate });
 			if (strikeUpdate && strikes.length > 0 && lyra) {
 				dispatch({
 					type: "SET_UPDATING_STRIKE",
@@ -414,6 +400,12 @@ export const useBuilder = () => {
 	const [activeStrike, setActiveStrike] = useState({ strikeId: 0, isCall: false });
 
 	return {
+		maxLossPost,
+		fee,
+		maxCost,
+		maxPremium,
+		validMaxLoss,
+		maxLoss,
 		lyra,
 		builderType,
 		selectedChain,
@@ -426,7 +418,6 @@ export const useBuilder = () => {
 		selectedExpirationDate,
 		selectedStrategy,
 		strikes,
-		positionPnl,
 		isValid,
 		isBuildingNewStrategy,
 		activeStrike,
@@ -473,4 +464,213 @@ const checkCappedPNL = (
 	}
 
 	return pnl;
+};
+
+const _calculateMaxLoss = (strikes: LyraStrike[]): [boolean, number, number] => {
+	if (strikes.length > 0) {
+		let strikesByOptionTypes: Record<number, number> = {
+			0: 0,
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+		};
+
+		const optionTypeMatch = strikes.reduce((accum: Record<number, number>, strike: LyraStrike) => {
+			const {
+				quote: { isBuy, isCall },
+			} = strike;
+
+			const optionType = calculateOptionType(isBuy, isCall);
+			accum[optionType] += 1;
+
+			return accum;
+		}, strikesByOptionTypes as Record<number, number>);
+
+		// if no shorts
+		if (optionTypeMatch[3] === 0 && optionTypeMatch[4] === 0) {
+			return [true, 0, 0];
+		}
+
+		// if size of longs puts < short puts
+		// infinite loss
+		let validCalls = true;
+		if (
+			optionTypeMatch[0] != undefined &&
+			optionTypeMatch[3] != undefined &&
+			optionTypeMatch[3] != 0 &&
+			optionTypeMatch[0] < optionTypeMatch[3]
+		) {
+			validCalls = false; // max loss is collateral
+		}
+
+		// if size of long calls < short calls
+		// infinite loss
+		let validPuts = true;
+		if (
+			optionTypeMatch[1] != undefined &&
+			optionTypeMatch[4] != undefined &&
+			optionTypeMatch[4] != 0 &&
+			optionTypeMatch[1] < optionTypeMatch[4]
+		) {
+			validPuts = false;
+		}
+
+		console.log({ validCalls, validPuts });
+
+		// max loss - calls
+		const calls = strikes
+			.filter((strike: LyraStrike) => {
+				const {
+					quote: { isCall },
+				} = strike;
+				return isCall;
+			})
+			.sort((a: LyraStrike, b: LyraStrike) => {
+				return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice);
+			});
+
+		const shortCallCollateralMax = calls.reduce(
+			(total: [number, number], strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				if (!isBuy) {
+					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
+					total[1] += fromBigNumber(size);
+				}
+				return total;
+			},
+			[0, 0] as [number, number]
+		);
+
+		if (!validCalls) {
+			console.log({ validCalls, shortCallCollateralMax });
+			return [validCalls, shortCallCollateralMax[0], 0];
+		}
+
+		let shortCallSize = shortCallCollateralMax[1];
+		let maxCallLoss = 0;
+
+		if (shortCallSize > 0) {
+			calls.forEach((strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				let longSize = fromBigNumber(size);
+
+				if (isBuy) {
+					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
+					maxCallLoss = cover - shortCallCollateralMax[0];
+					shortCallSize = shortCallSize - longSize;
+					if (shortCallSize <= 0) {
+						return;
+					}
+				}
+			});
+		}
+
+		// max loss - puts
+		const puts = strikes
+			.filter((strike: LyraStrike) => {
+				const {
+					quote: { isCall },
+				} = strike;
+				return !isCall;
+			})
+			.sort((a: LyraStrike, b: LyraStrike) => {
+				return fromBigNumber(b.strikePrice) - fromBigNumber(a.strikePrice);
+			});
+
+		const shortPutCollateralMax = puts.reduce(
+			(total: [number, number], strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				if (!isBuy) {
+					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
+					total[1] += fromBigNumber(size);
+				}
+				return total;
+			},
+			[0, 0] as [number, number]
+		);
+
+		if (!validPuts) {
+			console.log({ validPuts, shortPutCollateralMax });
+			return [validPuts, shortPutCollateralMax[0], 0];
+		}
+
+		let shortPutSize = shortPutCollateralMax[1];
+		let maxPutLoss = 0;
+
+		if (shortPutSize > 0) {
+			puts.forEach((strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				let longSize = fromBigNumber(size);
+
+				if (isBuy) {
+					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
+					maxPutLoss = cover - shortPutCollateralMax[0];
+					shortPutSize = shortPutSize - longSize;
+					if (shortPutSize <= 0) {
+						return;
+					}
+				}
+			});
+		}
+
+		console.log(Math.abs(maxPutLoss), Math.abs(maxCallLoss));
+
+		return [
+			true,
+			Math.abs(maxPutLoss) > Math.abs(maxCallLoss) ? Math.abs(maxPutLoss) : Math.abs(maxCallLoss),
+			shortPutCollateralMax[0] + shortCallCollateralMax[0],
+		];
+	}
+
+	return [false, 0, 0];
+};
+
+const _calculateMaxPremiums = (strikes: LyraStrike[]) => {
+	return strikes.reduce(
+		(totalPremiums: [number, number], strike: LyraStrike) => {
+			const {
+				quote: { size, isBuy, pricePerOption },
+			} = strike;
+
+			const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+
+			if (isBuy) {
+				totalPremiums[0] += _totalPriceForOptions;
+			} else {
+				totalPremiums[1] += _totalPriceForOptions;
+			}
+
+			return totalPremiums;
+		},
+		[0, 0] as [number, number]
+	);
+};
+
+const _furthestOutExpiry = (strikes: LyraStrike[]) => {
+	return (
+		strikes.reduce((expiration: number, strike: LyraStrike) => {
+			const {
+				expiryTimestamp,
+				quote: { isBuy },
+			} = strike;
+			if (!isBuy) {
+				return expiration > expiryTimestamp ? expiration : expiryTimestamp;
+			} else {
+				return expiration;
+			}
+		}, 0 as number) * 1000
+	);
 };

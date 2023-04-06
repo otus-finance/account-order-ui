@@ -5,6 +5,12 @@ import { Chain } from "wagmi";
 import { Dispatch } from "react";
 
 export type BuilderProviderState = {
+	fee: number;
+	maxCost: number;
+	maxPremium: number;
+	maxLoss: number;
+	maxLossPost: number;
+	validMaxLoss: boolean;
 	lyra: Lyra | null;
 	builderType: BuilderType;
 	showStrikesSelect: boolean;
@@ -17,7 +23,6 @@ export type BuilderProviderState = {
 	selectedExpirationDate: LyraBoard | null;
 	selectedStrategy: any | null | undefined;
 	strikes: LyraStrike[];
-	positionPnl: any | null | undefined; // netcreditdebit max profit max loss
 	isValid: boolean;
 	isBuildingNewStrategy: boolean;
 	activeStrike: any;
@@ -35,6 +40,12 @@ export type BuilderProviderState = {
 };
 
 export const builderInitialState: BuilderProviderState = {
+	fee: 0,
+	maxCost: 0,
+	maxPremium: 0,
+	maxLoss: 0,
+	maxLossPost: 0,
+	validMaxLoss: false, // valid for max loss post spread
 	lyra: null,
 	builderType: BuilderType.Builder,
 	showStrikesSelect: false,
@@ -47,14 +58,6 @@ export const builderInitialState: BuilderProviderState = {
 	selectedExpirationDate: null,
 	selectedStrategy: null,
 	strikes: [],
-	positionPnl: {
-		netCreditDebit: 0, // min. premium received
-		maxLoss: 0,
-		maxPorfit: 0,
-		collateralRequired: 0, // min collateral required
-		totalFundsRequired: 0, // collateral required + cost
-		maxCost: 0, // max cost buy put buy call
-	},
 	isValid: false,
 	isBuildingNewStrategy: false,
 	activeStrike: { strikeId: 0, isCall: false },
@@ -87,7 +90,6 @@ export type BuilderAction =
 			strikes: BuilderProviderState["strikes"];
 			selectedExpirationDate: BuilderProviderState["selectedExpirationDate"];
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
-			positionPnl: BuilderProviderState["positionPnl"];
 	  }
 	| {
 			type: "SET_LYRA";
@@ -112,7 +114,6 @@ export type BuilderAction =
 			strikes: BuilderProviderState["strikes"];
 			selectedExpirationDate: BuilderProviderState["selectedExpirationDate"];
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
-			positionPnl: BuilderProviderState["positionPnl"];
 	  }
 	| {
 			type: "SET_CURRENT_PRICE";
@@ -125,7 +126,6 @@ export type BuilderAction =
 	| {
 			type: "SET_EXPIRATION_DATE";
 			selectedExpirationDate: BuilderProviderState["selectedExpirationDate"];
-			positionPnl: BuilderProviderState["positionPnl"];
 	  }
 	| {
 			type: "SET_STRATEGY";
@@ -155,8 +155,16 @@ export type BuilderAction =
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
 	  }
 	| {
-			type: "SET_POSITION_PNL";
-			positionPnl: BuilderProviderState["positionPnl"];
+			type: "SET_VALID_MAX_PNL";
+			validMaxLoss: BuilderProviderState["validMaxLoss"];
+			maxLossPost: BuilderProviderState["maxLossPost"];
+			maxLoss: BuilderProviderState["maxLoss"];
+			maxCost: BuilderProviderState["maxCost"];
+			maxPremium: BuilderProviderState["maxPremium"];
+			fee: BuilderProviderState["fee"];
+	  }
+	| {
+			type: "RESET_VALID_MAX_PNL";
 	  }
 	| {
 			type: "RESET_BUILDER_PROVIDER";
@@ -179,7 +187,6 @@ export function builderReducer(
 				strikes: action.strikes,
 				selectedExpirationDate: action.selectedExpirationDate,
 				selectedStrategy: action.selectedStrategy,
-				positionPnl: action.positionPnl,
 			};
 		case "SET_LYRA":
 			return {
@@ -203,7 +210,6 @@ export function builderReducer(
 				strikes: action.strikes,
 				selectedExpirationDate: action.selectedExpirationDate,
 				selectedStrategy: action.selectedStrategy,
-				positionPnl: action.positionPnl,
 			};
 		case "SET_CURRENT_PRICE":
 			return { ...state, currentPrice: action.currentPrice };
@@ -216,7 +222,6 @@ export function builderReducer(
 			return {
 				...state,
 				selectedExpirationDate: action.selectedExpirationDate,
-				positionPnl: action.positionPnl,
 			};
 		case "SET_STRATEGY":
 			return {
@@ -239,8 +244,26 @@ export function builderReducer(
 				selectedExpirationDate: action.selectedExpirationDate,
 				selectedStrategy: action.selectedStrategy,
 			};
-		case "SET_POSITION_PNL":
-			return { ...state, positionPnl: action.positionPnl };
+		case "SET_VALID_MAX_PNL":
+			return {
+				...state,
+				validMaxLoss: action.validMaxLoss,
+				maxLoss: action.maxLoss,
+				maxLossPost: action.maxLossPost,
+				maxCost: action.maxCost,
+				maxPremium: action.maxPremium,
+				fee: action.fee,
+			};
+		case "RESET_VALID_MAX_PNL":
+			return {
+				...state,
+				validMaxLoss: false,
+				maxLoss: 0,
+				maxLossPost: 0,
+				maxCost: 0,
+				maxPremium: 0,
+				fee: 0,
+			};
 		case "RESET_BUILDER_PROVIDER":
 			return builderInitialState;
 		default:

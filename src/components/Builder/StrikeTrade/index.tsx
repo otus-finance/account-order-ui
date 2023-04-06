@@ -17,9 +17,7 @@ import { LyraStrike } from "../../../queries/lyra/useLyra";
 import { AccountOrderActions } from "../../Account/AccountOrderActions";
 
 export const StrikeTrade = () => {
-	const { selectedMarket, strikes, positionPnl } = useBuilderContext();
-
-	const { netCreditDebit, collateralRequired, maxCost } = positionPnl;
+	const { selectedMarket, strikes } = useBuilderContext();
 
 	return (
 		<>
@@ -30,30 +28,6 @@ export const StrikeTrade = () => {
 						{strikes.map((strike, index) => {
 							return <StrikeTradeDetail strike={strike} key={index} />;
 						})}
-					</div>
-
-					<div className="col-span-1 border-b border-zinc-800">
-						<div className="grid grid-cols-2 p-4 gap-2">
-							<div className="text-xs text-zinc-200">Min. Premium Received</div>
-							<div className="text-xs text-white font-semibold col-span-1 text-right">
-								{formatUSD(netCreditDebit < 0 ? 0 : netCreditDebit)}
-							</div>
-
-							<div className=" col-span-1 text-xs text-zinc-200">Collateral Required</div>
-							<div className="text-xs text-white font-semibold col-span-1 text-right">
-								{formatUSD(collateralRequired)}
-							</div>
-
-							<div className=" col-span-1 text-xs text-zinc-200">Max Cost</div>
-							<div className="text-xs text-white font-semibold col-span-1 text-right">
-								{formatUSD(maxCost)}
-							</div>
-
-							<div className="text-xs text-zinc-200">Total Funds Required</div>
-							<div className="text-xs text-white font-semibold col-span-1 text-right">
-								{formatUSD(collateralRequired + maxCost)}
-							</div>
-						</div>
 					</div>
 
 					{/* limit / market / trigger button header  */}
