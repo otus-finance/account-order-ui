@@ -25,7 +25,7 @@ export const TradeLimit = () => {
 	const { address } = useAccount();
 
 	return (
-		<div className="col-span-1 px-4 pb-2">
+		<div className="col-span-1 px-4 pb-4">
 			<div className="p-4 border border-zinc-800">
 				<p className="text-zinc-200 text-xs leading-5">
 					Create a margin account to trade Lyra options with limit orders. Set limit price orders or
