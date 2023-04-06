@@ -1,6 +1,6 @@
-import { Provider } from '@wagmi/core';
-import { Contract, ethers } from 'ethers';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { Provider } from "@wagmi/core";
+import { Contract, ethers } from "ethers";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import {
 	Address,
 	erc20ABI,
@@ -11,29 +11,29 @@ import {
 	useProvider,
 	useSigner,
 	useWaitForTransaction,
-} from 'wagmi';
-import { HeroIcon, IconType } from '../components/UI/Icons/IconSVG';
+} from "wagmi";
+import { HeroIcon, IconType } from "../components/UI/Icons/IconSVG";
 import {
 	createPendingToast,
 	CreateToastOptions,
 	ToastIcon,
 	updatePendingToast,
 	updateToast,
-} from '../components/UI/Toast';
-import { ZERO_ADDRESS, ZERO_BN } from '../constants/bn';
-import { quote } from '../constants/quote';
-import { useAccountWithOrders } from '../queries/otus/account';
+} from "../components/UI/Toast";
+import { ZERO_ADDRESS, ZERO_BN } from "../constants/bn";
+import { quote } from "../constants/quote";
+import { useAccountWithOrders } from "../queries/otus/account";
 
 import {
 	AccountOrderProviderState,
 	AccountOrderAction,
 	accountOrderInitialState,
 	accountOrderReducer,
-} from '../reducers';
-import getExplorerUrl from '../utils/chains/getExplorerUrl';
-import { formatUSD, fromBigNumber, toBN } from '../utils/formatters/numbers';
-import { OrderTypes, StrikeTrade } from '../utils/types';
-import { useOtusAccountContracts } from './Contracts';
+} from "../reducers";
+import getExplorerUrl from "../utils/chains/getExplorerUrl";
+import { formatUSD, fromBigNumber, toBN } from "../utils/formatters/numbers";
+import { OrderTypes, StrikeTrade } from "../utils/types";
+import { useOtusAccountContracts } from "./Contracts";
 
 const DEFAULT_TOAST_TIMEOUT = 1000 * 5; // 5 seconds
 
@@ -51,7 +51,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 	useEffect(() => {
 		if (isDataLoading && isDataLoading != isLoading) {
 			dispatch({
-				type: 'SET_LOADING',
+				type: "SET_LOADING",
 				isLoading: isDataLoading,
 			});
 		}
@@ -63,20 +63,20 @@ export const useAccountOrder = (owner: Address | undefined) => {
 			const { accountOrders } = data;
 			if (!accountOrders[0]) {
 				dispatch({
-					type: 'SET_ACCOUNT_ORDER',
+					type: "SET_ACCOUNT_ORDER",
 					accountOrder: null,
 					isLoading: false,
 				});
 				return;
 			}
 			dispatch({
-				type: 'SET_ACCOUNT_ORDER',
+				type: "SET_ACCOUNT_ORDER",
 				accountOrder: accountOrders[0],
 				isLoading: false,
 			});
 		} else {
 			dispatch({
-				type: 'SET_ACCOUNT_ORDER',
+				type: "SET_ACCOUNT_ORDER",
 				accountOrder: null,
 				isLoading: false,
 			});
@@ -92,8 +92,8 @@ export const useAccountOrder = (owner: Address | undefined) => {
 		}
 	}, [chain]);
 
-	const [userBalance, setUserBalance] = useState('');
-	const [accountBalance, setAccountBalance] = useState('');
+	const [userBalance, setUserBalance] = useState("");
+	const [accountBalance, setAccountBalance] = useState("");
 
 	const _userBalance = useBalance({
 		address: owner,
@@ -135,7 +135,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 	const { config: allowanceConfig } = usePrepareContractWrite({
 		address: accountOrder?.id && allowanceAmount ? tokenAddr : undefined,
 		abi: erc20ABI,
-		functionName: 'approve',
+		functionName: "approve",
 		args:
 			accountOrder?.id && allowanceAmount
 				? [accountOrder?.id, toBN(allowanceAmount.toString())]
@@ -158,12 +158,12 @@ export const useAccountOrder = (owner: Address | undefined) => {
 	// deposit
 	const [depositAmount, setDepositAmount] = useState(0);
 
-	let depositToastId = '';
+	let depositToastId = "";
 
 	const { config: accountOrderDepositConfig } = usePrepareContractWrite({
 		address: accountOrder?.id,
-		abi: otusContracts && otusContracts['AccountOrder'] && otusContracts['AccountOrder'].abi,
-		functionName: 'deposit',
+		abi: otusContracts && otusContracts["AccountOrder"] && otusContracts["AccountOrder"].abi,
+		functionName: "deposit",
 		args: [toBN(depositAmount.toString())],
 		chainId: chain?.id,
 	});
@@ -187,7 +187,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 		},
 		onError: (error: Error, variables, context) => {
 			const rawMessage = error?.message;
-			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, '') : 'Something went wrong';
+			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
 		},
 		onMutate: () => {
 			depositToastId = createPendingToast({
@@ -227,8 +227,8 @@ export const useAccountOrder = (owner: Address | undefined) => {
 
 	const { config: accountOrderWithdrawConfig } = usePrepareContractWrite({
 		address: accountOrder?.id,
-		abi: otusContracts && otusContracts['AccountOrder'] && otusContracts['AccountOrder'].abi,
-		functionName: 'withdraw',
+		abi: otusContracts && otusContracts["AccountOrder"] && otusContracts["AccountOrder"].abi,
+		functionName: "withdraw",
 		args: [toBN(withdrawAmount.toString())],
 		chainId: chain?.id,
 	});
@@ -244,7 +244,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 		chainId: chain?.id,
 		accountOrderAddr: accountOrder?.id,
 		accountOrderAbi:
-			otusContracts && otusContracts['AccountOrder'] && otusContracts['AccountOrder'].abi,
+			otusContracts && otusContracts["AccountOrder"] && otusContracts["AccountOrder"].abi,
 	});
 
 	return {
@@ -312,32 +312,28 @@ const useLimitOrder = ({
 }) => {
 	const [order, setOrder] = useState<StrikeTrade>({
 		orderType: OrderTypes.LIMIT_PRICE,
-		market: ethers.utils.formatBytes32String('ETH'),
+		market: ethers.utils.formatBytes32String("ETH"),
 		iterations: 3,
-		collatPercent: toBN('1'),
+		collatPercent: toBN("1"),
 		optionType: 0,
-		strikeId: toBN('1'),
-		size: toBN('1'),
+		strikeId: toBN("1"),
+		size: toBN("1"),
 		positionId: 0,
 		tradeDirection: 0,
-		targetPrice: toBN('1'),
-		targetVolatility: toBN('1'),
+		targetPrice: toBN("1"),
+		targetVolatility: toBN("1"),
 	});
 
-	// console.log({ order })
 	const { config: placeOrderConfig } = usePrepareContractWrite({
 		address: accountOrderAddr,
 		abi: accountOrderAbi,
-		functionName: 'placeOrder',
+		functionName: "placeOrder",
 		args: [order],
 		chainId: chainId,
-		overrides: { value: toBN('0.003') },
+		overrides: { value: toBN("0.003") },
 		onSettled: (data, error) => {},
 		onSuccess: (data) => {},
 		onError: (error) => {},
-		// overrides: {
-		//   value: toBN('.01'),
-		// },
 	});
 
 	const { data, isLoading, isSuccess, write: placeOrder } = useContractWrite(placeOrderConfig);

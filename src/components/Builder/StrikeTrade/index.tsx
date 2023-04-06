@@ -56,7 +56,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 
 	return (
 		<div
-			className="border-b border-zinc-800 hover:bg-black"
+			className="border-b border-zinc-800 hover:bg-black hover:rounded-t-lg"
 			onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
