@@ -24,6 +24,7 @@ export type LiquidityPool = {
 	pendingDeposits: BigNumber;
 	pendingWithdrawals: BigNumber;
 	lockedCollateral: BigNumber;
+	quoteBalance: BigNumber;
 	freeCollateral: BigNumber;
 	feesCollected: BigNumber;
 	cap: BigNumber;
@@ -36,16 +37,17 @@ export const useLiquidityPool = () => {
 	const { chain } = useNetwork();
 
 	const otusSpreadLiquidityEndpoint = getOtusEndpoint(chain?.id);
-	return useQuery<LiquidityPoolData | null>(
+	return useQuery<LiquidityPool | null | undefined>(
 		QUERY_KEYS.POOL.SpreadLiquidity,
 		async () => {
 			if (!otusSpreadLiquidityEndpoint) return null;
-			return await request(
+			const response: LiquidityPoolData = await request(
 				otusSpreadLiquidityEndpoint,
 				gql`
 					query {
 						liquidityPools {
 							id
+							quoteBalance
 							pendingDeposits
 							pendingWithdrawals
 							lockedCollateral
@@ -64,6 +66,7 @@ export const useLiquidityPool = () => {
 					}
 				`
 			);
+			return response.liquidityPools.length > 0 ? response.liquidityPools[0] : null;
 		},
 		{
 			enabled: true,

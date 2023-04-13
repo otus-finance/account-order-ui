@@ -12,14 +12,7 @@ import {
 	useSigner,
 	useWaitForTransaction,
 } from "wagmi";
-import { HeroIcon, IconType } from "../components/UI/Icons/IconSVG";
-import {
-	createPendingToast,
-	CreateToastOptions,
-	ToastIcon,
-	updatePendingToast,
-	updateToast,
-} from "../components/UI/Toast";
+
 import { ZERO_ADDRESS, ZERO_BN } from "../constants/bn";
 import { quote } from "../constants/quote";
 import { useAccountWithOrders } from "../queries/otus/account";
@@ -190,11 +183,11 @@ export const useAccountOrder = (owner: Address | undefined) => {
 			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
 		},
 		onMutate: () => {
-			depositToastId = createPendingToast({
-				description: `Confirm your deposit`,
-				autoClose: false,
-				icon: ToastIcon.Error,
-			});
+			// depositToastId = createPendingToast({
+			// 	description: `Confirm your deposit`,
+			// 	autoClose: false,
+			// 	icon: ToastIcon.Error,
+			// });
 		},
 	});
 
@@ -202,7 +195,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 		hash: depositData?.hash,
 		onSuccess: (data) => {
 			if (chain && data.blockHash) {
-				const txHref = getExplorerUrl(chain?.id, data.blockHash);
+				const txHref = getExplorerUrl(chain, data.blockHash);
 
 				// const args: CreateToastOptions = {
 				//   variant: 'success',

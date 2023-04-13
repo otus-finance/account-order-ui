@@ -14,33 +14,38 @@ This is an app bootstrapped according to the [init.tips](https://init.tips) stac
 
 `src/strategies.ts` has notes on how to add a new strategy.
 
--> Connect Wallet
--> Query subgraph for account order address
--> None
---> Create Margin Account
--> Has
---> Not enough funds for trade
---> Deposit Margin
---> Has enough funds for trade
---> Place order
+## UI Bugs/Tasks for Spread Positions
 
-Account Actions TX
+- Need message when a strategy not available
+- Calculate Max Loss after Selecting strikes/size
+- Display Spread Positions in Table
+- Display TVL in Vault UI + Other Stats
+- Display User Liquidity
+- Include fee in chart net profit net loss calculation
 
-New Account
-Deposit
-Withdraw
+## UI Bugs/Tasks for Limit Orders
 
-Place Order
-Cancel Order
+## UI Bugs
 
-Account Queries
-USD Balance (USDC and SUSD)
-User Wallet Balance
+- Bug on graph not updating correctly when changing size
+- Toast Handling
+- Bug on strikes table updating same strike id (sell vs buy)
 
-// useUserAccount
+## Updates needed in subgraph
 
-// send multi call tx (arb / op)
-https://github.com/mds1/multicall
+## Market Order TX - UI States
 
-// build tx
-// useContractWrite to send
+- Wallet Connect
+- Approve Quote
+- Open Position
+
+## Spread Positions
+
+- Spread
+
+## Display Spread Open Position Numbers
+
+- Potential Profit?
+- Max Cost
+
+- Max Loss Post

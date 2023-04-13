@@ -1,5 +1,5 @@
 import { Provider } from "@wagmi/core";
-import { Contract, ethers } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import {
 	Address,
@@ -12,39 +12,37 @@ import {
 	useProvider,
 	useWaitForTransaction,
 } from "wagmi";
-import { HeroIcon, IconType } from "../components/UI/Icons/IconSVG";
-import {
-	createPendingToast,
-	CreateToastOptions,
-	ToastIcon,
-	updatePendingToast,
-	updateToast,
-} from "../components/UI/Toast";
+import { createToast, updateToast } from "../components/UI/Toast";
 import { ZERO_ADDRESS, ZERO_BN } from "../constants/bn";
 import { quote } from "../constants/quote";
-import { useAccountWithOrders } from "../queries/otus/account";
 import { useLiquidityPool } from "../queries/otus/liquidityPool";
 
 import {
 	SpreadLiquidityPoolProviderState,
-	SpreadLiquidityPoolAction,
 	spreadLiquidityPoolInitialState,
 	spreadLiquidityPoolReducer,
 } from "../reducers";
 import getExplorerUrl from "../utils/chains/getExplorerUrl";
 import { formatUSD, fromBigNumber, toBN } from "../utils/formatters/numbers";
 import { useOtusAccountContracts } from "./Contracts";
-
-const DEFAULT_TOAST_TIMEOUT = 1000 * 5; // 5 seconds
+import { Transaction } from "../utils/types";
+import { reportError } from "../utils/errors";
 
 export const useSpreadLiquidityPool = () => {
 	const [state, dispatch] = useReducer(spreadLiquidityPoolReducer, spreadLiquidityPoolInitialState);
 
 	const { liquidityPool, isLoading } = state;
 
-	const { isLoading: isDataLoading, data, refetch } = useLiquidityPool();
-	console.log({ data });
+	const { isLoading: isDataLoading, data: liquidityPoolData, refetch } = useLiquidityPool();
+
+	const otusContracts = useOtusAccountContracts();
+
+	const spreadLiquidityPool =
+		otusContracts && otusContracts["SpreadLiquidityPool"] && otusContracts["SpreadLiquidityPool"];
+
 	const { chain } = useNetwork();
+
+	const [activeTransaction, setActiveTransaction] = useState<Transaction>();
 
 	useEffect(() => {
 		if (chain) {
@@ -59,10 +57,8 @@ export const useSpreadLiquidityPool = () => {
 	const [tokenAddr, setTokenAddr] = useState<Address>();
 
 	useEffect(() => {
-		if (data) {
-			const { liquidityPools } = data;
-
-			if (!liquidityPools[0]) {
+		if (liquidityPoolData) {
+			if (!liquidityPoolData) {
 				dispatch({
 					type: "SET_SPREAD_LIQUIDITY_POOL",
 					liquidityPool: null,
@@ -72,11 +68,11 @@ export const useSpreadLiquidityPool = () => {
 			}
 			dispatch({
 				type: "SET_SPREAD_LIQUIDITY_POOL",
-				liquidityPool: liquidityPools[0],
+				liquidityPool: liquidityPoolData,
 				isLoading: false,
 			});
 		}
-	}, [data]);
+	}, [liquidityPoolData]);
 
 	useEffect(() => {
 		if (chain && chain.id) {
@@ -85,10 +81,7 @@ export const useSpreadLiquidityPool = () => {
 		}
 	}, [chain]);
 
-	const otusContracts = useOtusAccountContracts();
-	const spreadLiquidityPool =
-		otusContracts && otusContracts["SpreadLiquidityPool"] && otusContracts["SpreadLiquidityPool"];
-
+	// Get User Balance
 	const [userBalance, setUserBalance] = useState("");
 
 	const _userBalance = useBalance({
@@ -98,7 +91,30 @@ export const useSpreadLiquidityPool = () => {
 		watch: true,
 	});
 
-	const poolAllowance = usePoolAllowance(
+	useEffect(() => {
+		if (_userBalance.data?.value) {
+			setUserBalance(formatUSD(fromBigNumber(_userBalance.data?.value), { dps: 2 }));
+		}
+	}, [_userBalance]);
+
+	// Get User LP Balance
+	const [lpBalance, setLpBalance] = useState(ZERO_BN);
+
+	const _lpBalance = useBalance({
+		address: owner,
+		token: spreadLiquidityPool?.address,
+		chainId: chain?.id,
+		watch: true,
+	});
+
+	useEffect(() => {
+		if (_lpBalance.data?.value) {
+			setLpBalance(_lpBalance.data?.value);
+		}
+	}, [_lpBalance]);
+
+	// Get Current Pool sUSD Allowance
+	const { poolAllowance, refetchPoolAllowance } = usePoolAllowance(
 		tokenAddr,
 		erc20ABI,
 		owner,
@@ -106,123 +122,94 @@ export const useSpreadLiquidityPool = () => {
 		provider
 	);
 
-	useEffect(() => {
-		if (_userBalance.data?.value) {
-			setUserBalance(formatUSD(fromBigNumber(_userBalance.data?.value), { dps: 2 }));
-		}
-	}, [_userBalance]);
+	// deposit
+	const [depositAmount, setDepositAmount] = useState<BigNumber>(ZERO_BN);
 
-	// allowance
-	const [allowanceAmount, setAllowanceAmount] = useState(0);
-
-	const { config: allowanceConfig } = usePrepareContractWrite({
-		address: spreadLiquidityPool?.address && allowanceAmount ? tokenAddr : undefined,
+	const { config: approveConfig } = usePrepareContractWrite({
+		address: tokenAddr,
 		abi: erc20ABI,
 		functionName: "approve",
 		args:
-			spreadLiquidityPool?.address && allowanceAmount
-				? [spreadLiquidityPool?.address, toBN(allowanceAmount.toString())]
+			spreadLiquidityPool?.address && depositAmount
+				? [spreadLiquidityPool?.address, depositAmount]
 				: [ZERO_ADDRESS, ZERO_BN],
 		chainId: chain?.id,
 	});
 
-	const {
-		isSuccess,
-		isLoading: isApproveQuoteLoading,
-		write: approveQuote,
-	} = useContractWrite({
-		...allowanceConfig,
-		onSettled: (data, error) => {},
-		onSuccess: (data) => {},
+	const { isLoading: isApproveQuoteLoading, write: approveQuote } = useContractWrite({
+		...approveConfig,
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", "Approving liquidity pool", txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
+			}
+		},
+		onSuccess: async (data) => {
+			await refetchPoolAllowance();
+		},
 	});
 
-	// deposit
-	const [depositAmount, setDepositAmount] = useState(0);
-
-	let depositToastId = "";
-
-	const { config: accountOrderDepositConfig } = usePrepareContractWrite({
+	const { config: liquidityPoolDepositConfig } = usePrepareContractWrite({
 		address: spreadLiquidityPool?.address,
 		abi: spreadLiquidityPool?.abi,
 		functionName: "initiateDeposit",
-		args: [owner, toBN(depositAmount.toString())],
+		args: [owner, depositAmount],
 		chainId: chain?.id,
 	});
 
-	const {
-		isSuccess: isDepositSuccess,
-		isLoading: isDepositLoading,
-		write: deposit,
-		data: depositData,
-	} = useContractWrite({
-		...accountOrderDepositConfig,
-		onSuccess: (data, variables, context) => {
-			// if (depositToastId && chain) {
-			//   const txHref = getExplorerUrl(chain?.id, data.hash)
-			//   updatePendingToast(depositToastId, {
-			//     description: `Your deposit is pending, click to view on etherscan`,
-			//     href: txHref,
-			//     autoClose: DEFAULT_TOAST_TIMEOUT,
-			//   })
-			// }
-		},
-		onError: (error: Error, variables, context) => {
-			const rawMessage = error?.message;
-			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
-		},
-		onMutate: () => {
-			depositToastId = createPendingToast({
-				description: `Confirm your deposit`,
-				autoClose: false,
-				icon: ToastIcon.Error,
-			});
-		},
-	});
-
-	const waitForDeposit = useWaitForTransaction({
-		hash: depositData?.hash,
-		onSuccess: (data) => {
-			if (chain && data.blockHash) {
-				const txHref = getExplorerUrl(chain?.id, data.blockHash);
-
-				// const args: CreateToastOptions = {
-				//   variant: 'success',
-				//   description: `Your tx was successful`,
-				//   href: txHref,
-				//   autoClose: DEFAULT_TOAST_TIMEOUT,
-				//   // icon: HeroIcon(IconType.CheckIcon),
-				// }
-				// updatePendingToast(depositToastId, {
-				//   description: `Your deposit is pending, click to view on etherscan`,
-				//   href: txHref,
-				//   autoClose: false,
-				// })
-				// updateToast(depositToastId, args)
+	const { isLoading: isDepositLoading, write: deposit } = useContractWrite({
+		...liquidityPoolDepositConfig,
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", "Confirm your deposit", txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
 			}
 		},
-		onError(err) {},
 	});
 
 	// withdraw
-	const [withdrawAmount, setWithdrawAmount] = useState(0);
+	const [withdrawAmount, setWithdrawAmount] = useState<BigNumber>(ZERO_BN);
 
 	const { config: accountOrderWithdrawConfig } = usePrepareContractWrite({
 		address: spreadLiquidityPool?.address,
 		abi: spreadLiquidityPool?.abi,
 		functionName: "initiateWithdraw",
-		args: [toBN(withdrawAmount.toString())],
+		args: owner && withdrawAmount ? [owner, withdrawAmount] : [ZERO_ADDRESS, ZERO_BN],
 		chainId: chain?.id,
 	});
 
-	const {
-		isSuccess: isWithdrawSuccess,
-		isLoading: isWithdrawLoading,
-		write: withdraw,
-	} = useContractWrite(accountOrderWithdrawConfig);
+	const { isLoading: isWithdrawLoading, write: withdraw } = useContractWrite(
+		accountOrderWithdrawConfig
+	);
+
+	const { isLoading: isTxLoading } = useWaitForTransaction({
+		hash: activeTransaction?.hash,
+		onSuccess: (data) => {
+			if (chain && data.blockHash) {
+				if (activeTransaction?.toastId) {
+					const txHref = getExplorerUrl(chain, data.blockHash);
+					updateToast("success", activeTransaction?.toastId, "Success", txHref);
+				}
+
+				setActiveTransaction(undefined);
+			}
+		},
+		onError(err) {
+			reportError(chain, err, activeTransaction?.toastId, false, activeTransaction?.receipt);
+			setActiveTransaction(undefined);
+		},
+	});
 
 	return {
 		liquidityPool,
 		isLoading,
+		isTxLoading,
 		isApproveQuoteLoading,
 		isDepositLoading,
 		isWithdrawLoading,
@@ -230,8 +217,7 @@ export const useSpreadLiquidityPool = () => {
 		poolAllowance,
 		depositAmount,
 		withdrawAmount,
-		allowanceAmount,
-		setAllowanceAmount,
+		lpBalance,
 		setDepositAmount,
 		setWithdrawAmount,
 		approveQuote,
@@ -247,17 +233,15 @@ const usePoolAllowance = (
 	liquidityPool: Address | undefined,
 	provider: Provider
 ) => {
-	const [accountAllowance, setAccountAllowance] = useState<number>(0);
+	const [poolAllowance, setPoolAllowance] = useState<BigNumber>(ZERO_BN);
 
 	const getAllowance = useCallback(async () => {
 		if (tokenAddr && abi && owner && liquidityPool && provider) {
 			const _contract: Contract = new ethers.Contract(tokenAddr, abi, provider);
 			try {
 				let _allowance = await _contract.allowance(owner, liquidityPool);
-				setAccountAllowance(fromBigNumber(_allowance));
-			} catch (error) {
-				// log error
-			}
+				setPoolAllowance(_allowance);
+			} catch (error) {}
 		}
 	}, [tokenAddr, abi, owner, liquidityPool, provider]);
 
@@ -267,5 +251,5 @@ const usePoolAllowance = (
 		}
 	}, [getAllowance, tokenAddr, abi, owner, liquidityPool, provider]);
 
-	return accountAllowance;
+	return { poolAllowance, refetchPoolAllowance: getAllowance };
 };

@@ -20,9 +20,9 @@ const Builder: NextPage = () => {
 
 			<SpreadLiquidityPoolContextProvider>
 				<Layout>
-					<div className="mx-auto max-w-screen-2xl py-6 text-white">
+					<div className="mx-auto max-w-screen-2xl py-14 text-white h-[70vh]">
 						<div className="grid grid-cols-5 gap-4">
-							<div className="col-start-2 col-span-3">
+							<div className="sm:col-start-2 sm:col-span-3 col-span-5">
 								<SpreadLiquidityPool />
 							</div>
 						</div>

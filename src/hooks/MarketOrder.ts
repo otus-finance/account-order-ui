@@ -21,8 +21,9 @@ import { quote } from "../constants/quote";
 import { useOtusAccountContracts } from "./Contracts";
 import { MarketOrderProviderState, marketOrderInitialState, marketOrderReducer } from "../reducers";
 import { MAX_BN, ZERO_ADDRESS, ZERO_BN } from "../constants/bn";
-import { ToastIcon, createPendingToast } from "../components/UI/Toast";
-
+import { createToast } from "../components/UI/Toast";
+import getExplorerUrl from "../utils/chains/getExplorerUrl";
+import { Transaction } from "../utils/types";
 export const useMarketOrder = () => {
 	const [state, dispatch] = useReducer(marketOrderReducer, marketOrderInitialState);
 
@@ -89,7 +90,11 @@ export const useMarketOrder = () => {
 	} = useContractWrite({
 		...allowanceConfig,
 		onSettled: (data, error) => {
-			console.log({ data, error });
+			if (data?.hash) {
+				setActiveTransaction({ hash: data.hash });
+			} else {
+				// createToast();
+			}
 		},
 		onSuccess: (data) => {},
 		onError: (error) => {
@@ -134,11 +139,11 @@ export const useMarketOrder = () => {
 			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
 		},
 		onMutate: () => {
-			openPositionToastId = createPendingToast({
-				description: `Confirm your deposit`,
-				autoClose: false,
-				icon: ToastIcon.Error,
-			});
+			// openPositionToastId = createPendingToast({
+			// 	description: `Confirm your deposit`,
+			// 	autoClose: false,
+			// 	icon: ToastIcon.Error,
+			// });
 		},
 	});
 
@@ -180,11 +185,44 @@ export const useMarketOrder = () => {
 			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
 		},
 		onMutate: () => {
-			closePositionToastId = createPendingToast({
-				description: `Confirm your deposit`,
-				autoClose: false,
-				icon: ToastIcon.Error,
-			});
+			// closePositionToastId = createPendingToast({
+			// 	description: `Confirm your deposit`,
+			// 	autoClose: false,
+			// 	icon: ToastIcon.Error,
+			// });
+		},
+	});
+
+	const [activeTransaction, setActiveTransaction] = useState<Transaction>();
+
+	const currentTransaction = useWaitForTransaction({
+		hash: activeTransaction?.hash,
+		onSuccess: (data) => {
+			if (chain && data.blockHash) {
+				console.log({ chain, data });
+				const txHref = getExplorerUrl(chain, data.blockHash);
+
+				console.log({ txHref });
+
+				// createToast();
+				// const args: CreateToastOptions = {
+				//   variant: 'success',
+				//   description: `Your tx was successful`,
+				//   href: txHref,
+				//   autoClose: DEFAULT_TOAST_TIMEOUT,
+				//   // icon: HeroIcon(IconType.CheckIcon),
+				// }
+				// updatePendingToast(depositToastId, {
+				//   description: `Your deposit is pending, click to view on etherscan`,
+				//   href: txHref,
+				//   autoClose: false,
+				// })
+				// updateToast(depositToastId, args)
+				setActiveTransaction(undefined);
+			}
+		},
+		onError(err) {
+			setActiveTransaction(undefined);
 		},
 	});
 

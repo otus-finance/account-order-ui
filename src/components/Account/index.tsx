@@ -27,7 +27,7 @@ export const AccountPosition = () => {
 					selectedAccountTab={selectedAccountTab}
 					setSelectedAccountTab={setSelectedAccountTab}
 				/>
-				<div className="border border-zinc-800 rounded-lg p-6">
+				<div className="border border-zinc-800 rounded-lg p-6 shadow-md shadow-black">
 					<AccountInfo selectedAccountTab={selectedAccountTab} />
 				</div>
 			</>

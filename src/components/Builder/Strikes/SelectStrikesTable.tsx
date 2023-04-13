@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { calculateOptionType } from "../../../utils/formatters/optiontypes";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { SelectBuilderExpiration } from "../Strategy/SelectExpiration";
+import { Spinner } from "../../UI/Components/Spinner";
+import { CheckCircleIcon, CheckIcon, PlusCircleIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 const style =
 	"border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center w-24 px-6 p-2 mr-1 text-sm font-light";
@@ -23,8 +25,14 @@ type SelectedStrike = {
 };
 
 export const SelectStrikesTable = () => {
-	const { builderType, strikes, selectedExpirationDate, handleToggleSelectedStrike } =
-		useBuilderContext();
+	const {
+		isToggleStrikeLoading,
+		toggleStrikeId,
+		builderType,
+		strikes,
+		selectedExpirationDate,
+		handleToggleSelectedStrike,
+	} = useBuilderContext();
 
 	const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
 
@@ -37,63 +45,53 @@ export const SelectStrikesTable = () => {
 	}, [isBuy, isCall, optionType]);
 
 	useEffect(() => {
-		if (selectedExpirationDate) {
-			const { strikesByOptionTypes } = selectedExpirationDate;
-			if (strikesByOptionTypes && strikesByOptionTypes[optionType]) {
-				const _strikes = strikesByOptionTypes[optionType];
-				setAvailableStrikes(_strikes);
-			}
-		}
-	}, [selectedExpirationDate, optionType]);
-
-	const [selectedStrikeIds, setSelectedStrikeIds] = useState<SelectedStrike[]>([]);
-
-	useEffect(() => {
-		setSelectedStrikeIds(
-			strikes.map(
-				({
-					id,
-					isCall,
-					quote: { isBuy },
-				}: {
-					id: number;
-					isCall: boolean;
-					quote: { isBuy: boolean };
-				}) => {
-					return { id, isCall, isBuy };
+		setAvailableStrikes(
+			strikes.filter((strike: LyraStrike) => {
+				const {
+					quote: { isBuy, isCall },
+				} = strike;
+				const _optionType = calculateOptionType(isBuy, isCall);
+				if (optionType == _optionType) {
+					return true;
+				} else {
+					return false;
 				}
-			)
+			})
 		);
-	}, [strikes]);
+	}, [strikes, optionType]);
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-4">
 			<div className="flex justify-between mt-6">
 				<div
 					onClick={() => setIsBuy(true)}
-					className={`${isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-						} ${style}`}
+					className={`${
+						isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+					} ${style}`}
 				>
 					Buy
 				</div>
 				<div
 					onClick={() => setIsBuy(false)}
-					className={`${!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-						} ${style}`}
+					className={`${
+						!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+					} ${style}`}
 				>
 					Sell
 				</div>
 				<div
 					onClick={() => setIsCall(true)}
-					className={`${isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-						} ${style} ml-2`}
+					className={`${
+						isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+					} ${style} ml-2`}
 				>
 					Call
 				</div>
 				<div
 					onClick={() => setIsCall(false)}
-					className={`${!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-						} ${style}`}
+					className={`${
+						!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+					} ${style}`}
 				>
 					Put
 				</div>
@@ -145,99 +143,108 @@ export const SelectStrikesTable = () => {
 							>
 								Gamma
 							</th>
-							<th
+							{/* <th
 								scope="col"
 								className="hidden px-3 py-3.5 text-left text-xs font-light uppercase text-white sm:table-cell"
 							>
 								Size
-							</th>
+							</th> */}
 							<th
 								scope="col"
-								className="px-3 py-3.5 text-left text-xs font-light uppercase text-white"
+								className="px-3 py-3.5 text-left text-xs font-light uppercase text-white "
 							>
-								Credit/(Debit)
+								Price
 							</th>
-							<th scope="col" className="relative py-3.5">
+							{/* <th scope="col" className="relative py-3.5">
 								<span className="sr-only">Price</span>
-							</th>
+							</th> */}
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-zinc-700 bg-zinc-800">
-						<AnimatePresence>
-							{availableStrikes &&
-								availableStrikes.map((strike: LyraStrike) => {
-									{
-										/* @ts-ignore */
-									}
-									const {
-										strikePrice,
-										iv,
-										vega,
-										gamma,
-										quote,
-										id,
-										isCall
-									} = strike;
-									const { size, premium, isBuy, greeks } = quote;
+						{availableStrikes &&
+							availableStrikes.map((strike: LyraStrike) => {
+								{
+									/* @ts-ignore */
+								}
+								const { strikePrice, iv, vega, gamma, quote, id, isCall, selected } = strike;
+								const { size, premium, isBuy, greeks, pricePerOption } = quote;
 
-									const { delta, theta } = greeks;
-									return (
-										<motion.tr
-											initial={{ opacity: 0 }}
-											animate={{ opacity: 1 }}
-											exit={{ opacity: 0 }}
-											key={id}
-										>
-											<td className="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
-												{formatUSD(fromBigNumber(strikePrice))}
-											</td>
-											<td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
-												{formatPercentage(fromBigNumber(iv))}
-											</td>
-											<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
-												{formatNumber(fromBigNumber(vega), { maxDps: 2 })}
-											</td>
-											<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
-												{formatNumber(fromBigNumber(theta), { maxDps: 2 })}
-											</td>
-											<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
-												{formatNumber(fromBigNumber(delta), { maxDps: 2 })}
-											</td>
-											<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
-												{formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
-											</td>
-											<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
-												{fromBigNumber(size)}
-											</td>
-											<td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
-												{isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
-											</td>
-											<td className="whitespace-nowrap py-2 pl-3 pr-4 text-center text-xs font-medium sm:pr-6 flex">
-												{selectedStrikeIds.filter((selected: SelectedStrike) => {
-													if (selected.id == id) {
-														return selected.isBuy == isBuy && selected.isCall == isCall;
-													}
-													return false;
-												}).length > 0 ? (
-													<a
-														onClick={() => handleToggleSelectedStrike(strike, false)}
-														className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-emerald-600 hover:border-emerald-600 hover:bg-zinc-800 bg-zinc-800"
-													>
-														<span className="content-center">Remove</span>
-													</a>
-												) : (
-													<a
-														onClick={() => handleToggleSelectedStrike(strike, true)}
-														className="cursor-pointer text-white font-medium w-full rounded-full p-2 inline border-2 border-zinc-900 hover:border-emerald-600 hover:bg-zinc-800 bg-zinc-800"
-													>
-														<span className="content-center">Select</span>
-													</a>
-												)}
-											</td>
-										</motion.tr>
-									);
-								})}
-						</AnimatePresence>
+								const { delta, theta } = greeks;
+								return (
+									<tr key={strike.id}>
+										<td className="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-6">
+											{formatUSD(fromBigNumber(strikePrice))}
+										</td>
+										<td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
+											{formatPercentage(fromBigNumber(iv))}
+										</td>
+										<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+											{formatNumber(fromBigNumber(vega), { maxDps: 2 })}
+										</td>
+										<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+											{formatNumber(fromBigNumber(theta), { maxDps: 2 })}
+										</td>
+										<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+											{formatNumber(fromBigNumber(delta), { maxDps: 2 })}
+										</td>
+										<td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+											{formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
+										</td>
+										{/* <td className="hidden whitespace-nowrap px-3 py-2 text-xs text-zinc-200 sm:table-cell">
+											{fromBigNumber(size)}
+										</td> */}
+										{/* <td className="whitespace-nowrap px-3 py-2 text-xs text-zinc-200">
+											{isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
+										</td> */}
+										<td className="whitespace-nowrap py-2   text-xs font-medium  flex px-3">
+											{/* {
+												!isToggleStrikeLoading ?
+													selectedStrikeIds.filter((selected: SelectedStrike) => {
+														if (selected.id == id) {
+															return selected.isBuy == isBuy && selected.isCall == isCall;
+														}
+														return false;
+													}).length > 0 ?  :
+													<Spinner />
+											} */}
+
+											{selected ? (
+												<a
+													onClick={() => handleToggleSelectedStrike(strike, false)}
+													className="cursor-pointer font-medium w-full rounded-full hover:opacity-80 bg-gradient-to-t from-emerald-700 to-emerald-500 "
+												>
+													<div className="flex justify-between ">
+														<div className="border-r border-zinc-800 p-2">
+															<CheckIcon className="h-5 w-5 ml-1 text-white " />
+														</div>
+														<div className="p-2 text-sm font-normal ">
+															<div className="text-center">
+																{formatUSD(fromBigNumber(pricePerOption), { dps: 2 })}
+															</div>
+														</div>
+													</div>
+												</a>
+											) : (
+												<a
+													onClick={() => handleToggleSelectedStrike(strike, true)}
+													className="cursor-pointer text-white font-medium w-full rounded-full bg-gradient-to-t from-black to-zinc-900 hover:opacity-80"
+												>
+													<div className="flex justify-between ">
+														<div className="border-r border-zinc-800 p-2">
+															<PlusIcon className="h-5 w-5 ml-1 text-white" />
+														</div>
+														<div className="p-2 text-sm font-normal ">
+															<div className="text-center">
+																{formatUSD(fromBigNumber(pricePerOption), { dps: 2 })}
+															</div>
+														</div>
+													</div>
+												</a>
+											)}
+										</td>
+									</tr>
+								);
+							})}
 					</tbody>
 				</table>
 			</div>

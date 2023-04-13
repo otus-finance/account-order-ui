@@ -2,10 +2,9 @@ import { useQuery } from "react-query";
 
 import Lyra, { Board, Market, Chain, Quote, Strike } from "@lyrafinance/lyra-js";
 import { BigNumber, ethers } from "ethers";
-import { MONTHS } from "../../constants/dates";
 import { ONE_BN } from "../../constants/bn";
 import { fromBigNumber } from "../../utils/formatters/numbers";
-import { arbitrum } from "wagmi/chains";
+import { formatBoardName } from "../../utils/formatters/expiry";
 
 export type LyraChain = {
 	name: Chain;
@@ -18,6 +17,7 @@ export type LyraStrike = {
 	isCall: boolean;
 	quote: Quote;
 	expiryTimestamp: number;
+	selected?: boolean;
 } & Strike;
 
 export type LyraStrikeMapping = {
@@ -31,6 +31,7 @@ export type LyraBoard = {
 	baseIv: BigNumber;
 	strikes: Strike[];
 	strikesByOptionTypes?: LyraStrikeMapping;
+	strikesWithQuotes: LyraStrike[];
 	marketName: string;
 };
 
@@ -113,7 +114,7 @@ const parseMarketBoards = (boards: Board[]): LyraBoard[] => {
 			.filter((strike) => strike.isDeltaInRange)
 			.sort(sortStrikes);
 		const name = formatBoardName(expiryTimestamp);
-		return { name, id, expiryTimestamp, baseIv, strikes, marketName };
+		return { name, id, expiryTimestamp, baseIv, strikes, marketName, strikesWithQuotes: [] };
 	});
 };
 
@@ -126,7 +127,7 @@ const parseMarketBoardsArb = (marketName: string, boards: Record<number, any>): 
 		const strikes: Strike[] = board.strikes.sort(sortStrikes);
 		const name = formatBoardName(expiryTimestamp);
 
-		return { name, id, expiryTimestamp, baseIv, strikes, marketName };
+		return { name, id, expiryTimestamp, baseIv, strikes, marketName, strikesWithQuotes: [] };
 	});
 };
 
@@ -176,6 +177,12 @@ const parseBoardStrikes = async (boards: LyraBoard[]) => {
 					3: strikesShortCallQuotes,
 					4: strikesShortPutQuotes,
 				},
+				strikesWithQuotes: [
+					...strikesLongCallQuotes,
+					...strikesLongPutQuotes,
+					...strikesShortCallQuotes,
+					...strikesShortPutQuotes,
+				],
 			};
 		})
 	);
@@ -194,14 +201,6 @@ const formatStrikeWithQuote = async (
 			return { ...strike, isCall, quote, market: marketName, expiryTimestamp };
 		})
 	);
-};
-
-const formatBoardName = (expiryTimestamp: number) => {
-	const date = new Date(expiryTimestamp * 1000);
-	const month = MONTHS[date.getMonth()];
-	const day = date.getDate();
-	const hours = date.getHours();
-	return `Expires ${month} ${day}, ${hours}:00`;
 };
 
 type OPTION_TYPE = {

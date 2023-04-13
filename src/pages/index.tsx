@@ -16,7 +16,7 @@ const Builder: NextPage = () => {
 
 			<BuilderContextProvider>
 				<Layout>
-					<div className="mx-auto max-w-screen-2xl py-6 text-white">
+					<div className="mx-auto max-w-screen-2xl py-14 text-white ">
 						<OptionsBuilder />
 					</div>
 				</Layout>

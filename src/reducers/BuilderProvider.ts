@@ -27,6 +27,8 @@ export type BuilderProviderState = {
 	isBuildingNewStrategy: boolean;
 	activeStrike: any;
 	isUpdating: boolean;
+	isToggleStrikeLoading: boolean;
+	toggleStrikeId: number;
 	setActiveStrike: Dispatch<any>;
 	handleSelectBuilderType: (any: BuilderType) => void;
 	handleSelectedChain: (any: Chain) => void;
@@ -34,7 +36,7 @@ export type BuilderProviderState = {
 	handleSelectedDirectionTypes: (any: StrategyDirection[]) => void;
 	handleSelectedExpirationDate: (any: LyraBoard | null) => void;
 	handleSelectedStrategy: (any: Strategy | null) => void;
-	handleUpdateQuote: (any: any) => void;
+	handleUpdateQuote: (any: any, any2: any) => void;
 	handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void;
 	handleBuildNewStrategy: (any: boolean) => void;
 };
@@ -62,6 +64,8 @@ export const builderInitialState: BuilderProviderState = {
 	isBuildingNewStrategy: false,
 	activeStrike: { strikeId: 0, isCall: false },
 	isUpdating: false,
+	isToggleStrikeLoading: false,
+	toggleStrikeId: 0,
 	setActiveStrike: () => {},
 	handleSelectBuilderType: (any) => void any,
 	handleSelectedChain: (any) => void any,
@@ -130,7 +134,7 @@ export type BuilderAction =
 	| {
 			type: "SET_STRATEGY";
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
-			strikes: BuilderProviderState["strikes"];
+			// strikes: BuilderProviderState["strikes"];
 			isBuildingNewStrategy: BuilderProviderState["isBuildingNewStrategy"];
 	  }
 	| {
@@ -162,6 +166,11 @@ export type BuilderAction =
 			maxCost: BuilderProviderState["maxCost"];
 			maxPremium: BuilderProviderState["maxPremium"];
 			fee: BuilderProviderState["fee"];
+	  }
+	| {
+			type: "TOGGLE_STRIKE_LOAD";
+			isToggleStrikeLoading: BuilderProviderState["isToggleStrikeLoading"];
+			toggleStrikeId: BuilderProviderState["toggleStrikeId"];
 	  }
 	| {
 			type: "RESET_VALID_MAX_PNL";
@@ -227,7 +236,7 @@ export function builderReducer(
 			return {
 				...state,
 				selectedStrategy: action.selectedStrategy,
-				strikes: action.strikes,
+				// strikes: action.strikes,
 				isBuildingNewStrategy: action.isBuildingNewStrategy,
 			};
 		case "SET_STRIKES":
@@ -263,6 +272,12 @@ export function builderReducer(
 				maxCost: 0,
 				maxPremium: 0,
 				fee: 0,
+			};
+		case "TOGGLE_STRIKE_LOAD":
+			return {
+				...state,
+				isToggleStrikeLoading: action.isToggleStrikeLoading,
+				toggleStrikeId: action.toggleStrikeId,
 			};
 		case "RESET_BUILDER_PROVIDER":
 			return builderInitialState;

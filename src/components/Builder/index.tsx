@@ -22,7 +22,7 @@ export const OptionsBuilder = () => {
 	) : (
 		<div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
 			<div className="col-span-3 sm:col-span-2">
-				<div className="border border-zinc-800 rounded-lg shadow-lg">
+				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					<div className="p-6">
 						<Market />
 					</div>
@@ -50,14 +50,14 @@ export const OptionsBuilder = () => {
 			</div>
 
 			<div className="col-span-3 sm:col-span-1">
-				<div className="border border-zinc-800 rounded-lg ">
+				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					{lyra && strikes[0] ? (
 						<>
 							<LyraAccountContextProvider lyra={lyra} strike={strikes[0]}>
 								<StrikeTrade />
 							</LyraAccountContextProvider>
 
-							<div className="p-4 rounded-lg border-t border-zinc-800">
+							<div className="p-4 border-t border-zinc-800">
 								<Chart />
 							</div>
 						</>

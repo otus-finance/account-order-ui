@@ -1,9 +1,13 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { Id } from "react-toastify";
+import { Address } from "wagmi";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 export type StrategyStrikeTrade = {
 	optionType: OptionType;
 	priceAt: PriceAt; // change to enum
 	order: number; // closer to strike // ex. if a sell call and a buy call are both otm, and sell call has order 0 and buy call order 1, sell call gets first strike
+	matched?: boolean;
 };
 
 export type Strategy = {
@@ -85,4 +89,10 @@ export type LiquidityPool = {
 	totalDeposits: BigNumber;
 	quoteAsset: string;
 	vaultCap: BigNumber;
+};
+
+export type Transaction = {
+	hash: Address;
+	toastId?: Id;
+	receipt?: TransactionReceipt;
 };

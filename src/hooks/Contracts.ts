@@ -30,8 +30,8 @@ type ContractInterface = {
 
 export const useOtusAccountContracts = () => {
 	const contractsConfig = useContractConfig();
-
 	const { chain } = useNetwork();
+
 	const [otusContracts, setOtusContracts] = useState<Record<string, ContractInterface>>();
 
 	useEffect(() => {

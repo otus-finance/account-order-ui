@@ -1,13 +1,44 @@
 import React from "react";
 
-export const Spinner = ({ size = "large" }: { size?: string }) => {
-	const styleSize = size === "small" ? "h-3 w-3" : "h-6 w-6";
+const getSpinnerSize = (size: string) => {
+	switch (size) {
+		case "small":
+			return "h-3 w-3";
+		case "medium":
+			return "h-4 w-64";
+		case "large":
+			return "h-6 w-6";
+		default:
+			return "h-6 w-6";
+	}
+};
+
+const getColor = (color: string) => {
+	switch (color) {
+		case "primary":
+			return "fill-zinc-900 text-zinc-600 dark:text-zinc-600";
+		case "secondary":
+			return "fill-zinc-100";
+		default:
+			return "fill-zinc-900 text-zinc-600 dark:text-zinc-600";
+	}
+};
+
+export const Spinner = ({
+	size = "large",
+	color = "primary",
+}: {
+	size?: string;
+	color?: string;
+}) => {
+	const styleSize = getSpinnerSize(size);
+	const styleColor = getColor(color);
 
 	return (
 		<div className="text-center">
 			<div role="status">
 				<svg
-					className={`mr-2 inline animate-spin fill-zinc-900 text-zinc-600 dark:text-zinc-600 ${styleSize}`}
+					className={`mr-2 inline animate-spin ${styleColor} ${styleSize}`}
 					viewBox="0 0 100 101"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"

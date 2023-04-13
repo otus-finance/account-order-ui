@@ -1,2092 +1,4 @@
 {
-	"10": [
-		{
-			"name": "optimistic-mainnet",
-			"chainId": "10",
-			"contracts": {
-				"AccountFactory": {
-					"address": "0xf5eF76ffad699f4D7574F11Ff58fCe0Ac1B2b0Ca",
-					"abi": [
-						{
-							"inputs": [
-								{
-									"internalType": "address",
-									"name": "_implementation",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_quoteAsset",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_ethLyraBase",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_btcLyraBase",
-									"type": "address"
-								},
-								{
-									"internalType": "address payable",
-									"name": "_ops",
-									"type": "address"
-								}
-							],
-							"stateMutability": "nonpayable",
-							"type": "constructor"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "owner",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "address",
-									"name": "account",
-									"type": "address"
-								}
-							],
-							"name": "NewAccount",
-							"type": "event"
-						},
-						{
-							"inputs": [],
-							"name": "btcLyraBase",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "ethLyraBase",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "implementation",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "newAccount",
-							"outputs": [
-								{
-									"internalType": "address payable",
-									"name": "accountAddress",
-									"type": "address"
-								}
-							],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "ops",
-							"outputs": [
-								{
-									"internalType": "address payable",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "quoteAsset",
-							"outputs": [
-								{
-									"internalType": "contract IERC20",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						}
-					]
-				},
-				"AccountOrder": {
-					"address": "0xbf5F1555C2033031a6C2472A8a2937F870958F05",
-					"abi": [
-						{
-							"inputs": [],
-							"stateMutability": "nonpayable",
-							"type": "constructor"
-						},
-						{
-							"inputs": [],
-							"name": "EthWithdrawalFailed",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "balance",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "minimum",
-									"type": "uint256"
-								}
-							],
-							"name": "InsufficientEthBalance",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "available",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "required",
-									"type": "uint256"
-								}
-							],
-							"name": "InsufficientFreeMargin",
-							"type": "error"
-						},
-						{
-							"inputs": [],
-							"name": "InvalidOrderType",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "strikeId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "bytes32",
-									"name": "market",
-									"type": "bytes32"
-								}
-							],
-							"name": "InvalidStrike",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "OrderInvalid",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "actual",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "expected",
-									"type": "uint256"
-								}
-							],
-							"name": "PremiumAboveExpected",
-							"type": "error"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "actual",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "expected",
-									"type": "uint256"
-								}
-							],
-							"name": "PremiumBelowExpected",
-							"type": "error"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "user",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "amount",
-									"type": "uint256"
-								}
-							],
-							"name": "Deposit",
-							"type": "event"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "account",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "OrderCancelled",
-							"type": "event"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "account",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "OrderFilled",
-							"type": "event"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "previousOwner",
-									"type": "address"
-								},
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "newOwner",
-									"type": "address"
-								}
-							],
-							"name": "OwnershipTransferred",
-							"type": "event"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "account",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								},
-								{
-									"components": [
-										{
-											"components": [
-												{
-													"internalType": "enum AccountOrder.OrderTypes",
-													"name": "orderType",
-													"type": "uint8"
-												},
-												{
-													"internalType": "bytes32",
-													"name": "market",
-													"type": "bytes32"
-												},
-												{
-													"internalType": "uint256",
-													"name": "iterations",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "collatPercent",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "optionType",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "strikeId",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "size",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "positionId",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "tradeDirection",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "targetPrice",
-													"type": "uint256"
-												},
-												{
-													"internalType": "uint256",
-													"name": "targetVolatility",
-													"type": "uint256"
-												}
-											],
-											"internalType": "struct AccountOrder.StrikeTrade",
-											"name": "strikeTrade",
-											"type": "tuple"
-										},
-										{
-											"internalType": "bytes32",
-											"name": "gelatoTaskId",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "committedMargin",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct AccountOrder.StrikeTradeOrder",
-									"name": "_tradeOrder",
-									"type": "tuple"
-								}
-							],
-							"name": "StrikeOrderPlaced",
-							"type": "event"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": true,
-									"internalType": "address",
-									"name": "user",
-									"type": "address"
-								},
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "amount",
-									"type": "uint256"
-								}
-							],
-							"name": "Withdraw",
-							"type": "event"
-						},
-						{
-							"inputs": [],
-							"name": "ETH",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_optionType",
-									"type": "uint256"
-								}
-							],
-							"name": "_isLong",
-							"outputs": [
-								{
-									"internalType": "bool",
-									"name": "isLong",
-									"type": "bool"
-								}
-							],
-							"stateMutability": "pure",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "cancelOrder",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "checker",
-							"outputs": [
-								{
-									"internalType": "bool",
-									"name": "canExec",
-									"type": "bool"
-								},
-								{
-									"internalType": "bytes",
-									"name": "execPayload",
-									"type": "bytes"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "committedMargin",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_amount",
-									"type": "uint256"
-								}
-							],
-							"name": "deposit",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "executeOrder",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "freeMargin",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "gelato",
-							"outputs": [
-								{
-									"internalType": "address payable",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "strikeId",
-									"type": "uint256"
-								},
-								{
-									"components": [
-										{
-											"internalType": "enum AccountOrder.OrderTypes",
-											"name": "orderType",
-											"type": "uint8"
-										},
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "iterations",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "collatPercent",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "size",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "tradeDirection",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetPrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetVolatility",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct AccountOrder.StrikeTrade",
-									"name": "_trade",
-									"type": "tuple"
-								}
-							],
-							"name": "getQuote",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "totalPremium",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "totalFees",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "initialize",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "address",
-									"name": "_quoteAsset",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_ethLyraBase",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_btcLyraBase",
-									"type": "address"
-								},
-								{
-									"internalType": "address payable",
-									"name": "_ops",
-									"type": "address"
-								}
-							],
-							"name": "initialize",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "bytes32",
-									"name": "",
-									"type": "bytes32"
-								}
-							],
-							"name": "lyraBases",
-							"outputs": [
-								{
-									"internalType": "contract ILyraBase",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "ops",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "orderId",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"name": "orders",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "enum AccountOrder.OrderTypes",
-											"name": "orderType",
-											"type": "uint8"
-										},
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "iterations",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "collatPercent",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "size",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "tradeDirection",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetPrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetVolatility",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct AccountOrder.StrikeTrade",
-									"name": "strikeTrade",
-									"type": "tuple"
-								},
-								{
-									"internalType": "bytes32",
-									"name": "gelatoTaskId",
-									"type": "bytes32"
-								},
-								{
-									"internalType": "uint256",
-									"name": "committedMargin",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "owner",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"components": [
-										{
-											"internalType": "enum AccountOrder.OrderTypes",
-											"name": "orderType",
-											"type": "uint8"
-										},
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "iterations",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "collatPercent",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "size",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "tradeDirection",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetPrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "targetVolatility",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct AccountOrder.StrikeTrade",
-									"name": "_trade",
-									"type": "tuple"
-								}
-							],
-							"name": "placeOrder",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "payable",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "quoteAsset",
-							"outputs": [
-								{
-									"internalType": "contract IERC20",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "renounceOwnership",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "address",
-									"name": "newOwner",
-									"type": "address"
-								}
-							],
-							"name": "transferOwnership",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_orderId",
-									"type": "uint256"
-								}
-							],
-							"name": "validOrder",
-							"outputs": [
-								{
-									"internalType": "bool",
-									"name": "",
-									"type": "bool"
-								},
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_amount",
-									"type": "uint256"
-								}
-							],
-							"name": "withdraw",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_amount",
-									"type": "uint256"
-								}
-							],
-							"name": "withdrawEth",
-							"outputs": [],
-							"stateMutability": "nonpayable",
-							"type": "function"
-						},
-						{
-							"stateMutability": "payable",
-							"type": "receive"
-						}
-					]
-				},
-				"LyraBaseBTC": {
-					"address": "0x4DE4FF646c1E5A2Dcf1Be50568B0FaBa421eCA2a",
-					"abi": [
-						{
-							"inputs": [
-								{
-									"internalType": "bytes32",
-									"name": "_marketKey",
-									"type": "bytes32"
-								},
-								{
-									"internalType": "address",
-									"name": "_exchangeAdapter",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionToken",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionMarket",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_liquidityPool",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_shortCollateral",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionPricer",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_greekCache",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_gwavOracle",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_lyraQuoter",
-									"type": "address"
-								}
-							],
-							"stateMutability": "nonpayable",
-							"type": "constructor"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "_positionIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "checkNetDelta",
-							"outputs": [
-								{
-									"internalType": "int256",
-									"name": "netDelta",
-									"type": "int256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getDeltas",
-							"outputs": [
-								{
-									"internalType": "int256[]",
-									"name": "callDeltas",
-									"type": "int256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getExchangeParams",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "spotPrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "quoteBaseFeeRate",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "baseQuoteFeeRate",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct LyraBase.ExchangeRateParams",
-									"name": "",
-									"type": "tuple"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "enum LyraBase.OptionType",
-									"name": "optionType",
-									"type": "uint8"
-								},
-								{
-									"internalType": "uint256",
-									"name": "strikePrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "expiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "amount",
-									"type": "uint256"
-								}
-							],
-							"name": "getMinCollateral",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "positionId",
-									"type": "uint256"
-								}
-							],
-							"name": "getMinCollateralForPosition",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getOptionMarket",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "positionIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getPositions",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "enum LyraBase.OptionType",
-											"name": "optionType",
-											"type": "uint8"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "collateral",
-											"type": "uint256"
-										},
-										{
-											"internalType": "enum LyraBase.PositionState",
-											"name": "state",
-											"type": "uint8"
-										}
-									],
-									"internalType": "struct LyraBase.OptionPosition[]",
-									"name": "",
-									"type": "tuple[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "secondsToExpiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "vol",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "strikePrice",
-									"type": "uint256"
-								}
-							],
-							"name": "getPurePremium",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "call",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "put",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_strikeId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_iterations",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_optionType",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_amount",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_tradeDirection",
-									"type": "uint256"
-								},
-								{
-									"internalType": "bool",
-									"name": "_isForceClose",
-									"type": "bool"
-								}
-							],
-							"name": "getQuote",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "totalPremium",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "totalFee",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_size",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_optionType",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_positionId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_strikePrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_strikeExpiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_collatBuffer",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_collatPercent",
-									"type": "uint256"
-								}
-							],
-							"name": "getRequiredCollateral",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "collateralToAdd",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "setCollateralTo",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getSpotPriceForMarket",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getStrikes",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "id",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "expiry",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikePrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "skew",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "boardIv",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct LyraBase.Strike[]",
-									"name": "allStrikes",
-									"type": "tuple[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getVegas",
-							"outputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "vegas",
-									"type": "uint256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getVols",
-							"outputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "vols",
-									"type": "uint256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "marketKey",
-							"outputs": [
-								{
-									"internalType": "bytes32",
-									"name": "",
-									"type": "bytes32"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "optionMarket",
-							"outputs": [
-								{
-									"internalType": "contract OptionMarket",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "strikeId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "secondsAgo",
-									"type": "uint256"
-								}
-							],
-							"name": "volGWAV",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						}
-					]
-				},
-				"LyraBaseETH": {
-					"address": "0xFb08dC6F3D1F55777E7d2bBe1cC439eB8E914b56",
-					"abi": [
-						{
-							"inputs": [
-								{
-									"internalType": "bytes32",
-									"name": "_marketKey",
-									"type": "bytes32"
-								},
-								{
-									"internalType": "address",
-									"name": "_exchangeAdapter",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionToken",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionMarket",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_liquidityPool",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_shortCollateral",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_optionPricer",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_greekCache",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_gwavOracle",
-									"type": "address"
-								},
-								{
-									"internalType": "address",
-									"name": "_lyraQuoter",
-									"type": "address"
-								}
-							],
-							"stateMutability": "nonpayable",
-							"type": "constructor"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "_positionIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "checkNetDelta",
-							"outputs": [
-								{
-									"internalType": "int256",
-									"name": "netDelta",
-									"type": "int256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getDeltas",
-							"outputs": [
-								{
-									"internalType": "int256[]",
-									"name": "callDeltas",
-									"type": "int256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getExchangeParams",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "spotPrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "quoteBaseFeeRate",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "baseQuoteFeeRate",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct LyraBase.ExchangeRateParams",
-									"name": "",
-									"type": "tuple"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "enum LyraBase.OptionType",
-									"name": "optionType",
-									"type": "uint8"
-								},
-								{
-									"internalType": "uint256",
-									"name": "strikePrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "expiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "amount",
-									"type": "uint256"
-								}
-							],
-							"name": "getMinCollateral",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "positionId",
-									"type": "uint256"
-								}
-							],
-							"name": "getMinCollateralForPosition",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getOptionMarket",
-							"outputs": [
-								{
-									"internalType": "address",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "positionIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getPositions",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "enum LyraBase.OptionType",
-											"name": "optionType",
-											"type": "uint8"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "collateral",
-											"type": "uint256"
-										},
-										{
-											"internalType": "enum LyraBase.PositionState",
-											"name": "state",
-											"type": "uint8"
-										}
-									],
-									"internalType": "struct LyraBase.OptionPosition[]",
-									"name": "",
-									"type": "tuple[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "secondsToExpiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "vol",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "strikePrice",
-									"type": "uint256"
-								}
-							],
-							"name": "getPurePremium",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "call",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "put",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_strikeId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_iterations",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_optionType",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_amount",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_tradeDirection",
-									"type": "uint256"
-								},
-								{
-									"internalType": "bool",
-									"name": "_isForceClose",
-									"type": "bool"
-								}
-							],
-							"name": "getQuote",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "totalPremium",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "totalFee",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "_size",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_optionType",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_positionId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_strikePrice",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_strikeExpiry",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_collatBuffer",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "_collatPercent",
-									"type": "uint256"
-								}
-							],
-							"name": "getRequiredCollateral",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "collateralToAdd",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "setCollateralTo",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "getSpotPriceForMarket",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "spotPrice",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getStrikes",
-							"outputs": [
-								{
-									"components": [
-										{
-											"internalType": "uint256",
-											"name": "id",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "expiry",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikePrice",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "skew",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "boardIv",
-											"type": "uint256"
-										}
-									],
-									"internalType": "struct LyraBase.Strike[]",
-									"name": "allStrikes",
-									"type": "tuple[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getVegas",
-							"outputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "vegas",
-									"type": "uint256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "strikeIds",
-									"type": "uint256[]"
-								}
-							],
-							"name": "getVols",
-							"outputs": [
-								{
-									"internalType": "uint256[]",
-									"name": "vols",
-									"type": "uint256[]"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "marketKey",
-							"outputs": [
-								{
-									"internalType": "bytes32",
-									"name": "",
-									"type": "bytes32"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [],
-							"name": "optionMarket",
-							"outputs": [
-								{
-									"internalType": "contract OptionMarket",
-									"name": "",
-									"type": "address"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						},
-						{
-							"inputs": [
-								{
-									"internalType": "uint256",
-									"name": "strikeId",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "secondsAgo",
-									"type": "uint256"
-								}
-							],
-							"name": "volGWAV",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "",
-									"type": "uint256"
-								}
-							],
-							"stateMutability": "view",
-							"type": "function"
-						}
-					]
-				}
-			}
-		}
-	],
 	"31337": [
 		{
 			"name": "localhost",
@@ -2940,6 +852,55 @@
 							"type": "function"
 						},
 						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_closeSize",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_optionType",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_positionId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_strikePrice",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_strikeExpiry",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_collatBuffer",
+									"type": "uint256"
+								}
+							],
+							"name": "getRequiredCollateralClose",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "collateralRemoved",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "setCollateralTo",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
 							"inputs": [],
 							"name": "getSpotPriceForMarket",
 							"outputs": [
@@ -3546,6 +1507,55 @@
 								{
 									"internalType": "uint256",
 									"name": "collateralToAdd",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "setCollateralTo",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_closeSize",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_optionType",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_positionId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_strikePrice",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_strikeExpiry",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_collatBuffer",
+									"type": "uint256"
+								}
+							],
+							"name": "getRequiredCollateralClose",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "collateralRemoved",
 									"type": "uint256"
 								},
 								{
@@ -4815,6 +2825,22 @@
 							"inputs": [
 								{
 									"internalType": "uint256",
+									"name": "longCallExpiry",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "shortCallExpiry",
+									"type": "uint256"
+								}
+							],
+							"name": "InvalidLongExpiry",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
 									"name": "longPutExpiry",
 									"type": "uint256"
 								},
@@ -4857,6 +2883,11 @@
 						{
 							"inputs": [],
 							"name": "NotAbleToPartialClose",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "NotAbleToSell",
 							"type": "error"
 						},
 						{
@@ -5108,6 +3139,11 @@
 							"type": "error"
 						},
 						{
+							"inputs": [],
+							"name": "PositionInsolventBeforeSettlement",
+							"type": "error"
+						},
+						{
 							"inputs": [
 								{
 									"internalType": "uint256",
@@ -5181,6 +3217,19 @@
 							],
 							"name": "TransferFundsToTraderFailed",
 							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amountInsolvent",
+									"type": "uint256"
+								}
+							],
+							"name": "LPInsolvent",
+							"type": "event"
 						},
 						{
 							"anonymous": false,
@@ -5331,6 +3380,25 @@
 						{
 							"inputs": [
 								{
+									"internalType": "uint256",
+									"name": "_optionType",
+									"type": "uint256"
+								}
+							],
+							"name": "_isCall",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "isCall",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
 									"internalType": "bytes32",
 									"name": "_market",
 									"type": "bytes32"
@@ -5339,11 +3407,6 @@
 									"internalType": "uint256",
 									"name": "_spreadPositionId",
 									"type": "uint256"
-								},
-								{
-									"internalType": "bool",
-									"name": "_isPartialClose",
-									"type": "bool"
 								},
 								{
 									"components": [
@@ -5440,19 +3503,31 @@
 									"type": "uint256"
 								},
 								{
-									"internalType": "uint256",
-									"name": "amount",
-									"type": "uint256"
-								},
-								{
-									"internalType": "uint256",
-									"name": "tradeDirection",
-									"type": "uint256"
-								},
-								{
-									"internalType": "bool",
-									"name": "isForceClose",
-									"type": "bool"
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "slippage",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "tradeDirection",
+											"type": "uint256"
+										},
+										{
+											"internalType": "bool",
+											"name": "forceClose",
+											"type": "bool"
+										}
+									],
+									"internalType": "struct ITradeTypes.Pricing",
+									"name": "pricing",
+									"type": "tuple"
 								}
 							],
 							"name": "getQuote",
@@ -5465,6 +3540,82 @@
 								{
 									"internalType": "uint256",
 									"name": "totalFees",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "_market",
+									"type": "bytes32"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters",
+									"name": "_trade",
+									"type": "tuple"
+								}
+							],
+							"name": "getRequiredCollateralOnClose",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "collateralToRemove",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "setCollateralTo",
 									"type": "uint256"
 								}
 							],
@@ -5752,13 +3903,7 @@
 								}
 							],
 							"name": "settleOption",
-							"outputs": [
-								{
-									"internalType": "uint256",
-									"name": "settlementInsolvency",
-									"type": "uint256"
-								}
-							],
+							"outputs": [],
 							"stateMutability": "nonpayable",
 							"type": "function"
 						},
@@ -7574,6 +5719,11 @@
 								{
 									"components": [
 										{
+											"internalType": "uint256",
+											"name": "size",
+											"type": "uint256"
+										},
+										{
 											"internalType": "address",
 											"name": "trader",
 											"type": "address"
@@ -7697,11 +5847,6 @@
 							"name": "checkLyraPositionsSettled",
 							"outputs": [
 								{
-									"internalType": "address",
-									"name": "trader",
-									"type": "address"
-								},
-								{
 									"components": [
 										{
 											"internalType": "enum OptionMarket.OptionType",
@@ -7745,6 +5890,123 @@
 						{
 							"inputs": [
 								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_partialSum",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_positionId",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "market",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalFee",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeResult[]",
+									"name": "_sellResults",
+									"type": "tuple[]"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "market",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalFee",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeResult[]",
+									"name": "_buyResults",
+									"type": "tuple[]"
+								}
+							],
+							"name": "closePosition",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
 									"internalType": "uint256",
 									"name": "tokenId",
 									"type": "uint256"
@@ -7773,6 +6035,11 @@
 							"outputs": [
 								{
 									"components": [
+										{
+											"internalType": "uint256",
+											"name": "size",
+											"type": "uint256"
+										},
 										{
 											"internalType": "address",
 											"name": "trader",
@@ -7829,6 +6096,11 @@
 							"outputs": [
 								{
 									"components": [
+										{
+											"internalType": "uint256",
+											"name": "size",
+											"type": "uint256"
+										},
 										{
 											"internalType": "address",
 											"name": "trader",
@@ -8160,6 +6432,11 @@
 							],
 							"name": "positions",
 							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "size",
+									"type": "uint256"
+								},
 								{
 									"internalType": "address",
 									"name": "trader",
@@ -8676,8 +6953,2810 @@
 						}
 					]
 				},
-				"AccountFactory": {
+				"OtusAMM": {
 					"address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+					"abi": [
+						{
+							"inputs": [],
+							"stateMutability": "nonpayable",
+							"type": "constructor"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "thrower",
+									"type": "address"
+								}
+							],
+							"name": "AlreadyInitialised",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "NotImplemented",
+							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "clone",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "expiry",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes32",
+									"name": "market",
+									"type": "bytes32"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "positionMarketInClone",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "positionMarketOutClone",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "rangedMarketTokenIn",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "rangedMarketTokenOut",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "_owner",
+									"type": "address"
+								}
+							],
+							"name": "NewRangedMarket",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "otus",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "spreadOptionMarket",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "lyraBaseETH",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "lyraBaseBTC",
+									"type": "address"
+								}
+							],
+							"name": "OtusAMMInit",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "previousOwner",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "newOwner",
+									"type": "address"
+								}
+							],
+							"name": "OwnershipTransferred",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "_position",
+									"type": "uint8"
+								},
+								{
+									"internalType": "address",
+									"name": "_rangedMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "buy",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "createLeveragedTokenMarkets",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "_market",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_expiry",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_inTrades",
+									"type": "tuple[]"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_outTrades",
+									"type": "tuple[]"
+								}
+							],
+							"name": "createRangedMarket",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "rangedMarketClone",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "positionMarketInClone",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "positionMarketOutClone",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "tokenInClone",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "tokenOutClone",
+									"type": "address"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address payable",
+									"name": "_spreadOptionMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_quoteAsset",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_positionMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_rangedMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_rangedMarketToken",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_ethLyraBase",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_btcLyraBase",
+									"type": "address"
+								}
+							],
+							"name": "initialize",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "market",
+									"type": "bytes32"
+								}
+							],
+							"name": "lyraBase",
+							"outputs": [
+								{
+									"internalType": "contract ILyraBase",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "",
+									"type": "bytes32"
+								}
+							],
+							"name": "lyraBases",
+							"outputs": [
+								{
+									"internalType": "contract ILyraBase",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "owner",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "positionMarket",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "quoteAsset",
+							"outputs": [
+								{
+									"internalType": "contract ERC20",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "rangedMarket",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "rangedMarketToken",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "renounceOwnership",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "_position",
+									"type": "uint8"
+								},
+								{
+									"internalType": "address",
+									"name": "_rangedMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "sell",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "spreadOptionMarket",
+							"outputs": [
+								{
+									"internalType": "contract SpreadOptionMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "newOwner",
+									"type": "address"
+								}
+							],
+							"name": "transferOwnership",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					]
+				},
+				"RangedMarket": {
+					"address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "address payable",
+									"name": "_spreadOptionMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_otusAMM",
+									"type": "address"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "constructor"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "thrower",
+									"type": "address"
+								}
+							],
+							"name": "AlreadyInitialised",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "InvalidTrade",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "NotAbleToExercise",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "inTrades",
+									"type": "tuple[]"
+								}
+							],
+							"name": "NotValidRangedPositionIn",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "outTrades",
+									"type": "tuple[]"
+								}
+							],
+							"name": "NotValidRangedPositionOut",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "caller",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "optionMarket",
+									"type": "address"
+								}
+							],
+							"name": "OnlyOtusAMM",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tokenBalance",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "SellExceedsBalance",
+							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "rangedPosition",
+									"type": "uint8"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								}
+							],
+							"name": "Burn",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "rangedPosition",
+									"type": "uint8"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								}
+							],
+							"name": "Mint",
+							"type": "event"
+						},
+						{
+							"inputs": [],
+							"name": "IN_STRIKES_LIMIT",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "OUT_STRIKES_LIMIT",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_optionType",
+									"type": "uint256"
+								}
+							],
+							"name": "_isCall",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "isCall",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "pure",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "_position",
+									"type": "uint8"
+								},
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_funds",
+									"type": "uint256"
+								}
+							],
+							"name": "burn",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "buyIn",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "buyOut",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "exerciseRangedPositions",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "expiry",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "slippage",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "tradeDirection",
+											"type": "uint256"
+										},
+										{
+											"internalType": "bool",
+											"name": "forceClose",
+											"type": "bool"
+										}
+									],
+									"internalType": "struct ITradeTypes.Pricing",
+									"name": "pricing",
+									"type": "tuple"
+								}
+							],
+							"name": "getInPricing",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithCosts",
+									"type": "tuple[]"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "slippage",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "tradeDirection",
+											"type": "uint256"
+										},
+										{
+											"internalType": "bool",
+											"name": "forceClose",
+											"type": "bool"
+										}
+									],
+									"internalType": "struct ITradeTypes.Pricing",
+									"name": "pricing",
+									"type": "tuple"
+								}
+							],
+							"name": "getOutPricing",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithCosts",
+									"type": "tuple[]"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"name": "inTrades",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "strikeId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "positionId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "iterations",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "optionType",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "setCollateralTo",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "minTotalCost",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "maxTotalCost",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "rewardRecipient",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_quoteAsset",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_positionMarketIn",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_positionMarketOut",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_tokenIn",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_tokenOut",
+									"type": "address"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "_market",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_expiry",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_inTrades",
+									"type": "tuple[]"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_outTrades",
+									"type": "tuple[]"
+								}
+							],
+							"name": "initialize",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "lyraBase",
+							"outputs": [
+								{
+									"internalType": "contract ILyraBase",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "market",
+							"outputs": [
+								{
+									"internalType": "bytes32",
+									"name": "",
+									"type": "bytes32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "enum ITradeTypes.RangedPosition",
+									"name": "_position",
+									"type": "uint8"
+								},
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								}
+							],
+							"name": "mint",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "otusAMM",
+							"outputs": [
+								{
+									"internalType": "contract OtusAMM",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"name": "outTrades",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "strikeId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "positionId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "iterations",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "optionType",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "setCollateralTo",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "minTotalCost",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "maxTotalCost",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "rewardRecipient",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"name": "positionIdByStrikeId",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "positionMarketIn",
+							"outputs": [
+								{
+									"internalType": "contract PositionMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "positionMarketOut",
+							"outputs": [
+								{
+									"internalType": "contract PositionMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "quoteAsset",
+							"outputs": [
+								{
+									"internalType": "contract ERC20",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "sellIn",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "sellOut",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "settleRangedPositions",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "spreadOptionMarket",
+							"outputs": [
+								{
+									"internalType": "contract SpreadOptionMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "tokenIn",
+							"outputs": [
+								{
+									"internalType": "contract RangedMarketToken",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "tokenOut",
+							"outputs": [
+								{
+									"internalType": "contract RangedMarketToken",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					]
+				},
+				"RangedMarketToken": {
+					"address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "uint8",
+									"name": "_decimals",
+									"type": "uint8"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "constructor"
+						},
+						{
+							"inputs": [],
+							"name": "AlreadyInitialized",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "InsufficientAllowance",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "thrower",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "caller",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "rangedMarket",
+									"type": "address"
+								}
+							],
+							"name": "OnlyRangedMarket",
+							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "owner",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "spender",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "value",
+									"type": "uint256"
+								}
+							],
+							"name": "Approval",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "burner",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "Burned",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "minter",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "Mint",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "from",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "to",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "value",
+									"type": "uint256"
+								}
+							],
+							"name": "Transfer",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "owner",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "spender",
+									"type": "address"
+								}
+							],
+							"name": "allowance",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_spender",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_value",
+									"type": "uint256"
+								}
+							],
+							"name": "approve",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "success",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"name": "balanceOf",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "claimant",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "burn",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "decimals",
+							"outputs": [
+								{
+									"internalType": "uint8",
+									"name": "",
+									"type": "uint8"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "account",
+									"type": "address"
+								}
+							],
+							"name": "getBalanceOf",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getTotalSupply",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_rangedMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "string",
+									"name": "_name",
+									"type": "string"
+								},
+								{
+									"internalType": "string",
+									"name": "_symbol",
+									"type": "string"
+								}
+							],
+							"name": "initialize",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "initialized",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "minter",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "mint",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "name",
+							"outputs": [
+								{
+									"internalType": "string",
+									"name": "",
+									"type": "string"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "otusAMM",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "rangedMarket",
+							"outputs": [
+								{
+									"internalType": "contract RangedMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "symbol",
+							"outputs": [
+								{
+									"internalType": "string",
+									"name": "",
+									"type": "string"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "totalSupply",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_to",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_value",
+									"type": "uint256"
+								}
+							],
+							"name": "transfer",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "success",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_from",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_to",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_value",
+									"type": "uint256"
+								}
+							],
+							"name": "transferFrom",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "success",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					]
+				},
+				"PositionMarket": {
+					"address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+					"abi": [
+						{
+							"inputs": [],
+							"stateMutability": "nonpayable",
+							"type": "constructor"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "thrower",
+									"type": "address"
+								}
+							],
+							"name": "AlreadyInitialised",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "price",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "received",
+									"type": "uint256"
+								}
+							],
+							"name": "BelowExpectedPrice",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "caller",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "optionMarket",
+									"type": "address"
+								}
+							],
+							"name": "OnlyOtusAMM",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "thrower",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "caller",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "rangedMarket",
+									"type": "address"
+								}
+							],
+							"name": "OnlyRangedMarket",
+							"type": "error"
+						},
+						{
+							"inputs": [],
+							"name": "PositionNotSettled",
+							"type": "error"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "TransferFundsToTraderFailed",
+							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "positionId",
+									"type": "uint256"
+								}
+							],
+							"name": "PositionSettled",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "price",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "buy",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "market",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalFee",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeResult[]",
+									"name": "",
+									"type": "tuple[]"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "market",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalFee",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeResult[]",
+									"name": "",
+									"type": "tuple[]"
+								},
+								{
+									"internalType": "bool",
+									"name": "isIncrease",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "canSettlePosition",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address payable",
+									"name": "_spreadOptionMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_rangedMarket",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "_quoteAsset",
+									"type": "address"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "_market",
+									"type": "bytes32"
+								}
+							],
+							"name": "initialize",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "market",
+							"outputs": [
+								{
+									"internalType": "bytes32",
+									"name": "",
+									"type": "bytes32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "positionId",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "quoteAsset",
+							"outputs": [
+								{
+									"internalType": "contract ERC20",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "rangedMarket",
+							"outputs": [
+								{
+									"internalType": "contract RangedMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_price",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "strikeId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "iterations",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "optionType",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "amount",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "setCollateralTo",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "minTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxTotalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "address",
+											"name": "rewardRecipient",
+											"type": "address"
+										}
+									],
+									"internalType": "struct ITradeTypes.TradeInputParameters[]",
+									"name": "_tradesWithPricing",
+									"type": "tuple[]"
+								}
+							],
+							"name": "sell",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "funds",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "_trader",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_amount",
+									"type": "uint256"
+								}
+							],
+							"name": "sendFundsToTrader",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "settlePosition",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "spreadOptionMarket",
+							"outputs": [
+								{
+									"internalType": "contract SpreadOptionMarket",
+									"name": "",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					]
+				},
+				"AccountFactory": {
+					"address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
 					"abi": [
 						{
 							"inputs": [

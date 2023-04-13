@@ -1,3 +1,5 @@
+import { StrategyStrikeTrade } from "../types";
+
 export const calculateOptionType = (isBuy: boolean, isCall: boolean) => {
 	if (isBuy && isCall) {
 		return 0;
@@ -24,6 +26,10 @@ export const isCall = (optionType: number) => {
 	} else {
 		return false;
 	}
+};
+
+export const orderFilter = (trade: StrategyStrikeTrade, matchesFound: number) => {
+	return trade.order == matchesFound;
 };
 
 export const extrensicValueFilter = (
