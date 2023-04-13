@@ -38,9 +38,7 @@ export const useBuilderProfitLossChart = (
 			}, {});
 
 			const _chartData = _ticks.map((tick, index) => {
-				{
-					/* @ts-ignore */
-				}
+				// @ts-ignore
 				const profitAtTick = _combo[tick].profitAtTick;
 
 				return {
