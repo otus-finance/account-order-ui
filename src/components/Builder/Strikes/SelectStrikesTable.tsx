@@ -103,9 +103,9 @@ export const SelectStrikesTable = () => {
 				)}
 			</div>
 
-			<div className="col-span-4 mt-4 mb-4">
-				<table className="min-w-full divide-y divide-zinc-700">
-					<thead className="bg-zinc-800">
+			<div className="col-span-4 mt-4">
+				<table className="min-w-full divide-y divide-zinc-800">
+					<thead className="bg-inherit  ">
 						<tr>
 							<th
 								scope="col"
@@ -160,7 +160,7 @@ export const SelectStrikesTable = () => {
 							</th> */}
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-zinc-700 bg-zinc-800">
+					<tbody className="divide-y divide-zinc-800 bg-inherit">
 						{availableStrikes &&
 							availableStrikes.map((strike: LyraStrike) => {
 								{
