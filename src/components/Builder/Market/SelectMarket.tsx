@@ -38,7 +38,7 @@ export const LyraMarketOptions = ({
 								onClick={() => {
 									handleSelectedMarket && handleSelectedMarket(market);
 								}}
-								className={`p-2 px-4 border hover:border-emerald-600 rounded-sm first:mr-1  cursor-pointer ${selectedClass}`}
+								className={`rounded-lg p-2 px-4 border hover:border-emerald-600 first:mr-1  cursor-pointer ${selectedClass}`}
 							>
 								<div className="flex items-center">
 									{name == "sETH-sUSD" && <ETHIcon className="h-8 w-8" />}

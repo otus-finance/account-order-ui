@@ -18,7 +18,7 @@ export const Strategies = () => {
 	const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
 	useEffect(() => {
-		if (selectedExpirationDate != null && selectedDirectionTypes.length > 0) {
+		if (selectedDirectionTypes.length > 0) {
 			const _selectedDirectionTypesIds = selectedDirectionTypes.map(({ id }: { id: number }) => id);
 			const _filteredStrategies = strategies.filter((strategy) => {
 				return strategy.type.some((r) => _selectedDirectionTypesIds.includes(r));
@@ -27,7 +27,7 @@ export const Strategies = () => {
 		} else {
 			setFilteredStrategies([]);
 		}
-	}, [selectedExpirationDate, selectedDirectionTypes]);
+	}, [selectedDirectionTypes]);
 
 	const isSelected = (_strategy: Strategy) => selectedStrategy?.id == _strategy.id;
 
@@ -44,7 +44,7 @@ export const Strategies = () => {
 						whileTap={{ scale: 0.97 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border  hover:border-emerald-600 mt-2 mb-8 rounded-sm ${isSelectedStyle}`}
+						className={`max-h-42 overflow-clip cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border hover:border-emerald-600 mt-2 mb-8 rounded-sm ${isSelectedStyle}`}
 					>
 						<div className="grid grid-cols-1 p-4">
 							<div className="grid grid-cols-3 place-content-between">

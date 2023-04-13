@@ -10,16 +10,13 @@ import { StrikeTrade } from "./StrikeTrade";
 import { BuilderType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { AccountPosition } from "../Account";
-import { useAccount } from "wagmi";
-import { AccountOrderActions } from "../Account/AccountOrderActions";
+
 import { Spinner } from "../UI/Components/Spinner";
 
 export const OptionsBuilder = () => {
-	const { lyra, strikes, builderType, isMarketLoading, isValid } = useBuilderContext();
+	const { lyra, strikes, builderType, isValid } = useBuilderContext();
 
-	return isMarketLoading ? (
-		<Spinner />
-	) : (
+	return (
 		<div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
 			<div className="col-span-3 sm:col-span-2">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
