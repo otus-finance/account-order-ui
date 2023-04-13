@@ -90,7 +90,6 @@ const StrikeTradeDetail = ({
 									// setFormattedSize(value);
 								}}
 								min={0}
-								disabled={isUpdating}
 								type="number"
 								name="size"
 								id="size"

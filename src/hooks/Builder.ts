@@ -151,7 +151,6 @@ export const useBuilder = () => {
 
 	const handleSelectedExpirationDate = (expirationDate: LyraBoard) => {
 		const { strikesWithQuotes } = expirationDate;
-		console.log({ strikesWithQuotes });
 		dispatch({
 			type: "SET_STRIKES",
 			strikes: strikesWithQuotes,
@@ -171,13 +170,10 @@ export const useBuilder = () => {
 				markets: data,
 				isMarketLoading: isLoading,
 			});
-			console.log({ data });
 			if (data[0]) {
 				handleSelectedMarket(data[0]);
 				const market = data[0];
-				console.log({ market });
 				if (market.liveBoards[0]) {
-					console.log("selecing market", { market });
 					handleSelectedExpirationDate(market.liveBoards[0]);
 					if (DirectionType[0] && DirectionType[1]) {
 						handleSelectedDirectionTypes([DirectionType[0], DirectionType[1]]);
@@ -285,7 +281,6 @@ export const useBuilder = () => {
 	};
 
 	const handleSelectedMarket = (market: LyraMarket) => {
-		console.log("what");
 		dispatch({
 			type: "SET_MARKET",
 			selectedMarket: market,
