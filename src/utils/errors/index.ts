@@ -20,7 +20,6 @@ export const reportError = (
 		return null;
 	}
 
-	// Remove parentheses from error message
 	const rawMessage = error?.data?.message ?? error?.message;
 	let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
 

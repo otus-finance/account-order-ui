@@ -54,6 +54,11 @@ export type StrategyDirection = {
 	name: string;
 };
 
+export enum ActivityType {
+	Trade,
+	Position,
+}
+
 export enum BuilderType {
 	Builder,
 	Custom,
@@ -68,20 +73,6 @@ export enum OrderTypes {
 	STOP_LOSS,
 }
 
-export type StrikeTrade = {
-	orderType: OrderTypes;
-	market: string;
-	iterations: BigNumberish;
-	collatPercent: BigNumber;
-	optionType: BigNumberish;
-	strikeId: BigNumber;
-	size: BigNumber;
-	positionId: BigNumberish;
-	tradeDirection: BigNumberish;
-	targetPrice: BigNumber;
-	targetVolatility: BigNumber;
-};
-
 // vault types
 export type LiquidityPool = {
 	id: string;
@@ -95,4 +86,35 @@ export type Transaction = {
 	hash: Address;
 	toastId?: Id;
 	receipt?: TransactionReceipt;
+};
+
+export type OrderInputParemeters = {
+	orderType: OrderTypes;
+	market: string;
+	iterations: BigNumberish;
+	collatPercent: BigNumber;
+	optionType: BigNumberish;
+	strikeId: BigNumber;
+	size: BigNumber;
+	positionId: BigNumberish;
+	tradeDirection: BigNumberish;
+	targetPrice: BigNumber;
+	targetVolatility: BigNumber;
+};
+
+export type TradeInputParameters = {
+	strikeId: BigNumberish;
+	positionId: BigNumberish;
+	iterations: BigNumberish;
+	optionType: BigNumberish;
+	amount: BigNumber;
+	setCollateralTo: BigNumber;
+	minTotalCost: BigNumber;
+	maxTotalCost: BigNumber;
+	rewardRecipient: string;
+};
+
+export type TradeInfo = {
+	positionId: BigNumberish;
+	market: string;
 };
