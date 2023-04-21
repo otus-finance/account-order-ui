@@ -9,11 +9,9 @@ interface Props {
 
 export default function Layout({ children }: Props) {
 	return (
-		<div className="bg-zinc-900 font-sans flex flex-col min-h-screen">
+		<div className="bg-gradient-to-l from-black to-zinc-900 font-sans flex flex-col min-h-screen">
 			<Navigation />
-
-			<main className="bg-zinc-900 px-2 sm:px-4 md:px-6 lg:px-8">{children}</main>
-
+			<main className=" px-2 sm:px-4 md:px-6 lg:px-8">{children}</main>
 			<FooterNav />
 		</div>
 	);

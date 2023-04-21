@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { Fragment, Dispatch } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-export default function Modal({
+export default function Modal1({
 	setOpen,
 	open,
 	title,

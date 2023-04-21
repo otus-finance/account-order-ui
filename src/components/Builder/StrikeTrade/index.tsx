@@ -60,7 +60,7 @@ const StrikeTradeDetail = ({
 
 	return (
 		<div
-			className="border-b border-zinc-800 hover:bg-black hover:first:rounded-t-lg"
+			className="border-b border-zinc-800 hover:bg-black hover:first:rounded-t-lg last:border-0"
 			onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
