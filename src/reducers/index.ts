@@ -5,7 +5,7 @@ export type { AccountOrderProviderState, AccountOrderAction } from "./AccountOrd
 export { accountOrderInitialState, accountOrderReducer } from "./AccountOrderProvider";
 
 export type { AccountProviderState, AccountAction } from "./AccountProvider";
-export { accountInitialState, accountReducer } from "./AccountProvider";
+export { accountInitialState } from "./AccountProvider";
 
 export type { MarketOrderProviderState, MarketOrderAction } from "./MarketOrderProvider";
 export { marketOrderInitialState, marketOrderReducer } from "./MarketOrderProvider";
