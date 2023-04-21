@@ -1,27 +1,28 @@
-import Lyra from '@lyrafinance/lyra-js'
-import React, { createContext, ReactElement, useContext } from 'react'
-import { useLyraTrade } from '../hooks'
-import { LyraStrike } from '../queries/lyra/useLyra'
-import {
-  AccountProviderState,
-  accountInitialState,
-} from '../reducers'
+import Lyra from "@lyrafinance/lyra-js";
+import React, { createContext, ReactElement, useContext } from "react";
+import { useLyraTrade } from "../hooks";
 
-const LyraAccountContext = createContext<AccountProviderState>(
-  accountInitialState
-)
+import { AccountProviderState, accountInitialState } from "../reducers";
 
-export const LyraAccountContextProvider = ({ children, lyra, strike }: { children: ReactElement, lyra: Lyra, strike: LyraStrike }) => {
-  const accountProviderState = useLyraTrade(lyra, strike)
+const LyraAccountContext = createContext<AccountProviderState>(accountInitialState);
 
-  return (
-    <LyraAccountContext.Provider value={accountProviderState}>
-      {children}
-    </LyraAccountContext.Provider>
-  )
-}
+export const LyraAccountContextProvider = ({
+	children,
+	lyra,
+}: {
+	children: ReactElement;
+	lyra: Lyra;
+}) => {
+	const accountProviderState = useLyraTrade(lyra);
+
+	return (
+		<LyraAccountContext.Provider value={accountProviderState}>
+			{children}
+		</LyraAccountContext.Provider>
+	);
+};
 
 // ready
 export function useLyraAccountContext() {
-  return useContext(LyraAccountContext)
+	return useContext(LyraAccountContext);
 }

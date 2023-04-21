@@ -6,3 +6,6 @@ export const OTUS_ACCOUNT_ENDPOINT_OPTIMISM =
 
 export const OTUS_ACCOUNT_ENDPOINT_ARBITRUM = "";
 //https://api.thegraph.com/subgraphs/name/otus-finance/otus-account-order-one
+
+export const OTUS_ACCOUNT_ENDPOINT_ARB_GOERLI =
+	"https://api.thegraph.com/subgraphs/name/otus-finance/otus-markets-goerli-arbitrum";

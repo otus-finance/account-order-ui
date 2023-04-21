@@ -19,6 +19,8 @@ const INFURA_PROJECT_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 
 export const arbitrumUrl = `https://arbitrum-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`;
 export const optimismUrl = `https://optimism-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`;
+export const arbitrumGoerliUrl = `https://arbitrum-goerli.infura.io/v3/${INFURA_PROJECT_ID}`;
+export const optimismGoerliUrl = `https://optimism-goerli.infura.io/v3/${INFURA_PROJECT_ID}`;
 
 export enum Chain {
 	Optimism,
