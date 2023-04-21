@@ -54,32 +54,6 @@ const AccountInfoSelect = ({
 			>
 				Spread Positions
 			</div>
-			<div
-				onClick={() => setSelectedAccountTab(AccountTab.Positions)}
-				className={`cursor-pointer hover:text-white ${
-					selectedAccountTab === AccountTab.Positions ? "text-white underline" : "text-zinc-300"
-				}`}
-			>
-				Limit Positions
-			</div>
-
-			<div
-				onClick={() => setSelectedAccountTab(AccountTab.Orders)}
-				className={`cursor-pointer hover:text-white ${
-					selectedAccountTab === AccountTab.Orders ? "text-white underline" : "text-zinc-300"
-				}`}
-			>
-				Limit Orders
-			</div>
-
-			<div
-				onClick={() => setSelectedAccountTab(AccountTab.Trades)}
-				className={`cursor-pointer hover:text-white ${
-					selectedAccountTab === AccountTab.Trades ? "text-white underline" : "text-zinc-300"
-				}`}
-			>
-				Limit Trades
-			</div>
 		</div>
 	);
 };
