@@ -27,12 +27,6 @@ export const Chart = () => {
 			{chartData.length > 0 && currentPrice > 0 && isValid && (
 				<BuilderPNLChart currentPrice={currentPrice} data={chartData} />
 			)}
-
-			{!isValid && (
-				<div className="p-6 text-sm font-semibold">
-					Strategy not available for asset, expiration and for the strikes available on lyra.finance
-				</div>
-			)}
 		</div>
 	);
 };
