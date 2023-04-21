@@ -4,13 +4,14 @@ import { LiquidityPool } from "../queries/otus/liquidityPool";
 import { ZERO_BN } from "../constants/bn";
 
 export type SpreadLiquidityPoolProviderState = {
+	decimals: number;
 	liquidityPool: LiquidityPool | null;
 	isLoading: boolean;
 	isTxLoading: boolean;
 	isApproveQuoteLoading: boolean;
 	isDepositLoading: boolean;
 	isWithdrawLoading: boolean;
-	userBalance: string | null;
+	userBalance: number;
 	depositAmount: BigNumber;
 	withdrawAmount: BigNumber;
 	poolAllowance: BigNumber | null;
@@ -25,13 +26,14 @@ export type SpreadLiquidityPoolProviderState = {
 };
 
 export const spreadLiquidityPoolInitialState: SpreadLiquidityPoolProviderState = {
+	decimals: 18,
 	liquidityPool: null,
 	isLoading: true,
 	isTxLoading: true,
 	isApproveQuoteLoading: false,
 	isDepositLoading: false,
 	isWithdrawLoading: false,
-	userBalance: null,
+	userBalance: 0,
 	depositAmount: ZERO_BN,
 	withdrawAmount: ZERO_BN,
 	poolAllowance: ZERO_BN,
