@@ -242,6 +242,8 @@ export const useBuilder = () => {
 			selectedExpirationDate: null,
 			selectedStrategy: null,
 		} as BuilderAction);
+
+		handleSelectActivityType(ActivityType.Trade);
 	};
 
 	const handleSelectedDirectionTypes = (directionTypes: StrategyDirection[]) => {
@@ -249,6 +251,8 @@ export const useBuilder = () => {
 			type: "SET_DIRECTION_TYPES",
 			selectedDirectionTypes: directionTypes,
 		} as BuilderAction);
+
+		handleSelectActivityType(ActivityType.Trade);
 	};
 
 	const handleSelectedStrategy = (strategy: any) => {
@@ -257,6 +261,8 @@ export const useBuilder = () => {
 			selectedStrategy: strategy,
 			isBuildingNewStrategy: false,
 		});
+
+		handleSelectActivityType(ActivityType.Trade);
 	};
 
 	const handleUpdateQuote = useCallback(

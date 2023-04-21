@@ -50,6 +50,7 @@ export const useMarketOrder = () => {
 		market: selectedMarket?.bytes,
 		positionId: 0,
 	});
+
 	const [trades, setTrades] = useState<TradeInputParameters[]>([]);
 
 	const [validMaxPNL, setValidMaxPNL] = useState({
