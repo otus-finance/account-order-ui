@@ -63,9 +63,8 @@ export function formatNumber(value: number | BigNumber, options?: FormatNumberOp
 	// commas for number part e.g. 1,000,000
 	// padded zeroes for dp precision e.g. 0.1000
 	const parts = roundedVal.toString().split(".");
-	{
-		/* @ts-ignore */
-	}
+
+	//@ts-ignore
 	const num = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); // add commas
 	const dec = (parts[1] || "").padEnd(minDps, "0");
 	const numStr = dec != null && dec.length > 0 ? num + "." + dec : num;
@@ -126,65 +125,15 @@ export const formatUSD = (price: number | BigNumber, options?: FormatUSDOptions)
 	}
 };
 
-export const toBN1 = (val: string) => {
-	// multiplier is to handle decimals
-	if (val.includes("e")) {
-		if (parseFloat(val) > 1) {
-			const x = val.split(".");
-			{
-				/* @ts-ignore */
-			}
-			const y = x[1].split("e+");
-			{
-				/* @ts-ignore */
-			}
-			const exponent = parseFloat(y[1]);
-			{
-				/* @ts-ignore */
-			}
-			const newVal = x[0] + y[0] + "0".repeat(exponent - y[0].length);
-			console.warn(
-				`Warning: toBN of val with exponent, converting to string. (${val}) converted to (${newVal})`
-			);
-			val = newVal;
-		} else {
-			console.warn(
-				`Warning: toBN of val with exponent, converting to float. (${val}) converted to (${parseFloat(
-					val
-				).toFixed(18)})`
-			);
-			val = parseFloat(val).toFixed(18);
-		}
-		{
-			/* @ts-ignore */
-		}
-	} else if (val.includes(".") && val.split(".")[1].length > 18) {
-		console.warn(`Warning: toBN of val with more than 18 decimals. Stripping excess. (${val})`);
-		const x = val.split(".");
-		{
-			/* @ts-ignore */
-		}
-		x[1] = x[1].slice(0, 18);
-		val = x[0] + "." + x[1];
-	}
-	return parseUnits(val, 18);
-};
-
 export const toBN = (val: string, decimals: number = 18): BigNumber => {
 	if (val.includes("e")) {
 		if (parseFloat(val) > 1) {
 			const x = val.split(".");
-			{
-				/* @ts-ignore */
-			}
+			//@ts-ignore
 			const y = x[1].split("e+");
-			{
-				/* @ts-ignore */
-			}
+			//@ts-ignore
 			const exponent = parseFloat(y[1]);
-			{
-				/* @ts-ignore */
-			}
+			//@ts-ignore
 			const newVal = x[0] + y[0] + "0".repeat(exponent - y[0].length);
 			console.warn(
 				`Warning: toBN of val with exponent, converting to string. (${val}) converted to (${newVal})`
@@ -198,15 +147,11 @@ export const toBN = (val: string, decimals: number = 18): BigNumber => {
 			);
 			val = parseFloat(val).toFixed(18);
 		}
-		{
-			/* @ts-ignore */
-		}
+		//@ts-ignore
 	} else if (val.includes(".") && val.split(".")[1].length > 18) {
 		console.warn(`Warning: toBN of val with more than 18 decimals. Stripping excess. (${val})`);
 		const x = val.split(".");
-		{
-			/* @ts-ignore */
-		}
+		//@ts-ignore
 		x[1] = x[1].slice(0, 18);
 		val = x[0] + "." + x[1];
 	}
