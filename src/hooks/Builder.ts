@@ -1,12 +1,17 @@
 import Lyra, { OptionType } from "@lyrafinance/lyra-js";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { BuilderType, Strategy, StrategyDirection, StrategyStrikeTrade } from "../utils/types";
+import {
+	ActivityType,
+	BuilderType,
+	Strategy,
+	StrategyDirection,
+	StrategyStrikeTrade,
+} from "../utils/types";
 import {
 	getStrikeQuote,
 	LyraBoard,
 	LyraMarket,
-	LyraChain,
 	LyraStrike,
 	useLyraMarket,
 } from "../queries/lyra/useLyra";
@@ -24,21 +29,29 @@ import {
 	orderFilter,
 } from "../utils/formatters/optiontypes";
 import { useNetwork } from "wagmi";
-import { optimism, arbitrum, hardhat, Chain } from "wagmi/chains";
-import { arbitrumUrl, optimismUrl } from "../constants/networks";
+import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
+import {
+	arbitrumGoerliUrl,
+	arbitrumUrl,
+	optimismGoerliUrl,
+	optimismUrl,
+} from "../constants/networks";
 import { DirectionType } from "../utils/direction";
-import { YEAR_SEC } from "../constants/dates";
-import { string } from "zod";
 
 const getRPCUrl = (chain: Chain) => {
-	switch (chain) {
-		case hardhat:
+	switch (chain.id) {
+		case hardhat.id:
 			return optimismUrl;
-		case arbitrum:
+		case arbitrum.id:
 			return arbitrumUrl;
-		case optimism:
+		case optimism.id:
 			return optimismUrl;
+		case arbitrumGoerli.id:
+			return arbitrumGoerliUrl;
+		case optimismGoerli.id:
+			return optimismGoerliUrl;
 		default:
+			console.log("are they all default?");
 			return optimismUrl;
 	}
 };
@@ -46,23 +59,16 @@ const getRPCUrl = (chain: Chain) => {
 const getLyra = async (chain: Chain) => {
 	const provider = new ethers.providers.JsonRpcProvider(getRPCUrl(chain));
 	await provider.getNetwork();
-	{
-		/* @ts-ignore  different types in JsonRpcProvider in lyra-js */
-	}
-	return new Lyra({ provider });
+	const _lyra = new Lyra({ provider });
+	return _lyra;
 };
 
 export const useBuilder = () => {
 	const [state, dispatch] = useReducer(builderReducer, builderInitialState);
 
 	const {
-		maxLossPost,
-		fee,
-		maxCost,
-		maxPremium,
-		validMaxLoss,
-		maxLoss,
 		lyra,
+		activityType,
 		builderType,
 		selectedChain,
 		showStrikesSelect,
@@ -81,23 +87,20 @@ export const useBuilder = () => {
 		isBuildingNewStrategy,
 	} = state;
 
-	const network = useNetwork();
+	const { chain } = useNetwork();
 
 	useEffect(() => {
-		if (network.chain?.id && !selectedChain) {
+		if (chain?.id) {
 			dispatch({
 				type: "SET_CHAIN",
-				selectedChain: network.chain,
+				selectedChain: chain,
 				selectedMarket: null,
 				strikes: [],
 				selectedExpirationDate: null,
 				selectedStrategy: null,
 			});
-			dispatch({
-				type: "RESET_VALID_MAX_PNL",
-			});
 		}
-	}, [network, selectedChain]);
+	}, [chain]);
 
 	const handleSelectedChain = (chain: Chain) => {
 		dispatch({
@@ -107,9 +110,6 @@ export const useBuilder = () => {
 			strikes: [],
 			selectedExpirationDate: null,
 			selectedStrategy: null,
-		});
-		dispatch({
-			type: "RESET_VALID_MAX_PNL",
 		});
 	};
 
@@ -132,19 +132,14 @@ export const useBuilder = () => {
 	}, [updateSelectedChain, selectedChain]);
 
 	useEffect(() => {
-		if (!selectedChain) {
-			dispatch({
-				type: "SET_CHAIN",
-				selectedChain: optimism,
-				selectedMarket: null,
-				strikes: [],
-				selectedExpirationDate: null,
-				selectedStrategy: null,
-			});
-			dispatch({
-				type: "RESET_VALID_MAX_PNL",
-			});
-		}
+		dispatch({
+			type: "SET_CHAIN",
+			selectedChain: selectedChain,
+			selectedMarket: null,
+			strikes: [],
+			selectedExpirationDate: null,
+			selectedStrategy: null,
+		});
 	}, [selectedChain]);
 
 	const { data, isLoading } = useLyraMarket(lyra);
@@ -188,54 +183,6 @@ export const useBuilder = () => {
 		}
 	}, [data, isLoading]);
 
-	const calculateMaxPNL = useCallback(() => {
-		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
-
-		if (selected.length > 0) {
-			let [maxCost, maxPremium] = _calculateMaxPremiums(selected);
-
-			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(selected);
-
-			const spreadCollateralLoanDuration = _furthestOutExpiry(selected) - Date.now();
-
-			let fee = 0;
-
-			if (validMaxLoss && spreadCollateralLoanDuration > 0) {
-				// get fee
-				fee = (spreadCollateralLoanDuration / (YEAR_SEC * 1000)) * collateralLoan * 0.2;
-			}
-
-			dispatch({
-				type: "SET_VALID_MAX_PNL",
-				validMaxLoss,
-				maxLoss,
-				maxCost,
-				maxPremium,
-				fee,
-				maxLossPost: maxLoss + maxCost - maxPremium + fee,
-			});
-		} else {
-			dispatch({
-				type: "SET_VALID_MAX_PNL",
-				validMaxLoss: false,
-				maxLoss: 0,
-				maxCost: 0,
-				maxPremium: 0,
-				fee: 0,
-				maxLossPost: 0,
-			});
-		}
-	}, [strikes]);
-
-	useEffect(() => {
-		if (strikes.length > 0) {
-			let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
-			if (selected.length > 0) {
-				calculateMaxPNL();
-			}
-		}
-	}, [strikes, calculateMaxPNL]);
-
 	useEffect(() => {
 		if (selectedStrategy && isBuildingNewStrategy) {
 			dispatch({
@@ -266,6 +213,13 @@ export const useBuilder = () => {
 		}
 	}, [selectedMarket]);
 
+	const handleSelectActivityType = (_type: ActivityType) => {
+		dispatch({
+			type: "SET_ACTIVITY_TYPE",
+			activityType: _type,
+		});
+	};
+
 	const handleSelectBuilderType = (_type: BuilderType) => {
 		dispatch({
 			type: "SET_BUILDER_TYPE",
@@ -288,9 +242,6 @@ export const useBuilder = () => {
 			selectedExpirationDate: null,
 			selectedStrategy: null,
 		} as BuilderAction);
-		dispatch({
-			type: "RESET_VALID_MAX_PNL",
-		});
 	};
 
 	const handleSelectedDirectionTypes = (directionTypes: StrategyDirection[]) => {
@@ -448,53 +399,6 @@ export const useBuilder = () => {
 	}, [filterStrikes, currentPrice, selectedStrategy, selectedExpirationDate]);
 
 	const handleToggleSelectedStrike = (selectedStrike: LyraStrike, selected: boolean) => {
-		// dispatch({
-		// 	type: "TOGGLE_STRIKE_LOAD",
-		// 	isToggleStrikeLoading: true,
-		// 	toggleStrikeId: selectedStrike.id
-		// })
-
-		// if (selected) {
-
-		// } else {
-		// 	dispatch({
-		// 		type: "SET_STRIKES",
-		// 		// strikes: strikes.filter((_strike: LyraStrike) => {
-		// 		// 	const {
-		// 		// 		id,
-		// 		// 		isCall,
-		// 		// 		quote: { isBuy },
-		// 		// 	} = _strike;
-		// 		// 	if (selectedStrike.id !== id) {
-		// 		// 		return true;
-		// 		// 	} else if (selectedStrike.quote.isBuy !== isBuy) {
-		// 		// 		return true;
-		// 		// 	} else if (selectedStrike.isCall !== isCall) {
-		// 		// 		return true;
-		// 		// 	} else {
-		// 		// 		return false;
-		// 		// 	}
-		// 		// }),
-		// 		strikes: strikes.map((strike: LyraStrike) => {
-		// 			const {
-		// 				id,
-		// 				isCall,
-		// 				quote: { isBuy },
-		// 			} = strike;
-		// 			if (selectedStrike.id !== id) {
-		// 				return strike;
-		// 			} else if (selectedStrike.quote.isBuy !== isBuy) {
-		// 				return strike;
-		// 			} else if (selectedStrike.isCall !== isCall) {
-		// 				return strike;
-		// 			} else {
-		// 				return { ...strike, selected: false };
-		// 			}
-		// 		}),
-		// 		isValid: true,
-		// 	});
-		// }
-
 		const _toggleStrikes = strikes.map((strike: LyraStrike) => {
 			const {
 				quote: { isCall, isBuy },
@@ -511,24 +415,13 @@ export const useBuilder = () => {
 			strikes: _toggleStrikes,
 			isValid: true,
 		});
-
-		// dispatch({
-		// 	type: "TOGGLE_STRIKE_LOAD",
-		// 	isToggleStrikeLoading: false,
-		// 	toggleStrikeId: selectedStrike.id
-		// })
 	};
 
 	const [activeStrike, setActiveStrike] = useState({ strikeId: 0, isCall: false });
 
 	return {
-		maxLossPost,
-		fee,
-		maxCost,
-		maxPremium,
-		validMaxLoss,
-		maxLoss,
 		lyra,
+		activityType,
 		builderType,
 		selectedChain,
 		showStrikesSelect,
@@ -547,6 +440,7 @@ export const useBuilder = () => {
 		isToggleStrikeLoading,
 		toggleStrikeId,
 		setActiveStrike,
+		handleSelectActivityType,
 		handleSelectBuilderType,
 		handleSelectedChain,
 		handleSelectedMarket,
@@ -557,209 +451,6 @@ export const useBuilder = () => {
 		handleUpdateQuote,
 		handleBuildNewStrategy,
 	} as BuilderProviderState;
-};
-
-const _calculateMaxLoss = (strikes: LyraStrike[]): [boolean, number, number] => {
-	if (strikes.length > 0) {
-		let strikesByOptionTypes: Record<number, number> = {
-			0: 0,
-			1: 0,
-			2: 0,
-			3: 0,
-			4: 0,
-		};
-
-		const optionTypeMatch = strikes.reduce((accum: Record<number, number>, strike: LyraStrike) => {
-			const {
-				quote: { isBuy, isCall },
-			} = strike;
-
-			const optionType = calculateOptionType(isBuy, isCall);
-			accum[optionType] += 1;
-
-			return accum;
-		}, strikesByOptionTypes as Record<number, number>);
-
-		// if no shorts
-		if (optionTypeMatch[3] === 0 && optionTypeMatch[4] === 0) {
-			return [true, 0, 0];
-		}
-
-		// if size of longs puts < short puts
-		// infinite loss
-		let validCalls = true;
-		if (
-			optionTypeMatch[0] != undefined &&
-			optionTypeMatch[3] != undefined &&
-			optionTypeMatch[3] != 0 &&
-			optionTypeMatch[0] < optionTypeMatch[3]
-		) {
-			validCalls = false; // max loss is collateral
-		}
-
-		// if size of long calls < short calls
-		// infinite loss
-		let validPuts = true;
-		if (
-			optionTypeMatch[1] != undefined &&
-			optionTypeMatch[4] != undefined &&
-			optionTypeMatch[4] != 0 &&
-			optionTypeMatch[1] < optionTypeMatch[4]
-		) {
-			validPuts = false;
-		}
-
-		// max loss - calls
-		const calls = strikes
-			.filter((strike: LyraStrike) => {
-				const {
-					quote: { isCall },
-				} = strike;
-				return isCall;
-			})
-			.sort((a: LyraStrike, b: LyraStrike) => {
-				return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice);
-			});
-
-		const shortCallCollateralMax = calls.reduce(
-			(total: [number, number], strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				if (!isBuy) {
-					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
-					total[1] += fromBigNumber(size);
-				}
-				return total;
-			},
-			[0, 0] as [number, number]
-		);
-
-		if (!validCalls) {
-			return [validCalls, shortCallCollateralMax[0], 0];
-		}
-
-		let shortCallSize = shortCallCollateralMax[1];
-		let maxCallLoss = 0;
-
-		if (shortCallSize > 0) {
-			calls.forEach((strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				let longSize = fromBigNumber(size);
-
-				if (isBuy) {
-					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
-					maxCallLoss = cover - shortCallCollateralMax[0];
-					shortCallSize = shortCallSize - longSize;
-					if (shortCallSize <= 0) {
-						return;
-					}
-				}
-			});
-		}
-
-		// max loss - puts
-		const puts = strikes
-			.filter((strike: LyraStrike) => {
-				const {
-					quote: { isCall },
-				} = strike;
-				return !isCall;
-			})
-			.sort((a: LyraStrike, b: LyraStrike) => {
-				return fromBigNumber(b.strikePrice) - fromBigNumber(a.strikePrice);
-			});
-
-		const shortPutCollateralMax = puts.reduce(
-			(total: [number, number], strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				if (!isBuy) {
-					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
-					total[1] += fromBigNumber(size);
-				}
-				return total;
-			},
-			[0, 0] as [number, number]
-		);
-
-		if (!validPuts) {
-			return [validPuts, shortPutCollateralMax[0], 0];
-		}
-
-		let shortPutSize = shortPutCollateralMax[1];
-		let maxPutLoss = 0;
-
-		if (shortPutSize > 0) {
-			puts.forEach((strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				let longSize = fromBigNumber(size);
-
-				if (isBuy) {
-					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
-					maxPutLoss = cover - shortPutCollateralMax[0];
-					shortPutSize = shortPutSize - longSize;
-					if (shortPutSize <= 0) {
-						return;
-					}
-				}
-			});
-		}
-
-		return [
-			true,
-			Math.abs(maxPutLoss) > Math.abs(maxCallLoss) ? Math.abs(maxPutLoss) : Math.abs(maxCallLoss),
-			shortPutCollateralMax[0] + shortCallCollateralMax[0],
-		];
-	}
-
-	return [false, 0, 0];
-};
-
-const _calculateMaxPremiums = (strikes: LyraStrike[]) => {
-	return strikes.reduce(
-		(totalPremiums: [number, number], strike: LyraStrike) => {
-			const {
-				quote: { size, isBuy, pricePerOption },
-			} = strike;
-
-			const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
-
-			if (isBuy) {
-				totalPremiums[0] += _totalPriceForOptions;
-			} else {
-				totalPremiums[1] += _totalPriceForOptions;
-			}
-
-			return totalPremiums;
-		},
-		[0, 0] as [number, number]
-	);
-};
-
-const _furthestOutExpiry = (strikes: LyraStrike[]) => {
-	return (
-		strikes.reduce((expiration: number, strike: LyraStrike) => {
-			const {
-				expiryTimestamp,
-				quote: { isBuy },
-			} = strike;
-			if (!isBuy) {
-				return expiration > expiryTimestamp ? expiration : expiryTimestamp;
-			} else {
-				return expiration;
-			}
-		}, 0 as number) * 1000
-	);
 };
 
 const isStrikeSelected = (

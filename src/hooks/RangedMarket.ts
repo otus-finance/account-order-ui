@@ -45,8 +45,6 @@ export const useRangedMarket = (market: RangedMarket) => {
 
 	const otusContracts = useOtusAccountContracts();
 
-	const { data: global, isLoading: isGlobalLoading } = useGlobal();
-
 	const provider = useProvider();
 
 	const otusAMM = otusContracts && otusContracts["OtusAMM"] && otusContracts["OtusAMM"];
@@ -101,7 +99,6 @@ export const useRangedMarket = (market: RangedMarket) => {
 	const handleSizeUpdate = (_size: number) => {
 		setSize(toBN(_size.toString()));
 	};
-
 	const { price, trades, isPriceLoading } = useGetPricing(
 		rangedMarketId,
 		rangedMarket?.abi,
@@ -144,7 +141,7 @@ export const useRangedMarket = (market: RangedMarket) => {
 	}, [_tokenOutBalance]);
 
 	// usd balance
-	const [userBalance, setUserBalance] = useState(ZERO_BN);
+	const [userBalance, setUserBalance] = useState(0);
 
 	const _userBalance = useBalance({
 		address: owner,
@@ -155,7 +152,7 @@ export const useRangedMarket = (market: RangedMarket) => {
 
 	useEffect(() => {
 		if (_userBalance.data?.value) {
-			setUserBalance(_userBalance.data?.value);
+			setUserBalance(fromBigNumber(_userBalance.data?.value, _userBalance.data.decimals));
 		}
 	}, [_userBalance]);
 
@@ -257,7 +254,7 @@ export const useRangedMarket = (market: RangedMarket) => {
 	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,
 		onSuccess: (data) => {
-			if (chain && data.blockHash) {
+			if (chain && data.transactionHash) {
 				if (activeTransaction?.toastId) {
 					updateToast("success", activeTransaction?.toastId, "Success");
 				}

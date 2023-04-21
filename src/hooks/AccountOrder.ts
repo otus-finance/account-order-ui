@@ -25,7 +25,7 @@ import {
 } from "../reducers";
 import getExplorerUrl from "../utils/chains/getExplorerUrl";
 import { formatUSD, fromBigNumber, toBN } from "../utils/formatters/numbers";
-import { OrderTypes, StrikeTrade } from "../utils/types";
+import { OrderTypes, OrderInputParemeters } from "../utils/types";
 import { useOtusAccountContracts } from "./Contracts";
 
 const DEFAULT_TOAST_TIMEOUT = 1000 * 5; // 5 seconds
@@ -303,7 +303,7 @@ const useLimitOrder = ({
 	accountOrderAddr: Address | undefined;
 	accountOrderAbi: any;
 }) => {
-	const [order, setOrder] = useState<StrikeTrade>({
+	const [order, setOrder] = useState<OrderInputParemeters>({
 		orderType: OrderTypes.LIMIT_PRICE,
 		market: ethers.utils.formatBytes32String("ETH"),
 		iterations: 3,

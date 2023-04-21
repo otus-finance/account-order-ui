@@ -7,7 +7,7 @@ import { Address, useAccount, useContractRead, useNetwork, useProvider } from "w
 import { ONE_BN, ONE_TENTH_BN, ZERO_BN } from "../../constants/bn";
 import { useSpreadLiquidityPoolContext } from "../../context/SpreadLiquidityPoolContext";
 import { useLPUser } from "../../queries/otus/user";
-import { formatUSD, fromBigNumber } from "../../utils/formatters/numbers";
+import { formatUSD, fromBigNumber, toBN } from "../../utils/formatters/numbers";
 
 import { LiquidityPool } from "../../utils/types";
 import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
@@ -25,6 +25,8 @@ import { useOtusAccountContracts } from "../../hooks/Contracts";
 import { TradeDirection } from "@lyrafinance/lyra-js";
 import { RangedMarketPosition, useRangedMarket } from "../../hooks/RangedMarket";
 import {
+	Area,
+	ComposedChart,
 	Line,
 	LineChart,
 	ReferenceLine,
@@ -75,12 +77,12 @@ const Market = ({ market }: { market: RangedMarket }) => {
 				<div className="p-4">
 					<div className="flex">
 						<div>
-							<div className="rounded-full bg-zinc-800">
+							<div className="rounded-full bg-zinc-900">
 								<SUSDIcon />
 							</div>
 						</div>
 						<div>
-							<div className="ml-[-20px] rounded-full bg-zinc-800">{getIcon(market.market)}</div>
+							<div className="ml-[-20px] rounded-full bg-zinc-900">{getIcon(market.market)}</div>
 						</div>
 						<div className="ml-4">
 							<h2 className="text-sm font-semibold">{name}</h2>
@@ -130,8 +132,10 @@ const Market = ({ market }: { market: RangedMarket }) => {
 						<div className="block">
 							<div className="font-light text-xxs text-white">Potential Profit</div>
 
-							<div className="font-semibold text-sm uppercase text-zinc-200 mt-2">
-								<strong>58%</strong>
+							<div className="font-normal text-sm text-zinc-200 mt-2">
+								<strong>
+									{RangedMarketPosition.IN == rangedMarketPosition ? "58%" : Infinity}
+								</strong>
 							</div>
 						</div>
 
@@ -165,7 +169,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 					<div className="bg-gradient-to-b from-black to-zinc-900  border border-zinc-900  rounded-lg  border-opacity-20 py-4 p-2 shadow-inner shadow-black">
 						<RangedMarketChart
 							strikePrice1={2500}
-							strikePrice2={2600}
+							strikePrice2={3100}
 							strikePrice3={2800}
 							strikePrice4={2800}
 							position={rangedMarketPosition}
@@ -182,7 +186,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 								<p className="truncate font-mono text-xs font-normal text-white">You Sell</p>
 								<div className="ml-2 flex flex-shrink-0">
 									<p className="inline-flex font-mono text-xs font-normal leading-5 text-white">
-										Balance: {formatUSD(fromBigNumber(userBalance), { dps: 2 })}
+										Balance: {formatUSD(userBalance, { dps: 2 })}
 									</p>
 								</div>
 							</div>
@@ -294,7 +298,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 								<p className="truncate font-mono text-xs font-normal text-white">You Buy</p>
 								<div className="ml-2 flex flex-shrink-0">
 									<p className="inline-flex font-mono text-xs font-normal leading-5 text-white">
-										Balance: {formatUSD(fromBigNumber(userBalance), { dps: 2 })}
+										Balance: {formatUSD(userBalance, { dps: 2 })}
 									</p>
 								</div>
 							</div>
@@ -318,6 +322,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 
 				<div className="p-4 pt-4 pb-2">
 					<RangedMarketActions
+						userBalance={userBalance}
 						currentAllowance={currentAllowance}
 						approveQuote={approveQuote}
 						swap={swap}
@@ -332,6 +337,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 };
 // , approve, buy, sell, excercise
 const RangedMarketActions = ({
+	userBalance,
 	currentAllowance,
 	approveQuote,
 	swap,
@@ -339,6 +345,7 @@ const RangedMarketActions = ({
 	isApproveQuoteLoading,
 	isSwapLoading,
 }: {
+	userBalance: number;
 	currentAllowance: BigNumber;
 	approveQuote: (() => void) | undefined;
 	swap: (() => void) | undefined;
@@ -346,6 +353,8 @@ const RangedMarketActions = ({
 	isApproveQuoteLoading: boolean;
 	isSwapLoading: boolean;
 }) => {
+	const { isConnected } = useAccount();
+	const { openConnectModal } = useConnectModal();
 	// insufficient balance
 	// approve
 
@@ -354,6 +363,21 @@ const RangedMarketActions = ({
 	// sell
 
 	// excercise
+
+	if (!isConnected && openConnectModal) {
+		return <WalletConnect />;
+	}
+
+	if (userBalance && toBN(userBalance.toString()).lt(price)) {
+		return (
+			<div
+				onClick={() => console.warn("Add funds")}
+				className="mb-4 cursor-disabled border-2 border-zinc-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full"
+			>
+				Insufficient Balance
+			</div>
+		);
+	}
 
 	if (currentAllowance.eq(ZERO_BN) || currentAllowance.lt(price)) {
 		return (
@@ -399,20 +423,34 @@ const RangedMarketChart = ({
 	const [data, setData] = useState<PnlChartPoint[] | []>([]);
 
 	useEffect(() => {
-		const _ticks = ticks("sETH-sUSD", 2500);
+		const _ticks = ticks("sETH-sUSD", 2800);
+		console.log({ _ticks });
 
+		console.log({
+			strikePrice1,
+			strikePrice2,
+			strikePrice3,
+			strikePrice4,
+		});
 		const _chartData = _ticks.map((tick, index) => {
 			{
 				/* @ts-ignore */
 			}
 			const profitAtTick =
 				position === RangedMarketPosition.IN
-					? (tick < strikePrice1 ? 100 : tick - strikePrice1 - 100) +
-					  (tick < strikePrice2 ? strikePrice2 - tick - 100 : 100) +
-					  (tick < strikePrice3 ? 100 : strikePrice3 - tick + 100) +
-					  (tick < strikePrice4 ? tick - strikePrice4 + 100 : 100)
-					: (tick < strikePrice1 ? 100 : tick - strikePrice1 - 100) +
-					  (tick < strikePrice2 ? strikePrice2 - tick - 100 : 100); // - cost // _combo[tick].profitAtTick;
+					? (tick > strikePrice1 ? 0 : strikePrice1 - tick) + // 2500 2100 21 strikePrice1 is buy put
+					  (tick > strikePrice2 ? tick - strikePrice2 : 0) +
+					  ((tick < strikePrice3 ? 500 : strikePrice3 - tick) +
+							(tick < strikePrice4 ? tick - strikePrice4 : 500)) -
+					  305
+					: (tick > strikePrice1 ? 0 : strikePrice1 - tick) + // 2500 2100 21 strikePrice1 is buy put
+					  (tick > strikePrice2 ? tick - strikePrice2 : 0) -
+					  194; // - cost // _combo[tick].profitAtTick; strikePrice2 is cbuy call 3100 < 3500
+
+			if (profitAtTick < 0) {
+				console.log({ profitAtTick });
+			}
+
 			return {
 				name: index,
 				asset_price: Math.floor(tick),
@@ -426,8 +464,10 @@ const RangedMarketChart = ({
 	}, [strikePrice1, strikePrice2, strikePrice3, strikePrice4, position]);
 
 	return (
-		<ResponsiveContainer width="99%" height={100}>
-			<LineChart
+		<ResponsiveContainer width="99%" height={80}>
+			<ComposedChart
+				width={730}
+				height={250}
 				data={data}
 				margin={{
 					top: 2,
@@ -447,11 +487,23 @@ const RangedMarketChart = ({
 						fontFamily: "Rubik",
 					}}
 				/>
-				{/* <YAxis hide={true} tickCount={100} tickSize={2} tick={{ stroke: '#f5f5f5', strokeWidth: .5, fontSize: '10px', fontWeight: '100', fontFamily: 'Rubik' }} />
+				<YAxis
+					hide={true}
+					tickCount={100}
+					tickSize={2}
+					tick={{
+						stroke: "#f5f5f5",
+						strokeWidth: 0.5,
+						fontSize: "10px",
+						fontWeight: "100",
+						fontFamily: "Rubik",
+					}}
+				/>
 
-			<Tooltip content={<CustomTooltip currentPrice={1800} />} />
+				{/* <Tooltip content={<CustomTooltip currentPrice={1800} />} />  */}
 
-			<ReferenceLine y={0} stroke={'#e4e4e7'} strokeWidth={.25} /> */}
+				<ReferenceLine y={0} stroke={"#e4e4e7"} strokeWidth={0.1} />
+				<ReferenceLine x={2800} stroke={"#fff"} strokeWidth={0.1} />
 
 				<Line
 					type="monotone"
@@ -469,7 +521,10 @@ const RangedMarketChart = ({
 					dot={false}
 					strokeWidth={2}
 				/>
-			</LineChart>
+				{/* </LineChart> */}
+				<Area dataKey="negative_combo_payoff" stroke="#831843" fill="#831843" />
+				<Area dataKey="positive_combo_payoff" stroke="#047857" fill="#047857" />
+			</ComposedChart>
 		</ResponsiveContainer>
 	);
 };

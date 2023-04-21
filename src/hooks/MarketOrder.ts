@@ -13,6 +13,7 @@ import {
 	useSigner,
 	useAccount,
 	useWaitForTransaction,
+	useContractRead,
 } from "wagmi";
 import { formatUSD, fromBigNumber, toBN } from "../utils/formatters/numbers";
 
@@ -21,19 +22,96 @@ import { quote } from "../constants/quote";
 import { useOtusAccountContracts } from "./Contracts";
 import { MarketOrderProviderState, marketOrderInitialState, marketOrderReducer } from "../reducers";
 import { MAX_BN, ZERO_ADDRESS, ZERO_BN } from "../constants/bn";
-import { createToast } from "../components/UI/Toast";
+import { createToast, updateToast } from "../components/UI/Toast";
 import getExplorerUrl from "../utils/chains/getExplorerUrl";
-import { Transaction } from "../utils/types";
+import { ActivityType, TradeInputParameters, Transaction } from "../utils/types";
+import { reportError } from "../utils/errors";
+import { useBuilder } from "./Builder";
+import { LyraStrike } from "../queries/lyra/useLyra";
+import { useBuilderContext } from "../context/BuilderContext";
+import { calculateOptionType, isLong } from "../utils/formatters/optiontypes";
+import { YEAR_SEC } from "../constants/dates";
+
+const getMarket = () => {};
+
 export const useMarketOrder = () => {
-	const [state, dispatch] = useReducer(marketOrderReducer, marketOrderInitialState);
+	// const [state, dispatch] = useReducer(marketOrderReducer, marketOrderInitialState);
 
 	const { chain } = useNetwork();
 
 	const { address: owner } = useAccount();
 
-	const provider = useProvider();
-
 	const [tokenAddr, setTokenAddr] = useState<Address>();
+
+	// build trades
+	const { strikes, selectedMarket, handleSelectActivityType } = useBuilderContext();
+
+	const [tradeInfo, setTradeInfo] = useState({
+		market: selectedMarket?.bytes,
+		positionId: 0,
+	});
+	const [trades, setTrades] = useState<TradeInputParameters[]>([]);
+
+	const [validMaxPNL, setValidMaxPNL] = useState({
+		validMaxLoss: false,
+		maxLoss: ZERO_BN,
+		maxCost: ZERO_BN,
+		maxPremium: ZERO_BN,
+		fee: ZERO_BN,
+		maxLossPost: ZERO_BN,
+	});
+
+	const setStrikeTrades = useCallback(() => {
+		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
+		setTrades(convertTradeParams(selected));
+	}, [strikes]);
+
+	const calculateMaxPNL = useCallback(() => {
+		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
+
+		if (selected.length > 0) {
+			let [maxCost, maxPremium] = _calculateMaxPremiums(selected);
+
+			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(selected);
+
+			const spreadCollateralLoanDuration = _furthestOutExpiry(selected) - Date.now();
+
+			let fee = 0;
+
+			if (validMaxLoss && spreadCollateralLoanDuration > 0) {
+				// get fee
+				fee = (spreadCollateralLoanDuration / (YEAR_SEC * 1000)) * collateralLoan * 0.2;
+			}
+
+			setValidMaxPNL({
+				validMaxLoss,
+				maxLoss: toBN(maxLoss.toString()),
+				maxCost: toBN(maxCost.toString()),
+				maxPremium: toBN(maxPremium.toString()),
+				fee: toBN(fee.toString()),
+				maxLossPost: toBN((maxLoss + maxCost - maxPremium + fee).toString()),
+			});
+		} else {
+			setValidMaxPNL({
+				validMaxLoss: false,
+				maxLoss: ZERO_BN,
+				maxCost: ZERO_BN,
+				maxPremium: ZERO_BN,
+				fee: ZERO_BN,
+				maxLossPost: ZERO_BN,
+			});
+		}
+	}, [strikes]);
+
+	useEffect(() => {
+		if (strikes.length > 0) {
+			let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
+			if (selected.length > 0) {
+				calculateMaxPNL();
+				setStrikeTrades();
+			}
+		}
+	}, [strikes, calculateMaxPNL, setStrikeTrades]);
 
 	useEffect(() => {
 		if (chain && chain.id) {
@@ -43,6 +121,7 @@ export const useMarketOrder = () => {
 	}, [chain]);
 
 	const otusContracts = useOtusAccountContracts();
+
 	const spreadOptionMarket =
 		otusContracts && otusContracts["SpreadOptionMarket"] && otusContracts["SpreadOptionMarket"];
 
@@ -55,19 +134,31 @@ export const useMarketOrder = () => {
 		watch: true,
 	});
 
-	const spreadMarketAllowance = useSpreadOptionMarketAllowance(
-		tokenAddr,
-		erc20ABI,
-		owner,
-		spreadOptionMarket?.address,
-		provider
-	);
-
 	useEffect(() => {
 		if (_userBalance.data?.value) {
 			setUserBalance(_userBalance.data?.value);
 		}
 	}, [_userBalance]);
+
+	const [spreadMarketAllowance, setSpreadMarketAllowance] = useState(ZERO_BN);
+
+	const { data: _usdAllowance, refetch: refetchAllowance } = useContractRead({
+		address: tokenAddr,
+		abi: erc20ABI,
+		functionName: "allowance",
+		args:
+			owner && spreadOptionMarket?.address
+				? [owner, spreadOptionMarket.address]
+				: [ZERO_ADDRESS, ZERO_ADDRESS],
+		chainId: chain?.id,
+	});
+
+	useEffect(() => {
+		if (_usdAllowance) {
+			console.log({ _usdAllowance: formatUSD(fromBigNumber(_usdAllowance, 6)) });
+			setSpreadMarketAllowance(_usdAllowance);
+		}
+	}, [_usdAllowance]);
 
 	// allowance
 	const [allowanceAmount, setAllowanceAmount] = useState(MAX_BN);
@@ -90,31 +181,29 @@ export const useMarketOrder = () => {
 	} = useContractWrite({
 		...allowanceConfig,
 		onSettled: (data, error) => {
-			if (data?.hash) {
-				setActiveTransaction({ hash: data.hash });
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", `Approving spread option market`, txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
 			} else {
-				// createToast();
+				reportError(chain, error, undefined, false);
 			}
 		},
-		onSuccess: (data) => {},
-		onError: (error) => {
-			console.log(error);
+		onSuccess: async (data) => {
+			await refetchAllowance();
 		},
-		onMutate: () => {},
 	});
-	// open position
-	const [tradeInfo, setTradeInfo] = useState(0);
-	const [trades, setTrades] = useState(0);
-	const [maxLossPosted, setMaxLossPosted] = useState(0);
-
-	let openPositionToastId = "";
 
 	const { config: openPositionConfig } = usePrepareContractWrite({
 		address: spreadOptionMarket?.address,
 		abi: spreadOptionMarket?.abi,
 		functionName: "openPosition",
-		args: [tradeInfo, trades, maxLossPosted],
+		args: [tradeInfo, trades, validMaxPNL.maxLossPost],
 		chainId: chain?.id,
+		onError: (error) => {
+			console.log({ error });
+		},
+		enabled: !!(trades.length > 0),
 	});
 
 	const {
@@ -123,27 +212,26 @@ export const useMarketOrder = () => {
 		write: openPosition,
 		data: openPositionData,
 	} = useContractWrite({
-		...openPositionConfig,
-		onSuccess: (data, variables, context) => {
-			// if (depositToastId && chain) {
-			//   const txHref = getExplorerUrl(chain?.id, data.hash)
-			//   updatePendingToast(depositToastId, {
-			//     description: `Your deposit is pending, click to view on etherscan`,
-			//     href: txHref,
-			//     autoClose: DEFAULT_TOAST_TIMEOUT,
-			//   })
-			// }
+		//...openPositionConfig,
+		mode: "recklesslyUnprepared",
+		address: spreadOptionMarket?.address,
+		abi: spreadOptionMarket?.abi,
+		functionName: "openPosition",
+		args: [tradeInfo, trades, validMaxPNL.maxLossPost],
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", `Opening position spread option market`, txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
+			}
 		},
-		onError: (error: Error, variables, context) => {
-			const rawMessage = error?.message;
-			let message = rawMessage ? rawMessage.replace(/ *\([^)]*\) */g, "") : "Something went wrong";
+		onMutate: (ee) => {
+			console.log({ ee });
 		},
-		onMutate: () => {
-			// openPositionToastId = createPendingToast({
-			// 	description: `Confirm your deposit`,
-			// 	autoClose: false,
-			// 	icon: ToastIcon.Error,
-			// });
+		onError: (error) => {
+			console.log({ error });
 		},
 	});
 
@@ -158,7 +246,7 @@ export const useMarketOrder = () => {
 	const { config: closePositionConfig } = usePrepareContractWrite({
 		address: spreadOptionMarket?.address,
 		abi: spreadOptionMarket?.abi,
-		functionName: "openPosition",
+		functionName: "closePosition",
 		args: [market, spreadPositionId, isPartialClose],
 		chainId: chain?.id,
 	});
@@ -195,39 +283,31 @@ export const useMarketOrder = () => {
 
 	const [activeTransaction, setActiveTransaction] = useState<Transaction>();
 
-	const currentTransaction = useWaitForTransaction({
+	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,
 		onSuccess: (data) => {
-			if (chain && data.blockHash) {
-				console.log({ chain, data });
-				const txHref = getExplorerUrl(chain, data.blockHash);
+			if (chain && data.transactionHash) {
+				if (activeTransaction?.toastId) {
+					const txHref = getExplorerUrl(chain, data.transactionHash);
+					updateToast("success", activeTransaction?.toastId, "Success", txHref);
+					handleSelectActivityType(ActivityType.Position);
+				}
 
-				console.log({ txHref });
-
-				// createToast();
-				// const args: CreateToastOptions = {
-				//   variant: 'success',
-				//   description: `Your tx was successful`,
-				//   href: txHref,
-				//   autoClose: DEFAULT_TOAST_TIMEOUT,
-				//   // icon: HeroIcon(IconType.CheckIcon),
-				// }
-				// updatePendingToast(depositToastId, {
-				//   description: `Your deposit is pending, click to view on etherscan`,
-				//   href: txHref,
-				//   autoClose: false,
-				// })
-				// updateToast(depositToastId, args)
 				setActiveTransaction(undefined);
 			}
 		},
 		onError(err) {
+			console.log({ err });
+			reportError(chain, err, activeTransaction?.toastId, false, activeTransaction?.receipt);
 			setActiveTransaction(undefined);
 		},
 	});
 
 	return {
+		trades,
+		validMaxPNL,
 		userBalance,
+		isTxLoading,
 		isApproveQuoteLoading,
 		isOpenPositionLoading,
 		isClosePositionLoading,
@@ -240,32 +320,231 @@ export const useMarketOrder = () => {
 	} as MarketOrderProviderState;
 };
 
-const useSpreadOptionMarketAllowance = (
-	tokenAddr: Address | undefined,
-	abi: any,
-	owner: Address | undefined,
-	liquidityPool: Address | undefined,
-	provider: Provider
-) => {
-	const [accountAllowance, setAccountAllowance] = useState<number>(0);
+const _calculateMaxLoss = (strikes: LyraStrike[]): [boolean, number, number] => {
+	if (strikes.length > 0) {
+		let strikesByOptionTypes: Record<number, number> = {
+			0: 0,
+			1: 0,
+			2: 0,
+			3: 0,
+			4: 0,
+		};
 
-	const getAllowance = useCallback(async () => {
-		if (tokenAddr && abi && owner && liquidityPool && provider) {
-			const _contract: Contract = new ethers.Contract(tokenAddr, abi, provider);
-			try {
-				let _allowance = await _contract.allowance(owner, liquidityPool);
-				setAccountAllowance(fromBigNumber(_allowance));
-			} catch (error) {
-				// log error
+		const optionTypeMatch = strikes.reduce((accum: Record<number, number>, strike: LyraStrike) => {
+			const {
+				quote: { isBuy, isCall },
+			} = strike;
+
+			const optionType = calculateOptionType(isBuy, isCall);
+			accum[optionType] += 1;
+
+			return accum;
+		}, strikesByOptionTypes as Record<number, number>);
+
+		// if no shorts
+		if (optionTypeMatch[3] === 0 && optionTypeMatch[4] === 0) {
+			return [true, 0, 0];
+		}
+
+		// if size of longs puts < short puts
+		// infinite loss
+		let validCalls = true;
+		if (
+			optionTypeMatch[0] != undefined &&
+			optionTypeMatch[3] != undefined &&
+			optionTypeMatch[3] != 0 &&
+			optionTypeMatch[0] < optionTypeMatch[3]
+		) {
+			validCalls = false; // max loss is collateral
+		}
+
+		// if size of long calls < short calls
+		// infinite loss
+		let validPuts = true;
+		if (
+			optionTypeMatch[1] != undefined &&
+			optionTypeMatch[4] != undefined &&
+			optionTypeMatch[4] != 0 &&
+			optionTypeMatch[1] < optionTypeMatch[4]
+		) {
+			validPuts = false;
+		}
+
+		// max loss - calls
+		const calls = strikes
+			.filter((strike: LyraStrike) => {
+				const {
+					quote: { isCall },
+				} = strike;
+				return isCall;
+			})
+			.sort((a: LyraStrike, b: LyraStrike) => {
+				return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice);
+			});
+
+		const shortCallCollateralMax = calls.reduce(
+			(total: [number, number], strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				if (!isBuy) {
+					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
+					total[1] += fromBigNumber(size);
+				}
+				return total;
+			},
+			[0, 0] as [number, number]
+		);
+
+		if (!validCalls) {
+			return [validCalls, shortCallCollateralMax[0], 0];
+		}
+
+		let shortCallSize = shortCallCollateralMax[1];
+		let maxCallLoss = 0;
+
+		if (shortCallSize > 0) {
+			calls.forEach((strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				let longSize = fromBigNumber(size);
+
+				if (isBuy) {
+					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
+					maxCallLoss = cover - shortCallCollateralMax[0];
+					shortCallSize = shortCallSize - longSize;
+					if (shortCallSize <= 0) {
+						return;
+					}
+				}
+			});
+		}
+
+		// max loss - puts
+		const puts = strikes
+			.filter((strike: LyraStrike) => {
+				const {
+					quote: { isCall },
+				} = strike;
+				return !isCall;
+			})
+			.sort((a: LyraStrike, b: LyraStrike) => {
+				return fromBigNumber(b.strikePrice) - fromBigNumber(a.strikePrice);
+			});
+
+		const shortPutCollateralMax = puts.reduce(
+			(total: [number, number], strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				if (!isBuy) {
+					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
+					total[1] += fromBigNumber(size);
+				}
+				return total;
+			},
+			[0, 0] as [number, number]
+		);
+
+		if (!validPuts) {
+			return [validPuts, shortPutCollateralMax[0], 0];
+		}
+
+		let shortPutSize = shortPutCollateralMax[1];
+		let maxPutLoss = 0;
+
+		if (shortPutSize > 0) {
+			puts.forEach((strike: LyraStrike) => {
+				const {
+					strikePrice,
+					quote: { isBuy, size },
+				} = strike;
+				let longSize = fromBigNumber(size);
+
+				if (isBuy) {
+					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
+					maxPutLoss = cover - shortPutCollateralMax[0];
+					shortPutSize = shortPutSize - longSize;
+					if (shortPutSize <= 0) {
+						return;
+					}
+				}
+			});
+		}
+
+		return [
+			true,
+			Math.abs(maxPutLoss) > Math.abs(maxCallLoss) ? Math.abs(maxPutLoss) : Math.abs(maxCallLoss),
+			shortPutCollateralMax[0] + shortCallCollateralMax[0],
+		];
+	}
+
+	return [false, 0, 0];
+};
+
+const _calculateMaxPremiums = (strikes: LyraStrike[]) => {
+	return strikes.reduce(
+		(totalPremiums: [number, number], strike: LyraStrike) => {
+			const {
+				quote: { size, isBuy, pricePerOption },
+			} = strike;
+
+			const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
+
+			if (isBuy) {
+				totalPremiums[0] += _totalPriceForOptions;
+			} else {
+				totalPremiums[1] += _totalPriceForOptions;
 			}
-		}
-	}, [tokenAddr, abi, owner, liquidityPool, provider]);
 
-	useEffect(() => {
-		if (tokenAddr && abi && owner && liquidityPool && provider) {
-			getAllowance();
-		}
-	}, [getAllowance, tokenAddr, abi, owner, liquidityPool, provider]);
+			return totalPremiums;
+		},
+		[0, 0] as [number, number]
+	);
+};
 
-	return accountAllowance;
+const _furthestOutExpiry = (strikes: LyraStrike[]) => {
+	return (
+		strikes.reduce((expiration: number, strike: LyraStrike) => {
+			const {
+				expiryTimestamp,
+				quote: { isBuy },
+			} = strike;
+			if (!isBuy) {
+				return expiration > expiryTimestamp ? expiration : expiryTimestamp;
+			} else {
+				return expiration;
+			}
+		}, 0 as number) * 1000
+	);
+};
+
+const slippage = 0.02;
+
+const convertTradeParams = (strikes: LyraStrike[]): TradeInputParameters[] => {
+	return strikes.map((strike: LyraStrike) => {
+		const {
+			quote: { isBuy, isCall, premium, size },
+		} = strike;
+		const optionType = calculateOptionType(isBuy, isCall);
+		const _isLong = isLong(optionType);
+		const _premium = _isLong
+			? fromBigNumber(premium) + fromBigNumber(premium) * slippage
+			: fromBigNumber(premium) - fromBigNumber(premium) * slippage;
+		return {
+			strikeId: strike.id,
+			positionId: 0,
+			iterations: 1,
+			optionType: optionType,
+			amount: size,
+			setCollateralTo: toBN("0"),
+			minTotalCost: _isLong ? ZERO_BN : toBN(_premium.toString()),
+			maxTotalCost: _isLong ? toBN(_premium.toString()) : MAX_BN,
+			rewardRecipient: ZERO_ADDRESS,
+		} as TradeInputParameters;
+	});
 };

@@ -5,6 +5,7 @@ import { BigNumber, ethers } from "ethers";
 import { ONE_BN } from "../../constants/bn";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import { formatBoardName } from "../../utils/formatters/expiry";
+import { ETH_MARKET } from "../../constants/markets";
 
 export type LyraChain = {
 	name: Chain;
@@ -37,6 +38,7 @@ export type LyraBoard = {
 
 export type LyraMarket = {
 	address: string;
+	bytes: string;
 	name: string;
 	isPaused: boolean;
 	tvl: BigNumber;
@@ -90,6 +92,7 @@ const parseMarketResponse = async (markets: Market[]): Promise<LyraMarket[]> => 
 
 			const liveBoardsWithQuotedStrikes: any[] = await parseBoardStrikes(liveBoards);
 			return {
+				bytes: getMarketInBytes(name),
 				address,
 				name,
 				isPaused,
@@ -101,6 +104,10 @@ const parseMarketResponse = async (markets: Market[]): Promise<LyraMarket[]> => 
 			};
 		})
 	);
+};
+
+const getMarketInBytes = (name: string) => {
+	return ETH_MARKET;
 };
 
 // temp fix arbitrum and optimism appear to return different board properties

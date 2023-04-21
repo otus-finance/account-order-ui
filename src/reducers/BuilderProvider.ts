@@ -1,17 +1,12 @@
 import Lyra from "@lyrafinance/lyra-js";
-import { BuilderType, Strategy, StrategyDirection } from "../utils/types";
-import { LyraBoard, LyraChain, LyraMarket, LyraStrike } from "../queries/lyra/useLyra";
+import { ActivityType, BuilderType, Strategy, StrategyDirection } from "../utils/types";
+import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra";
 import { Chain } from "wagmi";
 import { Dispatch } from "react";
 
 export type BuilderProviderState = {
-	fee: number;
-	maxCost: number;
-	maxPremium: number;
-	maxLoss: number;
-	maxLossPost: number;
-	validMaxLoss: boolean;
 	lyra: Lyra | null;
+	activityType: ActivityType;
 	builderType: BuilderType;
 	showStrikesSelect: boolean;
 	selectedChain: Chain | null;
@@ -30,6 +25,7 @@ export type BuilderProviderState = {
 	isToggleStrikeLoading: boolean;
 	toggleStrikeId: number;
 	setActiveStrike: Dispatch<any>;
+	handleSelectActivityType: (any: ActivityType) => void;
 	handleSelectBuilderType: (any: BuilderType) => void;
 	handleSelectedChain: (any: Chain) => void;
 	handleSelectedMarket: (any: LyraMarket | null) => void;
@@ -42,13 +38,8 @@ export type BuilderProviderState = {
 };
 
 export const builderInitialState: BuilderProviderState = {
-	fee: 0,
-	maxCost: 0,
-	maxPremium: 0,
-	maxLoss: 0,
-	maxLossPost: 0,
-	validMaxLoss: false, // valid for max loss post spread
 	lyra: null,
+	activityType: ActivityType.Trade,
 	builderType: BuilderType.Builder,
 	showStrikesSelect: false,
 	selectedChain: null,
@@ -67,6 +58,7 @@ export const builderInitialState: BuilderProviderState = {
 	isToggleStrikeLoading: false,
 	toggleStrikeId: 0,
 	setActiveStrike: () => {},
+	handleSelectActivityType: (any) => void any,
 	handleSelectBuilderType: (any) => void any,
 	handleSelectedChain: (any) => void any,
 	handleSelectedMarket: (any) => void any,
@@ -102,6 +94,10 @@ export type BuilderAction =
 	| {
 			type: "SET_MARKETS_LOADING";
 			isMarketLoading: BuilderProviderState["isMarketLoading"];
+	  }
+	| {
+			type: "SET_ACTIVITY_TYPE";
+			activityType: BuilderProviderState["activityType"];
 	  }
 	| {
 			type: "SET_BUILDER_TYPE";
@@ -159,22 +155,13 @@ export type BuilderAction =
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
 	  }
 	| {
-			type: "SET_VALID_MAX_PNL";
-			validMaxLoss: BuilderProviderState["validMaxLoss"];
-			maxLossPost: BuilderProviderState["maxLossPost"];
-			maxLoss: BuilderProviderState["maxLoss"];
-			maxCost: BuilderProviderState["maxCost"];
-			maxPremium: BuilderProviderState["maxPremium"];
-			fee: BuilderProviderState["fee"];
-	  }
-	| {
 			type: "TOGGLE_STRIKE_LOAD";
 			isToggleStrikeLoading: BuilderProviderState["isToggleStrikeLoading"];
 			toggleStrikeId: BuilderProviderState["toggleStrikeId"];
 	  }
-	| {
-			type: "RESET_VALID_MAX_PNL";
-	  }
+	// | {
+	// 	type: "RESET_VALID_MAX_PNL";
+	// }
 	| {
 			type: "RESET_BUILDER_PROVIDER";
 	  };
@@ -210,6 +197,8 @@ export function builderReducer(
 			};
 		case "SET_MARKETS_LOADING":
 			return { ...state, isMarketLoading: action.isMarketLoading };
+		case "SET_ACTIVITY_TYPE":
+			return { ...state, activityType: action.activityType };
 		case "SET_BUILDER_TYPE":
 			return { ...state, builderType: action.builderType };
 		case "SET_MARKET":
@@ -252,26 +241,6 @@ export function builderReducer(
 				currentPrice: action.currentPrice,
 				selectedExpirationDate: action.selectedExpirationDate,
 				selectedStrategy: action.selectedStrategy,
-			};
-		case "SET_VALID_MAX_PNL":
-			return {
-				...state,
-				validMaxLoss: action.validMaxLoss,
-				maxLoss: action.maxLoss,
-				maxLossPost: action.maxLossPost,
-				maxCost: action.maxCost,
-				maxPremium: action.maxPremium,
-				fee: action.fee,
-			};
-		case "RESET_VALID_MAX_PNL":
-			return {
-				...state,
-				validMaxLoss: false,
-				maxLoss: 0,
-				maxLossPost: 0,
-				maxCost: 0,
-				maxPremium: 0,
-				fee: 0,
 			};
 		case "TOGGLE_STRIKE_LOAD":
 			return {

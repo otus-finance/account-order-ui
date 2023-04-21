@@ -5,6 +5,9 @@ import { AccountOrderActions } from "../../../Account/AccountOrderActions";
 import { TradeLimit } from "../TradeLimit";
 import { TradeMarket } from "../TradeMarket";
 import { TradeTrigger } from "../TradeTrigger";
+import { ZERO_BN } from "../../../../constants/bn";
+import { useLyraTrade } from "../../../../hooks";
+import { useBuilderContext } from "../../../../context/BuilderContext";
 
 enum TradeTypes {
 	Market,
@@ -15,11 +18,13 @@ enum TradeTypes {
 export const TradeType = () => {
 	const [typeSelected, setTypeSelected] = useState(TradeTypes.Market);
 
-	const { quoteAsset } = useLyraAccountContext();
+	const { lyra } = useBuilderContext();
+
+	const { quoteAsset, quoteAssetBalance } = useLyraTrade(lyra);
 
 	return (
 		<>
-			<TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} />
+			{/* <TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} /> */}
 			{TradeTypes.Market === typeSelected && <TradeMarket />}
 			{TradeTypes.Limit === typeSelected && <TradeLimit />}
 			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
@@ -32,7 +37,7 @@ export const TradeType = () => {
 					<div className="grid grid-cols-2 p-4">
 						<div className="text-xs text-zinc-200">Wallet Balance</div>
 						<div className="text-xs text-white font-semibold col-span-1 text-right">
-							{quoteAsset && formatUSD(fromBigNumber(quoteAsset.balance), { dps: 2 })}{" "}
+							{formatUSD(fromBigNumber(quoteAssetBalance, quoteAsset?.decimals), { dps: 2 })}{" "}
 							{quoteAsset?.symbol}
 						</div>
 					</div>

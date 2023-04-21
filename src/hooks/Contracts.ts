@@ -28,16 +28,23 @@ type ContractInterface = {
 	abi: any;
 };
 
+const LOCAL_CHAIN_ID = 31337;
+
 export const useOtusAccountContracts = () => {
 	const contractsConfig = useContractConfig();
 	const { chain } = useNetwork();
-
 	const [otusContracts, setOtusContracts] = useState<Record<string, ContractInterface>>();
 
 	useEffect(() => {
-		if (contractsConfig && chain && contractsConfig.deployedContracts[chain.id]) {
-			const _contracts = contractsConfig.deployedContracts[chain.id][0].contracts;
-			setOtusContracts(_contracts);
+		if (contractsConfig) {
+			chain && contractsConfig.deployedContracts[chain.id];
+			const chainId = chain ? chain.id : LOCAL_CHAIN_ID;
+			const contracts = contractsConfig.deployedContracts[chainId];
+			console.log({ contracts, chain });
+			if (contracts) {
+				const _contracts = contracts[0].contracts;
+				setOtusContracts(_contracts);
+			}
 		}
 	}, [contractsConfig, chain]);
 

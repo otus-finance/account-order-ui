@@ -1,82 +1,54 @@
-import Lyra from '@lyrafinance/lyra-js';
-import { useCallback, useEffect, useReducer, useState } from 'react'
-import { LyraStrike } from '../queries/lyra/useLyra';
+import Lyra, { AccountQuoteBalance } from "@lyrafinance/lyra-js";
+import { useCallback, useEffect, useReducer, useState } from "react";
+import { LyraStrike } from "../queries/lyra/useLyra";
 
-import {
-  useAccount
-} from 'wagmi';
+import { useAccount } from "wagmi";
 
-import {
-  AccountProviderState,
-  AccountAction,
-  accountInitialState,
-  accountReducer,
-} from '../reducers'
+import { BigNumber } from "ethers";
+import { ZERO_BN } from "../constants/bn";
+import { AccountProviderState } from "../reducers";
 
-export const useLyraTrade = (lyra: Lyra | null, strike: LyraStrike | null) => {
-  const [state, dispatch] = useReducer(
-    accountReducer,
-    accountInitialState
-  );
+export const useLyraTrade = (lyra: Lyra | null) => {
+	const [market, setMarket] = useState("");
+	const [quoteAsset, setQuoteAsset] = useState<AccountQuoteBalance>();
+	const [quoteAssetBalance, setQuoteAssetBalance] = useState<BigNumber>(ZERO_BN);
 
-  const {
-    isLoading,
-    tradeInit,
-    marketAddress,
-    quoteAsset
-  } = state;
+	const { address } = useAccount();
 
-  const { address } = useAccount();
+	const buildLyraMarket = useCallback(async () => {
+		if (lyra && address) {
+			const markets = await lyra.marketAddresses();
+			if (markets.length > 0 && markets[0]) {
+				setMarket(markets[0]);
+			}
+		}
+	}, [lyra, address]);
 
-  const buildLyraTrade = useCallback(async () => {
-    if (lyra && address && strike) {
-      dispatch({
-        type: "SET_LOADING",
-        isLoading: true
-      })
+	useEffect(() => {
+		if (lyra && address) {
+			buildLyraMarket();
+		}
+	}, [lyra, address, buildLyraMarket]);
 
-      const { id, market, quote: { isCall, isBuy, size } } = strike;
-      const trade = await lyra.trade(address, market, id, isCall, isBuy, size, 0.1 / 100);
-      dispatch({
-        type: "SET_TRADE_INIT",
-        tradeInit: trade,
-        marketAddress: trade.marketAddress,
-        isLoading: false
-      } as AccountAction)
-    }
-  }, [lyra, address, strike])
+	const fetchMarketQuoteBalance = useCallback(async () => {
+		if (lyra && address && market) {
+			const account = lyra.account(address);
+			const marketBalance = await account.marketBalances(market);
+			const _quoteAsset = marketBalance.quoteAsset;
+			setQuoteAssetBalance(_quoteAsset.balance);
+			setQuoteAsset(_quoteAsset);
+		}
+	}, [lyra, address, market]);
 
-  useEffect(() => {
-    if (lyra && address && strike) {
-      buildLyraTrade();
-    }
-  }, [lyra, address, strike, buildLyraTrade])
+	useEffect(() => {
+		if (lyra && address && market) {
+			fetchMarketQuoteBalance();
+		}
+	}, [lyra, address, market, fetchMarketQuoteBalance]);
 
-  const fetchMarketQuoteBalance = useCallback(async () => {
-    if (lyra && address && marketAddress) {
-      const account = lyra.account(address);
-      const marketBalance = await account.marketBalances(marketAddress)
-      const _quoteAsset = marketBalance.quoteAsset;
-      dispatch({
-        type: 'SET_QUOTE_ASSET',
-        quoteAsset: _quoteAsset,
-        isLoading: false
-      } as AccountAction)
-    }
-  }, [lyra, address, marketAddress])
-
-
-  useEffect(() => {
-    if (lyra && address && marketAddress) {
-      fetchMarketQuoteBalance();
-    }
-  }, [lyra, address, marketAddress, fetchMarketQuoteBalance])
-
-  return {
-    isLoading,
-    tradeInit,
-    marketAddress,
-    quoteAsset,
-    fetchMarketQuoteBalance
-  } as AccountProviderState
-}
+	return {
+		quoteAsset,
+		quoteAssetBalance,
+		fetchMarketQuoteBalance,
+	} as AccountProviderState;
+};

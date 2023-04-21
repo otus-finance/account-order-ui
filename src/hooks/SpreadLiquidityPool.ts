@@ -23,7 +23,7 @@ import {
 	spreadLiquidityPoolReducer,
 } from "../reducers";
 import getExplorerUrl from "../utils/chains/getExplorerUrl";
-import { formatUSD, fromBigNumber, toBN } from "../utils/formatters/numbers";
+import { fromBigNumber } from "../utils/formatters/numbers";
 import { useOtusAccountContracts } from "./Contracts";
 import { Transaction } from "../utils/types";
 import { reportError } from "../utils/errors";
@@ -34,12 +34,12 @@ export const useSpreadLiquidityPool = () => {
 	const { liquidityPool, isLoading } = state;
 
 	const { isLoading: isDataLoading, data: liquidityPoolData, refetch } = useLiquidityPool();
-
+	console.log({ liquidityPoolData });
 	const otusContracts = useOtusAccountContracts();
 
 	const spreadLiquidityPool =
 		otusContracts && otusContracts["SpreadLiquidityPool"] && otusContracts["SpreadLiquidityPool"];
-
+	console.log({ spreadLiquidityPool });
 	const { chain } = useNetwork();
 
 	const [activeTransaction, setActiveTransaction] = useState<Transaction>();
@@ -81,8 +81,11 @@ export const useSpreadLiquidityPool = () => {
 		}
 	}, [chain]);
 
+	// Set Quote Decimals
+	const [decimals, setDecimals] = useState(18);
+
 	// Get User Balance
-	const [userBalance, setUserBalance] = useState("");
+	const [userBalance, setUserBalance] = useState(0);
 
 	const _userBalance = useBalance({
 		address: owner,
@@ -93,7 +96,8 @@ export const useSpreadLiquidityPool = () => {
 
 	useEffect(() => {
 		if (_userBalance.data?.value) {
-			setUserBalance(formatUSD(fromBigNumber(_userBalance.data?.value), { dps: 2 }));
+			setUserBalance(fromBigNumber(_userBalance.data.value, _userBalance.data.decimals));
+			setDecimals(_userBalance.data.decimals);
 		}
 	}, [_userBalance]);
 
@@ -165,6 +169,7 @@ export const useSpreadLiquidityPool = () => {
 		onSettled: (data, error) => {
 			if (chain && data?.hash) {
 				const txHref = getExplorerUrl(chain, data.hash);
+				console.log({ hash: data.hash });
 				const toastId = createToast("info", "Confirm your deposit", txHref);
 				setActiveTransaction({ hash: data.hash, toastId: toastId });
 			} else {
@@ -191,9 +196,10 @@ export const useSpreadLiquidityPool = () => {
 	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,
 		onSuccess: (data) => {
-			if (chain && data.blockHash) {
+			if (chain && data.transactionHash) {
 				if (activeTransaction?.toastId) {
-					const txHref = getExplorerUrl(chain, data.blockHash);
+					console.log({ data });
+					const txHref = getExplorerUrl(chain, data.transactionHash);
 					updateToast("success", activeTransaction?.toastId, "Success", txHref);
 				}
 
@@ -207,6 +213,7 @@ export const useSpreadLiquidityPool = () => {
 	});
 
 	return {
+		decimals,
 		liquidityPool,
 		isLoading,
 		isTxLoading,

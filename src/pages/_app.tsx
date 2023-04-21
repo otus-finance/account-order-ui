@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, midnightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { optimism, arbitrum, hardhat } from "wagmi/chains";
+import { optimism, arbitrum, hardhat, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -23,7 +23,7 @@ Sentry.init({
 });
 
 const { chains, provider } = configureChains(
-	[optimism, arbitrum, hardhat],
+	[hardhat, optimism, arbitrum, optimismGoerli, arbitrumGoerli],
 	[
 		infuraProvider({
 			// @ts-ignore
