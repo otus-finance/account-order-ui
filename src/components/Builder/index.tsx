@@ -16,6 +16,7 @@ import { Position, usePositions } from "../../queries/otus/positions";
 import { useAccount, useNetwork } from "wagmi";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import getExplorerUrl from "../../utils/chains/getExplorerUrl";
+import { MarketOrderContextProvider } from "../../context/MarketOrderContext";
 
 export const OptionsBuilder = () => {
 	const { lyra, strikes, builderType, activityType } = useBuilderContext();
@@ -56,12 +57,15 @@ export const OptionsBuilder = () => {
 							{lyra && strikes[0] ? (
 								<>
 									<LyraAccountContextProvider lyra={lyra}>
-										<StrikeTrade />
+										<MarketOrderContextProvider>
+											<>
+												<StrikeTrade />
+												<div className="p-4 border-t border-zinc-800">
+													<Chart />
+												</div>
+											</>
+										</MarketOrderContextProvider>
 									</LyraAccountContextProvider>
-
-									<div className="p-4 border-t border-zinc-800">
-										<Chart />
-									</div>
 								</>
 							) : (
 								<div className=" p-4">
@@ -94,8 +98,6 @@ export const OptionsBuilder = () => {
 const Positions = () => {
 	const { chain } = useNetwork();
 	const { data } = usePositions();
-
-	console.log({ data });
 
 	return (
 		<table className="min-w-full  rounded-sm">
