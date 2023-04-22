@@ -146,7 +146,7 @@ export const useAccountOrder = (owner: Address | undefined) => {
 		onSuccess: (data) => {},
 	});
 
-	const otusContracts = useOtusAccountContracts();
+	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
 	// deposit
 	const [depositAmount, setDepositAmount] = useState(0);

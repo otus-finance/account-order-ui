@@ -43,7 +43,7 @@ export const useRangedMarket = (market: RangedMarket) => {
 
 	const { address: owner } = useAccount();
 
-	const otusContracts = useOtusAccountContracts();
+	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
 	const provider = useProvider();
 

@@ -5,6 +5,7 @@ import { TradeInputParameters } from "../utils/types";
 import { LyraStrike } from "../queries/lyra/useLyra";
 
 export type MarketOrderProviderState = {
+	networkNotSupported: boolean;
 	loading: boolean;
 	validMaxPNL: any;
 	updateStrikes: LyraStrike[];
@@ -25,6 +26,7 @@ export type MarketOrderProviderState = {
 };
 
 export const marketOrderInitialState: MarketOrderProviderState = {
+	networkNotSupported: true,
 	loading: true,
 	validMaxPNL: {
 		validMaxLoss: false,

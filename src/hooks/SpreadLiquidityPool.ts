@@ -35,7 +35,7 @@ export const useSpreadLiquidityPool = () => {
 
 	const { isLoading: isDataLoading, data: liquidityPoolData, refetch } = useLiquidityPool();
 
-	const otusContracts = useOtusAccountContracts();
+	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
 	const spreadLiquidityPool =
 		otusContracts && otusContracts["SpreadLiquidityPool"] && otusContracts["SpreadLiquidityPool"];

@@ -135,9 +135,14 @@ export const MarketTransaction = () => {
 		isApproveQuoteLoading,
 		spreadMarketAllowance, // currently allowed
 		approveQuote,
+		networkNotSupported,
 	} = useMarketOrderContext();
 
-	return (
+	return networkNotSupported ? (
+		<div className="cursor-pointer bg-gradient-to-t from-black to-zinc-900 rounded-full p-4 w-full font-semibold hover:text-zinc-200 py-3 text-center text-white">
+			Network not supported
+		</div>
+	) : (
 		<>
 			{spreadMarketAllowance.isZero() ? (
 				<div

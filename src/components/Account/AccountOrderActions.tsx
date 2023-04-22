@@ -277,7 +277,7 @@ export const CreateAccount = () => {
 };
 
 const useAccountFactory = (chainId: number | undefined) => {
-	const otusContracts = useOtusAccountContracts();
+	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
 	const { config: accountFactoryConfig } = usePrepareContractWrite({
 		address:

@@ -34,6 +34,7 @@ export const useOtusAccountContracts = () => {
 	const contractsConfig = useContractConfig();
 	const { chain } = useNetwork();
 	const [otusContracts, setOtusContracts] = useState<Record<string, ContractInterface>>();
+	const [networkNotSupported, setNetworkNotSupported] = useState(false);
 
 	useEffect(() => {
 		if (contractsConfig) {
@@ -43,9 +44,11 @@ export const useOtusAccountContracts = () => {
 			if (contracts) {
 				const _contracts = contracts[0].contracts;
 				setOtusContracts(_contracts);
+			} else {
+				setNetworkNotSupported(true);
 			}
 		}
 	}, [contractsConfig, chain]);
 
-	return otusContracts;
+	return { otusContracts, networkNotSupported };
 };

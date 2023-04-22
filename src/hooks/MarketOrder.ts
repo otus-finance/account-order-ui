@@ -175,7 +175,7 @@ export const useMarketOrder = () => {
 		}
 	}, [chain]);
 
-	const otusContracts = useOtusAccountContracts();
+	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
 	const spreadOptionMarket =
 		otusContracts && otusContracts["SpreadOptionMarket"] && otusContracts["SpreadOptionMarket"];
@@ -358,6 +358,7 @@ export const useMarketOrder = () => {
 	});
 
 	return {
+		networkNotSupported,
 		loading,
 		updateStrikes,
 		updateSize,
