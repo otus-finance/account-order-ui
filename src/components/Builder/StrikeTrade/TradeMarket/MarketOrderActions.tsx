@@ -45,7 +45,7 @@ export const MarketOrderActions = () => {
 			</div>
 
 			<div className="flex items-center justify-between py-2 pb-4">
-				<p className="truncate font-sans text-sm font-normal text-zinc-300">Spread Fee</p>
+				<p className="truncate font-sans text-sm font-normal text-zinc-300">Collateral Fee</p>
 				<div className="ml-2 flex flex-shrink-0">
 					<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 						{formatUSD(fromBigNumber(fee), { dps: 2 })}
