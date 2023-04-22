@@ -40,7 +40,6 @@ export const useOtusAccountContracts = () => {
 			chain && contractsConfig.deployedContracts[chain.id];
 			const chainId = chain ? chain.id : LOCAL_CHAIN_ID;
 			const contracts = contractsConfig.deployedContracts[chainId];
-			console.log({ contracts, chain });
 			if (contracts) {
 				const _contracts = contracts[0].contracts;
 				setOtusContracts(_contracts);
