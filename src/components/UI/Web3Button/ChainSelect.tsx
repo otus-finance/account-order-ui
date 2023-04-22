@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { ONEImage, OPImage } from "../Icons/Color/DataImage";
+import { useNetwork } from "wagmi";
 
 const chains = [optimism, arbitrum, arbitrumGoerli];
 
@@ -13,12 +14,15 @@ function classNames(...classes: string[]) {
 }
 
 export const OfflineChainSelect = () => {
+	const { chain } = useNetwork();
+	// console.log({ chain })
 	const [offlineChain, setOfflineChain] = useState(optimism);
 
 	const { selectedChain, handleSelectedChain } = useBuilderContext();
 
 	useEffect(() => {
-		if (selectedChain?.id != offlineChain.id) {
+		if (!chain && selectedChain?.id != offlineChain.id) {
+			console.log("offlineChain", { offlineChain });
 			handleSelectedChain(offlineChain);
 		}
 	}, [handleSelectedChain, selectedChain, offlineChain]);

@@ -6,6 +6,7 @@ import { Spinner } from "../../UI/Components/Spinner";
 
 export const Market = () => {
 	const { markets, selectedMarket, isMarketLoading, handleSelectedMarket } = useBuilderContext();
+	console.log({ isMarketLoading });
 	return (
 		<div className="flex justify-between border border-zinc-800 shadow-xl rounded-lg p-1">
 			<LyraMarketOptions

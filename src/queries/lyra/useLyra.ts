@@ -50,6 +50,7 @@ export type LyraMarket = {
 };
 
 export const useLyraMarket = (lyra: Lyra | null) => {
+	console.log({ lyra });
 	return useQuery<LyraMarket[] | null>(
 		["lyraMarkets", lyra?.chainId],
 		async () => {

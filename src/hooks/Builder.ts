@@ -103,14 +103,16 @@ export const useBuilder = () => {
 	}, [chain]);
 
 	const handleSelectedChain = (chain: Chain) => {
-		dispatch({
-			type: "SET_CHAIN",
-			selectedChain: chain,
-			selectedMarket: null,
-			strikes: [],
-			selectedExpirationDate: null,
-			selectedStrategy: null,
-		});
+		if (chain) {
+			dispatch({
+				type: "SET_CHAIN",
+				selectedChain: chain,
+				selectedMarket: null,
+				strikes: [],
+				selectedExpirationDate: null,
+				selectedStrategy: null,
+			});
+		}
 	};
 
 	const updateSelectedChain = useCallback(async () => {
@@ -131,16 +133,16 @@ export const useBuilder = () => {
 		}
 	}, [updateSelectedChain, selectedChain]);
 
-	useEffect(() => {
-		dispatch({
-			type: "SET_CHAIN",
-			selectedChain: selectedChain,
-			selectedMarket: null,
-			strikes: [],
-			selectedExpirationDate: null,
-			selectedStrategy: null,
-		});
-	}, [selectedChain]);
+	// useEffect(() => {
+	// 	dispatch({
+	// 		type: "SET_CHAIN",
+	// 		selectedChain: selectedChain,
+	// 		selectedMarket: null,
+	// 		strikes: [],
+	// 		selectedExpirationDate: null,
+	// 		selectedStrategy: null,
+	// 	});
+	// }, [selectedChain]);
 
 	const { data, isLoading } = useLyraMarket(lyra);
 
@@ -156,6 +158,58 @@ export const useBuilder = () => {
 			type: "SET_EXPIRATION_DATE",
 			selectedExpirationDate: expirationDate,
 		} as BuilderAction);
+	};
+
+	const handleSelectActivityType = (_type: ActivityType) => {
+		dispatch({
+			type: "SET_ACTIVITY_TYPE",
+			activityType: _type,
+		});
+	};
+
+	const handleSelectBuilderType = (_type: BuilderType) => {
+		dispatch({
+			type: "SET_BUILDER_TYPE",
+			builderType: _type,
+		});
+	};
+
+	const handleBuildNewStrategy = (_isBuildNewStrategy: boolean) => {
+		dispatch({
+			type: "SET_BUILD_NEW_STRATEGY",
+			isBuildingNewStrategy: _isBuildNewStrategy,
+		});
+	};
+
+	const handleSelectedMarket = useCallback((market: LyraMarket) => {
+		dispatch({
+			type: "SET_MARKET",
+			selectedMarket: market,
+			strikes: [],
+			selectedExpirationDate: null,
+			selectedStrategy: null,
+		} as BuilderAction);
+
+		handleSelectActivityType(ActivityType.Trade);
+	}, []);
+
+	const handleSelectedDirectionTypes = useCallback((directionTypes: StrategyDirection[]) => {
+		dispatch({
+			type: "SET_DIRECTION_TYPES",
+			selectedDirectionTypes: directionTypes,
+		} as BuilderAction);
+
+		handleSelectActivityType(ActivityType.Trade);
+	}, []);
+
+	const handleSelectedStrategy = (strategy: any) => {
+		dispatch({
+			type: "SET_STRATEGY",
+			selectedStrategy: strategy,
+			isBuildingNewStrategy: false,
+		});
+
+		handleSelectActivityType(ActivityType.Trade);
 	};
 
 	useEffect(() => {
@@ -181,7 +235,7 @@ export const useBuilder = () => {
 				isMarketLoading: true,
 			});
 		}
-	}, [data, isLoading]);
+	}, [data, isLoading, handleSelectedDirectionTypes, handleSelectedMarket]);
 
 	useEffect(() => {
 		if (selectedStrategy && isBuildingNewStrategy) {
@@ -212,58 +266,6 @@ export const useBuilder = () => {
 			} as BuilderAction);
 		}
 	}, [selectedMarket]);
-
-	const handleSelectActivityType = (_type: ActivityType) => {
-		dispatch({
-			type: "SET_ACTIVITY_TYPE",
-			activityType: _type,
-		});
-	};
-
-	const handleSelectBuilderType = (_type: BuilderType) => {
-		dispatch({
-			type: "SET_BUILDER_TYPE",
-			builderType: _type,
-		});
-	};
-
-	const handleBuildNewStrategy = (_isBuildNewStrategy: boolean) => {
-		dispatch({
-			type: "SET_BUILD_NEW_STRATEGY",
-			isBuildingNewStrategy: _isBuildNewStrategy,
-		});
-	};
-
-	const handleSelectedMarket = (market: LyraMarket) => {
-		dispatch({
-			type: "SET_MARKET",
-			selectedMarket: market,
-			strikes: [],
-			selectedExpirationDate: null,
-			selectedStrategy: null,
-		} as BuilderAction);
-
-		handleSelectActivityType(ActivityType.Trade);
-	};
-
-	const handleSelectedDirectionTypes = (directionTypes: StrategyDirection[]) => {
-		dispatch({
-			type: "SET_DIRECTION_TYPES",
-			selectedDirectionTypes: directionTypes,
-		} as BuilderAction);
-
-		handleSelectActivityType(ActivityType.Trade);
-	};
-
-	const handleSelectedStrategy = (strategy: any) => {
-		dispatch({
-			type: "SET_STRATEGY",
-			selectedStrategy: strategy,
-			isBuildingNewStrategy: false,
-		});
-
-		handleSelectActivityType(ActivityType.Trade);
-	};
 
 	const filterStrikes = useCallback(() => {
 		if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
