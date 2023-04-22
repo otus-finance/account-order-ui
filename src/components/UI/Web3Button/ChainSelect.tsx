@@ -6,7 +6,7 @@ import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } fr
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { ONEImage, OPImage } from "../Icons/Color/DataImage";
 
-const chains = [optimism, arbitrum, optimismGoerli, arbitrumGoerli, hardhat];
+const chains = [optimism, arbitrum, arbitrumGoerli];
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");

@@ -1,31 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useBuilderContext } from "../../../context/BuilderContext";
-import { formatUSD, fromBigNumber } from "../../../utils/formatters/numbers";
+import { formatUSD, fromBigNumber, toBN } from "../../../utils/formatters/numbers";
 import { formatName } from "../Market/SelectMarket";
 import { DebounceInput } from "react-debounce-input";
 import { TradeType } from "./TradeSelect";
-import { LyraStrike } from "../../../queries/lyra/useLyra";
+import { LyraStrike, getStrikeQuote } from "../../../queries/lyra/useLyra";
+import { useMarketOrderContext } from "../../../context/MarketOrderContext";
+import { Spinner } from "../../UI/Components/Spinner";
 
 export const StrikeTrade = () => {
-	const { selectedMarket, strikes, handleUpdateQuote } = useBuilderContext();
-
+	const { selectedMarket, strikes } = useBuilderContext();
+	const { loading, selectedStrikes } = useMarketOrderContext();
 	return (
 		<>
 			{selectedMarket && strikes.length > 0 && (
 				<div className="col-span-1 sm:col-span-1 grid grid-cols-1">
 					{/* strikes summary  */}
 					<div className="col-span-1">
-						{strikes
-							.filter((strike: LyraStrike) => strike.selected)
-							.map((strike, index) => {
-								return (
-									<StrikeTradeDetail
-										strike={strike}
-										key={index}
-										handleUpdateQuote={handleUpdateQuote}
-									/>
-								);
-							})}
+						{loading && <Spinner />}
+						{selectedStrikes.map((strike, index) => {
+							return <StrikeTradeDetail strike={strike} key={index} />;
+						})}
 					</div>
 
 					{/* limit / market / trigger button header  */}
@@ -36,21 +31,15 @@ export const StrikeTrade = () => {
 	);
 };
 
-const StrikeTradeDetail = ({
-	strike,
-	handleUpdateQuote,
-}: {
-	strike: LyraStrike;
-	handleUpdateQuote: any;
-}) => {
-	const { selectedMarket, setActiveStrike, isUpdating, selectedStrategy } = useBuilderContext();
+const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
+	const { selectedMarket, setActiveStrike, selectedStrategy } = useBuilderContext();
+	const { updateSize } = useMarketOrderContext();
 
 	const {
 		quote: { size, pricePerOption, isCall, isBuy, premium },
 		strikePrice,
+		isUpdating,
 	} = strike;
-
-	// const [formattedSize, setFormattedSize] = useState(1);
 
 	const [optionPriceLoading, setOptionPriceLoading] = useState(false);
 
@@ -80,14 +69,10 @@ const StrikeTradeDetail = ({
 						<div className="mt-1">
 							<DebounceInput
 								minLength={1}
-								debounceTimeout={400}
 								onChange={async (e) => {
 									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
-									handleUpdateQuote(selectedStrategy, { size: value.toString(), strike: strike });
-
-									setOptionPriceLoading(true);
-									// setFormattedSize(value);
+									updateSize?.(strike, value);
 								}}
 								min={0}
 								type="number"
@@ -105,7 +90,11 @@ const StrikeTradeDetail = ({
 					<p className="truncate font-sans text-sm font-normal text-zinc-300">Price Per Option</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex font-sans text-sm font-semibold  leading-5 text-white">
-							{formatUSD(fromBigNumber(pricePerOption), { dps: 2 })}
+							{isUpdating ? (
+								<Spinner size="small" />
+							) : (
+								formatUSD(fromBigNumber(pricePerOption), { dps: 2 })
+							)}
 						</span>
 					</div>
 				</div>
@@ -113,7 +102,11 @@ const StrikeTradeDetail = ({
 					<p className="truncate font-sans text-sm font-normal text-zinc-300">Credit/(Debit)</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<p className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-							{optionPriceLoading ? "-" : isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium)))}
+							{isUpdating ? (
+								<Spinner size="small" />
+							) : (
+								isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium), { dps: 2 }))
+							)}
 						</p>
 					</div>
 				</div>

@@ -36,15 +36,15 @@ export const Strategies = () => {
 			{filteredStrategies.map((strategy: Strategy, index: number) => {
 				const { name, description, type, tags } = strategy;
 
-				const isSelectedStyle = isSelected(strategy) ? "border-emerald-600" : "border-zinc-800";
+				const isSelectedStyle = isSelected(strategy) ? "border-emerald-400" : "border-zinc-900";
 
 				return (
 					<motion.div
-						whileHover={{ scale: 1.03 }}
-						whileTap={{ scale: 0.97 }}
+						whileHover={{ scale: 1.01 }}
+						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`max-h-42 overflow-clip cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border hover:border-emerald-600 mt-2 mb-8 rounded-sm ${isSelectedStyle}`}
+						className={`max-h-42 overflow-clip cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border-4 hover:border-emerald-600 mt-2 mb-8 rounded-lg ${isSelectedStyle}`}
 					>
 						<div className="grid grid-cols-1 p-4">
 							<div className="grid grid-cols-3 place-content-between">
