@@ -37,7 +37,6 @@ import {
 	optimismUrl,
 } from "../constants/networks";
 import { DirectionType } from "../utils/direction";
-import _ from "lodash";
 
 const getRPCUrl = (chain: Chain) => {
 	switch (chain.id) {
