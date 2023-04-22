@@ -19,6 +19,7 @@ export type LyraStrike = {
 	quote: Quote;
 	expiryTimestamp: number;
 	selected?: boolean;
+	isUpdating?: boolean;
 } & Strike;
 
 export type LyraStrikeMapping = {

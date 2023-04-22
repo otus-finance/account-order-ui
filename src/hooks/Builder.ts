@@ -37,6 +37,7 @@ import {
 	optimismUrl,
 } from "../constants/networks";
 import { DirectionType } from "../utils/direction";
+import _ from "lodash";
 
 const getRPCUrl = (chain: Chain) => {
 	switch (chain.id) {
@@ -51,7 +52,6 @@ const getRPCUrl = (chain: Chain) => {
 		case optimismGoerli.id:
 			return optimismGoerliUrl;
 		default:
-			console.log("are they all default?");
 			return optimismUrl;
 	}
 };
@@ -80,6 +80,7 @@ export const useBuilder = () => {
 		selectedExpirationDate,
 		selectedStrategy,
 		strikes,
+		previousStrikes,
 		isUpdating,
 		isToggleStrikeLoading,
 		toggleStrikeId,
@@ -265,43 +266,6 @@ export const useBuilder = () => {
 		handleSelectActivityType(ActivityType.Trade);
 	};
 
-	const handleUpdateQuote = useCallback(
-		async (_selectedStrategy: any, strikeUpdate: { strike: LyraStrike; size: string }) => {
-			if (
-				strikeUpdate &&
-				strikes.length > 0 &&
-				lyra &&
-				selectedStrategy.id === _selectedStrategy.id
-			) {
-				dispatch({
-					type: "SET_UPDATING_STRIKE",
-					isUpdating: true,
-				});
-
-				const { strike: _strike, size } = strikeUpdate;
-				const { id: _id, quote, isCall } = _strike;
-				const { isBuy } = quote;
-
-				const _quote = await getStrikeQuote(lyra, isCall, isBuy, toBN(size), _strike);
-
-				const _updateStrikes: any = strikes.map((strike: LyraStrike) => {
-					const { id } = strike;
-					if (id == _id && isBuy == strike.quote.isBuy) {
-						return { ...strike, quote: _quote };
-					} else {
-						return strike;
-					}
-				});
-				dispatch({
-					type: "UPDATE_STRIKES",
-					strikes: _updateStrikes,
-					isUpdating: false,
-				});
-			}
-		},
-		[lyra, strikes, selectedStrategy]
-	);
-
 	const filterStrikes = useCallback(() => {
 		if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
 			const { strikesByOptionTypes, strikesWithQuotes } = selectedExpirationDate;
@@ -439,6 +403,7 @@ export const useBuilder = () => {
 		selectedExpirationDate,
 		selectedStrategy,
 		strikes,
+		previousStrikes,
 		isValid,
 		isBuildingNewStrategy,
 		activeStrike,
@@ -454,7 +419,6 @@ export const useBuilder = () => {
 		handleSelectedDirectionTypes,
 		handleToggleSelectedStrike,
 		handleSelectedStrategy,
-		handleUpdateQuote,
 		handleBuildNewStrategy,
 	} as BuilderProviderState;
 };

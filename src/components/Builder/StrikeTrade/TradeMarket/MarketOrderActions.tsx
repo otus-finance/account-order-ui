@@ -170,6 +170,7 @@ export const OpenPosition = () => {
 					Insufficient Balance
 				</div>
 			)}
+
 			<div
 				onClick={() => openPosition?.()}
 				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
@@ -179,3 +180,9 @@ export const OpenPosition = () => {
 		</>
 	);
 };
+
+// onClick={() => openPosition?.({
+// 	recklesslySetUnpreparedOverrides: {
+// 		gasLimit: 4800000
+// 	},
+// })}

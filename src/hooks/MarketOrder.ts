@@ -1,6 +1,6 @@
 import { Provider } from "@wagmi/core";
 import { Contract, ethers } from "ethers";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import {
 	Address,
@@ -27,7 +27,7 @@ import getExplorerUrl from "../utils/chains/getExplorerUrl";
 import { ActivityType, TradeInputParameters, Transaction } from "../utils/types";
 import { reportError } from "../utils/errors";
 import { useBuilder } from "./Builder";
-import { LyraStrike } from "../queries/lyra/useLyra";
+import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { calculateOptionType, isLong } from "../utils/formatters/optiontypes";
 import { YEAR_SEC } from "../constants/dates";
@@ -44,7 +44,64 @@ export const useMarketOrder = () => {
 	const [tokenAddr, setTokenAddr] = useState<Address>();
 
 	// build trades
-	const { strikes, selectedMarket, handleSelectActivityType } = useBuilderContext();
+	const { lyra, strikes, selectedMarket, handleSelectActivityType } = useBuilderContext();
+
+	const [loading, setLoading] = useState(true);
+
+	const [selectedStrikes, setSelectedStrikes] = useState<LyraStrike[]>([]);
+
+	useEffect(() => {
+		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
+		setSelectedStrikes(selected);
+		setLoading(false);
+	}, [strikes]);
+
+	const updateStrikes = useDebounce(selectedStrikes, 2000);
+
+	const updateSize = useCallback(
+		async (strike: LyraStrike, size: number) => {
+			if (lyra) {
+				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
+					if (isStrikeMatch(strike, _strike)) {
+						const { quote } = strike;
+						return {
+							...strike,
+							isUpdating: true,
+							quote: { ...quote, size: toBN(size.toString()) },
+						} as LyraStrike;
+					}
+					return _strike;
+				});
+				setSelectedStrikes(_updated);
+			}
+		},
+		[lyra, selectedStrikes]
+	);
+
+	const updateStrikeQuotes = useCallback(async () => {
+		if (lyra) {
+			const _strikes = await Promise.all(
+				updateStrikes.map(async (strike: LyraStrike) => {
+					const { quote, isUpdating } = strike;
+					if (isUpdating) {
+						const { size, isCall, isBuy } = quote;
+						const _quote = await getStrikeQuote(lyra, isCall, isBuy, size, strike);
+						return { ...strike, isUpdating: false, quote: _quote } as LyraStrike;
+					} else {
+						return strike;
+					}
+				})
+			);
+
+			setSelectedStrikes(_strikes);
+		}
+	}, [lyra, updateStrikes]);
+
+	useEffect(() => {
+		if (updateStrikes.length > 0) {
+			updateStrikeQuotes();
+		}
+	}, [lyra, updateStrikes, updateStrikeQuotes]);
 
 	const [tradeInfo, setTradeInfo] = useState({
 		market: selectedMarket?.bytes,
@@ -68,14 +125,12 @@ export const useMarketOrder = () => {
 	}, [strikes]);
 
 	const calculateMaxPNL = useCallback(() => {
-		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
+		if (selectedStrikes.length > 0) {
+			let [maxCost, maxPremium] = _calculateMaxPremiums(selectedStrikes);
 
-		if (selected.length > 0) {
-			let [maxCost, maxPremium] = _calculateMaxPremiums(selected);
+			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(selectedStrikes);
 
-			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(selected);
-
-			const spreadCollateralLoanDuration = _furthestOutExpiry(selected) - Date.now();
+			const spreadCollateralLoanDuration = _furthestOutExpiry(selectedStrikes) - Date.now();
 
 			let fee = 0;
 
@@ -102,17 +157,16 @@ export const useMarketOrder = () => {
 				maxLossPost: ZERO_BN,
 			});
 		}
-	}, [strikes]);
+	}, [selectedStrikes]);
 
 	useEffect(() => {
-		if (strikes.length > 0) {
-			let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
-			if (selected.length > 0) {
+		if (selectedStrikes.length > 0) {
+			if (selectedStrikes.length > 0) {
 				calculateMaxPNL();
 				setStrikeTrades();
 			}
 		}
-	}, [strikes, calculateMaxPNL, setStrikeTrades]);
+	}, [selectedStrikes, calculateMaxPNL, setStrikeTrades]);
 
 	useEffect(() => {
 		if (chain && chain.id) {
@@ -156,7 +210,6 @@ export const useMarketOrder = () => {
 
 	useEffect(() => {
 		if (_usdAllowance) {
-			console.log({ _usdAllowance: formatUSD(fromBigNumber(_usdAllowance, 6)) });
 			setSpreadMarketAllowance(_usdAllowance);
 		}
 	}, [_usdAllowance]);
@@ -305,6 +358,10 @@ export const useMarketOrder = () => {
 	});
 
 	return {
+		loading,
+		updateStrikes,
+		updateSize,
+		selectedStrikes,
 		trades,
 		validMaxPNL,
 		userBalance,
@@ -549,3 +606,35 @@ const convertTradeParams = (strikes: LyraStrike[]): TradeInputParameters[] => {
 		} as TradeInputParameters;
 	});
 };
+
+const isStrikeMatch = (newStrike: LyraStrike, existingStrike: LyraStrike) => {
+	if (
+		newStrike.id == existingStrike.id &&
+		calculateOptionType(newStrike.quote.isBuy, newStrike.isCall) ==
+			calculateOptionType(existingStrike.quote.isBuy, existingStrike.quote.isCall)
+	) {
+		return true;
+	}
+	return false;
+};
+
+function useDebounce(value: LyraStrike[], delay: number) {
+	// State and setters for debounced value
+	const [debouncedValue, setDebouncedValue] = useState(value);
+	useEffect(
+		() => {
+			// Update debounced value after delay
+			const handler = setTimeout(() => {
+				setDebouncedValue(value);
+			}, delay);
+			// Cancel the timeout if value changes (also on delay change or unmount)
+			// This is how we prevent debounced value from updating if value is changed ...
+			// .. within the delay period. Timeout gets cleared and restarted.
+			return () => {
+				clearTimeout(handler);
+			};
+		},
+		[value, delay] // Only re-call effect if value or delay changes
+	);
+	return debouncedValue;
+}

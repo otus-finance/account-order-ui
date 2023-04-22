@@ -17,6 +17,7 @@ export type BuilderProviderState = {
 	selectedDirectionTypes: StrategyDirection[];
 	selectedExpirationDate: LyraBoard | null;
 	selectedStrategy: any | null | undefined;
+	previousStrikes: LyraStrike[];
 	strikes: LyraStrike[];
 	isValid: boolean;
 	isBuildingNewStrategy: boolean;
@@ -32,7 +33,6 @@ export type BuilderProviderState = {
 	handleSelectedDirectionTypes: (any: StrategyDirection[]) => void;
 	handleSelectedExpirationDate: (any: LyraBoard | null) => void;
 	handleSelectedStrategy: (any: Strategy | null) => void;
-	handleUpdateQuote: (any: any, any2: any) => void;
 	handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void;
 	handleBuildNewStrategy: (any: boolean) => void;
 };
@@ -50,6 +50,7 @@ export const builderInitialState: BuilderProviderState = {
 	selectedDirectionTypes: [],
 	selectedExpirationDate: null,
 	selectedStrategy: null,
+	previousStrikes: [],
 	strikes: [],
 	isValid: false,
 	isBuildingNewStrategy: false,
@@ -65,7 +66,6 @@ export const builderInitialState: BuilderProviderState = {
 	handleSelectedDirectionTypes: (any) => void any,
 	handleSelectedExpirationDate: (any) => void any,
 	handleSelectedStrategy: (any) => void any,
-	handleUpdateQuote: (any) => void any,
 	handleToggleSelectedStrike: (any) => void any,
 	handleBuildNewStrategy: (any) => void any,
 };
@@ -140,6 +140,7 @@ export type BuilderAction =
 	  }
 	| {
 			type: "UPDATE_STRIKES";
+			previousStrikes: BuilderProviderState["previousStrikes"];
 			strikes: BuilderProviderState["strikes"];
 			isUpdating: BuilderProviderState["isUpdating"];
 	  }
@@ -231,7 +232,12 @@ export function builderReducer(
 		case "SET_STRIKES":
 			return { ...state, strikes: action.strikes, isValid: action.isValid };
 		case "UPDATE_STRIKES":
-			return { ...state, strikes: action.strikes, isUpdating: action.isUpdating };
+			return {
+				...state,
+				previousStrikes: action.previousStrikes,
+				strikes: action.strikes,
+				isUpdating: action.isUpdating,
+			};
 		case "SET_UPDATING_STRIKE":
 			return { ...state, isUpdating: action.isUpdating };
 		case "RESET_MARKET":
