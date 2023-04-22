@@ -34,12 +34,12 @@ export const useSpreadLiquidityPool = () => {
 	const { liquidityPool, isLoading } = state;
 
 	const { isLoading: isDataLoading, data: liquidityPoolData, refetch } = useLiquidityPool();
-	console.log({ liquidityPoolData });
+
 	const otusContracts = useOtusAccountContracts();
 
 	const spreadLiquidityPool =
 		otusContracts && otusContracts["SpreadLiquidityPool"] && otusContracts["SpreadLiquidityPool"];
-	console.log({ spreadLiquidityPool });
+
 	const { chain } = useNetwork();
 
 	const [activeTransaction, setActiveTransaction] = useState<Transaction>();
@@ -169,7 +169,6 @@ export const useSpreadLiquidityPool = () => {
 		onSettled: (data, error) => {
 			if (chain && data?.hash) {
 				const txHref = getExplorerUrl(chain, data.hash);
-				console.log({ hash: data.hash });
 				const toastId = createToast("info", "Confirm your deposit", txHref);
 				setActiveTransaction({ hash: data.hash, toastId: toastId });
 			} else {
@@ -198,7 +197,6 @@ export const useSpreadLiquidityPool = () => {
 		onSuccess: (data) => {
 			if (chain && data.transactionHash) {
 				if (activeTransaction?.toastId) {
-					console.log({ data });
 					const txHref = getExplorerUrl(chain, data.transactionHash);
 					updateToast("success", activeTransaction?.toastId, "Success", txHref);
 				}
