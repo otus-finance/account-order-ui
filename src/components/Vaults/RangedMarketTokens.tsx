@@ -424,14 +424,7 @@ const RangedMarketChart = ({
 
 	useEffect(() => {
 		const _ticks = ticks("sETH-sUSD", 2800);
-		console.log({ _ticks });
 
-		console.log({
-			strikePrice1,
-			strikePrice2,
-			strikePrice3,
-			strikePrice4,
-		});
 		const _chartData = _ticks.map((tick, index) => {
 			{
 				/* @ts-ignore */
@@ -446,10 +439,6 @@ const RangedMarketChart = ({
 					: (tick > strikePrice1 ? 0 : strikePrice1 - tick) + // 2500 2100 21 strikePrice1 is buy put
 					  (tick > strikePrice2 ? tick - strikePrice2 : 0) -
 					  194; // - cost // _combo[tick].profitAtTick; strikePrice2 is cbuy call 3100 < 3500
-
-			if (profitAtTick < 0) {
-				console.log({ profitAtTick });
-			}
 
 			return {
 				name: index,
