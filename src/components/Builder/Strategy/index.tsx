@@ -25,7 +25,7 @@ export const Strategy = () => {
 				<Strategies />
 			</div>
 
-			<div className="sm:hidden flex  overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 mt-8 gap-6">
+			<div className="sm:hidden pr-10  max-h-40 overflow-y-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 mt-8 gap-6">
 				<Strategies />
 			</div>
 		</div>

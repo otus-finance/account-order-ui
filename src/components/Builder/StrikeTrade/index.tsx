@@ -8,6 +8,7 @@ import { LyraStrike, getStrikeQuote } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 import { Spinner } from "../../UI/Components/Spinner";
 import { CheckIcon, PencilIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { formatBoardName } from "../../../utils/formatters/expiry";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, strikes } = useBuilderContext();
@@ -17,18 +18,33 @@ export const StrikeTrade = () => {
 			{selectedMarket && strikes.length > 0 && (
 				<>
 					{/* strikes summary  */}
-					<table className=" font-mono font-semibold min-w-full divide-y divide-zinc-700 table-auto">
+					<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
 						<thead className="bg-inherit ">
-							<tr>
-								<th className="py-2 text-xs text-zinc-400 text-left  px-2">Type</th>
-								<th className="text-xs text-zinc-400 text-left  px-2">Direction</th>
-								<th className="text-xs text-zinc-400 text-left  px-2">Strike Price</th>
-								<th className="text-xs  text-zinc-400 text-left  px-2">Price</th>
-								<th className="text-xs  text-zinc-400 text-left  px-2">Credit/(Debit)</th>
-								<th className="text-xs  text-zinc-400 text-left  px-2">Size</th>
+							<tr className="font-mono">
+								<th scope="col" className="py-2 text-xs text-zinc-400 text-left  px-2">
+									Expiry
+								</th>
+								<th scope="col" className="text-xs text-zinc-400 text-left  px-2">
+									Type
+								</th>
+								<th scope="col" className="text-xs text-zinc-400 text-left  px-2">
+									Direction
+								</th>
+								<th scope="col" className="text-xs text-zinc-400 text-left  px-2">
+									Strike Price
+								</th>
+								<th scope="col" className="text-xs  text-zinc-400 text-left  px-2">
+									Price
+								</th>
+								<th scope="col" className="text-xs  text-zinc-400 text-left  px-2">
+									Credit/(Debit)
+								</th>
+								<th scope="col" className="text-xs  text-zinc-400 text-left  px-2">
+									Size
+								</th>
 							</tr>
 						</thead>
-						<tbody className="divide-y divide-zinc-700 bg-inherit">
+						<tbody className="divide-y divide-zinc-800 bg-inherit">
 							{loading && <Spinner />}
 							{selectedStrikes.map((strike, index) => {
 								return <StrikeTradeDetail strike={strike} key={index} />;
@@ -51,6 +67,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 		quote: { size, pricePerOption, isCall, isBuy, premium },
 		strikePrice,
 		isUpdating,
+		expiryTimestamp,
 	} = strike;
 
 	const [optionPriceLoading, setOptionPriceLoading] = useState(false);
@@ -84,7 +101,10 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 			onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
-			<td className="py-2 text-xs px-2">
+			<td className="text-xs font-medium text-zinc-300   px-2">
+				{expiryTimestamp && formatBoardName(expiryTimestamp)}
+			</td>
+			<td className="py-3 text-xs px-2">
 				{isCall ? (
 					<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">Call</span>
 				) : (

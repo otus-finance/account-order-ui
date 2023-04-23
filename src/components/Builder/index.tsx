@@ -23,7 +23,7 @@ export const OptionsBuilder = () => {
 
 	return (
 		<div className="grid sm:grid-cols-2 grid-cols-2 gap-8">
-			<div className="col-span-2 sm:col-span-1">
+			<div className="col-span-2 lg:col-span-1">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					<div className="p-6">
 						<Market />
@@ -47,7 +47,7 @@ export const OptionsBuilder = () => {
 				</div>
 			</div>
 
-			<div className="col-span-2 sm:col-span-1">
+			<div className="col-span-2 lg:col-span-1">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					<ActivitySelect />
 					{activityType === ActivityType.Trade ? (
