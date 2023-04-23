@@ -8,9 +8,9 @@ import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 export const Chart = () => {
 	const { selectedMarket, currentPrice, isValid } = useBuilderContext();
 
-	const { selectedStrikes } = useMarketOrderContext();
-
-	const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, selectedStrikes);
+	const { updateStrikes } = useMarketOrderContext();
+	console.log({ updateStrikes });
+	const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, updateStrikes);
 
 	return (
 		<div className="col-span-3 sm:col-span-3 p-4 bg-black rounded-lg">

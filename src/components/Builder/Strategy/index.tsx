@@ -21,7 +21,13 @@ export const Strategy = () => {
 				</span>
 			</div>
 
-			<Strategies />
+			<div className="hidden sm:flex flex-row flex-wrap mt-6">
+				<Strategies />
+			</div>
+
+			<div className="sm:hidden flex  overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 mt-8 gap-6">
+				<Strategies />
+			</div>
 		</div>
 	);
 };

@@ -33,7 +33,7 @@ export const Strategies = () => {
 	const isSelected = (_strategy: Strategy) => selectedStrategy?.id == _strategy.id;
 
 	return (
-		<div className="flex flex-row flex-wrap mt-6">
+		<>
 			{filteredStrategies.map((strategy: Strategy, index: number) => {
 				const { name, description, type, tags } = strategy;
 
@@ -45,7 +45,7 @@ export const Strategies = () => {
 						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`basis-1/5 gap-8 shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
+						className={`mb-8 sm:mb-0 basis-1/2 flex-none overflow-clip sm:basis-1/5 sm:gap-8 sm:shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
 					>
 						<div className="p-2">
 							<div className="flex place-content-between">
@@ -95,6 +95,6 @@ export const Strategies = () => {
 					</motion.div>
 				);
 			})}
-		</div>
+		</>
 	);
 };
