@@ -126,12 +126,12 @@ export const useMarketOrder = () => {
 	}, [strikes]);
 
 	const calculateMaxPNL = useCallback(() => {
-		if (selectedStrikes.length > 0) {
-			let [maxCost, maxPremium] = _calculateMaxPremiums(selectedStrikes);
+		if (updateStrikes.length > 0) {
+			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);
 
-			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(selectedStrikes);
+			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(updateStrikes);
 
-			const spreadCollateralLoanDuration = _furthestOutExpiry(selectedStrikes) - Date.now();
+			const spreadCollateralLoanDuration = _furthestOutExpiry(updateStrikes) - Date.now();
 
 			let fee = 0;
 
@@ -158,16 +158,16 @@ export const useMarketOrder = () => {
 				maxLossPost: ZERO_BN,
 			});
 		}
-	}, [selectedStrikes]);
+	}, [updateStrikes]);
 
 	useEffect(() => {
-		if (selectedStrikes.length > 0) {
-			if (selectedStrikes.length > 0) {
+		if (updateStrikes.length > 0) {
+			if (updateStrikes.length > 0) {
 				calculateMaxPNL();
 				setStrikeTrades();
 			}
 		}
-	}, [selectedStrikes, calculateMaxPNL, setStrikeTrades]);
+	}, [updateStrikes, calculateMaxPNL, setStrikeTrades]);
 
 	useEffect(() => {
 		if (chain && chain.id) {

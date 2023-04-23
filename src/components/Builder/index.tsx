@@ -25,12 +25,12 @@ export const OptionsBuilder = () => {
 		<div className="grid sm:grid-cols-2 grid-cols-2 gap-8">
 			<div className="col-span-2 lg:col-span-1">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
-					<div className="p-6">
+					<div className="p-4">
 						<Market />
 					</div>
 
 					<div className="border-b border-zinc-800">
-						<div className="px-6 pt-2 pb-4">
+						<div className="px-4 pt-2 pb-4">
 							<BuilderSelect />
 						</div>
 					</div>

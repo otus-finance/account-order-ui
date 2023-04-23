@@ -5,7 +5,7 @@ import { Strategies } from "./Strategies";
 
 export const Strategy = () => {
 	return (
-		<div className="col-span-3 sm:col-span-3 p-6">
+		<div className="col-span-3 sm:col-span-3 py-4 p-4">
 			<div className="font-normal text-sm">
 				Show me strategies if my bet is the market will be
 				<span>
@@ -21,7 +21,7 @@ export const Strategy = () => {
 				</span>
 			</div>
 
-			<div className="hidden sm:flex flex-row flex-wrap mt-6">
+			<div className="hidden sm:flex flex-row flex-wrap mt-4">
 				<Strategies />
 			</div>
 

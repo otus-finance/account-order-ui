@@ -13,7 +13,7 @@ export const formatExpirationDate = (expiryTimestamp: number) => {
 	const month = MONTHS[date.getMonth()];
 	const day = date.getDate();
 	const hours = date.getHours();
-	return `${month} ${day}, ${hours}:00 UTC`;
+	return `${month} ${day}`;
 };
 
 export const formatExpirationTitle = (expiryTimestamp: number) => {
