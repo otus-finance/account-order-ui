@@ -8,7 +8,7 @@ import { LyraStrike, getStrikeQuote } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 import { Spinner } from "../../UI/Components/Spinner";
 import { CheckIcon, PencilIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { formatBoardName } from "../../../utils/formatters/expiry";
+import { formatBoardName, formatExpirationDate } from "../../../utils/formatters/expiry";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, strikes } = useBuilderContext();
@@ -102,7 +102,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
 			<td className="text-xs font-medium text-zinc-300   px-2">
-				{expiryTimestamp && formatBoardName(expiryTimestamp)}
+				{expiryTimestamp && formatExpirationDate(expiryTimestamp)}
 			</td>
 			<td className="py-3 text-xs px-2">
 				{isCall ? (

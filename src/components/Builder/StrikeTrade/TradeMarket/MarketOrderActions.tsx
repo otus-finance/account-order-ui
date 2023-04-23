@@ -44,37 +44,60 @@ export const MarketOrderActions = () => {
 				</div>
 			</div>
 
-			<div className="flex items-center justify-between py-2 pb-4">
-				<p className="truncate font-sans text-sm font-normal text-zinc-300">Collateral Fee</p>
-				<div className="ml-2 flex flex-shrink-0">
-					<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
-						{formatUSD(fromBigNumber(fee), { dps: 2 })}
-					</span>
-				</div>
-			</div>
-
 			{validMaxLoss ? (
-				<div className="border-t border-zinc-800 flex items-center justify-between py-4 ">
-					<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
-						Post Max Loss
-					</p>
-					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
-							{formatUSD(fromBigNumber(maxLossPost), { dps: 2 })}
-						</span>
+				<>
+					<div className="flex items-center justify-between py-2 pb-4">
+						<p className="truncate font-sans text-sm font-normal text-zinc-300">Collateral Fee</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
+								{formatUSD(fromBigNumber(fee), { dps: 2 })}
+							</span>
+						</div>
 					</div>
-				</div>
+					<div className="border-t border-zinc-800 flex items-center justify-between py-4 ">
+						<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+							Post Max Loss
+						</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
+								{formatUSD(fromBigNumber(maxLossPost), { dps: 2 })}
+							</span>
+						</div>
+					</div>
+				</>
 			) : (
-				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-sans text-sm font-normal text-zinc-300">
-						Collateral Required
-					</p>
-					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-							{formatUSD(fromBigNumber(maxLoss), { dps: 2 })}
-						</span>
+				<>
+					<div className="flex items-center justify-between pt-2">
+						<p className="truncate font-sans text-sm font-normal text-zinc-300">Collateral</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+								{formatUSD(fromBigNumber(maxLoss), { dps: 2 })}
+							</span>
+						</div>
 					</div>
-				</div>
+					<div className="pt-2">
+						<input
+							id="collateral-range"
+							type="range"
+							value="50"
+							className="ring-rose-500 w-full h-[2px] bg-zinc-700 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+						/>
+						<div className="flex justify-between">
+							<label
+								htmlFor="collateral-range"
+								className="block mb-2 text-xs font-normal text-zinc-400 "
+							>
+								$1200
+							</label>
+							<label
+								htmlFor="collateral-range"
+								className="block mb-2 text-xs font-normal text-zinc-400 "
+							>
+								$2000
+							</label>
+						</div>
+					</div>
+				</>
 			)}
 
 			<MarketOrderInfo />

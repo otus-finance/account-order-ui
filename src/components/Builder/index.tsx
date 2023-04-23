@@ -94,51 +94,80 @@ const Positions = () => {
 	const { data } = usePositions();
 
 	return (
-		<table className="min-w-full  rounded-sm">
-			<thead className="divide-b divide-zinc-900 bg-zinc-800"></thead>
-			<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
-				Position Id
-			</th>
+		<div>
+			<div className="border-b border-zinc-900 p-4 text-sm font-normal text-zinc-200">
+				Option Spread Positions
+			</div>
+			<table className="min-w-full  rounded-sm">
+				<thead className="divide-b divide-zinc-900 bg-zinc-800"></thead>
+				<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+					Position Id
+				</th>
 
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-				Status
-			</th>
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Status
+				</th>
 
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-				Open Date
-			</th>
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Open Date
+				</th>
 
-			<th scope="col" className="sr-only">
-				Action
-			</th>
-			<tbody className="divide-y divide-zinc-900 bg-inherit">
-				{data?.positions.map((position: Position, index: number) => {
-					const { id, owner, state, openTimestamp, txHash } = position;
-					const txHref = chain && txHash && getExplorerUrl(chain, txHash);
-					return (
-						<tr key={index}>
-							<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
-								{fromBigNumber(id, 0)}
-							</td>
+				<th scope="col" className="sr-only">
+					Action
+				</th>
+				<tbody className="divide-y divide-zinc-900 bg-inherit">
+					{data?.positions.map((position: Position, index: number) => {
+						const { id, owner, state, openTimestamp, txHash } = position;
+						const txHref = chain && txHash && getExplorerUrl(chain, txHash);
+						return (
+							<tr key={index}>
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{fromBigNumber(id, 0)}
+								</td>
 
-							<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
-								{state === 0 ? "Open" : "Closed"}
-							</td>
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{state === 0 ? "Open" : "Closed"}
+								</td>
 
-							<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
-								{new Date(openTimestamp * 1000).toDateString()}
-							</td>
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{new Date(openTimestamp * 1000).toDateString()}
+								</td>
 
-							<td className="whitespace-nowrap py-4 text-xs font-medium text-zinc-200">
-								<a target="_blank" rel="noreferrer" href={txHref}>
-									View
-								</a>
-							</td>
-						</tr>
-					);
-				})}
-			</tbody>
-		</table>
+								<td className="whitespace-nowrap py-4 text-xs font-medium text-zinc-200">
+									<a target="_blank" rel="noreferrer" href={txHref}>
+										View
+									</a>
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
+			<div className="border-t border-zinc-900 p-4 text-sm font-normal text-zinc-200">
+				Lyra Positions
+			</div>
+			<table className="min-w-full  rounded-sm">
+				<thead className="divide-b divide-zinc-900 bg-zinc-800"></thead>
+				<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+					Position Id
+				</th>
+
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Status
+				</th>
+
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Open Date
+				</th>
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Delta Hedge
+				</th>
+				<th scope="col" className="sr-only">
+					Action
+				</th>
+				<tbody className="divide-y divide-zinc-900 bg-inherit"></tbody>
+			</table>
+		</div>
 	);
 };
 
