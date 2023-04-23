@@ -17,10 +17,8 @@ function classNames(...classes: string[]) {
 export const MarketOrderActions = () => {
 	const { isValid } = useBuilderContext();
 
-	const { trades, validMaxPNL } = useMarketOrderContext();
+	const { trades, validMaxPNL, spreadSelected, setSpreadSelected } = useMarketOrderContext();
 	const { maxLossPost, fee, maxCost, maxPremium, maxLoss, validMaxLoss } = validMaxPNL;
-
-	const [enabled, setEnabled] = useState(false);
 
 	return trades.length > 0 ? (
 		<>
@@ -42,10 +40,10 @@ export const MarketOrderActions = () => {
 						</span>
 						<Switch
 							disabled={!validMaxLoss}
-							checked={enabled}
-							onChange={setEnabled}
+							checked={spreadSelected}
+							onChange={setSpreadSelected}
 							className={classNames(
-								enabled ? "bg-emerald-500" : "bg-zinc-800",
+								spreadSelected ? "bg-emerald-500" : "bg-zinc-800",
 								`${
 									validMaxLoss ? "cursor-pointer" : "cursor-not-allowed"
 								} relative inline-flex h-6 w-11 flex-shrink-0  rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-200 focus:ring-offset-2`
@@ -54,7 +52,7 @@ export const MarketOrderActions = () => {
 							<span
 								aria-hidden="true"
 								className={classNames(
-									enabled ? "translate-x-5" : "translate-x-0",
+									spreadSelected ? "translate-x-5" : "translate-x-0",
 									"pointer-events-none inline-block h-5 w-5 transform rounded-full bg-zinc-200 shadow ring-0 transition duration-200 ease-in-out"
 								)}
 							/>
@@ -92,10 +90,10 @@ export const MarketOrderActions = () => {
 					</div>
 				</div>
 
-				{validMaxLoss && enabled && (
+				{validMaxLoss && spreadSelected ? (
 					<>
 						<div className="flex items-center justify-between py-2 pb-4">
-							<p className="truncate font-sans text-sm font-normal text-zinc-300">Collateral Fee</p>
+							<p className="truncate font-mono text-sm font-normal text-zinc-300">Collateral Fee</p>
 							<div className="ml-2 flex flex-shrink-0">
 								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 									{formatUSD(fromBigNumber(fee), { dps: 2 })}
@@ -113,6 +111,17 @@ export const MarketOrderActions = () => {
 							</div>
 						</div>
 					</>
+				) : (
+					<div className="flex items-center justify-between py-2">
+						<p className="truncate font-mono text-sm font-normal text-zinc-200">
+							Total Colalteral Required
+						</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+								{formatUSD(fromBigNumber(maxPremium), { dps: 2 })}
+							</span>
+						</div>
+					</div>
 				)}
 
 				<MarketOrderInfo />
@@ -162,8 +171,6 @@ export const MarketOrderInfo = () => {
 				isConnected && <MarketTransaction />
 			)}
 
-			{/* {isConnected && <MarketTransaction />} */}
-
 			{!isConnected && openConnectModal && <WalletConnect />}
 		</div>
 	);
@@ -172,33 +179,91 @@ export const MarketOrderInfo = () => {
 export const MarketTransaction = () => {
 	const {
 		isApproveQuoteLoading,
-		spreadMarketAllowance, // currently allowed
+		otusOptionMarketAllowance, // currently allowed for otus option market
+		spreadMarketAllowance, // currently allowed for otus spread market
 		approveQuote,
+		approveOtusQuote,
 		networkNotSupported,
+		validMaxPNL,
+		spreadSelected,
 	} = useMarketOrderContext();
+
+	const { validMaxLoss } = validMaxPNL;
 
 	return networkNotSupported ? (
 		<div className="cursor-pointer bg-gradient-to-t from-black to-zinc-900 rounded-full p-4 w-full font-semibold hover:text-zinc-200 py-3 text-center text-white">
 			Network not supported
 		</div>
-	) : (
-		<>
-			{spreadMarketAllowance.isZero() ? (
-				<div
-					onClick={() => approveQuote?.()}
-					className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
-				>
-					{isApproveQuoteLoading ? (
-						<Spinner size={"medium"} color={"secondary"} />
-					) : (
-						"Approve Quote"
-					)}
-				</div>
+	) : validMaxLoss && spreadSelected ? (
+		spreadMarketAllowance.isZero() ? (
+			<div
+				onClick={() => approveQuote?.()}
+				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+			>
+				{isApproveQuoteLoading ? (
+					<Spinner size={"medium"} color={"secondary"} />
+				) : (
+					"Approve Quote Spread"
+				)}
+			</div>
+		) : (
+			<OpenPosition />
+		)
+	) : otusOptionMarketAllowance.isZero() ? (
+		<div
+			onClick={() => approveOtusQuote?.()}
+			className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+		>
+			{isApproveQuoteLoading ? (
+				<Spinner size={"medium"} color={"secondary"} />
 			) : (
-				<OpenPosition />
+				"Approve Quote Otus"
 			)}
-		</>
+		</div>
+	) : (
+		<OpenLyraPosition />
 	);
+
+	// <>
+	// 	{/* {
+	// 		validMaxLoss && spreadSelected &&
+	// 			spreadMarketAllowance.isZero() ? (
+	// 			<div
+	// 				onClick={() => approveQuote?.()}
+	// 				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+	// 			>
+	// 				{isApproveQuoteLoading ? (
+	// 					<Spinner size={"medium"} color={"secondary"} />
+	// 				) : (
+	// 					"Approve Quote"
+	// 				)}
+	// 			</div>
+	// 		) : (
+	// 			<OpenPosition />
+	// 		)
+	// 	} */}
+
+	// 	<>
+	// 		{
+	// 			(!validMaxLoss || !spreadSelected) &&
+	// 				otusOptionMarketAllowance.isZero() ? (
+	// 				<div
+	// 					onClick={() => approveQuote?.()}
+	// 					className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+	// 				>
+	// 					{isApproveQuoteLoading ? (
+	// 						<Spinner size={"medium"} color={"secondary"} />
+	// 					) : (
+	// 						"Approve Quote2"
+	// 					)}
+	// 				</div>
+	// 			) : (
+	// 				<OpenLyraPosition />
+	// 			)
+	// 		}
+	// 	</>
+
+	// </>
 };
 
 export const OpenPosition = () => {
@@ -217,6 +282,31 @@ export const OpenPosition = () => {
 
 			<div
 				onClick={() => openPosition?.()}
+				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+			>
+				{isOpenPositionLoading && isTxLoading ? <Spinner /> : "Open Position"}
+			</div>
+		</>
+	);
+};
+
+export const OpenLyraPosition = () => {
+	const { userBalance, isOpenPositionLoading, openLyraPosition, isTxLoading } =
+		useMarketOrderContext();
+
+	return (
+		<>
+			{userBalance && userBalance.isZero() && (
+				<div
+					onClick={() => console.warn("Add funds")}
+					className="mb-4 cursor-disabled border-2 border-zinc-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full"
+				>
+					Insufficient Balance
+				</div>
+			)}
+
+			<div
+				onClick={() => openLyraPosition?.()}
 				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
 			>
 				{isOpenPositionLoading && isTxLoading ? <Spinner /> : "Open Position"}

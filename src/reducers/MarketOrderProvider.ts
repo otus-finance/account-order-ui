@@ -5,6 +5,7 @@ import { TradeInputParameters } from "../utils/types";
 import { LyraStrike } from "../queries/lyra/useLyra";
 
 export type MarketOrderProviderState = {
+	spreadSelected: boolean;
 	networkNotSupported: boolean;
 	loading: boolean;
 	validMaxPNL: any;
@@ -16,16 +17,21 @@ export type MarketOrderProviderState = {
 	isOpenPositionLoading: boolean;
 	isClosePositionLoading: boolean;
 	userBalance: BigNumber;
+	otusOptionMarketAllowance: BigNumber;
 	spreadMarketAllowance: BigNumber;
 	allowanceAmount: BigNumber;
+	setSpreadSelected: Dispatch<boolean>;
 	setAllowanceAmount: Dispatch<BigNumber>;
 	updateSize: ((any: any, any2: any) => void) | undefined;
+	approveOtusQuote: (() => void) | undefined;
 	approveQuote: (() => void) | undefined;
 	openPosition: (() => void) | undefined;
+	openLyraPosition: (() => void) | undefined;
 	closePosition: (() => void) | undefined;
 };
 
 export const marketOrderInitialState: MarketOrderProviderState = {
+	spreadSelected: false,
 	networkNotSupported: true,
 	loading: true,
 	validMaxPNL: {
@@ -44,12 +50,16 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 	isOpenPositionLoading: false,
 	isClosePositionLoading: false,
 	userBalance: ZERO_BN,
+	otusOptionMarketAllowance: ZERO_BN,
 	spreadMarketAllowance: ZERO_BN,
 	allowanceAmount: ZERO_BN,
 	setAllowanceAmount: () => {},
 	updateSize: (any, any2) => {},
+	setSpreadSelected: (any) => {},
+	approveOtusQuote: () => {},
 	approveQuote: () => {},
 	openPosition: () => {},
+	openLyraPosition: () => {},
 	closePosition: () => {},
 };
 

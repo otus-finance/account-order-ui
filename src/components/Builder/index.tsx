@@ -17,6 +17,9 @@ import { useAccount, useNetwork } from "wagmi";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import getExplorerUrl from "../../utils/chains/getExplorerUrl";
 import { MarketOrderContextProvider } from "../../context/MarketOrderContext";
+import { useLyraPositions } from "../../queries/lyra/useLyra";
+import { Position as LyraPosition } from "@lyrafinance/lyra-js";
+import { formatExpirationDate } from "../../utils/formatters/expiry";
 
 export const OptionsBuilder = () => {
 	const { lyra, strikes, builderType, activityType } = useBuilderContext();
@@ -90,9 +93,12 @@ export const OptionsBuilder = () => {
 };
 
 const Positions = () => {
+	const { lyra } = useBuilderContext();
+	const { address } = useAccount();
 	const { chain } = useNetwork();
 	const { data } = usePositions();
-
+	const { isLoading, data: lyraPositions } = useLyraPositions(lyra, address);
+	console.log({ lyraPositions });
 	return (
 		<div>
 			<div className="border-b border-zinc-900 p-4 text-sm font-normal text-zinc-200">
@@ -143,11 +149,17 @@ const Positions = () => {
 					})}
 				</tbody>
 			</table>
-			<div className="border-t border-zinc-900 p-4 text-sm font-normal text-zinc-200">
+			<div className="border-t border-zinc-900 pt-8 p-4 text-sm font-normal text-zinc-200">
 				Lyra Positions
 			</div>
 			<table className="min-w-full  rounded-sm">
 				<thead className="divide-b divide-zinc-900 bg-zinc-800"></thead>
+				<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+					Type
+				</th>
+				<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+					Direction
+				</th>
 				<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
 					Position Id
 				</th>
@@ -160,12 +172,68 @@ const Positions = () => {
 					Open Date
 				</th>
 				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-					Delta Hedge
+					Delta
+				</th>
+				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+					Hedge Delta
 				</th>
 				<th scope="col" className="sr-only">
 					Action
 				</th>
-				<tbody className="divide-y divide-zinc-900 bg-inherit"></tbody>
+				<tbody className="divide-y divide-zinc-900 bg-inherit">
+					{lyraPositions?.map((position: LyraPosition, index: number) => {
+						const { isCall, isLong, id, isOpen, expiryTimestamp, delta } = position;
+						return (
+							<tr key={index}>
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{isCall ? (
+										<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">
+											Call
+										</span>
+									) : (
+										<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">
+											Put
+										</span>
+									)}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{isLong ? (
+										<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+									) : (
+										<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+									)}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{id}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{isOpen ? "Open" : "Closed"}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+									{formatExpirationDate(expiryTimestamp)}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium text-zinc-200">
+									{parseFloat(fromBigNumber(delta).toString()).toFixed(4)}
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium text-zinc-200">
+									<button className="">Hedge</button>
+								</td>
+
+								<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium text-zinc-200">
+									<a target="_blank" rel="noreferrer">
+										View
+									</a>
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
 			</table>
 		</div>
 	);

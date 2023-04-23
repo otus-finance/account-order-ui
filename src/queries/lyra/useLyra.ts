@@ -1,11 +1,12 @@
 import { useQuery } from "react-query";
 
-import Lyra, { Board, Market, Chain, Quote, Strike } from "@lyrafinance/lyra-js";
+import Lyra, { Board, Market, Chain, Quote, Strike, Position } from "@lyrafinance/lyra-js";
 import { BigNumber, ethers } from "ethers";
 import { ONE_BN } from "../../constants/bn";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import { formatBoardName } from "../../utils/formatters/expiry";
 import { ETH_MARKET } from "../../constants/markets";
+import { Address } from "wagmi";
 
 export type LyraChain = {
 	name: Chain;
@@ -50,13 +51,29 @@ export type LyraMarket = {
 };
 
 export const useLyraMarket = (lyra: Lyra | null) => {
-	console.log({ lyra });
 	return useQuery<LyraMarket[] | null>(
 		["lyraMarkets", lyra?.chainId],
 		async () => {
 			if (!lyra) return null;
 			const response: Market[] = await lyra.markets();
 			return response ? parseMarketResponse(response) : null;
+		},
+		{
+			refetchInterval: false,
+			refetchOnWindowFocus: false,
+			refetchOnMount: false,
+		}
+	);
+};
+
+export const useLyraPositions = (lyra: Lyra | null, owner?: Address) => {
+	return useQuery<Position[] | null>(
+		["positions", owner],
+		async () => {
+			if (!lyra) return null;
+			if (!owner) return null;
+			const positions = await lyra.positions(owner);
+			return positions;
 		},
 		{
 			refetchInterval: false,

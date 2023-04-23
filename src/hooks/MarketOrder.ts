@@ -104,6 +104,7 @@ export const useMarketOrder = () => {
 		}
 	}, [lyra, updateStrikes, updateStrikeQuotes]);
 
+	const [spreadSelected, setSpreadSelected] = useState(false);
 	const [tradeInfo, setTradeInfo] = useState({
 		market: selectedMarket?.bytes,
 		positionId: 0,
@@ -178,6 +179,11 @@ export const useMarketOrder = () => {
 
 	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 
+	const otusOptionMarket =
+		otusContracts && otusContracts["OtusOptionMarket"] && otusContracts["OtusOptionMarket"];
+
+	console.log({ otusOptionMarket: otusOptionMarket?.address });
+
 	const spreadOptionMarket =
 		otusContracts && otusContracts["SpreadOptionMarket"] && otusContracts["SpreadOptionMarket"];
 
@@ -196,6 +202,28 @@ export const useMarketOrder = () => {
 		}
 	}, [_userBalance]);
 
+	// option market allowance
+	const [otusOptionMarketAllowance, setOtusOptionMarketAllowance] = useState(ZERO_BN);
+	console.log({ otusOptionMarketAllowance });
+	const { data: _usdOptionMarketAllowance, refetch: refetchOptionMarketAllowance } =
+		useContractRead({
+			address: tokenAddr,
+			abi: erc20ABI,
+			functionName: "allowance",
+			args:
+				owner && otusOptionMarket?.address
+					? [owner, otusOptionMarket.address]
+					: [ZERO_ADDRESS, ZERO_ADDRESS],
+			chainId: chain?.id,
+		});
+
+	useEffect(() => {
+		if (_usdOptionMarketAllowance) {
+			setOtusOptionMarketAllowance(_usdOptionMarketAllowance);
+		}
+	}, [_usdOptionMarketAllowance]);
+
+	// allowance
 	const [spreadMarketAllowance, setSpreadMarketAllowance] = useState(ZERO_BN);
 
 	const { data: _usdAllowance, refetch: refetchAllowance } = useContractRead({
@@ -215,7 +243,6 @@ export const useMarketOrder = () => {
 		}
 	}, [_usdAllowance]);
 
-	// allowance
 	const [allowanceAmount, setAllowanceAmount] = useState(MAX_BN);
 
 	const { config: allowanceConfig } = usePrepareContractWrite({
@@ -235,6 +262,38 @@ export const useMarketOrder = () => {
 		write: approveQuote,
 	} = useContractWrite({
 		...allowanceConfig,
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", `Approving spread option market`, txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
+			}
+		},
+		onSuccess: async (data) => {
+			await refetchAllowance();
+		},
+	});
+
+	// approve otus contract
+	const { config: allowanceOtusMarketConfig } = usePrepareContractWrite({
+		address: otusOptionMarket?.address && allowanceAmount ? tokenAddr : undefined,
+		abi: erc20ABI,
+		functionName: "approve",
+		args:
+			otusOptionMarket?.address && allowanceAmount
+				? [otusOptionMarket?.address, allowanceAmount]
+				: [ZERO_ADDRESS, ZERO_BN],
+		chainId: chain?.id,
+	});
+
+	const {
+		isSuccess: isApproveOtusMarketSuccess,
+		isLoading: isApproveOtusMarketLoading,
+		write: approveOtusQuote,
+	} = useContractWrite({
+		...allowanceOtusMarketConfig,
 		onSettled: (data, error) => {
 			if (chain && data?.hash) {
 				const txHref = getExplorerUrl(chain, data.hash);
@@ -290,7 +349,51 @@ export const useMarketOrder = () => {
 		},
 	});
 
-	// close position
+	// open lyra position
+	const { config: openLyraPositionConfig } = usePrepareContractWrite({
+		address: otusOptionMarket?.address,
+		abi: otusOptionMarket?.abi,
+		functionName: "openLyraPosition",
+		args: [
+			tradeInfo.market,
+			trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
+			trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
+		],
+		chainId: chain?.id,
+		onError: (error) => {
+			console.log({ error });
+		},
+		enabled: !!(trades.length > 0),
+	});
+
+	const {
+		isSuccess: isOpenLyraPositionSuccess,
+		isLoading: isOpenLyrPositionLoading,
+		write: openLyraPosition,
+		data: openLyraPositionData,
+	} = useContractWrite({
+		...openPositionConfig,
+		// mode: "recklesslyUnprepared",
+		// address: spreadOptionMarket?.address,
+		// abi: spreadOptionMarket?.abi,
+		// functionName: "openPosition",
+		// args: [tradeInfo, trades, validMaxPNL.maxLossPost],
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", `Opening position lyra option market`, txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
+			}
+		},
+		onMutate: (ee) => {
+			console.log({ ee });
+		},
+		onError: (error) => {
+			console.log({ error });
+		},
+	});
 
 	const [market, setMarket] = useState(0);
 	const [spreadPositionId, setSpreadPositionId] = useState(0);
@@ -345,7 +448,7 @@ export const useMarketOrder = () => {
 				if (activeTransaction?.toastId) {
 					const txHref = getExplorerUrl(chain, data.transactionHash);
 					updateToast("success", activeTransaction?.toastId, "Success", txHref);
-					handleSelectActivityType(ActivityType.Position);
+					// handleSelectActivityType(ActivityType.Position);
 				}
 
 				setActiveTransaction(undefined);
@@ -359,6 +462,8 @@ export const useMarketOrder = () => {
 	});
 
 	return {
+		spreadSelected,
+		setSpreadSelected,
 		networkNotSupported,
 		loading,
 		updateStrikes,
@@ -371,11 +476,14 @@ export const useMarketOrder = () => {
 		isApproveQuoteLoading,
 		isOpenPositionLoading,
 		isClosePositionLoading,
+		otusOptionMarketAllowance,
 		spreadMarketAllowance,
 		allowanceAmount,
 		setAllowanceAmount,
+		approveOtusQuote,
 		approveQuote,
 		openPosition,
+		openLyraPosition,
 		closePosition,
 	} as MarketOrderProviderState;
 };
