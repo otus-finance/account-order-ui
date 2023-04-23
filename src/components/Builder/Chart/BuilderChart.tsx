@@ -33,8 +33,8 @@ export const BuilderPNLChart = ({
 				}}
 			>
 				<XAxis
-					hide={true}
 					dataKey="asset_price"
+					tickSize={10}
 					tick={{
 						stroke: "#fff",
 						strokeWidth: 0.25,
@@ -44,11 +44,10 @@ export const BuilderPNLChart = ({
 					}}
 				/>
 				<YAxis
-					hide={true}
 					tickCount={100}
-					tickSize={2}
+					tickSize={10}
 					tick={{
-						stroke: "#f5f5f5",
+						stroke: "#fff",
 						strokeWidth: 0.25,
 						fontSize: "10px",
 						fontWeight: "100",
@@ -56,18 +55,29 @@ export const BuilderPNLChart = ({
 					}}
 				/>
 
+				<CartesianGrid stroke={"#27272a"} strokeDasharray="3 3" />
+
 				{/* @ts-ignore */}
 				<Tooltip content={<CustomTooltip currentPrice={currentPrice} />} />
 
-				<ReferenceLine y={0} stroke={"#e4e4e7"} strokeWidth={0.25} />
+				<ReferenceLine y={0} stroke={"#3f3f46"} strokeWidth={1} />
 
+				<Line
+					type="monotone"
+					connectNulls={false}
+					strokeDasharray={"3 3"}
+					dataKey="combo_payoff"
+					stroke={"#eab308"}
+					dot={false}
+					strokeWidth={4}
+				/>
 				<Line
 					type="monotone"
 					connectNulls={false}
 					dataKey="negative_combo_payoff"
 					stroke={"#831843"}
 					dot={false}
-					strokeWidth={1}
+					strokeWidth={2}
 				/>
 				<Line
 					type="monotone"
@@ -75,7 +85,7 @@ export const BuilderPNLChart = ({
 					dataKey="positive_combo_payoff"
 					stroke={"#047857"}
 					dot={false}
-					strokeWidth={1}
+					strokeWidth={2}
 				/>
 			</LineChart>
 		</ResponsiveContainer>
