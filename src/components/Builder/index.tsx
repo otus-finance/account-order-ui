@@ -46,7 +46,11 @@ export const OptionsBuilder = () => {
 					</div>
 				</div>
 
-				<div className="hidden sm:block">{/* <AccountPosition /> */}</div>
+				<div className="hidden sm:block border border-zinc-800 rounded-lg shadow-md shadow-black p-4 mt-6">
+					<MarketOrderContextProvider>
+						<Chart />
+					</MarketOrderContextProvider>
+				</div>
 			</div>
 
 			<div className="col-span-3 sm:col-span-1">
@@ -60,9 +64,6 @@ export const OptionsBuilder = () => {
 										<MarketOrderContextProvider>
 											<>
 												<StrikeTrade />
-												<div className="p-4 border-t border-zinc-800">
-													<Chart />
-												</div>
 											</>
 										</MarketOrderContextProvider>
 									</LyraAccountContextProvider>
@@ -86,10 +87,6 @@ export const OptionsBuilder = () => {
 						<Positions />
 					)}
 				</div>
-			</div>
-
-			<div className="col-span-3 sm:hidden">
-				<AccountPosition />
 			</div>
 		</div>
 	);

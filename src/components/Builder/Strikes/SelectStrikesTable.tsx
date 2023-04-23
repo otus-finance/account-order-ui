@@ -14,6 +14,7 @@ import { useBuilderContext } from "../../../context/BuilderContext";
 import { SelectBuilderExpiration } from "../Strategy/SelectExpiration";
 import { Spinner } from "../../UI/Components/Spinner";
 import { CheckCircleIcon, CheckIcon, PlusCircleIcon, PlusIcon } from "@heroicons/react/24/solid";
+import LyraIcon from "../../UI/Icons/Color/LYRA";
 
 const style =
 	"border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center w-24 px-6 p-2 mr-1 text-sm font-light";
@@ -151,9 +152,9 @@ export const SelectStrikesTable = () => {
 							</th> */}
 							<th
 								scope="col"
-								className="px-3 py-3.5 text-left text-xs font-light uppercase text-white "
+								className="px-3 py-3.5 text-left text-xs font-light uppercase text-white flex "
 							>
-								Price
+								Price <LyraIcon className="h-4 w-4 ml-2" />
 							</th>
 							{/* <th scope="col" className="relative py-3.5">
 								<span className="sr-only">Price</span>

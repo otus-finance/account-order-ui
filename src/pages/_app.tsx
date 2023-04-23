@@ -23,7 +23,7 @@ Sentry.init({
 });
 
 const { chains, provider } = configureChains(
-	[arbitrumGoerli, optimism, arbitrum],
+	[hardhat, arbitrumGoerli, optimism, arbitrum],
 	// [hardhat, optimism, arbitrum, optimismGoerli, arbitrumGoerli],
 	[
 		infuraProvider({

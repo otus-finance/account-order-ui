@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import BTCIcon from "../../UI/Icons/Color/BTC";
 import { strategies } from "../../../strategies";
+import { InformationCircleIcon } from "@heroicons/react/20/solid";
 
 export const Strategies = () => {
 	const {
@@ -32,7 +33,7 @@ export const Strategies = () => {
 	const isSelected = (_strategy: Strategy) => selectedStrategy?.id == _strategy.id;
 
 	return (
-		<>
+		<div className="flex flex-row flex-wrap mt-6">
 			{filteredStrategies.map((strategy: Strategy, index: number) => {
 				const { name, description, type, tags } = strategy;
 
@@ -44,53 +45,56 @@ export const Strategies = () => {
 						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`max-h-42 overflow-clip cursor-pointer basis-full sm:basis-1/2 flex-none flex flex-col border-4 hover:border-emerald-600 mt-2 mb-8 rounded-lg ${isSelectedStyle}`}
+						className={`basis-1/5 gap-8 shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
 					>
-						<div className="grid grid-cols-1 p-4">
-							<div className="grid grid-cols-3 place-content-between">
-								<div className="col-span-2 text-xl font-bold">
-									{name}
-									<div>
-										{tags.map((tag: StrategyTag, index: number) => {
-											if (StrategyTag.PostMaxLossOnly === tag) {
-												return (
-													<span
-														key={index}
-														className="text-xs font-normal rounded-sm bg-emerald-600 text-zinc-200 p-1 mr-1"
-													>
-														{tag}
-													</span>
-												);
-											}
-											return (
-												<span
-													key={index}
-													className="text-xs font-light rounded-sm bg-zinc-800 text-zinc-100 p-1 mr-1"
-												>
-													{tag}
-												</span>
-											);
-										})}
-									</div>
-								</div>
-								<div className="col-span-1">
+						<div className="p-2">
+							<div className="flex place-content-between">
+								<div className="py-1 text-lg font-semibold">{name}</div>
+								<div className="">
 									<div className="float-right">
 										{selectedMarket?.name == "sETH-sUSD" || selectedMarket?.name == "ETH-USDC" ? (
-											<ETHIcon />
+											<ETHIcon className="w-8 h-8" />
 										) : (
-											<BTCIcon />
+											<BTCIcon className="w-8 h-8" />
 										)}
 									</div>
 								</div>
 							</div>
 
-							<div className="col-span-1 mt-4 mb-4">
-								<p className="text-xs leading-5 font-light text-zinc-200">{description}</p>
+							<div className="flex flex-wrap">
+								{tags.map((tag: StrategyTag, index: number) => {
+									if (StrategyTag.PostMaxLossOnly === tag) {
+										return (
+											<span
+												key={index}
+												className="text-xs font-normal rounded-sm bg-emerald-600 text-zinc-200 p-1 mr-1"
+											>
+												{tag}
+											</span>
+										);
+									}
+									return (
+										<span
+											key={index}
+											className="text-xs font-light rounded-sm bg-zinc-800 text-zinc-100 p-1 mr-1"
+										>
+											{tag}
+										</span>
+									);
+								})}
+							</div>
+
+							<div className="has-tooltip mt-2 inline-block">
+								<InformationCircleIcon className="text-zinc-200 h-4 w-4" />
+
+								<motion.div className="bg-zinc-900 p-4 tooltip  -mt-16">
+									<p className="text-xs leading-5 font-light text-zinc-200">{description}</p>
+								</motion.div>
 							</div>
 						</div>
 					</motion.div>
 				);
 			})}
-		</>
+		</div>
 	);
 };
