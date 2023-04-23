@@ -7,6 +7,7 @@ import { TradeType } from "./TradeSelect";
 import { LyraStrike, getStrikeQuote } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 import { Spinner } from "../../UI/Components/Spinner";
+import { CheckIcon, PencilIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, strikes } = useBuilderContext();
@@ -14,18 +15,29 @@ export const StrikeTrade = () => {
 	return (
 		<>
 			{selectedMarket && strikes.length > 0 && (
-				<div className="col-span-1 sm:col-span-1 grid grid-cols-1">
+				<>
 					{/* strikes summary  */}
-					<div className="col-span-1">
-						{loading && <Spinner />}
-						{selectedStrikes.map((strike, index) => {
-							return <StrikeTradeDetail strike={strike} key={index} />;
-						})}
-					</div>
+					<table className=" font-mono font-semibold min-w-full divide-y divide-zinc-700 table-auto">
+						<thead className="bg-inherit ">
+							<tr>
+								<th className="py-2 text-xs text-zinc-400 text-left  px-2">Type</th>
+								<th className="text-xs text-zinc-400 text-left  px-2">Direction</th>
+								<th className="text-xs text-zinc-400 text-left  px-2">Strike Price</th>
+								<th className="text-xs  text-zinc-400 text-left  px-2">Price</th>
+								<th className="text-xs  text-zinc-400 text-left  px-2">Credit/(Debit)</th>
+								<th className="text-xs  text-zinc-400 text-left  px-2">Size</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-zinc-700 bg-inherit">
+							{loading && <Spinner />}
+							{selectedStrikes.map((strike, index) => {
+								return <StrikeTradeDetail strike={strike} key={index} />;
+							})}
+						</tbody>
+					</table>
 
-					{/* limit / market / trigger button header  */}
 					<TradeType />
-				</div>
+				</>
 			)}
 		</>
 	);
@@ -47,71 +59,109 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 		setOptionPriceLoading(false);
 	}, [size]);
 
+	const [editPricing, setEditPricing] = useState(false);
+
+	useEffect(() => {
+		return () => {
+			setEditPricing(false);
+		};
+	}, []);
+
+	const [newSize, setNewSize] = useState(fromBigNumber(size));
+
+	const handleNewSize = (_newSize: number) => {
+		setNewSize(_newSize);
+	};
+
+	const handleConfirmSizeUpdate = () => {
+		updateSize?.(strike, newSize);
+		setEditPricing(false);
+	};
+
 	return (
-		<div
-			className="border-b border-zinc-800 hover:bg-black hover:first:rounded-t-lg last:border-0"
+		<tr
+			className="bg-inherit hover:bg-zinc-900 cursor-pointer"
 			onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
-			<div className="p-2">
-				<div className="text-white font-semibold text-sm p-2">
-					{`${isBuy ? "Buy" : "Sell"} ${formatName(selectedMarket?.name || "N/A")} ${formatUSD(
-						strikePrice,
-						{ dps: 2 }
-					)}  ${isCall ? "Call" : "Put"} `}
-				</div>
-				<div className="flex items-center justify-between p-2">
-					<p className="truncate font-sans text-sm font-normal text-white">Contracts</p>
-					<div className="ml-2 flex flex-shrink-0">
-						<label htmlFor="size" className="sr-only">
-							Size
-						</label>
-						<div className="mt-1">
-							<DebounceInput
-								minLength={1}
-								onChange={async (e) => {
-									if (e.target.value == "") return;
-									const value = parseFloat(e.target.value);
-									updateSize?.(strike, value);
-								}}
-								min={0}
-								type="number"
-								name="size"
-								id="size"
-								value={fromBigNumber(size)}
-								className={`block w-24 rounded-sm border border-zinc-700 bg-transparent px-4 pr-2 py-2 text-right text-zinc-200 shadow-lg text-sm ${
-									isUpdating && "cursor-disabled"
-								}`}
+			<td className="py-2 text-xs px-2">
+				{isCall ? (
+					<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">Call</span>
+				) : (
+					<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">Put</span>
+				)}
+			</td>
+			<td className="text-xs  px-2">
+				{isBuy ? (
+					<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+				) : (
+					<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+				)}
+			</td>
+
+			<td className="text-xs font-medium text-zinc-300   px-2">
+				{formatUSD(strikePrice, { dps: 0 })}
+			</td>
+
+			<td className="text-xs font-medium text-zinc-300   px-2">
+				{isUpdating ? (
+					<Spinner size="small" />
+				) : (
+					formatUSD(fromBigNumber(pricePerOption), { dps: 2 })
+				)}
+			</td>
+
+			<td className="text-xs font-medium text-zinc-300  px-2 ">
+				{isUpdating ? (
+					<Spinner size="small" />
+				) : (
+					isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium), { dps: 2 }))
+				)}
+			</td>
+
+			<td className="text-xs font-semibold text-zinc-300 px-2">
+				{editPricing ? (
+					<div className="flex gap-2 items-center">
+						<DebounceInput
+							minLength={1}
+							onChange={async (e) => {
+								if (e.target.value == "") return;
+								const value = parseFloat(e.target.value);
+
+								handleNewSize(value);
+							}}
+							min={0}
+							type="number"
+							name="size"
+							id="size"
+							value={fromBigNumber(size)}
+							className={`w-12 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
+								isUpdating && "cursor-disabled"
+							}`}
+						/>
+
+						<div>
+							<XMarkIcon className=" h-4 w-4 text-rose-500" onClick={() => setEditPricing(false)} />
+						</div>
+
+						<div>
+							<CheckIcon
+								className="h-4 w-4 text-emerald-500"
+								onClick={() => handleConfirmSizeUpdate()}
 							/>
 						</div>
 					</div>
-				</div>
-				<div className="flex items-center justify-between p-2">
-					<p className="truncate font-sans text-sm font-normal text-zinc-300">Price Per Option</p>
-					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex font-sans text-sm font-semibold  leading-5 text-white">
-							{isUpdating ? (
-								<Spinner size="small" />
-							) : (
-								formatUSD(fromBigNumber(pricePerOption), { dps: 2 })
-							)}
-						</span>
+				) : (
+					<div className="flex gap-2 items-center">
+						{fromBigNumber(size)}
+						<PencilSquareIcon
+							className="h-4 w-4 text-zinc-200"
+							onClick={() => setEditPricing(true)}
+						/>
 					</div>
-				</div>
-				<div className="flex items-center justify-between p-2">
-					<p className="truncate font-sans text-sm font-normal text-zinc-300">Credit/(Debit)</p>
-					<div className="ml-2 flex flex-shrink-0">
-						<p className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-							{isUpdating ? (
-								<Spinner size="small" />
-							) : (
-								isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium), { dps: 2 }))
-							)}
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
+				)}
+			</td>
+		</tr>
 	);
 };
 

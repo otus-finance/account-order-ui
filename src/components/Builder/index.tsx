@@ -6,7 +6,7 @@ import { Strikes } from "./Strikes";
 
 import { LyraAccountContextProvider } from "../../context/LyraAccountContext";
 import { useBuilderContext } from "../../context/BuilderContext";
-import { StrikeTrade } from "./StrikeTrade";
+import { StrikeTrade } from "./StrikeTrade/index";
 import { ActivityType, BuilderType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { AccountPosition } from "../Account";
@@ -22,8 +22,8 @@ export const OptionsBuilder = () => {
 	const { lyra, strikes, builderType, activityType } = useBuilderContext();
 
 	return (
-		<div className="grid sm:grid-cols-3 grid-cols-3 gap-8">
-			<div className="col-span-3 sm:col-span-2">
+		<div className="grid sm:grid-cols-2 grid-cols-2 gap-8">
+			<div className="col-span-2 sm:col-span-1">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					<div className="p-6">
 						<Market />
@@ -45,15 +45,9 @@ export const OptionsBuilder = () => {
 						<Strikes />
 					</div>
 				</div>
-
-				<div className="hidden sm:block border border-zinc-800 rounded-lg shadow-md shadow-black p-4 mt-6">
-					<MarketOrderContextProvider>
-						<Chart />
-					</MarketOrderContextProvider>
-				</div>
 			</div>
 
-			<div className="col-span-3 sm:col-span-1">
+			<div className="col-span-2 sm:col-span-1">
 				<div className="border border-zinc-800 rounded-lg shadow-md shadow-black">
 					<ActivitySelect />
 					{activityType === ActivityType.Trade ? (
@@ -64,6 +58,9 @@ export const OptionsBuilder = () => {
 										<MarketOrderContextProvider>
 											<>
 												<StrikeTrade />
+												<div className="hidden sm:block p-4 border-t border-zinc-900">
+													<Chart />
+												</div>
 											</>
 										</MarketOrderContextProvider>
 									</LyraAccountContextProvider>
@@ -159,7 +156,7 @@ const ActivitySelect = () => {
 			</div>
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Position)}
-				className={`cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-800 
+				className={`cursor-pointer p-4 w-full text-center text-sm font-mono 
 		${activityType === ActivityType.Position ? "text-white underline font-semibold" : "text-zinc-300"}`}
 			>
 				Positions

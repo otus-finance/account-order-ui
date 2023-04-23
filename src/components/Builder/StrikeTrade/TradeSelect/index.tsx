@@ -24,14 +24,6 @@ export const TradeType = () => {
 
 	return (
 		<>
-			{/* <TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} /> */}
-			{TradeTypes.Market === typeSelected && <TradeMarket />}
-			{TradeTypes.Limit === typeSelected && <TradeLimit />}
-			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
-
-			{TradeTypes.Limit === typeSelected && <AccountOrderActions />}
-			{TradeTypes.Trigger === typeSelected && <AccountOrderActions />}
-
 			{typeSelected === TradeTypes.Market && (
 				<div className="col-span-1 border-t border-zinc-800">
 					<div className="grid grid-cols-2 p-4">
@@ -43,6 +35,14 @@ export const TradeType = () => {
 					</div>
 				</div>
 			)}
+
+			{/* <TradeTypeSelect typeSelected={typeSelected} setTypeSelected={setTypeSelected} /> */}
+			{TradeTypes.Market === typeSelected && <TradeMarket />}
+			{TradeTypes.Limit === typeSelected && <TradeLimit />}
+			{TradeTypes.Trigger === typeSelected && <TradeTrigger />}
+
+			{TradeTypes.Limit === typeSelected && <AccountOrderActions />}
+			{TradeTypes.Trigger === typeSelected && <AccountOrderActions />}
 		</>
 	);
 };

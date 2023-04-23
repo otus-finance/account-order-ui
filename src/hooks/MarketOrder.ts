@@ -31,6 +31,7 @@ import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { calculateOptionType, isLong } from "../utils/formatters/optiontypes";
 import { YEAR_SEC } from "../constants/dates";
+import * as _ from "lodash";
 
 const getMarket = () => {};
 
@@ -626,7 +627,10 @@ function useDebounce(value: LyraStrike[], delay: number) {
 		() => {
 			// Update debounced value after delay
 			const handler = setTimeout(() => {
-				setDebouncedValue(value);
+				// check debouncedValue different than value
+				if (!_.isEqual(debouncedValue, value)) {
+					setDebouncedValue(value);
+				}
 			}, delay);
 			// Cancel the timeout if value changes (also on delay change or unmount)
 			// This is how we prevent debounced value from updating if value is changed ...
