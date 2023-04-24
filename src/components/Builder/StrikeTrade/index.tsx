@@ -23,7 +23,7 @@ export const StrikeTrade = () => {
 
 					<WalletBalance />
 
-					<div className="overflow-x-scroll">
+					<div className="overflow-x-scroll sm:overflow-auto">
 						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
 							<thead className="bg-inherit ">
 								<tr className="font-mono ">
