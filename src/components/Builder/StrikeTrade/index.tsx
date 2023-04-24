@@ -23,43 +23,44 @@ export const StrikeTrade = () => {
 
 					<WalletBalance />
 
-					<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
-						<thead className="bg-inherit ">
-							<tr className="font-mono">
-								<th scope="col" className="py-2 text-xs text-zinc-400 text-left  px-4">
-									Expiry
-								</th>
-								<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
-									Type
-								</th>
-								<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
-									Direction
-								</th>
-								<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
-									Strike Price
-								</th>
-								<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-									Collateral
-								</th>
-								<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-									Price
-								</th>
-								<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-									Credit/(Debit)
-								</th>
-								<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-									Size
-								</th>
-							</tr>
-						</thead>
-						<tbody className="divide-y divide-zinc-800 bg-inherit">
-							{loading && <Spinner />}
-							{selectedStrikes.map((strike, index) => {
-								return <StrikeTradeDetail strike={strike} key={index} />;
-							})}
-						</tbody>
-					</table>
-
+					<div className="overflow-x-scroll">
+						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
+							<thead className="bg-inherit ">
+								<tr className="font-mono ">
+									<th scope="col" className="py-2 text-xs text-zinc-400 text-left  px-4">
+										Expiry
+									</th>
+									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+										Type
+									</th>
+									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+										Direction
+									</th>
+									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+										Strike Price
+									</th>
+									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+										Collateral
+									</th>
+									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+										Price
+									</th>
+									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+										Credit/(Debit)
+									</th>
+									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+										Size
+									</th>
+								</tr>
+							</thead>
+							<tbody className="divide-y divide-zinc-800 bg-inherit">
+								{loading && <Spinner />}
+								{selectedStrikes.map((strike, index) => {
+									return <StrikeTradeDetail strike={strike} key={index} />;
+								})}
+							</tbody>
+						</table>
+					</div>
 					<MarketOrderActions />
 				</>
 			)}
