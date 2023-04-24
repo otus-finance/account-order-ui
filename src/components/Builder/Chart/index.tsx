@@ -5,7 +5,7 @@ import { BuilderPNLChart } from "./BuilderChart";
 import { LyraStrike } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 
-export const Chart = () => {
+export const Chart = ({ height = 360 }: { height?: number }) => {
 	const { selectedMarket, currentPrice, isValid } = useBuilderContext();
 
 	const { updateStrikes } = useMarketOrderContext();
@@ -15,7 +15,7 @@ export const Chart = () => {
 	return (
 		<div className="col-span-3 sm:col-span-3 p-4 bg-black rounded-lg">
 			{chartData.length > 0 && currentPrice > 0 && isValid && (
-				<BuilderPNLChart currentPrice={currentPrice} data={chartData} />
+				<BuilderPNLChart height={height} currentPrice={currentPrice} data={chartData} />
 			)}
 		</div>
 	);

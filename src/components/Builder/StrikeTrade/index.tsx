@@ -14,7 +14,7 @@ import { MarketOrderActions } from "./TradeMarket/MarketOrderActions";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, strikes } = useBuilderContext();
-	const { loading, selectedStrikes } = useMarketOrderContext();
+	const { loading, selectedStrikes, spreadSelected } = useMarketOrderContext();
 	return (
 		<>
 			{selectedMarket && strikes.length > 0 && (
@@ -23,7 +23,7 @@ export const StrikeTrade = () => {
 
 					<WalletBalance />
 
-					<div className="overflow-x-scroll sm:overflow-auto">
+					<div className="overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
 						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
 							<thead className="bg-inherit ">
 								<tr className="font-mono ">
@@ -39,9 +39,12 @@ export const StrikeTrade = () => {
 									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
 										Strike Price
 									</th>
-									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-										Collateral
-									</th>
+									{!spreadSelected && (
+										<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+											Collateral
+										</th>
+									)}
+
 									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
 										Price
 									</th>
@@ -70,7 +73,7 @@ export const StrikeTrade = () => {
 
 const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 	const { selectedMarket, setActiveStrike, selectedStrategy } = useBuilderContext();
-	const { updateSize } = useMarketOrderContext();
+	const { updateSize, spreadSelected } = useMarketOrderContext();
 
 	const {
 		quote: { size, pricePerOption, isCall, isBuy, premium },
@@ -151,55 +154,57 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				{formatUSD(strikePrice, { dps: 0 })}
 			</td>
 
-			<td className="text-xs font-medium text-zinc-300   px-4">
-				{isBuy ? (
-					"-"
-				) : editCollateral ? (
-					<div className="flex gap-2 items-center">
-						<DebounceInput
-							minLength={1}
-							onChange={async (e) => {
-								if (e.target.value == "") return;
-								const value = parseFloat(e.target.value);
+			{!spreadSelected && (
+				<td className="text-xs font-medium text-zinc-300   px-4">
+					{isBuy ? (
+						"-"
+					) : editCollateral ? (
+						<div className="flex gap-2 items-center">
+							<DebounceInput
+								minLength={1}
+								onChange={async (e) => {
+									if (e.target.value == "") return;
+									const value = parseFloat(e.target.value);
 
-								handleNewSize(value);
-							}}
-							type="number"
-							name="size"
-							id="size"
-							min={initialCollateral * 0.4}
-							max={initialCollateral}
-							value={newCollateral}
-							className={`w-16 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
-								isUpdating && "cursor-disabled"
-							}`}
-						/>
+									handleNewSize(value);
+								}}
+								type="number"
+								name="size"
+								id="size"
+								min={initialCollateral * 0.4}
+								max={initialCollateral}
+								value={newCollateral}
+								className={`w-16 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
+									isUpdating && "cursor-disabled"
+								}`}
+							/>
 
-						<div>
-							<XMarkIcon
-								className=" h-4 w-4 text-rose-500"
-								onClick={() => setEditCollateral(false)}
+							<div>
+								<XMarkIcon
+									className=" h-4 w-4 text-rose-500"
+									onClick={() => setEditCollateral(false)}
+								/>
+							</div>
+
+							<div>
+								<CheckIcon
+									className="h-4 w-4 text-emerald-500"
+									onClick={() => handleConfirmCollateral()}
+								/>
+							</div>
+						</div>
+					) : (
+						<div className="flex gap-2 items-center">
+							{formatUSD(strikePrice, { dps: 0 })}
+
+							<PencilSquareIcon
+								className="h-4 w-4 text-zinc-200"
+								onClick={() => setEditCollateral(true)}
 							/>
 						</div>
-
-						<div>
-							<CheckIcon
-								className="h-4 w-4 text-emerald-500"
-								onClick={() => handleConfirmCollateral()}
-							/>
-						</div>
-					</div>
-				) : (
-					<div className="flex gap-2 items-center">
-						{formatUSD(strikePrice, { dps: 0 })}
-
-						<PencilSquareIcon
-							className="h-4 w-4 text-zinc-200"
-							onClick={() => setEditCollateral(true)}
-						/>
-					</div>
-				)}
-			</td>
+					)}
+				</td>
+			)}
 
 			<td className="text-xs font-medium text-zinc-300   px-4">
 				{isUpdating ? (

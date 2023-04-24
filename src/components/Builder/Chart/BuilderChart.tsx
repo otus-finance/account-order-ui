@@ -17,12 +17,14 @@ import { formatUSD } from "../../../utils/formatters/numbers";
 export const BuilderPNLChart = ({
 	currentPrice,
 	data,
+	height = 360,
 }: {
 	currentPrice: number;
 	data: PnlChartPoint[] | [];
+	height?: number;
 }) => {
 	return (
-		<ResponsiveContainer width="99%" height={360}>
+		<ResponsiveContainer width={"99%"} height={height}>
 			<LineChart
 				data={data}
 				margin={{

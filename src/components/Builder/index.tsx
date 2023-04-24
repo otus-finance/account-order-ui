@@ -64,6 +64,9 @@ export const OptionsBuilder = () => {
 												<div className="hidden sm:block p-4 border-t border-zinc-900">
 													<Chart />
 												</div>
+												<div className="sm:hidden p-4 border-t border-zinc-900">
+													<Chart height={200} />
+												</div>
 											</>
 										</MarketOrderContextProvider>
 									</LyraAccountContextProvider>

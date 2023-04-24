@@ -32,6 +32,8 @@ import { useBuilderContext } from "../context/BuilderContext";
 import { calculateOptionType, isLong } from "../utils/formatters/optiontypes";
 import { YEAR_SEC } from "../constants/dates";
 import * as _ from "lodash";
+import getPositionCollateral from "@lyrafinance/lyra-js/dist/types/position/getPositionCollateral";
+import { _calculateMaxLoss, _calculateMaxPremiums, _furthestOutExpiry } from "../utils/pnl";
 
 const getMarket = () => {};
 
@@ -114,11 +116,13 @@ export const useMarketOrder = () => {
 
 	const [validMaxPNL, setValidMaxPNL] = useState({
 		validMaxLoss: false,
+		maxProfit: 0,
 		maxLoss: ZERO_BN,
 		maxCost: ZERO_BN,
 		maxPremium: ZERO_BN,
 		fee: ZERO_BN,
 		maxLossPost: ZERO_BN,
+		collateralRequired: ZERO_BN,
 	});
 
 	const setStrikeTrades = useCallback(() => {
@@ -130,7 +134,10 @@ export const useMarketOrder = () => {
 		if (updateStrikes.length > 0) {
 			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);
 
-			let [validMaxLoss, maxLoss, collateralLoan] = _calculateMaxLoss(updateStrikes);
+			let [validMaxLoss, maxLoss, maxProfit, collateralLoan] = _calculateMaxLoss(
+				updateStrikes,
+				maxCost
+			);
 
 			const spreadCollateralLoanDuration = _furthestOutExpiry(updateStrikes) - Date.now();
 
@@ -143,20 +150,24 @@ export const useMarketOrder = () => {
 
 			setValidMaxPNL({
 				validMaxLoss,
+				maxProfit: maxProfit,
 				maxLoss: toBN(maxLoss.toString()),
 				maxCost: toBN(maxCost.toString()),
 				maxPremium: toBN(maxPremium.toString()),
 				fee: toBN(fee.toString()),
 				maxLossPost: toBN((maxLoss + maxCost - maxPremium + fee).toString()),
+				collateralRequired: ZERO_BN,
 			});
 		} else {
 			setValidMaxPNL({
 				validMaxLoss: false,
+				maxProfit: 0,
 				maxLoss: ZERO_BN,
 				maxCost: ZERO_BN,
 				maxPremium: ZERO_BN,
 				fee: ZERO_BN,
 				maxLossPost: ZERO_BN,
+				collateralRequired: ZERO_BN,
 			});
 		}
 	}, [updateStrikes]);
@@ -372,12 +383,16 @@ export const useMarketOrder = () => {
 		write: openLyraPosition,
 		data: openLyraPositionData,
 	} = useContractWrite({
-		...openPositionConfig,
-		// mode: "recklesslyUnprepared",
-		// address: spreadOptionMarket?.address,
-		// abi: spreadOptionMarket?.abi,
-		// functionName: "openPosition",
-		// args: [tradeInfo, trades, validMaxPNL.maxLossPost],
+		// ...openPositionConfig,
+		mode: "recklesslyUnprepared",
+		address: otusOptionMarket?.address,
+		abi: otusOptionMarket?.abi,
+		functionName: "openLyraPosition",
+		args: [
+			tradeInfo.market,
+			trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
+			trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
+		],
 		onSettled: (data, error) => {
 			if (chain && data?.hash) {
 				const txHref = getExplorerUrl(chain, data.hash);
@@ -488,209 +503,6 @@ export const useMarketOrder = () => {
 	} as MarketOrderProviderState;
 };
 
-const _calculateMaxLoss = (strikes: LyraStrike[]): [boolean, number, number] => {
-	if (strikes.length > 0) {
-		let strikesByOptionTypes: Record<number, number> = {
-			0: 0,
-			1: 0,
-			2: 0,
-			3: 0,
-			4: 0,
-		};
-
-		const optionTypeMatch = strikes.reduce((accum: Record<number, number>, strike: LyraStrike) => {
-			const {
-				quote: { isBuy, isCall },
-			} = strike;
-
-			const optionType = calculateOptionType(isBuy, isCall);
-			accum[optionType] += 1;
-
-			return accum;
-		}, strikesByOptionTypes as Record<number, number>);
-
-		// if no shorts
-		if (optionTypeMatch[3] === 0 && optionTypeMatch[4] === 0) {
-			return [true, 0, 0];
-		}
-
-		// if size of longs puts < short puts
-		// infinite loss
-		let validCalls = true;
-		if (
-			optionTypeMatch[0] != undefined &&
-			optionTypeMatch[3] != undefined &&
-			optionTypeMatch[3] != 0 &&
-			optionTypeMatch[0] < optionTypeMatch[3]
-		) {
-			validCalls = false; // max loss is collateral
-		}
-
-		// if size of long calls < short calls
-		// infinite loss
-		let validPuts = true;
-		if (
-			optionTypeMatch[1] != undefined &&
-			optionTypeMatch[4] != undefined &&
-			optionTypeMatch[4] != 0 &&
-			optionTypeMatch[1] < optionTypeMatch[4]
-		) {
-			validPuts = false;
-		}
-
-		// max loss - calls
-		const calls = strikes
-			.filter((strike: LyraStrike) => {
-				const {
-					quote: { isCall },
-				} = strike;
-				return isCall;
-			})
-			.sort((a: LyraStrike, b: LyraStrike) => {
-				return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice);
-			});
-
-		const shortCallCollateralMax = calls.reduce(
-			(total: [number, number], strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				if (!isBuy) {
-					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
-					total[1] += fromBigNumber(size);
-				}
-				return total;
-			},
-			[0, 0] as [number, number]
-		);
-
-		if (!validCalls) {
-			return [validCalls, shortCallCollateralMax[0], 0];
-		}
-
-		let shortCallSize = shortCallCollateralMax[1];
-		let maxCallLoss = 0;
-
-		if (shortCallSize > 0) {
-			calls.forEach((strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				let longSize = fromBigNumber(size);
-
-				if (isBuy) {
-					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
-					maxCallLoss = cover - shortCallCollateralMax[0];
-					shortCallSize = shortCallSize - longSize;
-					if (shortCallSize <= 0) {
-						return;
-					}
-				}
-			});
-		}
-
-		// max loss - puts
-		const puts = strikes
-			.filter((strike: LyraStrike) => {
-				const {
-					quote: { isCall },
-				} = strike;
-				return !isCall;
-			})
-			.sort((a: LyraStrike, b: LyraStrike) => {
-				return fromBigNumber(b.strikePrice) - fromBigNumber(a.strikePrice);
-			});
-
-		const shortPutCollateralMax = puts.reduce(
-			(total: [number, number], strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				if (!isBuy) {
-					total[0] += fromBigNumber(strikePrice) * fromBigNumber(size);
-					total[1] += fromBigNumber(size);
-				}
-				return total;
-			},
-			[0, 0] as [number, number]
-		);
-
-		if (!validPuts) {
-			return [validPuts, shortPutCollateralMax[0], 0];
-		}
-
-		let shortPutSize = shortPutCollateralMax[1];
-		let maxPutLoss = 0;
-
-		if (shortPutSize > 0) {
-			puts.forEach((strike: LyraStrike) => {
-				const {
-					strikePrice,
-					quote: { isBuy, size },
-				} = strike;
-				let longSize = fromBigNumber(size);
-
-				if (isBuy) {
-					let cover = fromBigNumber(strikePrice) * fromBigNumber(size);
-					maxPutLoss = cover - shortPutCollateralMax[0];
-					shortPutSize = shortPutSize - longSize;
-					if (shortPutSize <= 0) {
-						return;
-					}
-				}
-			});
-		}
-
-		return [
-			true,
-			Math.abs(maxPutLoss) > Math.abs(maxCallLoss) ? Math.abs(maxPutLoss) : Math.abs(maxCallLoss),
-			shortPutCollateralMax[0] + shortCallCollateralMax[0],
-		];
-	}
-
-	return [false, 0, 0];
-};
-
-const _calculateMaxPremiums = (strikes: LyraStrike[]) => {
-	return strikes.reduce(
-		(totalPremiums: [number, number], strike: LyraStrike) => {
-			const {
-				quote: { size, isBuy, pricePerOption },
-			} = strike;
-
-			const _totalPriceForOptions = fromBigNumber(pricePerOption) * fromBigNumber(size);
-
-			if (isBuy) {
-				totalPremiums[0] += _totalPriceForOptions;
-			} else {
-				totalPremiums[1] += _totalPriceForOptions;
-			}
-
-			return totalPremiums;
-		},
-		[0, 0] as [number, number]
-	);
-};
-
-const _furthestOutExpiry = (strikes: LyraStrike[]) => {
-	return (
-		strikes.reduce((expiration: number, strike: LyraStrike) => {
-			const {
-				expiryTimestamp,
-				quote: { isBuy },
-			} = strike;
-			if (!isBuy) {
-				return expiration > expiryTimestamp ? expiration : expiryTimestamp;
-			} else {
-				return expiration;
-			}
-		}, 0 as number) * 1000
-	);
-};
-
 const slippage = 0.02;
 
 const convertTradeParams = (strikes: LyraStrike[]): TradeInputParameters[] => {
@@ -703,13 +515,14 @@ const convertTradeParams = (strikes: LyraStrike[]): TradeInputParameters[] => {
 		const _premium = _isLong
 			? fromBigNumber(premium) + fromBigNumber(premium) * slippage
 			: fromBigNumber(premium) - fromBigNumber(premium) * slippage;
+
 		return {
 			strikeId: strike.id,
 			positionId: 0,
 			iterations: 1,
 			optionType: optionType,
 			amount: size,
-			setCollateralTo: toBN("0"),
+			setCollateralTo: _isLong ? toBN("0") : toBN("2000"),
 			minTotalCost: _isLong ? ZERO_BN : toBN(_premium.toString()),
 			maxTotalCost: _isLong ? toBN(_premium.toString()) : MAX_BN,
 			rewardRecipient: ZERO_ADDRESS,

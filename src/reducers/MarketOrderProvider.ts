@@ -41,6 +41,7 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 		maxPremium: 0,
 		fee: 0,
 		maxLossPost: 0,
+		collateralRequired: 0,
 	},
 	updateStrikes: [],
 	selectedStrikes: [],
