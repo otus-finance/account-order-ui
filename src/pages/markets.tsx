@@ -23,7 +23,7 @@ const Markets: NextPage = () => {
 			</Head>
 
 			<Layout>
-				<div className="mx-auto max-w-screen-2xl py-14 text-white">
+				<div className="mx-auto max-w-screen-2xl py-8 text-white">
 					{isLoading ? <Spinner /> : null}
 
 					<div className="grid md:grid-cols-2 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-12">
