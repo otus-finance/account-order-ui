@@ -5,7 +5,7 @@
 			"chainId": "421613",
 			"contracts": {
 				"LyraQuoter": {
-					"address": "0x62E7a664eFe2dDfA187d6e97A435433a25a78230",
+					"address": "0xCfCB4f953dB6E796277232314585E4Bc7eD433E8",
 					"abi": [
 						{
 							"inputs": [
@@ -194,7 +194,7 @@
 					]
 				},
 				"LyraBaseBTC": {
-					"address": "0xBA3C9121136212033Ed8d53eD6c4d8DC05cd829f",
+					"address": "0x5DF184489bAc0761140D97a502095552e311D903",
 					"abi": [
 						{
 							"inputs": [
@@ -837,7 +837,7 @@
 					]
 				},
 				"LyraBaseETH": {
-					"address": "0xa99Cb83DF3c751dB2C249dfB05af88db920a97A7",
+					"address": "0x07B1465648CbAC91aC2d8Faf4d0a32B08caBca67",
 					"abi": [
 						{
 							"inputs": [
@@ -1480,7 +1480,7 @@
 					]
 				},
 				"SpreadOptionMarket": {
-					"address": "0xa00C210b49400BAc266Db2C090218Ca4b8f4cA00",
+					"address": "0x05dD014cB1CA65Bf4Eea18e9dF6A4Ad54690f89B",
 					"abi": [
 						{
 							"inputs": [],
@@ -2725,7 +2725,7 @@
 					]
 				},
 				"SpreadLiquidityPool": {
-					"address": "0xAeb7b807181Dd1dF7441cc36093e4eeBe8DeCa53",
+					"address": "0x1Eeda4FC0A7795b518FB5BB720663e9d97797690",
 					"abi": [
 						{
 							"inputs": [
@@ -4210,7 +4210,7 @@
 					]
 				},
 				"SpreadOptionToken": {
-					"address": "0xb4D8ABb680563181fC379AC265b1F978499cb076",
+					"address": "0x66411888b3161F69C7fB8312B48D4b3049DF88dC",
 					"abi": [
 						{
 							"inputs": [
@@ -5444,7 +5444,7 @@
 					]
 				},
 				"SpreadMaxLossCollateral": {
-					"address": "0x3A67f79995D6e2C81e71B83a7ebaF8fe00D3AF26",
+					"address": "0xC8167855771fd177D21D3EE0dD894e713561460e",
 					"abi": [
 						{
 							"inputs": [],
@@ -5679,7 +5679,7 @@
 					]
 				},
 				"OtusAMM": {
-					"address": "0xAdd33Eb19fd88F933d070550b503b722733EC683",
+					"address": "0xE817056Fb37dD6117E75C9bb289450Aa2Ed50C55",
 					"abi": [
 						{
 							"inputs": [],
@@ -6408,7 +6408,7 @@
 					]
 				},
 				"RangedMarket": {
-					"address": "0xb3fb7365441fCE6Afc577432c2F06E11c645ee1E",
+					"address": "0xAabf73d8CA1543cF51e3c1D54Ef98BE35e949034",
 					"abi": [
 						{
 							"inputs": [
@@ -7622,7 +7622,7 @@
 					]
 				},
 				"RangedMarketToken": {
-					"address": "0x10E4c31De6c4915160CB227B867F95D3AA82e475",
+					"address": "0x80352c5bD57EA8051f3d6e031Ff6a8466F3311d2",
 					"abi": [
 						{
 							"inputs": [
@@ -8059,7 +8059,7 @@
 					]
 				},
 				"PositionMarket": {
-					"address": "0x8cCD3b36023Db28376d40AFe4D8C30ba2C7Eae17",
+					"address": "0x677030A3DA8b8dDA2b8E0d78e0B4F9E042d033c1",
 					"abi": [
 						{
 							"inputs": [],
@@ -8580,7 +8580,7 @@
 					]
 				},
 				"OtusOptionMarket": {
-					"address": "0x98Ea69DA8991Df6Ae1CAD6E22304816C109Ec730",
+					"address": "0xa25e861b1653E82D16e66F231197cFef5A106555",
 					"abi": [
 						{
 							"inputs": [],
@@ -8635,10 +8635,56 @@
 									"internalType": "uint256",
 									"name": "amount",
 									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "balance",
+									"type": "uint256"
 								}
 							],
 							"name": "TransferFundsToTraderFailed",
 							"type": "error"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "comobId",
+									"type": "uint256"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes32",
+											"name": "market",
+											"type": "bytes32"
+										},
+										{
+											"internalType": "uint256",
+											"name": "positionId",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalCost",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalFee",
+											"type": "uint256"
+										}
+									],
+									"indexed": false,
+									"internalType": "struct ITradeTypes.TradeResultDirect",
+									"name": "result",
+									"type": "tuple"
+								}
+							],
+							"name": "OpenPosition",
+							"type": "event"
 						},
 						{
 							"anonymous": false,
@@ -8948,6 +8994,19 @@
 								}
 							],
 							"name": "setLyraBase",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "_maxIterations",
+									"type": "uint256"
+								}
+							],
+							"name": "setMaxIterations",
 							"outputs": [],
 							"stateMutability": "nonpayable",
 							"type": "function"

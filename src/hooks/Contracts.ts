@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { loadAppContracts } from "./helpers/loadAppContracts";
 import { Contract, ethers } from "ethers";
 import { Address, useNetwork } from "wagmi";
+import { ContractInterface } from "../utils/types";
 
 type ContractConfig = {
 	deployedContracts: {
@@ -21,11 +22,6 @@ export const useContractConfig = () => {
 	}, []);
 
 	return contractsConfig;
-};
-
-type ContractInterface = {
-	address: `0x${string}` | undefined;
-	abi: any;
 };
 
 const LOCAL_CHAIN_ID = 31337;

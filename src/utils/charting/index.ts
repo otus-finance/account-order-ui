@@ -29,10 +29,10 @@ export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
 		const {
 			strikePrice,
 			isCall,
-			quote: { size, isBuy, pricePerOption, premium },
+			quote: { size, isBuy, premium },
 		} = strike;
-		const totalPremium = fromBigNumber(premium); // fromBigNumber(pricePerOption) * fromBigNumber(size);
-		// const totalSumOfFees = isBuy ? -totalPriceForOptions : totalPriceForOptions;
+		const totalPremium = fromBigNumber(premium);
+
 		const profitAtTick = calculateProfitAtTick(
 			totalPremium,
 			strikePrice,

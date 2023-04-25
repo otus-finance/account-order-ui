@@ -118,3 +118,21 @@ export type TradeInfo = {
 	positionId: BigNumberish;
 	market: string;
 };
+
+export type ContractInterface = {
+	address: `0x${string}` | undefined;
+	abi: any;
+};
+
+export type MarketOrderTransaction = {
+	allowance: BigNumber;
+	isApproveSuccess: boolean;
+	isApproveLoading: boolean;
+	isOpenConfigSuccess: boolean;
+	openConfigError: any;
+	isOpenPositionSuccess: boolean;
+	isOpenPositionLoading: boolean;
+	isTxLoading: boolean;
+	approve: () => Promise<void>;
+	open: () => Promise<void>;
+};

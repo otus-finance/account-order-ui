@@ -1,10 +1,11 @@
 import { BigNumber } from "ethers";
 import { Dispatch } from "react";
 import { ZERO_BN } from "../constants/bn";
-import { TradeInputParameters } from "../utils/types";
+import { MarketOrderTransaction, TradeInputParameters } from "../utils/types";
 import { LyraStrike } from "../queries/lyra/useLyra";
 
 export type MarketOrderProviderState = {
+	totalCollateral: number;
 	spreadSelected: boolean;
 	networkNotSupported: boolean;
 	loading: boolean;
@@ -12,25 +13,16 @@ export type MarketOrderProviderState = {
 	updateStrikes: LyraStrike[];
 	selectedStrikes: LyraStrike[];
 	trades: TradeInputParameters[];
-	isTxLoading: boolean;
-	isApproveQuoteLoading: boolean;
-	isOpenPositionLoading: boolean;
-	isClosePositionLoading: boolean;
 	userBalance: BigNumber;
-	otusOptionMarketAllowance: BigNumber;
-	spreadMarketAllowance: BigNumber;
-	allowanceAmount: BigNumber;
+	otusMarket: MarketOrderTransaction | null;
+	spreadMarket: MarketOrderTransaction | null;
 	setSpreadSelected: Dispatch<boolean>;
-	setAllowanceAmount: Dispatch<BigNumber>;
+	updateCollateralPercent: ((any: any, any2: any) => void) | undefined;
 	updateSize: ((any: any, any2: any) => void) | undefined;
-	approveOtusQuote: (() => void) | undefined;
-	approveQuote: (() => void) | undefined;
-	openPosition: (() => void) | undefined;
-	openLyraPosition: (() => void) | undefined;
-	closePosition: (() => void) | undefined;
 };
 
 export const marketOrderInitialState: MarketOrderProviderState = {
+	totalCollateral: 0,
 	spreadSelected: false,
 	networkNotSupported: true,
 	loading: true,
@@ -46,22 +38,13 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 	updateStrikes: [],
 	selectedStrikes: [],
 	trades: [],
-	isTxLoading: false,
-	isApproveQuoteLoading: false,
-	isOpenPositionLoading: false,
-	isClosePositionLoading: false,
+
 	userBalance: ZERO_BN,
-	otusOptionMarketAllowance: ZERO_BN,
-	spreadMarketAllowance: ZERO_BN,
-	allowanceAmount: ZERO_BN,
-	setAllowanceAmount: () => {},
+	updateCollateralPercent: (any, any2) => {},
 	updateSize: (any, any2) => {},
 	setSpreadSelected: (any) => {},
-	approveOtusQuote: () => {},
-	approveQuote: () => {},
-	openPosition: () => {},
-	openLyraPosition: () => {},
-	closePosition: () => {},
+	otusMarket: null,
+	spreadMarket: null,
 };
 
 export type MarketOrderAction = {

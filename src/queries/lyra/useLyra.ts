@@ -21,6 +21,7 @@ export type LyraStrike = {
 	expiryTimestamp: number;
 	selected?: boolean;
 	isUpdating?: boolean;
+	collateralPercent: number;
 } & Strike;
 
 export type LyraStrikeMapping = {
@@ -224,7 +225,14 @@ const formatStrikeWithQuote = async (
 	return await Promise.all(
 		strikes.map(async (strike: Strike) => {
 			const quote = await strike.quote(isCall, isLong, ONE_BN);
-			return { ...strike, isCall, quote, market: marketName, expiryTimestamp };
+			return {
+				...strike,
+				isCall,
+				quote,
+				market: marketName,
+				expiryTimestamp,
+				collateralPercent: 1,
+			};
 		})
 	);
 };

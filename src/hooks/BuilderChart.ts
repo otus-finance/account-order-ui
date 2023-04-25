@@ -9,6 +9,8 @@ export type PnlChartPoint = {
 	asset_price: number;
 	negative_combo_payoff: number | null;
 	positive_combo_payoff: number | null;
+	negative_payoff: number | null;
+	positive_payoff: number | null;
 };
 
 const assetInTrades = (asset: string, trades: LyraStrike[]): boolean => {
@@ -44,9 +46,11 @@ export const useBuilderProfitLossChart = (
 					name: index,
 					asset_price: Math.floor(tick),
 					combo_payoff: profitAtTick,
-					negative_combo_payoff: profitAtTick < 0 ? profitAtTick : null,
-					positive_combo_payoff: profitAtTick > 0 ? profitAtTick : null,
-				};
+					negative_combo_payoff: profitAtTick < 0 ? profitAtTick.toFixed(0) : null,
+					positive_combo_payoff: profitAtTick > 0 ? profitAtTick.toFixed(0) : null,
+					negative_payoff: profitAtTick < 0 ? null : 0,
+					positive_payoff: profitAtTick > 0 ? null : 0,
+				} as PnlChartPoint;
 			});
 			// setMaxPNL
 			// handleSetPnl(maxProfit, maxLoss);

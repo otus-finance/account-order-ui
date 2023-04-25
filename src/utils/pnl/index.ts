@@ -41,12 +41,28 @@ export const _furthestOutExpiry = (strikes: LyraStrike[]) => {
 	);
 };
 
+enum OptionType {
+	"LongCall" = 0,
+	"LongPut" = 1,
+	"ShortCallQuote" = 2,
+	"ShortCall" = 3,
+	"ShortPut" = 4,
+}
+
+type OptionTypeStrikes = {
+	[OptionType.LongCall]: number;
+	[OptionType.LongPut]: number;
+	[OptionType.ShortCallQuote]: number;
+	[OptionType.ShortCall]: number;
+	[OptionType.ShortPut]: number;
+};
+
 export const _calculateMaxLoss = (
 	strikes: LyraStrike[],
 	maxCost: number
 ): [boolean, number, number, number] => {
 	if (strikes.length > 0) {
-		let strikesByOptionTypes: Record<number, number> = {
+		let strikesByOptionTypes: OptionTypeStrikes = {
 			0: 0,
 			1: 0,
 			2: 0,
@@ -54,7 +70,7 @@ export const _calculateMaxLoss = (
 			4: 0,
 		};
 
-		const optionTypeMatch = strikes.reduce((accum: Record<number, number>, strike: LyraStrike) => {
+		const optionTypeMatch = strikes.reduce((accum: OptionTypeStrikes, strike: LyraStrike) => {
 			const {
 				quote: { isBuy, isCall },
 			} = strike;
@@ -63,7 +79,7 @@ export const _calculateMaxLoss = (
 			accum[optionType] += 1;
 
 			return accum;
-		}, strikesByOptionTypes as Record<number, number>);
+		}, strikesByOptionTypes as OptionTypeStrikes);
 
 		// if no shorts
 		if (optionTypeMatch[3] === 0 && optionTypeMatch[4] === 0) {
@@ -73,24 +89,14 @@ export const _calculateMaxLoss = (
 		// if size of longs puts < short puts
 		// infinite loss
 		let validCalls = true;
-		if (
-			optionTypeMatch[0] != undefined &&
-			optionTypeMatch[3] != undefined &&
-			optionTypeMatch[3] != 0 &&
-			optionTypeMatch[0] < optionTypeMatch[3]
-		) {
+		if (optionTypeMatch[3] != 0 && optionTypeMatch[0] < optionTypeMatch[3]) {
 			validCalls = false; // max loss is collateral
 		}
 
 		// if size of long calls < short calls
 		// infinite loss
 		let validPuts = true;
-		if (
-			optionTypeMatch[1] != undefined &&
-			optionTypeMatch[4] != undefined &&
-			optionTypeMatch[4] != 0 &&
-			optionTypeMatch[1] < optionTypeMatch[4]
-		) {
+		if (optionTypeMatch[4] != 0 && optionTypeMatch[1] < optionTypeMatch[4]) {
 			validPuts = false;
 		}
 
