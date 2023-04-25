@@ -118,16 +118,20 @@ const SpreadLiquidityPool = () => {
 					</div>
 				</div>
 
-				<div className="border-b border-zinc-800">
-					<div className="p-4 py-6">
-						<div
-							onClick={() => setOpen(true)}
-							className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-2 text-center"
-						>
-							Deposit
+				{!open ? (
+					<div className="border-b border-zinc-800">
+						<div className="p-4 py-6">
+							<div
+								onClick={() => setOpen(true)}
+								className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-2 text-center"
+							>
+								Deposit
+							</div>
 						</div>
 					</div>
-				</div>
+				) : (
+					<LiquidityPoolActions />
+				)}
 
 				<div className="p-4">
 					<div className="flex flex-wrap justify-between py-2">
@@ -154,14 +158,6 @@ const SpreadLiquidityPool = () => {
 						</div>
 					</div>
 				</div>
-
-				<Modal
-					setOpen={setOpen}
-					open={open}
-					title={<div className="font-semibold text-md">Spread Liquidity Pool</div>}
-				>
-					<LiquidityPoolActions />
-				</Modal>
 			</div>
 		</>
 	) : (
@@ -227,8 +223,8 @@ const LiquidityPoolActions = () => {
 	const [liquidityPoolActionType, setLiquidityPoolActionType] = useState(LPActionType.DEPOSIT);
 
 	return (
-		<>
-			<div className="py-4 ">
+		<div className="p-4">
+			<div className="">
 				<div className="flex justify-between">
 					<div className="font-light py-2 text-sm text-zinc-200 text-center">Withdrawl Fee</div>
 					<div className="font-normal py-2 text-sm text-zinc-200 text-center">0%</div>
@@ -403,7 +399,7 @@ const LiquidityPoolActions = () => {
 			) : (
 				!isLoading && !isConnected && openConnectModal && <WalletConnect />
 			)}
-		</>
+		</div>
 	);
 };
 
