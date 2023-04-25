@@ -5,7 +5,7 @@
 			"chainId": "421613",
 			"contracts": {
 				"LyraQuoter": {
-					"address": "0xCfCB4f953dB6E796277232314585E4Bc7eD433E8",
+					"address": "0xb2782a38C4Ce73c72E106945f66450C280a697c5",
 					"abi": [
 						{
 							"inputs": [
@@ -194,7 +194,7 @@
 					]
 				},
 				"LyraBaseBTC": {
-					"address": "0x5DF184489bAc0761140D97a502095552e311D903",
+					"address": "0x90E9eAcE71687d583E6553364d7102dD2fCfF60C",
 					"abi": [
 						{
 							"inputs": [
@@ -837,7 +837,7 @@
 					]
 				},
 				"LyraBaseETH": {
-					"address": "0x07B1465648CbAC91aC2d8Faf4d0a32B08caBca67",
+					"address": "0xdac54acdB2B6b359eB1cE69D8Dd62322AA869779",
 					"abi": [
 						{
 							"inputs": [
@@ -1480,7 +1480,7 @@
 					]
 				},
 				"SpreadOptionMarket": {
-					"address": "0x05dD014cB1CA65Bf4Eea18e9dF6A4Ad54690f89B",
+					"address": "0x29fF346B7d1E87f5e8f15a941DD7eb12a37FE08e",
 					"abi": [
 						{
 							"inputs": [],
@@ -2725,7 +2725,7 @@
 					]
 				},
 				"SpreadLiquidityPool": {
-					"address": "0x1Eeda4FC0A7795b518FB5BB720663e9d97797690",
+					"address": "0xA48ec156721053438b229b2E5a454bF24CB3bdd4",
 					"abi": [
 						{
 							"inputs": [
@@ -4210,7 +4210,7 @@
 					]
 				},
 				"SpreadOptionToken": {
-					"address": "0x66411888b3161F69C7fB8312B48D4b3049DF88dC",
+					"address": "0xb0230096524AAecC869E90c40620628f1faA949e",
 					"abi": [
 						{
 							"inputs": [
@@ -5444,7 +5444,7 @@
 					]
 				},
 				"SpreadMaxLossCollateral": {
-					"address": "0xC8167855771fd177D21D3EE0dD894e713561460e",
+					"address": "0x678AF3e297652215C1cBD1B8e32d6289153B579C",
 					"abi": [
 						{
 							"inputs": [],
@@ -5679,7 +5679,7 @@
 					]
 				},
 				"OtusAMM": {
-					"address": "0xE817056Fb37dD6117E75C9bb289450Aa2Ed50C55",
+					"address": "0x4F95146a38f4F09e3046351d4A7Ab5214ec4D962",
 					"abi": [
 						{
 							"inputs": [],
@@ -6408,7 +6408,7 @@
 					]
 				},
 				"RangedMarket": {
-					"address": "0xAabf73d8CA1543cF51e3c1D54Ef98BE35e949034",
+					"address": "0xdb2aAa0a9339fbaf12f4378e36B722347dDfa326",
 					"abi": [
 						{
 							"inputs": [
@@ -7622,7 +7622,7 @@
 					]
 				},
 				"RangedMarketToken": {
-					"address": "0x80352c5bD57EA8051f3d6e031Ff6a8466F3311d2",
+					"address": "0xf65E16A9a1e2592798C555d73697251e97fc1D7B",
 					"abi": [
 						{
 							"inputs": [
@@ -8059,7 +8059,7 @@
 					]
 				},
 				"PositionMarket": {
-					"address": "0x677030A3DA8b8dDA2b8E0d78e0B4F9E042d033c1",
+					"address": "0x3ccD1D7210a516f51a8b110E300CE3E2b050Cc71",
 					"abi": [
 						{
 							"inputs": [],
@@ -8580,7 +8580,7 @@
 					]
 				},
 				"OtusOptionMarket": {
-					"address": "0xa25e861b1653E82D16e66F231197cFef5A106555",
+					"address": "0x1BEE303CD58089B5802C6D75611db30D624fFBd5",
 					"abi": [
 						{
 							"inputs": [],
