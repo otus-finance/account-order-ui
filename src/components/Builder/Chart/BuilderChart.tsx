@@ -29,8 +29,8 @@ export const BuilderPNLChart = ({
 				data={data}
 				margin={{
 					top: 2,
-					left: 8,
-					right: 8,
+					left: -16,
+					right: 2,
 					bottom: 8,
 				}}
 			>
@@ -86,6 +86,23 @@ export const BuilderPNLChart = ({
 					connectNulls={false}
 					dataKey="positive_combo_payoff"
 					stroke={"#047857"}
+					dot={false}
+					strokeWidth={2}
+				/>
+
+				<Line
+					type="monotone"
+					connectNulls={false}
+					dataKey="negative_payoff"
+					stroke={"#047857"}
+					dot={false}
+					strokeWidth={2}
+				/>
+				<Line
+					type="monotone"
+					connectNulls={false}
+					dataKey="positive_payoff"
+					stroke={"#831843"}
 					dot={false}
 					strokeWidth={2}
 				/>

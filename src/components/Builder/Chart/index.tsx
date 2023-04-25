@@ -9,7 +9,7 @@ export const Chart = ({ height = 360 }: { height?: number }) => {
 	const { selectedMarket, currentPrice, isValid } = useBuilderContext();
 
 	const { updateStrikes } = useMarketOrderContext();
-	console.log({ updateStrikes });
+
 	const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, updateStrikes);
 
 	return (

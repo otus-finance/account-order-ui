@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useBuilderContext } from "../../../context/BuilderContext";
-import { formatUSD, fromBigNumber, toBN } from "../../../utils/formatters/numbers";
+import {
+	formatPercentage,
+	formatUSD,
+	fromBigNumber,
+	toBN,
+} from "../../../utils/formatters/numbers";
 import { formatName } from "../Market/SelectMarket";
 import { DebounceInput } from "react-debounce-input";
 import { WalletBalance } from "./TradeSelect";
@@ -23,7 +28,7 @@ export const StrikeTrade = () => {
 
 					<WalletBalance />
 
-					<div className="overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
+					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
 						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
 							<thead className="bg-inherit ">
 								<tr className="font-mono ">
@@ -41,7 +46,7 @@ export const StrikeTrade = () => {
 									</th>
 									{!spreadSelected && (
 										<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
-											Collateral
+											Collateral Percent
 										</th>
 									)}
 
@@ -72,14 +77,15 @@ export const StrikeTrade = () => {
 };
 
 const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
-	const { selectedMarket, setActiveStrike, selectedStrategy } = useBuilderContext();
-	const { updateSize, spreadSelected } = useMarketOrderContext();
+	const { setActiveStrike } = useBuilderContext();
+	const { updateSize, updateCollateralPercent, spreadSelected } = useMarketOrderContext();
 
 	const {
 		quote: { size, pricePerOption, isCall, isBuy, premium },
 		strikePrice,
 		isUpdating,
 		expiryTimestamp,
+		collateralPercent,
 	} = strike;
 
 	const [optionPriceLoading, setOptionPriceLoading] = useState(false);
@@ -88,22 +94,17 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 		setOptionPriceLoading(false);
 	}, [size]);
 
-	const [initialCollateral, setInitialCollateral] = useState(
-		fromBigNumber(size) * fromBigNumber(strikePrice)
-	);
-
 	const [editCollateral, setEditCollateral] = useState(false);
 
-	const [newCollateral, setNewCollateral] = useState(
-		fromBigNumber(size) * fromBigNumber(strikePrice)
-	);
+	const [newCollateralPercent, setNewCollateralPercent] = useState(1);
 
-	const handleNewCollateral = (_newSize: number) => {
-		setNewCollateral(_newSize);
+	const handleNewCollateralPercent = (_collateralPercent: number) => {
+		if (_collateralPercent > 1 || _collateralPercent < 0.4) return;
+		setNewCollateralPercent(_collateralPercent);
 	};
 
 	const handleConfirmCollateral = () => {
-		// updateSize?.(strike, newSize);
+		updateCollateralPercent?.(strike, newCollateralPercent);
 		setEditCollateral(false);
 	};
 
@@ -166,14 +167,14 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 									if (e.target.value == "") return;
 									const value = parseFloat(e.target.value);
 
-									handleNewSize(value);
+									handleNewCollateralPercent(value);
 								}}
-								type="number"
-								name="size"
-								id="size"
-								min={initialCollateral * 0.4}
-								max={initialCollateral}
-								value={newCollateral}
+								type="percent"
+								name="collateralPercent"
+								id="collateralPercent"
+								min={0.4}
+								max={1}
+								value={collateralPercent}
 								className={`w-16 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
 									isUpdating && "cursor-disabled"
 								}`}
@@ -181,7 +182,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 
 							<div>
 								<XMarkIcon
-									className=" h-4 w-4 text-rose-500"
+									className="h-4 w-4 text-rose-500"
 									onClick={() => setEditCollateral(false)}
 								/>
 							</div>
@@ -195,7 +196,8 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 						</div>
 					) : (
 						<div className="flex gap-2 items-center">
-							{formatUSD(strikePrice, { dps: 0 })}
+							{/* {formatUSD(strikePrice, { dps: 0 })} */}
+							{collateralPercent && formatPercentage(collateralPercent, true)}
 
 							<PencilSquareIcon
 								className="h-4 w-4 text-zinc-200"
