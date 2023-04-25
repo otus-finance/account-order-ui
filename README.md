@@ -27,25 +27,6 @@ This is an app bootstrapped according to the [init.tips](https://init.tips) stac
 
 ## UI Bugs
 
-- Bug on graph not updating correctly when changing size
-- Toast Handling
-- Bug on strikes table updating same strike id (sell vs buy)
-
-## Updates needed in subgraph
-
-## Market Order TX - UI States
-
-- Wallet Connect
-- Approve Quote
-- Open Position
-
-## Spread Positions
-
-- Spread
-
-## Display Spread Open Position Numbers
-
-- Potential Profit?
-- Max Cost
-
-- Max Loss Post
+- Allowing quote doesnt show user loading
+- Allowing quote is requesting max
+- Allowing quote doesn't update to open position
