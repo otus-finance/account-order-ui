@@ -14,7 +14,8 @@ function classNames(...classes: string[]) {
 export const MarketOrderActions = () => {
 	const { isValid } = useBuilderContext();
 
-	const { trades, validMaxPNL, spreadSelected, setSpreadSelected } = useMarketOrderContext();
+	const { totalCollateral, trades, validMaxPNL, spreadSelected, setSpreadSelected } =
+		useMarketOrderContext();
 	const { maxLossPost, fee, maxCost, maxPremium, maxLoss, maxProfit, validMaxLoss } = validMaxPNL;
 
 	return trades.length > 0 ? (
@@ -104,7 +105,7 @@ export const MarketOrderActions = () => {
 						</p>
 						<div className="ml-2 flex flex-shrink-0">
 							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-								{formatUSD(fromBigNumber(maxPremium), { dps: 2 })}
+								{formatUSD(totalCollateral, { dps: 2 })}
 							</span>
 						</div>
 					</div>
