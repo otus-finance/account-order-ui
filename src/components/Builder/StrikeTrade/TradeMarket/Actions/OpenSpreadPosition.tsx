@@ -2,9 +2,12 @@ import React, { useState } from "react";
 
 import { Spinner } from "../../../../UI/Components/Spinner";
 import { useMarketOrderContext } from "../../../../../context/MarketOrderContext";
+import { useBuilderContext } from "../../../../../context/BuilderContext";
+import { ActivityType } from "../../../../../utils/types";
 
-export const OpenPosition = () => {
-	const { userBalance, isOpenPositionLoading, openPosition, isTxLoading } = useMarketOrderContext();
+export const OpenSpreadPosition = () => {
+	const { handleSelectActivityType } = useBuilderContext();
+	const { userBalance, spreadMarket } = useMarketOrderContext();
 
 	return (
 		<>
@@ -17,12 +20,46 @@ export const OpenPosition = () => {
 				</div>
 			)}
 
-			<div
-				onClick={() => openPosition?.()}
-				className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
-			>
-				{isOpenPositionLoading && isTxLoading ? <Spinner /> : "Open Spread Position"}
-			</div>
+			{spreadMarket?.allowance.isZero() ? (
+				<div
+					onClick={() => spreadMarket.approve?.()}
+					className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+				>
+					{spreadMarket?.isApproveLoading ? (
+						<Spinner size={"medium"} color={"secondary"} />
+					) : (
+						"Allow Otus to use your Quote"
+					)}
+				</div>
+			) : (
+				<div
+					onClick={() => spreadMarket?.open?.()}
+					className={` rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white
+	${
+		spreadMarket?.isOpenConfigSuccess
+			? "cursor-pointer  bg-gradient-to-t from-emerald-700 to-emerald-500"
+			: "bg-zinc-800 cursor-not-allowed "
+	}
+	`}
+				>
+					{spreadMarket?.isOpenPositionLoading && spreadMarket?.isTxLoading ? (
+						<Spinner />
+					) : (
+						"Open Spread Position"
+					)}
+				</div>
+			)}
+
+			{spreadMarket?.openConfigError && (
+				<div className="py-4 cursor-not-allowed">
+					<div
+						onClick={() => handleSelectActivityType(ActivityType.Position)}
+						className="p-4 text-sm  bg-rose-500 rounded-xl"
+					>
+						{spreadMarket?.openConfigError.reason}
+					</div>
+				</div>
+			)}
 		</>
 	);
 };
