@@ -32,8 +32,7 @@ export const MarketOrderActions = () => {
 								Post Max Loss Only
 							</Switch.Label>
 							<Switch.Description as="span" className="text-xs text-zinc-400">
-								|Trade valid spreads through Otus to post max loss only, small collateral fee
-								applies.
+								|Trade valid spreads through Otus to post max loss only, small fee applies.
 							</Switch.Description>
 						</span>
 						<Switch
@@ -80,7 +79,7 @@ export const MarketOrderActions = () => {
 				{validMaxLoss && spreadSelected ? (
 					<>
 						<div className="flex items-center justify-between py-2 pb-4">
-							<p className="truncate font-mono text-sm font-normal text-zinc-300">Collateral Fee</p>
+							<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
 							<div className="ml-2 flex flex-shrink-0">
 								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 									{formatUSD(fromBigNumber(fee), { dps: 2 })}
@@ -99,16 +98,26 @@ export const MarketOrderActions = () => {
 						</div>
 					</>
 				) : (
-					<div className="flex items-center justify-between py-2">
-						<p className="truncate font-mono text-sm font-normal text-zinc-200">
-							Total Collateral Required
-						</p>
-						<div className="ml-2 flex flex-shrink-0">
-							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-								{formatUSD(totalCollateral, { dps: 2 })}
-							</span>
+					<>
+						<div className="flex items-center justify-between py-2 pb-4">
+							<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
+							<div className="ml-2 flex flex-shrink-0">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
+									{formatUSD(0, { dps: 2 })}
+								</span>
+							</div>
 						</div>
-					</div>
+						<div className="flex items-center justify-between py-2">
+							<p className="truncate font-mono text-sm font-normal text-zinc-200">
+								Total Collateral Required
+							</p>
+							<div className="ml-2 flex flex-shrink-0">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+									{formatUSD(totalCollateral, { dps: 2 })}
+								</span>
+							</div>
+						</div>
+					</>
 				)}
 
 				<MarketOrderInfo />

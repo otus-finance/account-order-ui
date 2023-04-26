@@ -16,17 +16,52 @@ import { CheckIcon, PencilIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/r
 import { formatBoardName, formatExpirationDate } from "../../../utils/formatters/expiry";
 import { TradeMarket } from "./TradeMarket";
 import { MarketOrderActions } from "./TradeMarket/MarketOrderActions";
+import { BuilderType } from "../../../utils/types";
 
 export const StrikeTrade = () => {
-	const { selectedMarket, strikes } = useBuilderContext();
-	const { loading, selectedStrikes, spreadSelected } = useMarketOrderContext();
+	const { selectedMarket, builderType, builderTypeClean, selectedStrategy, strikes } =
+		useBuilderContext();
+	const { loading, selectedStrikes, spreadSelected, updateMultiSize } = useMarketOrderContext();
+
 	return (
 		<>
 			{selectedMarket && strikes.length > 0 && (
 				<>
 					{/* strikes summary  */}
-
 					<WalletBalance />
+
+					<div className="border-b border-zinc-800 py-4 p-4">
+						{builderType == BuilderType.Builder && builderTypeClean ? (
+							<div className="flex justify-between items-center">
+								<div className="text-sm font-semibold font-mono text-emerald-100">
+									{selectedStrategy && selectedStrategy.name}
+								</div>
+								<div className="flex justify-between items-center">
+									<div className="text-sm font-normal font-mono text-zinc-200 pr-4">Size</div>
+									<div>
+										<DebounceInput
+											minLength={1}
+											onChange={async (e) => {
+												if (e.target.value == "") return;
+												const value = parseFloat(e.target.value);
+												// setMultiSize(value);
+												updateMultiSize?.(value);
+											}}
+											min={0.1}
+											step={1}
+											type="number"
+											name="multiSize"
+											id="multiSize"
+											value={1}
+											className={`w-24 border-2 border-emerald-600 bg-transparent p-2  text-zinc-200 shadow-lg text-sm`}
+										/>
+									</div>
+								</div>
+							</div>
+						) : (
+							<div className="text-sm font-semibold font-mono text-emerald-100">Custom</div>
+						)}
+					</div>
 
 					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
 						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
@@ -77,7 +112,7 @@ export const StrikeTrade = () => {
 };
 
 const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
-	const { setActiveStrike } = useBuilderContext();
+	const { setActiveStrike, builderType, builderTypeClean } = useBuilderContext();
 	const { updateSize, updateCollateralPercent, spreadSelected } = useMarketOrderContext();
 
 	const {
@@ -259,10 +294,14 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				) : (
 					<div className="flex gap-2 items-center">
 						{fromBigNumber(size)}
-						<PencilSquareIcon
-							className="h-4 w-4 text-zinc-200"
-							onClick={() => setEditPricing(true)}
-						/>
+
+						{builderType != BuilderType.Builder ||
+							(!builderTypeClean && (
+								<PencilSquareIcon
+									className="h-4 w-4 text-zinc-200"
+									onClick={() => setEditPricing(true)}
+								/>
+							))}
 					</div>
 				)}
 			</td>

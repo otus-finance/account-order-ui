@@ -85,6 +85,7 @@ export const useBuilder = () => {
 		toggleStrikeId,
 		isValid,
 		isBuildingNewStrategy,
+		builderTypeClean,
 	} = state;
 
 	const { chain } = useNetwork();
@@ -133,17 +134,6 @@ export const useBuilder = () => {
 		}
 	}, [updateSelectedChain, selectedChain]);
 
-	// useEffect(() => {
-	// 	dispatch({
-	// 		type: "SET_CHAIN",
-	// 		selectedChain: selectedChain,
-	// 		selectedMarket: null,
-	// 		strikes: [],
-	// 		selectedExpirationDate: null,
-	// 		selectedStrategy: null,
-	// 	});
-	// }, [selectedChain]);
-
 	const { data, isLoading } = useLyraMarket(lyra);
 
 	const handleSelectedExpirationDate = (expirationDate: LyraBoard) => {
@@ -152,6 +142,7 @@ export const useBuilder = () => {
 			type: "SET_STRIKES",
 			strikes: strikesWithQuotes,
 			isValid: true,
+			builderTypeClean: false,
 		});
 
 		dispatch({
@@ -171,6 +162,7 @@ export const useBuilder = () => {
 		dispatch({
 			type: "SET_BUILDER_TYPE",
 			builderType: _type,
+			builderTypeClean: true,
 		});
 	};
 
@@ -359,6 +351,7 @@ export const useBuilder = () => {
 				type: "SET_STRIKES",
 				strikes: isValid ? (_strikes1 as LyraStrike[]) : strikesWithQuotes,
 				isValid: isValid,
+				builderTypeClean: isValid,
 			});
 		}
 	}, [currentPrice, selectedStrategy, selectedExpirationDate]);
@@ -385,6 +378,7 @@ export const useBuilder = () => {
 			type: "SET_STRIKES",
 			strikes: _toggleStrikes,
 			isValid: true,
+			builderTypeClean: false,
 		});
 	};
 
@@ -411,6 +405,7 @@ export const useBuilder = () => {
 		isUpdating,
 		isToggleStrikeLoading,
 		toggleStrikeId,
+		builderTypeClean,
 		setActiveStrike,
 		handleSelectActivityType,
 		handleSelectBuilderType,

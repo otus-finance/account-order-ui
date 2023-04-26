@@ -25,6 +25,7 @@ export type BuilderProviderState = {
 	isUpdating: boolean;
 	isToggleStrikeLoading: boolean;
 	toggleStrikeId: number;
+	builderTypeClean: boolean;
 	setActiveStrike: Dispatch<any>;
 	handleSelectActivityType: (any: ActivityType) => void;
 	handleSelectBuilderType: (any: BuilderType) => void;
@@ -58,6 +59,7 @@ export const builderInitialState: BuilderProviderState = {
 	isUpdating: false,
 	isToggleStrikeLoading: false,
 	toggleStrikeId: 0,
+	builderTypeClean: true,
 	setActiveStrike: () => {},
 	handleSelectActivityType: (any) => void any,
 	handleSelectBuilderType: (any) => void any,
@@ -102,6 +104,7 @@ export type BuilderAction =
 	| {
 			type: "SET_BUILDER_TYPE";
 			builderType: BuilderProviderState["builderType"];
+			builderTypeClean: BuilderProviderState["builderTypeClean"];
 	  }
 	| {
 			type: "SET_MARKETS";
@@ -137,6 +140,7 @@ export type BuilderAction =
 			type: "SET_STRIKES";
 			strikes: BuilderProviderState["strikes"];
 			isValid: BuilderProviderState["isValid"];
+			builderTypeClean: BuilderProviderState["builderTypeClean"];
 	  }
 	| {
 			type: "UPDATE_STRIKES";
@@ -201,7 +205,11 @@ export function builderReducer(
 		case "SET_ACTIVITY_TYPE":
 			return { ...state, activityType: action.activityType };
 		case "SET_BUILDER_TYPE":
-			return { ...state, builderType: action.builderType };
+			return {
+				...state,
+				builderType: action.builderType,
+				builderTypeClean: action.builderTypeClean,
+			};
 		case "SET_MARKET":
 			return {
 				...state,
@@ -230,7 +238,12 @@ export function builderReducer(
 				isBuildingNewStrategy: action.isBuildingNewStrategy,
 			};
 		case "SET_STRIKES":
-			return { ...state, strikes: action.strikes, isValid: action.isValid };
+			return {
+				...state,
+				strikes: action.strikes,
+				isValid: action.isValid,
+				builderTypeClean: action.builderTypeClean,
+			};
 		case "UPDATE_STRIKES":
 			return {
 				...state,
