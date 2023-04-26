@@ -15,17 +15,16 @@ function classNames(...classes: string[]) {
 
 export const OfflineChainSelect = () => {
 	const { chain } = useNetwork();
-	// console.log({ chain })
+
 	const [offlineChain, setOfflineChain] = useState(optimism);
 
 	const { selectedChain, handleSelectedChain } = useBuilderContext();
 
 	useEffect(() => {
 		if (!chain && selectedChain?.id != offlineChain.id) {
-			console.log("offlineChain", { offlineChain });
 			handleSelectedChain(offlineChain);
 		}
-	}, [handleSelectedChain, selectedChain, offlineChain]);
+	}, [chain, handleSelectedChain, selectedChain, offlineChain]);
 
 	return (
 		<Listbox value={offlineChain} onChange={setOfflineChain}>

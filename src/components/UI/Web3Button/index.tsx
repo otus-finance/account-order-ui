@@ -9,7 +9,6 @@ export const Web3Button = () => {
 				// Note: If your app doesn't use authentication, you
 				// can remove all 'authenticationStatus' checks
 				const connected = mounted && account && chain ? true : false;
-				console.log({ connected, mounted, account, chain });
 				return (
 					<div
 						{...(!mounted && {
