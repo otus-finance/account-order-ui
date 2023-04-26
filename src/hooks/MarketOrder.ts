@@ -59,6 +59,23 @@ export const useMarketOrder = () => {
 		[lyra, selectedStrikes]
 	);
 
+	const updateMultiSize = useCallback(
+		async (size: number) => {
+			if (lyra) {
+				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
+					const { quote } = _strike;
+					return {
+						..._strike,
+						isUpdating: true,
+						quote: { ...quote, size: toBN(size.toString()) },
+					} as LyraStrike;
+				});
+				setSelectedStrikes(_updated);
+			}
+		},
+		[lyra, selectedStrikes]
+	);
+
 	const updateSize = useCallback(
 		async (strike: LyraStrike, size: number) => {
 			if (lyra) {
@@ -278,6 +295,7 @@ export const useMarketOrder = () => {
 		loading,
 		updateStrikes,
 		updateSize,
+		updateMultiSize,
 		updateCollateralPercent,
 		selectedStrikes,
 		trades,
