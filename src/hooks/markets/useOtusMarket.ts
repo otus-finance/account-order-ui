@@ -135,7 +135,6 @@ export const useOtusMarket = (
 			}
 		},
 		onError(err) {
-			console.log({ err });
 			reportError(chain, err, activeTransaction?.toastId, false, activeTransaction?.receipt);
 			setActiveTransaction(undefined);
 		},

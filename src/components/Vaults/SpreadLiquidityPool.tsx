@@ -310,7 +310,7 @@ const LiquidityPoolActions = () => {
 								name="size"
 								id="size"
 								value={fromBigNumber(depositAmount, decimals)}
-								className="block ring-transparent outline-none w-32 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+								className="block ring-transparent outline-none w-64 bg-transparent pr-2 text-left text-white font-normal text-2xl"
 							/>
 						) : null}
 

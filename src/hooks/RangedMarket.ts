@@ -222,9 +222,6 @@ export const useRangedMarket = (market: RangedMarket) => {
 				  ]
 				: [ZERO_ADDRESS, ZERO_BN],
 		chainId: chain?.id,
-		onError: (err) => {
-			console.log("test prep", err);
-		},
 	});
 
 	const {
@@ -245,9 +242,6 @@ export const useRangedMarket = (market: RangedMarket) => {
 			} else {
 				reportError(chain, error, undefined, false);
 			}
-		},
-		onError: (err) => {
-			console.log("test", err);
 		},
 	});
 
