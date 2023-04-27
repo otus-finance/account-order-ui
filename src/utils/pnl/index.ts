@@ -2,8 +2,25 @@ import { LyraStrike } from "../../queries/lyra/useLyra";
 import { fromBigNumber } from "../formatters/numbers";
 import { calculateOptionType } from "../formatters/optiontypes";
 
+enum OptionType {
+	"LongCall" = 0,
+	"LongPut" = 1,
+	"ShortCallQuote" = 2,
+	"ShortCall" = 3,
+	"ShortPut" = 4,
+}
+
+type OptionTypeStrikes = {
+	[OptionType.LongCall]: number;
+	[OptionType.LongPut]: number;
+	[OptionType.ShortCallQuote]: number;
+	[OptionType.ShortCall]: number;
+	[OptionType.ShortPut]: number;
+};
+
 // calculates max cost for buys
 // calculates max premium for sells
+
 export const _calculateMaxPremiums = (strikes: LyraStrike[]) => {
 	return strikes.reduce(
 		(totalPremiums: [number, number], strike: LyraStrike) => {
@@ -39,22 +56,6 @@ export const _furthestOutExpiry = (strikes: LyraStrike[]) => {
 			}
 		}, 0 as number) * 1000
 	);
-};
-
-enum OptionType {
-	"LongCall" = 0,
-	"LongPut" = 1,
-	"ShortCallQuote" = 2,
-	"ShortCall" = 3,
-	"ShortPut" = 4,
-}
-
-type OptionTypeStrikes = {
-	[OptionType.LongCall]: number;
-	[OptionType.LongPut]: number;
-	[OptionType.ShortCallQuote]: number;
-	[OptionType.ShortCall]: number;
-	[OptionType.ShortPut]: number;
 };
 
 export const _calculateMaxLoss = (
@@ -215,4 +216,35 @@ export const _calculateMaxLoss = (
 	}
 
 	return [false, 0, 0, 0];
+};
+
+export const checkValidSpread = (strikes: LyraStrike[]): boolean => {
+	let calls = strikes.filter((strike: LyraStrike) => strike.quote.isCall);
+	let puts = strikes.filter((strike: LyraStrike) => !strike.quote.isCall);
+
+	let buyCalls = calls.filter((strike: LyraStrike) => strike.quote.isBuy);
+	let sellCalls = calls.filter((strike: LyraStrike) => !strike.quote.isBuy);
+
+	if (buyCalls.length < sellCalls.length) {
+		return false; // more sell calls than buy calls
+	}
+
+	let buyPuts = puts.filter((strike: LyraStrike) => strike.quote.isBuy);
+	let sellPuts = puts.filter((strike: LyraStrike) => !strike.quote.isBuy);
+
+	if (buyPuts.length < sellPuts.length) {
+		return false; // more sell puts than buy puts
+	}
+
+	return true;
+};
+
+export const calculateTotalCost = (maxLoss: number, maxCost: number, maxPremium: number) => {
+	// return maxLoss == -Infinity ? maxCost - maxPremium : maxLoss;
+
+	if (maxLoss == -Infinity) {
+		return maxCost - maxPremium;
+	} else {
+		return Math.abs(maxLoss);
+	}
 };

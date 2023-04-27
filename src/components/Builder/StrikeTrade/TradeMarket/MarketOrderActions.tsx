@@ -14,9 +14,9 @@ function classNames(...classes: string[]) {
 export const MarketOrderActions = () => {
 	const { isValid } = useBuilderContext();
 
-	const { totalCollateral, trades, validMaxPNL, spreadSelected, setSpreadSelected } =
+	const { otusFee, totalCollateral, trades, validMaxPNL, spreadSelected, setSpreadSelected } =
 		useMarketOrderContext();
-	const { maxLossPost, fee, maxCost, maxPremium, maxLoss, maxProfit, validMaxLoss } = validMaxPNL;
+	const { maxLossPost, maxCost, maxPremium, maxLoss, maxProfit, validMaxLoss } = validMaxPNL;
 
 	return trades.length > 0 ? (
 		<>
@@ -32,7 +32,7 @@ export const MarketOrderActions = () => {
 								Post Max Loss Only
 							</Switch.Label>
 							<Switch.Description as="span" className="text-xs text-zinc-400">
-								|Trade valid spreads through Otus to post max loss only, small fee applies.
+								|Trade valid spreads through Otus to post max loss only.
 							</Switch.Description>
 						</span>
 						<Switch
@@ -68,7 +68,7 @@ export const MarketOrderActions = () => {
 				</div>
 
 				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-mono text-sm font-normal text-zinc-200">Premium</p>
+					<p className="truncate font-mono text-sm font-normal text-zinc-200">Min Received</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
 							{formatUSD(fromBigNumber(maxPremium), { dps: 2 })}
@@ -76,49 +76,56 @@ export const MarketOrderActions = () => {
 					</div>
 				</div>
 
-				{validMaxLoss && spreadSelected ? (
-					<>
-						<div className="flex items-center justify-between py-2 pb-4">
-							<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
-							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
-									{formatUSD(fromBigNumber(fee), { dps: 2 })}
-								</span>
-							</div>
+				<>
+					<div className="flex items-center justify-between py-2 pb-4">
+						<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
+								{validMaxLoss && spreadSelected
+									? formatUSD(otusFee, { dps: 2 })
+									: formatUSD(0, { dps: 2 })}
+							</span>
 						</div>
-						<div className="border-t border-zinc-800 flex items-center justify-between py-4 ">
+					</div>
+					<div className="flex items-center justify-between py-2">
+						<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+							Total Collateral Required
+						</p>
+						<div className="ml-2 flex flex-shrink-0">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+								{validMaxLoss && spreadSelected
+									? formatUSD(0, { dps: 2 })
+									: formatUSD(totalCollateral, { dps: 2 })}
+							</span>
+						</div>
+					</div>
+
+					{maxLossPost < 0 ? (
+						<div className="flex items-center justify-between py-2">
 							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
-								Post Max Loss
+								Total Received
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
 								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
-									{formatUSD(fromBigNumber(maxLossPost), { dps: 2 })}
+									{maxLossPost != Infinity
+										? formatUSD(Math.abs(maxLossPost), { dps: 2 })
+										: maxLossPost}
 								</span>
 							</div>
 						</div>
-					</>
-				) : (
-					<>
-						<div className="flex items-center justify-between py-2 pb-4">
-							<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
-							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
-									{formatUSD(0, { dps: 2 })}
-								</span>
-							</div>
-						</div>
+					) : (
 						<div className="flex items-center justify-between py-2">
-							<p className="truncate font-mono text-sm font-normal text-zinc-200">
-								Total Collateral Required
+							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+								Total Cost
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
-									{formatUSD(totalCollateral, { dps: 2 })}
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
+									{maxLossPost != Infinity ? formatUSD(maxLossPost, { dps: 2 }) : maxLossPost}
 								</span>
 							</div>
 						</div>
-					</>
-				)}
+					)}
+				</>
 
 				<MarketOrderInfo />
 			</div>
@@ -128,7 +135,9 @@ export const MarketOrderActions = () => {
 					<p className="truncate font-mono text-sm font-normal text-zinc-200">Max Loss</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex text-rose-400 font-sans text-sm font-semibold leading-5">
-							{formatUSD(fromBigNumber(maxLoss), { dps: 2 })}
+							{maxLoss != Infinity && maxLoss != -Infinity
+								? formatUSD(Math.abs(maxLoss), { dps: 2 })
+								: Infinity}
 						</span>
 					</div>
 				</div>
@@ -137,7 +146,7 @@ export const MarketOrderActions = () => {
 					<p className="truncate font-mono text-sm font-normal text-zinc-200">Max Profit</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex text-emerald-400 font-sans text-sm font-semibold leading-5">
-							{maxProfit === Infinity ? maxProfit : formatUSD(maxProfit, { dps: 2 })}
+							{maxProfit != Infinity ? formatUSD(maxProfit, { dps: 2 }) : maxProfit}
 						</span>
 					</div>
 				</div>

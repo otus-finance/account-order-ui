@@ -5,6 +5,7 @@ import { MarketOrderTransaction, TradeInputParameters } from "../utils/types";
 import { LyraStrike } from "../queries/lyra/useLyra";
 
 export type MarketOrderProviderState = {
+	otusFee: number;
 	totalCollateral: number;
 	spreadSelected: boolean;
 	networkNotSupported: boolean;
@@ -23,6 +24,7 @@ export type MarketOrderProviderState = {
 };
 
 export const marketOrderInitialState: MarketOrderProviderState = {
+	otusFee: 0,
 	totalCollateral: 0,
 	spreadSelected: false,
 	networkNotSupported: true,
@@ -32,9 +34,7 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 		maxLoss: 0,
 		maxCost: 0,
 		maxPremium: 0,
-		fee: 0,
 		maxLossPost: 0,
-		collateralRequired: 0,
 	},
 	updateStrikes: [],
 	selectedStrikes: [],

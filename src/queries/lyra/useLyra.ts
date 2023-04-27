@@ -145,19 +145,6 @@ const parseMarketBoards = (boards: Board[]): LyraBoard[] => {
 	});
 };
 
-const parseMarketBoardsArb = (marketName: string, boards: Record<number, any>): LyraBoard[] => {
-	return Object.values(boards).map((board) => {
-		const { id, expiry, baseIv } = board;
-
-		const expiryTimestamp = fromBigNumber(expiry) * 1e18;
-
-		const strikes: Strike[] = board.strikes.sort(sortStrikes);
-		const name = formatBoardName(expiryTimestamp);
-
-		return { name, id, expiryTimestamp, baseIv, strikes, marketName, strikesWithQuotes: [] };
-	});
-};
-
 const sortStrikes = (a: Strike, b: Strike) => {
 	return fromBigNumber(a.strikePrice) - fromBigNumber(b.strikePrice);
 };

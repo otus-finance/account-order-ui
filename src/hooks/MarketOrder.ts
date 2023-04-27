@@ -13,11 +13,19 @@ import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { YEAR_SEC } from "../constants/dates";
 import * as _ from "lodash";
-import { _calculateMaxLoss, _calculateMaxPremiums, _furthestOutExpiry } from "../utils/pnl";
+import {
+	_calculateMaxLoss,
+	_calculateMaxPremiums,
+	_furthestOutExpiry,
+	calculateTotalCost,
+	checkValidSpread,
+} from "../utils/pnl";
 import { useDebounce } from "./helpers/useDebounce";
 import { convertTradeParams, isStrikeMatch } from "../utils/trade";
 import { useOtusMarket } from "./markets/useOtusMarket";
 import { useSpreadMarket } from "./markets/useSpreadMarket";
+import { formatProfitAndLostAtTicks } from "../utils/charting";
+import { MAX_NUMBER, MIN_NUMBER, OTUS_FEE } from "../constants/markets";
 
 export const useMarketOrder = () => {
 	const { chain } = useNetwork();
@@ -32,6 +40,31 @@ export const useMarketOrder = () => {
 	const [loading, setLoading] = useState(true);
 
 	const [selectedStrikes, setSelectedStrikes] = useState<LyraStrike[]>([]);
+
+	const [spreadSelected, setSpreadSelected] = useState(false);
+
+	const [totalCollateral, setTotalCollateral] = useState(0);
+	const [spreadCollateralLoanDuration, setSpreadCollateralLoanDuration] = useState(0);
+
+	const [otusFee, setOtusFee] = useState(0);
+
+	const [tradeInfo, setTradeInfo] = useState({
+		market: selectedMarket?.bytes,
+		positionId: 0,
+	});
+
+	const [slippage, setSlippage] = useState(0.02);
+
+	const [trades, setTrades] = useState<TradeInputParameters[]>([]);
+
+	const [validMaxPNL, setValidMaxPNL] = useState({
+		validMaxLoss: false,
+		maxProfit: 0,
+		maxLoss: 0,
+		maxCost: ZERO_BN,
+		maxPremium: ZERO_BN,
+		maxLossPost: 0,
+	});
 
 	useEffect(() => {
 		let selected: LyraStrike[] = strikes.filter((strike: LyraStrike) => strike.selected);
@@ -96,8 +129,6 @@ export const useMarketOrder = () => {
 		[lyra, selectedStrikes]
 	);
 
-	const [totalCollateral, setTotalCollateral] = useState(0);
-
 	const calculateCollateral = useCallback(() => {
 		if (updateStrikes.length > 0) {
 			let _totalCollateral = updateStrikes.reduce((acc: number, strike: LyraStrike) => {
@@ -110,10 +141,37 @@ export const useMarketOrder = () => {
 				return acc + _collateral;
 			}, 0);
 			setTotalCollateral(_totalCollateral);
+
+			const _spreadCollateralLoanDuration = _furthestOutExpiry(updateStrikes) - Date.now();
+			setSpreadCollateralLoanDuration(_spreadCollateralLoanDuration);
 		} else {
 			setTotalCollateral(0);
 		}
 	}, [updateStrikes]);
+
+	const calculateOtusFee = useCallback(() => {
+		if (
+			spreadSelected &&
+			spreadCollateralLoanDuration > 0 &&
+			validMaxPNL.validMaxLoss &&
+			totalCollateral > 0
+		) {
+			// get fee
+			const _fee = (spreadCollateralLoanDuration / (YEAR_SEC * 1000)) * totalCollateral * OTUS_FEE;
+
+			setOtusFee(_fee);
+		}
+	}, [validMaxPNL, spreadCollateralLoanDuration, totalCollateral, spreadSelected]);
+
+	useEffect(() => {
+		calculateOtusFee();
+	}, [
+		spreadSelected,
+		totalCollateral,
+		spreadCollateralLoanDuration,
+		validMaxPNL,
+		calculateOtusFee,
+	]);
 
 	const updateStrikeQuotes = useCallback(async () => {
 		if (lyra) {
@@ -141,97 +199,59 @@ export const useMarketOrder = () => {
 		}
 	}, [lyra, updateStrikes, updateStrikeQuotes, calculateCollateral]);
 
-	const [spreadSelected, setSpreadSelected] = useState(false);
-
-	const [tradeInfo, setTradeInfo] = useState({
-		market: selectedMarket?.bytes,
-		positionId: 0,
-	});
-
-	const [slippage, setSlippage] = useState(0.02);
-
-	const [trades, setTrades] = useState<TradeInputParameters[]>([]);
-
-	const [validMaxPNL, setValidMaxPNL] = useState({
-		validMaxLoss: false,
-		maxProfit: 0,
-		maxLoss: ZERO_BN,
-		maxCost: ZERO_BN,
-		maxPremium: ZERO_BN,
-		fee: ZERO_BN,
-		maxLossPost: ZERO_BN,
-		collateralRequired: ZERO_BN,
-	});
-
 	const setStrikeTrades = useCallback(() => {
 		setTrades(convertTradeParams(selectedStrikes, slippage));
 	}, [selectedStrikes, slippage]);
 
-	const _calculateMaxProfit = (strikes: LyraStrike[]): number => {
-		// if more buys than sells, then max profit is infinite
-
-		let buys = strikes.filter((strike: LyraStrike) => strike.quote.isBuy);
-		let sells = strikes.filter((strike: LyraStrike) => !strike.quote.isBuy);
-
-		if (buys.length > sells.length) {
-			return Infinity;
-		}
-
-		return 0;
+	const buildTicks = (strikes: LyraStrike[]): number[] => {
+		return strikes.map((strike: LyraStrike) => {
+			const { quote } = strike;
+			const { strikePrice } = quote;
+			return fromBigNumber(strikePrice);
+		});
 	};
 
 	const calculateMaxPNL = useCallback(() => {
 		if (updateStrikes.length > 0) {
+			console.log({ otusFee });
+			const _pnl = [MIN_NUMBER, MAX_NUMBER]
+				.concat(buildTicks(updateStrikes))
+				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes, spreadSelected, otusFee));
+			const _maxProfit = Math.max(..._pnl);
+			const _maxLoss = Math.min(..._pnl);
+
 			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);
 
-			let [validMaxLoss, maxLoss, maxProfit, collateralLoan] = _calculateMaxLoss(
-				updateStrikes,
-				maxCost
-			);
+			const isValidSpread = checkValidSpread(updateStrikes);
 
-			if (maxProfit != Infinity) {
-				maxProfit = _calculateMaxProfit(updateStrikes);
-			}
-
-			const spreadCollateralLoanDuration = _furthestOutExpiry(updateStrikes) - Date.now();
-
-			let fee = 0;
-
-			if (validMaxLoss && spreadCollateralLoanDuration > 0) {
-				// get fee
-				fee = (spreadCollateralLoanDuration / (YEAR_SEC * 1000)) * collateralLoan * 0.2;
-			}
+			const totalCost = calculateTotalCost(_maxLoss, maxCost, maxPremium);
 
 			setValidMaxPNL({
-				validMaxLoss,
-				maxProfit: maxProfit,
-				maxLoss: toBN(maxLoss.toString()),
+				validMaxLoss: isValidSpread,
+				maxProfit: _maxProfit,
+				maxLoss: _maxLoss,
 				maxCost: toBN(maxCost.toString()),
 				maxPremium: toBN(maxPremium.toString()),
-				fee: toBN(fee.toString()),
-				maxLossPost: toBN((maxLoss + maxCost - maxPremium + fee).toString()),
-				collateralRequired: ZERO_BN,
+				maxLossPost: totalCost,
 			});
 		} else {
 			setValidMaxPNL({
 				validMaxLoss: false,
 				maxProfit: 0,
-				maxLoss: ZERO_BN,
+				maxLoss: 0,
 				maxCost: ZERO_BN,
 				maxPremium: ZERO_BN,
-				fee: ZERO_BN,
-				maxLossPost: ZERO_BN,
-				collateralRequired: ZERO_BN,
+				maxLossPost: 0,
 			});
 		}
-	}, [updateStrikes]);
+	}, [updateStrikes, spreadSelected, otusFee]);
 
 	useEffect(() => {
 		if (updateStrikes.length > 0) {
 			calculateMaxPNL();
 			setStrikeTrades();
 		}
-	}, [updateStrikes, calculateMaxPNL, setStrikeTrades]);
+	}, [updateStrikes, otusFee, spreadSelected, calculateMaxPNL, setStrikeTrades]);
 
 	useEffect(() => {
 		if (chain && chain.id) {
@@ -286,6 +306,7 @@ export const useMarketOrder = () => {
 	);
 
 	return {
+		otusFee,
 		otusMarket,
 		spreadMarket,
 		totalCollateral,

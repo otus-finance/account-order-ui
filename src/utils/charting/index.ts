@@ -24,7 +24,12 @@ export const ticks = (asset: string, price: number) => {
 	return ticks;
 };
 
-export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
+export const formatProfitAndLostAtTicks = (
+	tick: number,
+	strikes: any[],
+	hasSpreadFee: boolean = false,
+	additionalFees: number = 0
+) => {
 	const pnl = strikes.reduce((totalPnl: number, strike: any) => {
 		const {
 			strikePrice,
@@ -43,6 +48,17 @@ export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
 		); // can be negative or positive dependent on option type
 
 		totalPnl = totalPnl + profitAtTick;
+
+		// infinity + -infinity is nan
+		if (Number.isNaN(totalPnl)) {
+			totalPnl = 0;
+			return totalPnl;
+		}
+
+		if (hasSpreadFee && additionalFees > 0) {
+			console.log({ hasSpreadFee, additionalFees });
+			totalPnl = totalPnl - additionalFees;
+		}
 
 		return totalPnl;
 	}, 0);
@@ -66,12 +82,12 @@ export const calculateProfitAtTick = (
 			if (tick < strikePrice) {
 				profitAtTick = -totalPremium;
 			} else {
-				profitAtTick = (tick - strikePrice) * size - totalPremium; // (tick - (strikePrice - (totalSumOfFees))) * size; // 1200 - 1150 = 50 - 60 = -10
+				profitAtTick = (tick - strikePrice) * size - totalPremium;
 			}
 		} else {
 			// long put
 			if (tick < strikePrice) {
-				profitAtTick = (strikePrice - tick) * size - totalPremium; // (strikePrice - (tick + totalSumOfFees)) * size; // 1200 -
+				profitAtTick = (strikePrice - tick) * size - totalPremium;
 			} else {
 				profitAtTick = -totalPremium;
 			}
@@ -82,7 +98,7 @@ export const calculateProfitAtTick = (
 		if (isCall) {
 			// short call
 			if (tick < strikePrice) {
-				profitAtTick = totalPremium; // premium
+				profitAtTick = totalPremium;
 			} else {
 				profitAtTick = (strikePrice - tick) * size + totalPremium;
 			}
@@ -91,7 +107,7 @@ export const calculateProfitAtTick = (
 			if (tick < strikePrice) {
 				profitAtTick = (tick - strikePrice) * size + totalPremium;
 			} else {
-				profitAtTick = totalPremium; // premium
+				profitAtTick = totalPremium;
 			}
 		}
 	}

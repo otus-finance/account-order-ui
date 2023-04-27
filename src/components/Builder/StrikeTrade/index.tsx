@@ -40,6 +40,7 @@ export const StrikeTrade = () => {
 									<div className="text-sm font-normal font-mono text-zinc-200 pr-4">Size</div>
 									<div>
 										<DebounceInput
+											debounceTimeout={300}
 											minLength={1}
 											onChange={async (e) => {
 												if (e.target.value == "") return;
@@ -48,12 +49,12 @@ export const StrikeTrade = () => {
 												updateMultiSize?.(value);
 											}}
 											min={0.1}
-											step={1}
+											step={0.1}
 											type="number"
 											name="multiSize"
 											id="multiSize"
 											value={1}
-											className={`w-24 border-2 border-emerald-600 bg-transparent p-2  text-zinc-200 shadow-lg text-sm`}
+											className={`w-24 border border-zinc-800 bg-transparent p-2  text-zinc-200 shadow-lg text-sm ring-emerald-600`}
 										/>
 									</div>
 								</div>

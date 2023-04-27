@@ -19,6 +19,7 @@ import getExplorerUrl from "../../utils/chains/getExplorerUrl";
 import { createToast, updateToast } from "../../components/UI/Toast";
 import { reportError } from "../../utils/errors";
 import { BigNumber } from "ethers";
+import { toBN } from "../../utils/formatters/numbers";
 
 // prepares and executes transaction for spread market
 export const useSpreadMarket = (
@@ -29,7 +30,7 @@ export const useSpreadMarket = (
 	spreadSelected: boolean,
 	tradeInfo: { market?: string; positionId?: number },
 	trades: TradeInputParameters[],
-	maxLossPost: BigNumber
+	maxLossPost: number
 ) => {
 	// spread market allowance
 	const [allowance, setSpreadMarketCurrentAllowance] = useState(ZERO_BN);
@@ -94,9 +95,16 @@ export const useSpreadMarket = (
 		address: spreadOptionMarket?.address,
 		abi: spreadOptionMarket?.abi,
 		functionName: "openPosition",
-		args: [tradeInfo, trades, maxLossPost],
+		args:
+			maxLossPost != Infinity && maxLossPost != -Infinity
+				? [tradeInfo, trades, toBN(maxLossPost.toString())]
+				: [],
 		chainId: chain?.id,
-		enabled: spreadSelected,
+		enabled:
+			!Number.isNaN(maxLossPost) &&
+			maxLossPost != Infinity &&
+			maxLossPost != -Infinity &&
+			spreadSelected,
 	});
 
 	const {
