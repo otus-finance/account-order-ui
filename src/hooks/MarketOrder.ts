@@ -228,7 +228,7 @@ export const useMarketOrder = () => {
 			setValidMaxPNL({
 				validMaxLoss: isValidSpread,
 				maxProfit: spreadSelected ? _maxProfit - otusFee : _maxProfit,
-				maxLoss: _maxLoss,
+				maxLoss: spreadSelected ? _maxLoss - otusFee : _maxLoss,
 				maxCost: toBN(maxCost.toString()),
 				maxPremium: toBN(maxPremium.toString()),
 				maxLossPost: spreadSelected ? totalCost + otusFee : totalCost,
