@@ -213,10 +213,9 @@ export const useMarketOrder = () => {
 
 	const calculateMaxPNL = useCallback(() => {
 		if (updateStrikes.length > 0) {
-			console.log({ otusFee });
 			const _pnl = [MIN_NUMBER, MAX_NUMBER]
 				.concat(buildTicks(updateStrikes))
-				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes, spreadSelected, otusFee));
+				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes));
 			const _maxProfit = Math.max(..._pnl);
 			const _maxLoss = Math.min(..._pnl);
 
@@ -228,11 +227,11 @@ export const useMarketOrder = () => {
 
 			setValidMaxPNL({
 				validMaxLoss: isValidSpread,
-				maxProfit: _maxProfit,
+				maxProfit: spreadSelected ? _maxProfit - otusFee : _maxProfit,
 				maxLoss: _maxLoss,
 				maxCost: toBN(maxCost.toString()),
 				maxPremium: toBN(maxPremium.toString()),
-				maxLossPost: totalCost,
+				maxLossPost: spreadSelected ? totalCost + otusFee : totalCost,
 			});
 		} else {
 			setValidMaxPNL({

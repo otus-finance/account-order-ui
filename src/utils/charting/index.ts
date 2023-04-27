@@ -55,11 +55,6 @@ export const formatProfitAndLostAtTicks = (
 			return totalPnl;
 		}
 
-		if (hasSpreadFee && additionalFees > 0) {
-			console.log({ hasSpreadFee, additionalFees });
-			totalPnl = totalPnl - additionalFees;
-		}
-
 		return totalPnl;
 	}, 0);
 	return pnl;
