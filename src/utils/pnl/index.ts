@@ -239,12 +239,19 @@ export const checkValidSpread = (strikes: LyraStrike[]): boolean => {
 	return true;
 };
 
-export const calculateTotalCost = (maxLoss: number, maxCost: number, maxPremium: number) => {
-	// return maxLoss == -Infinity ? maxCost - maxPremium : maxLoss;
-
-	if (maxLoss == -Infinity) {
+export const calculateTotalCost = (
+	spreadSelected: boolean,
+	maxLoss: number,
+	maxCost: number,
+	maxPremium: number
+) => {
+	if (!spreadSelected || maxLoss == -Infinity || maxLoss == Infinity) {
 		return maxCost - maxPremium;
-	} else {
+	}
+
+	if (spreadSelected) {
 		return Math.abs(maxLoss);
 	}
+
+	return maxCost - maxPremium;
 };

@@ -18,3 +18,6 @@ export {
 	spreadLiquidityPoolInitialState,
 	spreadLiquidityPoolReducer,
 } from "./SpreadLiquidityPoolProvider";
+
+export type { ChainProviderState, ChainAction } from "./ChainProvider";
+export { chainInitialState, chainReducer } from "./ChainProvider";
