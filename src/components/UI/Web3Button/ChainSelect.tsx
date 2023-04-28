@@ -3,9 +3,9 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Fragment, useEffect, useState } from "react";
 import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
-import { useBuilderContext } from "../../../context/BuilderContext";
 import { ONEImage, OPImage } from "../Icons/Color/DataImage";
 import { useNetwork } from "wagmi";
+import { useChainContext } from "../../../context/ChainContext";
 
 const chains = [optimism, arbitrum, arbitrumGoerli];
 
@@ -18,7 +18,7 @@ export const OfflineChainSelect = () => {
 
 	const [offlineChain, setOfflineChain] = useState(optimism);
 
-	const { selectedChain, handleSelectedChain } = useBuilderContext();
+	const { selectedChain, handleSelectedChain } = useChainContext();
 
 	useEffect(() => {
 		if (!chain && selectedChain?.id != offlineChain.id) {

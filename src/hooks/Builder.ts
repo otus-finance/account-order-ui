@@ -37,6 +37,7 @@ import {
 	optimismUrl,
 } from "../constants/networks";
 import { DirectionType } from "../utils/direction";
+import { useChainContext } from "../context/ChainContext";
 
 const getRPCUrl = (chain: Chain) => {
 	switch (chain.id) {
@@ -69,7 +70,6 @@ export const useBuilder = () => {
 		lyra,
 		activityType,
 		builderType,
-		selectedChain,
 		showStrikesSelect,
 		markets,
 		isMarketLoading,
@@ -88,33 +88,20 @@ export const useBuilder = () => {
 		builderTypeClean,
 	} = state;
 
-	const { chain } = useNetwork();
+	const { handleSelectedChain, selectedChain } = useChainContext();
 
 	useEffect(() => {
-		if (chain?.id) {
+		if (selectedChain?.id) {
 			dispatch({
 				type: "SET_CHAIN",
-				selectedChain: chain,
+				selectedChain: selectedChain,
 				selectedMarket: null,
 				strikes: [],
 				selectedExpirationDate: null,
 				selectedStrategy: null,
 			});
 		}
-	}, [chain]);
-
-	const handleSelectedChain = (chain: Chain) => {
-		if (chain) {
-			dispatch({
-				type: "SET_CHAIN",
-				selectedChain: chain,
-				selectedMarket: null,
-				strikes: [],
-				selectedExpirationDate: null,
-				selectedStrategy: null,
-			});
-		}
-	};
+	}, [selectedChain]);
 
 	const updateSelectedChain = useCallback(async () => {
 		if (selectedChain) {
