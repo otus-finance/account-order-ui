@@ -1,28 +1,20 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Provider } from "@wagmi/core";
-import { BigNumber, Bytes, Contract, ethers } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import { useEffect, useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { Address, useAccount, useContractRead, useNetwork, useProvider } from "wagmi";
-import { ONE_BN, ONE_TENTH_BN, ZERO_BN } from "../../constants/bn";
-import { useSpreadLiquidityPoolContext } from "../../context/SpreadLiquidityPoolContext";
-import { useLPUser } from "../../queries/otus/user";
+import { useAccount } from "wagmi";
+import { ZERO_BN } from "../../constants/bn";
 import { formatUSD, fromBigNumber, toBN } from "../../utils/formatters/numbers";
 
-import { LiquidityPool } from "../../utils/types";
 import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
 import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
-import Modal from "../UI/Modal";
 import ETHIcon from "../UI/Icons/Color/ETH";
-import { ArrowDownCircleIcon } from "@heroicons/react/20/solid";
-import { ArrowDownIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { RangedMarket, useRangedMarkets } from "../../queries/otus/rangedMarkets";
+import { ArrowDownIcon } from "@heroicons/react/24/outline";
+import { RangedMarket } from "../../queries/otus/rangedMarkets";
 import { formatExpirationDate, formatExpirationTitle } from "../../utils/formatters/expiry";
-import { BTC_MARKET, ETH_MARKET } from "../../constants/markets";
+import { BTC_MARKET } from "../../constants/markets";
 import BTCIcon from "../UI/Icons/Color/BTC";
-import { useOtusAccountContracts } from "../../hooks/Contracts";
-import { TradeDirection } from "@lyrafinance/lyra-js";
 import { RangedMarketPosition, useRangedMarket } from "../../hooks/RangedMarket";
 import {
 	Area,
@@ -36,6 +28,7 @@ import {
 	YAxis,
 } from "recharts";
 import { ticks } from "../../utils/charting";
+import { TradeDirection } from "@lyrafinance/lyra-js";
 
 const getIcon = (market: string) => {
 	if (market == BTC_MARKET) {
