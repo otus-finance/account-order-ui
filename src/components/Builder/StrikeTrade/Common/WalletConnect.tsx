@@ -6,7 +6,7 @@ export const WalletConnect = () => {
 	return (
 		<div
 			onClick={openConnectModal}
-			className="cursor-pointer  hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full bg-black"
+			className="cursor-pointer bg-gradient-to-b from-black to-zinc-900 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full bg-black"
 		>
 			Connect Wallet
 		</div>
