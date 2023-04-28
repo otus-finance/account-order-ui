@@ -223,7 +223,7 @@ export const useMarketOrder = () => {
 
 			const isValidSpread = checkValidSpread(updateStrikes);
 
-			const totalCost = calculateTotalCost(_maxLoss, maxCost, maxPremium);
+			const totalCost = calculateTotalCost(spreadSelected, _maxLoss, maxCost, maxPremium);
 
 			setValidMaxPNL({
 				validMaxLoss: isValidSpread,

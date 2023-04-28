@@ -27,13 +27,21 @@ import { fromBigNumber } from "../utils/formatters/numbers";
 import { useOtusAccountContracts } from "./Contracts";
 import { Transaction } from "../utils/types";
 import { reportError } from "../utils/errors";
+import { useBuilderContext } from "../context/BuilderContext";
+import { useChainContext } from "../context/ChainContext";
 
 export const useSpreadLiquidityPool = () => {
 	const [state, dispatch] = useReducer(spreadLiquidityPoolReducer, spreadLiquidityPoolInitialState);
 
 	const { liquidityPool, isLoading } = state;
 
-	const { isLoading: isDataLoading, data: liquidityPoolData, refetch } = useLiquidityPool();
+	const { selectedChain } = useChainContext();
+
+	const {
+		isLoading: isDataLoading,
+		data: liquidityPoolData,
+		refetch,
+	} = useLiquidityPool(selectedChain);
 
 	const { otusContracts, networkNotSupported } = useOtusAccountContracts();
 

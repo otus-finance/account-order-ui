@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import request, { gql } from "graphql-request";
 import { Query, UseQueryResult, useQuery } from "react-query";
-import { Address, useNetwork } from "wagmi";
+import { Address, Chain, useNetwork } from "wagmi";
 import { getOtusEndpoint } from "../../utils/endpoints";
 import { LPUser } from "./user";
 
@@ -33,13 +33,13 @@ export type LiquidityPool = {
 	lpUsers: Array<LPUser>;
 };
 
-export const useLiquidityPool = () => {
-	const { chain } = useNetwork();
-
+export const useLiquidityPool = (chain: Chain | null) => {
 	const otusSpreadLiquidityEndpoint = getOtusEndpoint(chain?.id);
+
 	return useQuery<LiquidityPool | null | undefined>(
 		QUERY_KEYS.POOL.SpreadLiquidity,
 		async () => {
+			if (!chain) return null;
 			if (!otusSpreadLiquidityEndpoint) return null;
 			const response: LiquidityPoolData = await request(
 				otusSpreadLiquidityEndpoint,

@@ -13,6 +13,7 @@ import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { optimism, arbitrum, hardhat, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+import { ChainContextProvider } from "../context/ChainContext";
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
@@ -53,7 +54,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			<WagmiConfig client={wagmiClient}>
 				<RainbowKitProvider chains={chains}>
 					<QueryClientProvider client={queryClient}>
-						<Component {...pageProps} />
+						<ChainContextProvider>
+							<Component {...pageProps} />
+						</ChainContextProvider>
 						<ToastContainer />
 					</QueryClientProvider>
 				</RainbowKitProvider>

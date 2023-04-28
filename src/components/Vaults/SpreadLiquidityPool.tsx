@@ -34,7 +34,7 @@ const SpreadLiquidityPool = () => {
 
 	return liquidityPool ? (
 		<>
-			<div className="cursor-pointer rounded-xl bg-gradient-to-t from-black to-zinc-800 shadow-lg">
+			<div className="cursor-pointer rounded-xl bg-gradient-to-l from-black to-zinc-900 shadow-lg">
 				<div key={liquidityPool.id} className="border-b border-zinc-800">
 					<div className="p-4">
 						<div className="flex">
