@@ -50,41 +50,46 @@ export const SelectStrikesTable = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between py-6">
-				<div
-					onClick={() => setIsBuy(true)}
-					className={`${
-						isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
-				>
-					Buy
+			<div className="flex justify-between py-6 sm:w-40">
+				<div className="flex justify-between">
+					<div
+						onClick={() => setIsBuy(true)}
+						className={`${
+							isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
+					>
+						Buy
+					</div>
+					<div
+						onClick={() => setIsBuy(false)}
+						className={`${
+							!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
+					>
+						Sell
+					</div>
+					<div
+						onClick={() => setIsCall(true)}
+						className={`${
+							isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style} ml-2`}
+					>
+						Call
+					</div>
+					<div
+						onClick={() => setIsCall(false)}
+						className={`${
+							!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
+						} ${style}`}
+					>
+						Put
+					</div>
 				</div>
-				<div
-					onClick={() => setIsBuy(false)}
-					className={`${
-						!isBuy ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
-				>
-					Sell
-				</div>
-				<div
-					onClick={() => setIsCall(true)}
-					className={`${
-						isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style} ml-2`}
-				>
-					Call
-				</div>
-				<div
-					onClick={() => setIsCall(false)}
-					className={`${
-						!isCall ? "border-emerald-600 bg-zinc-900" : "border-zinc-700 hover:border-zinc-700"
-					} ${style}`}
-				>
-					Put
+
+				<div className="flex">
+					{builderType === BuilderType.Custom && <SelectBuilderExpiration />}
 				</div>
 			</div>
-			<div className="">{builderType === BuilderType.Custom && <SelectBuilderExpiration />}</div>
 
 			<div className="mt-4">
 				<table className="min-w-full divide-y divide-zinc-800">

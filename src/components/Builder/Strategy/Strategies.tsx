@@ -45,7 +45,7 @@ export const Strategies = () => {
 						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`mb-8 sm:mb-0 basis-1/2 flex-none overflow-clip md:basis-1/3 xl:basis-1/5 sm:gap-14 sm:shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
+						className={`mb-8 sm:mb-0 basis-1/2  md:basis-1/3 xl:basis-1/5 sm:gap-14 sm:shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
 					>
 						<div className="p-2">
 							<div className="flex place-content-between">
