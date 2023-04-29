@@ -296,12 +296,10 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 					<div className="flex gap-2 items-center">
 						{fromBigNumber(size)}
 
-						{builderType != BuilderType.Builder && (
-							<PencilSquareIcon
-								className="h-4 w-4 text-zinc-200"
-								onClick={() => setEditPricing(true)}
-							/>
-						)}
+						<PencilSquareIcon
+							className="h-4 w-4 text-zinc-200"
+							onClick={() => setEditPricing(true)}
+						/>
 					</div>
 				)}
 			</td>

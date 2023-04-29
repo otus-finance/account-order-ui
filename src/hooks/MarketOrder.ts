@@ -8,7 +8,12 @@ import { quote } from "../constants/quote";
 import { useOtusAccountContracts } from "./Contracts";
 import { MarketOrderProviderState } from "../reducers";
 import { ZERO_BN } from "../constants/bn";
-import { MarketOrderTransaction, TradeInputParameters, Transaction } from "../utils/types";
+import {
+	BuilderType,
+	MarketOrderTransaction,
+	TradeInputParameters,
+	Transaction,
+} from "../utils/types";
 import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { YEAR_SEC } from "../constants/dates";
@@ -35,7 +40,7 @@ export const useMarketOrder = () => {
 	const [tokenAddr, setTokenAddr] = useState<Address>();
 
 	// build trades
-	const { lyra, strikes, selectedMarket, handleSelectActivityType } = useBuilderContext();
+	const { lyra, strikes, selectedMarket, handleSelectBuilderType } = useBuilderContext();
 
 	const [loading, setLoading] = useState(true);
 
@@ -124,9 +129,10 @@ export const useMarketOrder = () => {
 					return _strike;
 				});
 				setSelectedStrikes(_updated);
+				handleSelectBuilderType(BuilderType.Custom);
 			}
 		},
-		[lyra, selectedStrikes]
+		[lyra, selectedStrikes, handleSelectBuilderType]
 	);
 
 	const calculateCollateral = useCallback(() => {

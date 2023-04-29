@@ -19,21 +19,8 @@ import LyraIcon from "../../UI/Icons/Color/LYRA";
 const style =
 	"border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center w-24 px-6 p-2 mr-1 text-sm font-light";
 
-type SelectedStrike = {
-	id: number;
-	isCall: boolean;
-	isBuy: boolean;
-};
-
 export const SelectStrikesTable = () => {
-	const {
-		isToggleStrikeLoading,
-		toggleStrikeId,
-		builderType,
-		strikes,
-		selectedExpirationDate,
-		handleToggleSelectedStrike,
-	} = useBuilderContext();
+	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
 
 	const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
 
@@ -62,8 +49,8 @@ export const SelectStrikesTable = () => {
 	}, [strikes, optionType]);
 
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-4">
-			<div className="flex justify-between mt-6">
+		<div className="flex flex-col">
+			<div className="flex justify-between py-6">
 				<div
 					onClick={() => setIsBuy(true)}
 					className={`${
@@ -96,15 +83,10 @@ export const SelectStrikesTable = () => {
 				>
 					Put
 				</div>
-
-				{builderType === BuilderType.Custom && (
-					<div className="">
-						<SelectBuilderExpiration />
-					</div>
-				)}
 			</div>
+			<div className="">{builderType === BuilderType.Custom && <SelectBuilderExpiration />}</div>
 
-			<div className="col-span-4 mt-4">
+			<div className="mt-4">
 				<table className="min-w-full divide-y divide-zinc-800">
 					<thead className="bg-inherit  ">
 						<tr>
