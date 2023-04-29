@@ -45,7 +45,7 @@ export const OpenSpreadPosition = () => {
 					{spreadMarket?.isOpenPositionLoading && spreadMarket?.isTxLoading ? (
 						<Spinner />
 					) : (
-						"Open Spread Position"
+						"Open Position"
 					)}
 				</div>
 			)}

@@ -18,7 +18,7 @@ import { MAX_BN, ZERO_ADDRESS, ZERO_BN } from "../../constants/bn";
 import getExplorerUrl from "../../utils/chains/getExplorerUrl";
 import { createToast, updateToast } from "../../components/UI/Toast";
 import { reportError } from "../../utils/errors";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { toBN } from "../../utils/formatters/numbers";
 
 // prepares and executes transaction for spread market
@@ -84,13 +84,17 @@ export const useSpreadMarket = (
 		},
 		onSuccess: async (data) => {
 			await refetchAllowance();
+			await refetchOpenConfig();
 		},
 	});
+
+	console.log({ params: [tradeInfo, trades, toBN(maxLossPost.toString())] });
 
 	const {
 		config: openPositionConfig,
 		error: openConfigError,
 		isSuccess: isOpenConfigSuccess,
+		refetch: refetchOpenConfig,
 	} = usePrepareContractWrite({
 		address: spreadOptionMarket?.address,
 		abi: spreadOptionMarket?.abi,
@@ -106,6 +110,8 @@ export const useSpreadMarket = (
 			maxLossPost != -Infinity &&
 			spreadSelected,
 	});
+
+	ethers;
 
 	const {
 		isSuccess: isOpenPositionSuccess,

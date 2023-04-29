@@ -83,14 +83,17 @@ export const useOtusMarket = (
 		},
 		onSuccess: async (data) => {
 			await refetchAllowance();
+			await refetchOpenConfig();
 		},
 	});
 
 	// open lyra position
+	console.log({ trades });
 	const {
 		config: openPositionConfig,
 		isSuccess: isOpenConfigSuccess,
 		error: openConfigError,
+		refetch: refetchOpenConfig,
 	} = usePrepareContractWrite({
 		address: otusOptionMarket?.address,
 		abi: otusOptionMarket?.abi,

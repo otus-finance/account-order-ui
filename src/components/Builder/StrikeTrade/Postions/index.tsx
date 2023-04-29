@@ -7,21 +7,25 @@ import { fromBigNumber } from "../../../../utils/formatters/numbers";
 import { Position as LyraPosition } from "@lyrafinance/lyra-js";
 import { formatExpirationDate } from "../../../../utils/formatters/expiry";
 import { Spinner } from "../../../UI/Components/Spinner";
+import { useChainContext } from "../../../../context/ChainContext";
 
 export const Positions = () => {
-	const { lyra } = useBuilderContext();
-	const { address } = useAccount();
-	const { chain } = useNetwork();
-	const { isLoading, data } = usePositions();
-	const { isLoading: isLyraPositionsLoading, data: lyraPositions } = useLyraPositions(
-		lyra,
-		address
+	return (
+		<>
+			<OtusPositions />
+			<LyraPositions />
+		</>
 	);
+};
+
+export const OtusPositions = () => {
+	const { selectedChain: chain } = useChainContext();
+	const { isLoading, data } = usePositions();
 
 	return (
-		<div>
+		<>
 			<div className="border-b border-zinc-900 p-4 text-sm font-normal text-zinc-200">
-				Option Spread Positions
+				Otus Positions
 			</div>
 			{isLoading ? (
 				<div className="p-4">
@@ -40,6 +44,10 @@ export const Positions = () => {
 
 					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
 						Open Date
+					</th>
+
+					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						Type
 					</th>
 
 					<th scope="col" className="sr-only">
@@ -63,10 +71,16 @@ export const Positions = () => {
 										{new Date(openTimestamp * 1000).toDateString()}
 									</td>
 
+									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
+										Spread
+									</td>
+
 									<td className="whitespace-nowrap py-4 text-xs font-medium text-zinc-200">
-										<a target="_blank" rel="noreferrer" href={txHref}>
-											View
-										</a>
+										{txHref && (
+											<a target="_blank" rel="noreferrer" href={txHref}>
+												View
+											</a>
+										)}
 									</td>
 								</tr>
 							);
@@ -74,43 +88,59 @@ export const Positions = () => {
 					</tbody>
 				</table>
 			)}
+		</>
+	);
+};
 
+const LyraPositions = () => {
+	const { lyra } = useBuilderContext();
+	const { address } = useAccount();
+
+	const { isLoading: isLyraPositionsLoading, data: lyraPositions } = useLyraPositions(
+		lyra,
+		address
+	);
+
+	return (
+		<>
 			<div className="border-t border-zinc-900 pt-8 p-4 text-sm font-normal text-zinc-200">
 				Lyra Positions
 			</div>
+
 			{isLyraPositionsLoading ? (
 				<div className="p-4">
 					<Spinner />
 				</div>
 			) : (
 				<table className="min-w-full  rounded-sm">
-					<thead className="divide-b divide-zinc-900 bg-zinc-800 "></thead>
-					<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
-						Type
-					</th>
-					<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
-						Direction
-					</th>
-					<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
-						Position Id
-					</th>
+					<thead className="divide-b divide-zinc-900 bg-zinc-800 ">
+						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+							Type
+						</th>
+						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+							Direction
+						</th>
+						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+							Position Id
+						</th>
 
-					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-						Status
-					</th>
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Status
+						</th>
 
-					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-						Open Date
-					</th>
-					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-						Delta
-					</th>
-					<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-						Hedge Delta
-					</th>
-					<th scope="col" className="sr-only">
-						Action
-					</th>
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Open Date
+						</th>
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Delta
+						</th>
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Hedge Delta
+						</th>
+						<th scope="col" className="sr-only">
+							Action
+						</th>
+					</thead>
 					<tbody className="divide-y divide-zinc-900 bg-inherit">
 						{lyraPositions?.map((position: LyraPosition, index: number) => {
 							const { isCall, isLong, id, isOpen, expiryTimestamp, delta } = position;
@@ -167,6 +197,6 @@ export const Positions = () => {
 					</tbody>
 				</table>
 			)}
-		</div>
+		</>
 	);
 };

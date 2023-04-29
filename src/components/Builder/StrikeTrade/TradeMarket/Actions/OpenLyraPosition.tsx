@@ -45,7 +45,7 @@ export const OpenLyraPosition = () => {
 					{otusMarket?.isOpenPositionLoading || otusMarket?.isTxLoading ? (
 						<Spinner size={"medium"} color={"secondary"} />
 					) : (
-						"Open Lyra Position"
+						"Open Position"
 					)}
 				</div>
 			)}
