@@ -17,7 +17,7 @@ import { CheckCircleIcon, CheckIcon, PlusCircleIcon, PlusIcon } from "@heroicons
 import LyraIcon from "../../UI/Icons/Color/LYRA";
 
 const style =
-	"border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center w-24 px-6 p-2 mr-1 text-sm font-light";
+	"border-2 cursor-pointer text-white-700 rounded-full bg-zinc-900 text-center sm:w-24 px-6 p-2 mr-1 text-sm font-light";
 
 export const SelectStrikesTable = () => {
 	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
