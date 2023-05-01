@@ -6,12 +6,12 @@ import { Strategies } from "./Strategies";
 export const Strategy = () => {
 	return (
 		<div className="flex flex-col">
-			<div className="border-b border-zinc-800 py-4 sm:flex">
-				<div className="p-2">
+			<div className="border-b border-zinc-800 py-4 sm:flex sm:justify-between">
+				<div className="p-2 w-full">
 					<SelectDirectionType />
 				</div>
 
-				<div className="p-2">
+				<div className="p-2  w-full">
 					<SelectBuilderExpiration />
 				</div>
 			</div>

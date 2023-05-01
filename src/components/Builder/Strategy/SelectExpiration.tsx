@@ -16,9 +16,9 @@ export const SelectBuilderExpiration = () => {
 		<Listbox value={selectedExpirationDate} onChange={handleSelectedExpirationDate}>
 			{({ open }) => (
 				<>
-					<div className="relative sm:pl-2">
-						<Listbox.Button className=" relative w-full  rounded-md cursor-pointer bg-zinc-800 shadow-black  shadow-sm py-3 pl-3 pr-10 text-left text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-							<span className="block truncate">
+					<div className="relative sm:pl-2 w-full">
+						<Listbox.Button className=" relative rounded-full cursor-pointer bg-zinc-900 shadow-black shadow-sm py-3 pl-3 pr-2 text-left text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md w-full">
+							<span className="bloc]k truncate">
 								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -33,7 +33,7 @@ export const SelectBuilderExpiration = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-900 py-1 text-base shadow-lg ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
 								{selectedMarket?.liveBoards.map((board: LyraBoard, index: number) => (
 									<Listbox.Option
 										key={index}
@@ -61,7 +61,7 @@ export const SelectBuilderExpiration = () => {
 												{selected ? (
 													<span
 														className={classNames(
-															active ? "text-white" : "text-indigo-600",
+															active ? "text-white" : "text-indigo-400",
 															"absolute inset-y-0 right-0 flex items-center pr-4"
 														)}
 													>

@@ -1,11 +1,8 @@
 import React from "react";
-import { useBuilderContext } from "../../../context/BuilderContext";
 import { SelectStrikesTable } from "./SelectStrikesTable";
 import { motion } from "framer-motion";
 
 export const Strikes = () => {
-	const { strikes } = useBuilderContext();
-
 	return (
 		<div className="col-span-3 sm:col-span-3 px-4 pb-6 grid grid-cols-6 bg-gradient-to-l from-black to-zinc-900 rounded-b-lg ">
 			{

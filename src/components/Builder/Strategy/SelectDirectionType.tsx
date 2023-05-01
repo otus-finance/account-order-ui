@@ -38,7 +38,7 @@ export const SelectDirectionType = () => {
 			{({ open }) => (
 				<>
 					<div className="relative sm:pl-2">
-						<Listbox.Button className=" relative w-full  rounded-md cursor-pointer bg-zinc-800 shadow-black  shadow-sm py-3 pl-3 pr-10 text-left text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-zinc-900 shadow-black shadow-sm py-3 pl-3 pr-20 text-left text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="block truncate">
 								{selectedDirectionTypes.length > 0
 									? buildTextSelectedDirections(selectedDirectionTypes)
@@ -56,7 +56,7 @@ export const SelectDirectionType = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
 								{DirectionType.map((direction: StrategyDirection) => (
 									<Listbox.Option
 										key={direction.id}
@@ -86,7 +86,7 @@ export const SelectDirectionType = () => {
 													{selected ? (
 														<span
 															className={classNames(
-																active ? "text-white" : "text-indigo-600",
+																active ? "text-white" : "text-emerald-400",
 																"absolute inset-y-0 right-0 flex items-center pr-4"
 															)}
 														>

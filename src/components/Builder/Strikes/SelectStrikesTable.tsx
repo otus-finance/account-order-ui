@@ -50,8 +50,8 @@ export const SelectStrikesTable = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between py-6 sm:w-40">
-				<div className="flex justify-between">
+			<div className="flex justify-between py-6 my-auto">
+				<div className="flex basis-1/2">
 					<div
 						onClick={() => setIsBuy(true)}
 						className={`${
@@ -86,7 +86,7 @@ export const SelectStrikesTable = () => {
 					</div>
 				</div>
 
-				<div className="flex">
+				<div className="flex basis-1/2">
 					{builderType === BuilderType.Custom && <SelectBuilderExpiration />}
 				</div>
 			</div>
