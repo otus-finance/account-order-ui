@@ -7,6 +7,7 @@ import LogoIcon from "../UI/Icons/Logo/OTUS";
 // import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Web3Button } from "../UI/Web3Button";
 import { DarkModeSwitch } from "./darkMode";
+import { useTheme } from "next-themes";
 
 const linkStyle = (path: string, activePath: string) => {
 	if (path == activePath) {
@@ -26,6 +27,9 @@ const linkStyleMobile = (path: string, activePath: string) => {
 
 export const Navigation = () => {
 	const router = useRouter();
+
+	const { theme } = useTheme();
+
 	return (
 		<Disclosure as="nav" className="border-b dark:border-zinc-800 ">
 			{({ open }) => (
@@ -36,7 +40,11 @@ export const Navigation = () => {
 								<div className="flex-shrink-0">
 									<Link href="/">
 										<span className="mt-1 block w-auto cursor-pointer">
-											<LogoIcon />
+											{theme == "dark" ? (
+												<LogoIcon />
+											) : (
+												<img src="./OTUSICONLOGO.png" className="rounded-md h-12" />
+											)}
 										</span>
 									</Link>
 								</div>

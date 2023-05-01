@@ -69,7 +69,7 @@ export const Strategies = () => {
 										return (
 											<span
 												key={index}
-												className="text-xs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 p-1 mr-1"
+												className="text-xs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 bg-emerald-400 text-white p-1 mr-1"
 											>
 												{tag}
 											</span>
