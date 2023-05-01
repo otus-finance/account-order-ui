@@ -86,10 +86,10 @@ export const Strategies = () => {
 								})}
 							</div>
 
-							<div className="has-tooltip mt-2 inline-block">
+							<div className="has-tooltip mt-2 inline-block ">
 								<InformationCircleIcon className="dark:text-zinc-200 h-4 w-4" />
 
-								<motion.div className="dark:bg-zinc-900 p-4 tooltip  -mt-16">
+								<motion.div className="dark:bg-zinc-900 p-4 tooltip bg-zinc-100 -mt-16">
 									<p className="text-xs leading-5 font-light dark:text-zinc-200">{description}</p>
 								</motion.div>
 							</div>

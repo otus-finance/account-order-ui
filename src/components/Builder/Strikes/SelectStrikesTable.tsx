@@ -50,7 +50,7 @@ export const SelectStrikesTable = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between px-4 py-6 my-auto">
+			<div className="flex justify-between p-4 my-auto">
 				<div className="flex basis-1/2">
 					<div
 						onClick={() => setIsBuy(true)}
@@ -100,7 +100,7 @@ export const SelectStrikesTable = () => {
 			</div>
 
 			<div className="mt-4">
-				<table className="min-w-full divide-y divide-zinc-300">
+				<table className="min-w-full divide-y divide-zinc-200">
 					<thead className="dark:bg-inherit  ">
 						<tr>
 							<th
