@@ -8,16 +8,14 @@ import {
 } from "../../../utils/formatters/numbers";
 import { LyraStrike } from "../../../queries/lyra/useLyra";
 import { BuilderType, OptionType } from "../../../utils/types";
-import { motion, AnimatePresence } from "framer-motion";
 import { calculateOptionType } from "../../../utils/formatters/optiontypes";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { SelectBuilderExpiration } from "../Strategy/SelectExpiration";
-import { Spinner } from "../../UI/Components/Spinner";
-import { CheckCircleIcon, CheckIcon, PlusCircleIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { CheckIcon, PlusIcon } from "@heroicons/react/24/solid";
 import LyraIcon from "../../UI/Icons/Color/LYRA";
 
 const style =
-	"border-2 cursor-pointer dark:text-white-700 rounded-full dark:bg-zinc-900 text-center sm:w-24 px-6 p-2 mr-1 text-sm font-light";
+	"border-2 cursor-pointer dark:text-white-700 rounded-full dark:bg-zinc-900 text-center sm:w-24 sm:px-6 p-2 mr-1 text-sm font-light";
 
 export const SelectStrikesTable = () => {
 	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
@@ -50,8 +48,8 @@ export const SelectStrikesTable = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between p-4 my-auto">
-				<div className="flex basis-1/2">
+			<div className="flex flex-col lg:flex-row sm:justify-between p-4 my-auto">
+				<div className="flex items-center sm:basis-1/2">
 					<div
 						onClick={() => setIsBuy(true)}
 						className={`${
@@ -94,12 +92,12 @@ export const SelectStrikesTable = () => {
 					</div>
 				</div>
 
-				<div className="flex basis-1/2">
+				<div className="flex py-2 items-center sm:basis-1/2">
 					{builderType === BuilderType.Custom && <SelectBuilderExpiration />}
 				</div>
 			</div>
 
-			<div className="mt-4">
+			<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
 				<table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
 					<thead className="dark:bg-inherit  ">
 						<tr>
