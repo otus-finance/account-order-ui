@@ -100,7 +100,7 @@ export const SelectStrikesTable = () => {
 			</div>
 
 			<div className="mt-4">
-				<table className="min-w-full divide-y divide-zinc-200">
+				<table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
 					<thead className="dark:bg-inherit  ">
 						<tr>
 							<th
