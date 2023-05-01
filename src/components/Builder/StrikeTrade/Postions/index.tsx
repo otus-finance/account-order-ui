@@ -148,21 +148,21 @@ const LyraPositions = () => {
 								<tr key={index} className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
 									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 										{isCall ? (
-											<span className="dark:bg-emerald-500 dark:text-zinc-100 font-normal p-1 rounded-lg">
+											<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">
 												Call
 											</span>
 										) : (
-											<span className="dark:bg-pink-700 dark:text-zinc-100  font-normal p-1 rounded-lg">
+											<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">
 												Put
 											</span>
 										)}
 									</td>
 
-									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
 										{isLong ? (
-											<span className="dark:text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+											<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
 										) : (
-											<span className="dark:text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+											<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
 										)}
 									</td>
 

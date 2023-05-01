@@ -145,9 +145,9 @@ const SpreadLiquidityPool = () => {
 								: "$0"}
 						</div>
 					</div>
-					<div className="rounded-xs h-3 w-full dark:bg-zinc-800">
+					<div className="rounded-xs h-3 w-full dark:bg-zinc-800 bg-zinc-200">
 						<div
-							className={`progress-bar h-3 dark:bg-emerald-500`}
+							className={`progress-bar h-3 bg-emerald-500`}
 							style={{ width: percentWidth(userDeposit || ZERO_BN, liquidityPool.cap) }}
 						></div>
 					</div>

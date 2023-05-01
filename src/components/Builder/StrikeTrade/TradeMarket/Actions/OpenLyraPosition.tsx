@@ -54,7 +54,7 @@ export const OpenLyraPosition = () => {
 				<div className="py-4">
 					<div
 						onClick={() => handleSelectActivityType(ActivityType.Position)}
-						className="cursor-pointer rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white dark:bg-gradient-to-t from-black to-zinc-800"
+						className="cursor-pointer rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white bg-gradient-to-t from-black to-zinc-800"
 					>
 						View Position
 					</div>
@@ -63,7 +63,7 @@ export const OpenLyraPosition = () => {
 
 			{otusMarket?.openConfigError && (
 				<div className="py-4 cursor-not-allowed">
-					<div className="p-4 text-sm  dark:bg-rose-500 rounded-xl">
+					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
 						{otusMarket?.openConfigError.reason}
 					</div>
 				</div>
