@@ -40,11 +40,7 @@ export const Navigation = () => {
 								<div className="flex-shrink-0">
 									<Link href="/">
 										<span className="mt-1 block w-auto cursor-pointer">
-											{theme == "dark" ? (
-												<LogoIcon />
-											) : (
-												<img src="./OTUSICONLOGO.png" className="rounded-md h-12" />
-											)}
+											{theme == "dark" ? <LogoIcon /> : <LogoIcon />}
 										</span>
 									</Link>
 								</div>
