@@ -7,7 +7,7 @@ export const MarketTransaction = () => {
 	const { networkNotSupported } = useMarketOrderContext();
 
 	return networkNotSupported ? (
-		<div className="cursor-pointer dark:bg-gradient-to-t from-black to-zinc-900 rounded-full p-4 w-full font-semibold hover:dark:text-zinc-200 py-3 text-center dark:text-white">
+		<div className="cursor-pointer bg-gradient-to-t from-black to-zinc-900  rounded-full p-4 w-full font-semibold hover:dark:text-zinc-200 py-3 text-center text-white">
 			Network not supported
 		</div>
 	) : (
