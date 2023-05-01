@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { PnlChartPoint } from "../../../hooks/BuilderChart";
 import { formatUSD } from "../../../utils/formatters/numbers";
+import { useTheme } from "next-themes";
 
 export const BuilderPNLChart = ({
 	currentPrice,
@@ -23,6 +24,10 @@ export const BuilderPNLChart = ({
 	data: PnlChartPoint[] | [];
 	height?: number;
 }) => {
+	const { theme } = useTheme();
+
+	const cartesianGridColor = theme === "dark" ? "#27272a" : "#d4d4d8";
+
 	return (
 		<ResponsiveContainer width={"99%"} height={height}>
 			<LineChart
@@ -57,7 +62,7 @@ export const BuilderPNLChart = ({
 					}}
 				/>
 
-				<CartesianGrid stroke={"#27272a"} strokeDasharray="3 3" />
+				<CartesianGrid stroke={cartesianGridColor} strokeDasharray="3 3" />
 
 				{/* @ts-ignore */}
 				<Tooltip content={<CustomTooltip currentPrice={currentPrice} />} />
@@ -124,19 +129,23 @@ const CustomTooltip = ({
 }) => {
 	if (active && payload && payload.length) {
 		return (
-			<div className="grid grid-cols-2">
+			<div className="grid grid-cols-2 bg-zinc-100 dark:bg-inherit">
 				<div className="col-span-2 grid-cols-1">
 					<div>
-						<p className="truncate font-sans text-xs font-medium text-white">Asset Price At</p>
+						<p className="truncate font-sans text-xs font-medium dark:text-white text-zinc-900">
+							Asset Price At
+						</p>
 					</div>
 					<div>
-						<p className="font-mono text-xs font-normal leading-5 text-white">{formatUSD(label)}</p>
+						<p className="font-mono text-xs font-normal leading-5 dark:text-white">
+							{formatUSD(label)}
+						</p>
 					</div>
 				</div>
 
 				<div className="col-span-2 grid-cols-1">
 					<div>
-						<p className="truncate font-sans text-xs font-medium text-white">Profit/Loss</p>
+						<p className="truncate font-sans text-xs font-medium dark:text-white">Profit/Loss</p>
 					</div>
 					<div>
 						{payload[0].value > 0 ? (
@@ -153,10 +162,10 @@ const CustomTooltip = ({
 
 				<div className="col-span-2 grid-cols-1">
 					<div>
-						<p className="truncate font-sans text-xs font-medium text-white">Current Price</p>
+						<p className="truncate font-sans text-xs font-medium dark:text-white">Current Price</p>
 					</div>
 					<div>
-						<p className="font-mono text-xs font-normal leading-5 text-white">
+						<p className="font-mono text-xs font-normal leading-5 dark:text-white">
 							{formatUSD(currentPrice)}
 						</p>
 					</div>

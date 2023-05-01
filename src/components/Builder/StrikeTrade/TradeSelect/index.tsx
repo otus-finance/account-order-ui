@@ -8,9 +8,9 @@ export const WalletBalance = () => {
 
 	const { quoteAsset, quoteAssetBalance } = useLyraTrade(lyra);
 	return (
-		<div className="flex justify-between border-b border-zinc-800 py-4 p-4">
-			<div className="text-sm font-mono text-zinc-200">Wallet Balance</div>
-			<div className="text-sm text-white font-semibold col-span-1 text-right">
+		<div className="flex justify-between border-b dark:border-zinc-800 py-4 p-4">
+			<div className="text-sm font-mono dark:text-zinc-200">Wallet Balance</div>
+			<div className="text-sm dark:text-white font-semibold col-span-1 dark:text-right">
 				{formatUSD(fromBigNumber(quoteAssetBalance, quoteAsset?.decimals), { dps: 2 })}{" "}
 				{quoteAsset?.symbol}
 			</div>

@@ -37,7 +37,9 @@ export const Strategies = () => {
 			{filteredStrategies.map((strategy: Strategy, index: number) => {
 				const { name, description, type, tags } = strategy;
 
-				const isSelectedStyle = isSelected(strategy) ? "border-emerald-400" : "border-zinc-900";
+				const isSelectedStyle = isSelected(strategy)
+					? "border-emerald-400"
+					: "dark:border-zinc-900";
 
 				return (
 					<motion.div
@@ -45,7 +47,7 @@ export const Strategies = () => {
 						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`mb-8 sm:mb-0 basis-1/2  md:basis-1/3 xl:basis-1/5 sm:gap-14 sm:shrink-0 cursor-pointer border-4 hover:border-emerald-600 mt-2 rounded-lg ${isSelectedStyle}`}
+						className={`mb-8 sm:mb-0 basis-1/2  md:basis-1/3 xl:basis-1/5 sm:gap-14 sm:shrink-0 cursor-pointer border-4 hover:border-emerald-400 mt-2 rounded-lg ${isSelectedStyle}`}
 					>
 						<div className="p-2">
 							<div className="flex place-content-between">
@@ -67,7 +69,7 @@ export const Strategies = () => {
 										return (
 											<span
 												key={index}
-												className="text-xs font-normal rounded-sm bg-emerald-600 text-zinc-200 p-1 mr-1"
+												className="text-xs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 p-1 mr-1"
 											>
 												{tag}
 											</span>
@@ -76,7 +78,7 @@ export const Strategies = () => {
 									return (
 										<span
 											key={index}
-											className="text-xs font-light rounded-sm bg-zinc-800 text-zinc-100 p-1 mr-1"
+											className="text-xs font-light rounded-sm dark:bg-zinc-800 dark:text-zinc-100 p-1 mr-1"
 										>
 											{tag}
 										</span>
@@ -85,10 +87,10 @@ export const Strategies = () => {
 							</div>
 
 							<div className="has-tooltip mt-2 inline-block">
-								<InformationCircleIcon className="text-zinc-200 h-4 w-4" />
+								<InformationCircleIcon className="dark:text-zinc-200 h-4 w-4" />
 
-								<motion.div className="bg-zinc-900 p-4 tooltip  -mt-16">
-									<p className="text-xs leading-5 font-light text-zinc-200">{description}</p>
+								<motion.div className="dark:bg-zinc-900 p-4 tooltip  -mt-16">
+									<p className="text-xs leading-5 font-light dark:text-zinc-200">{description}</p>
 								</motion.div>
 							</div>
 						</div>

@@ -23,14 +23,14 @@ const Markets: NextPage = () => {
 			</Head>
 
 			<Layout>
-				<div className="mx-auto max-w-screen-2xl py-8 text-white">
+				<div className="mx-auto max-w-screen-2xl py-8 dark:text-white">
 					{isLoading ? <Spinner /> : null}
 
 					<div className="grid md:grid-cols-2 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-12">
 						{data?.rangedMarkets.map((market, index) => {
 							return (
 								<div key={index} className="col-span-1">
-									<div className="cursor-disabled rounded-xl bg-gradient-to-b from-blue-600 to-emerald-600  shadow-lg shadow-black">
+									<div className="cursor-disabled rounded-xl dark:bg-gradient-to-b from-blue-600 to-emerald-600  shadow-lg dark:shadow-black shadow-zinc-100">
 										<Market market={market} />
 									</div>
 								</div>

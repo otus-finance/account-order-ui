@@ -28,7 +28,7 @@ export const Web3Button = () => {
 										<button
 											onClick={openConnectModal}
 											type="button"
-											className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
+											className="flex items-center dark:bg-zinc-900 p-3 rounded-full dark:text-white text-sm font-semibold"
 										>
 											Connect Wallet
 										</button>
@@ -40,7 +40,7 @@ export const Web3Button = () => {
 									<button
 										onClick={openChainModal}
 										type="button"
-										className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
+										className="flex items-center dark:bg-zinc-900 p-3 rounded-full dark:text-white text-sm font-semibold"
 									>
 										Wrong network
 									</button>
@@ -50,12 +50,12 @@ export const Web3Button = () => {
 								<div className="flex gap-4">
 									<button
 										onClick={openChainModal}
-										className="flex items-center bg-zinc-800 p-3 rounded-xl text-white text-sm font-semibold"
+										className="flex items-center dark:bg-zinc-800 p-3 rounded-xl dark:text-white text-sm font-semibold"
 										type="button"
 									>
 										{chain?.hasIcon && (
 											<div
-												className={`bg-[${chain.iconBackground}] h-5 w-5 rounded-full overflow-hidden mr-2`}
+												className={`dark:bg-[${chain.iconBackground}] h-5 w-5 rounded-full overflow-hidden mr-2`}
 											>
 												{chain.iconUrl && (
 													<img
@@ -68,11 +68,11 @@ export const Web3Button = () => {
 										)}
 										{chain?.name}
 										<div className="ml-2">
-											<ChevronDownIcon className="h-4 w-4 text-white font-bold" />
+											<ChevronDownIcon className="h-4 w-4 dark:text-white font-bold" />
 										</div>
 									</button>
 									<button
-										className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
+										className="flex items-center dark:bg-zinc-900 p-3 rounded-full dark:text-white text-sm font-semibold"
 										onClick={openAccountModal}
 										type="button"
 									>

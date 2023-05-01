@@ -17,12 +17,12 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative sm:pl-2 w-full">
-						<Listbox.Button className=" relative rounded-full cursor-pointer bg-zinc-900 shadow-black shadow-sm py-3 pl-3 pr-2 text-left text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md w-full">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="bloc]k truncate">
 								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-								<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+								<ChevronUpDownIcon className="h-5 w-5 dark:text-gray-400" aria-hidden="true" />
 							</span>
 						</Listbox.Button>
 
@@ -33,13 +33,13 @@ export const SelectBuilderExpiration = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-900 py-1 text-base shadow-lg ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
+							<Listbox.Options className="bg-white rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
 								{selectedMarket?.liveBoards.map((board: LyraBoard, index: number) => (
 									<Listbox.Option
 										key={index}
 										className={({ active }) =>
 											classNames(
-												active ? "bg-emerald-600 text-white" : "text-white",
+												active ? "dark:bg-emerald-600 dark:text-white" : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}
@@ -61,7 +61,7 @@ export const SelectBuilderExpiration = () => {
 												{selected ? (
 													<span
 														className={classNames(
-															active ? "text-white" : "text-indigo-400",
+															active ? "text-white" : "text-emerald-500",
 															"absolute inset-y-0 right-0 flex items-center pr-4"
 														)}
 													>

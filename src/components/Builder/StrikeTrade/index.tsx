@@ -30,14 +30,14 @@ export const StrikeTrade = () => {
 					{/* strikes summary  */}
 					<WalletBalance />
 
-					<div className="border-b border-zinc-800 py-4 p-4">
+					<div className="border-b dark:border-zinc-800 py-4 p-4">
 						{builderType == BuilderType.Builder && builderTypeClean ? (
 							<div className="flex justify-between items-center">
-								<div className="text-sm font-semibold font-mono text-emerald-100">
+								<div className="text-sm font-semibold font-mono dark:text-emerald-100">
 									{selectedStrategy && selectedStrategy.name}
 								</div>
 								<div className="flex justify-between items-center">
-									<div className="text-sm font-normal font-mono text-zinc-200 pr-4">Size</div>
+									<div className="text-sm font-normal font-mono dark:text-zinc-200 pr-4">Size</div>
 									<div>
 										<DebounceInput
 											debounceTimeout={300}
@@ -54,50 +54,50 @@ export const StrikeTrade = () => {
 											name="multiSize"
 											id="multiSize"
 											value={1}
-											className={`w-24 border border-zinc-800 bg-transparent p-2  text-zinc-200 shadow-lg text-sm ring-emerald-600`}
+											className={`w-24 border dark:border-zinc-800 dark:bg-transparent p-2  dark:text-zinc-200 shadow-lg text-sm ring-emerald-600`}
 										/>
 									</div>
 								</div>
 							</div>
 						) : (
-							<div className="text-sm font-semibold font-mono text-emerald-100">Custom</div>
+							<div className="text-sm font-semibold font-mono dark:text-emerald-100">Custom</div>
 						)}
 					</div>
 
 					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
-						<table className="  font-semibold min-w-full divide-y divide-zinc-800 table-fixed">
-							<thead className="bg-inherit ">
+						<table className="  font-semibold min-w-full divide-y dark:divide-zinc-800 divide-zinc-300 table-fixed">
+							<thead className="dark:bg-inherit ">
 								<tr className="font-mono ">
-									<th scope="col" className="py-2 text-xs text-zinc-400 text-left  px-4">
+									<th scope="col" className="py-2 text-xs dark:text-zinc-400 text-left  px-4">
 										Expiry
 									</th>
-									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Type
 									</th>
-									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Direction
 									</th>
-									<th scope="col" className="text-xs text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Strike Price
 									</th>
 									{!spreadSelected && (
-										<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+										<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
 											Collateral Percent
 										</th>
 									)}
 
-									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
 										Price
 									</th>
-									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
 										Credit/(Debit)
 									</th>
-									<th scope="col" className="text-xs  text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
 										Size
 									</th>
 								</tr>
 							</thead>
-							<tbody className="divide-y divide-zinc-800 bg-inherit">
+							<tbody className="divide-y dark:divide-zinc-800 divide-zinc-200 dark:bg-inherit">
 								{loading && <Spinner />}
 								{selectedStrikes.map((strike, index) => {
 									return <StrikeTradeDetail strike={strike} key={index} />;
@@ -165,34 +165,38 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 
 	return (
 		<tr
-			className="bg-inherit hover:bg-zinc-900 cursor-pointer"
+			className="dark:bg-inherit hover:dark:bg-zinc-900 hover:bg-zinc-100 cursor-pointer"
 			onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 			onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
 		>
-			<td className="text-xs font-medium text-zinc-300   px-4">
+			<td className="text-xs font-medium dark:text-zinc-300   px-4">
 				{expiryTimestamp && formatExpirationDate(expiryTimestamp)}
 			</td>
 			<td className="py-3 text-xs px-4">
 				{isCall ? (
-					<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">Call</span>
+					<span className="dark:bg-emerald-500 dark:text-zinc-100 font-normal p-1 rounded-lg">
+						Call
+					</span>
 				) : (
-					<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">Put</span>
+					<span className="dark:bg-pink-700 dark:text-zinc-100  font-normal p-1 rounded-lg">
+						Put
+					</span>
 				)}
 			</td>
 			<td className="text-xs  px-4">
 				{isBuy ? (
-					<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+					<span className="dark:text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
 				) : (
-					<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+					<span className="dark:text-pink-700 font-normal p-1 rounded-lg">Sell</span>
 				)}
 			</td>
 
-			<td className="text-xs font-medium text-zinc-300   px-4">
+			<td className="text-xs font-medium dark:text-zinc-300   px-4">
 				{formatUSD(strikePrice, { dps: 0 })}
 			</td>
 
 			{!spreadSelected && (
-				<td className="text-xs font-medium text-zinc-300   px-4">
+				<td className="text-xs font-medium dark:text-zinc-300   px-4">
 					{isBuy ? (
 						"-"
 					) : editCollateral ? (
@@ -211,21 +215,21 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 								min={0.4}
 								max={1}
 								value={collateralPercent}
-								className={`w-16 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
+								className={`w-16 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-lg text-xs ${
 									isUpdating && "cursor-disabled"
 								}`}
 							/>
 
 							<div>
 								<XMarkIcon
-									className="h-4 w-4 text-rose-500"
+									className="h-4 w-4 dark:text-rose-500"
 									onClick={() => setEditCollateral(false)}
 								/>
 							</div>
 
 							<div>
 								<CheckIcon
-									className="h-4 w-4 text-emerald-500"
+									className="h-4 w-4 dark:text-emerald-500"
 									onClick={() => handleConfirmCollateral()}
 								/>
 							</div>
@@ -236,7 +240,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 							{collateralPercent && formatPercentage(collateralPercent, true)}
 
 							<PencilSquareIcon
-								className="h-4 w-4 text-zinc-200"
+								className="h-4 w-4 dark:text-zinc-200"
 								onClick={() => setEditCollateral(true)}
 							/>
 						</div>
@@ -244,7 +248,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				</td>
 			)}
 
-			<td className="text-xs font-medium text-zinc-300   px-4">
+			<td className="text-xs font-medium dark:text-zinc-300   px-4">
 				{isUpdating ? (
 					<Spinner size="small" />
 				) : (
@@ -252,7 +256,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				)}
 			</td>
 
-			<td className="text-xs font-medium text-zinc-300  px-4 ">
+			<td className="text-xs font-medium dark:text-zinc-300  px-4 ">
 				{isUpdating ? (
 					<Spinner size="small" />
 				) : (
@@ -260,7 +264,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				)}
 			</td>
 
-			<td className="text-xs font-semibold text-zinc-300 px-4">
+			<td className="text-xs font-semibold dark:text-zinc-300 px-4">
 				{editPricing ? (
 					<div className="flex gap-2 items-center">
 						<DebounceInput
@@ -276,18 +280,21 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 							name="size"
 							id="size"
 							value={newSize}
-							className={`w-12 border-2 border-emerald-600 bg-transparent p-1  text-zinc-200 shadow-lg text-xs ${
+							className={`w-12 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-lg text-xs ${
 								isUpdating && "cursor-disabled"
 							}`}
 						/>
 
 						<div>
-							<XMarkIcon className=" h-4 w-4 text-rose-500" onClick={() => setEditPricing(false)} />
+							<XMarkIcon
+								className=" h-4 w-4 dark:text-rose-500"
+								onClick={() => setEditPricing(false)}
+							/>
 						</div>
 
 						<div>
 							<CheckIcon
-								className="h-4 w-4 text-emerald-500"
+								className="h-4 w-4 dark:text-emerald-500"
 								onClick={() => handleConfirmSizeUpdate()}
 							/>
 						</div>
@@ -297,7 +304,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 						{fromBigNumber(size)}
 
 						<PencilSquareIcon
-							className="h-4 w-4 text-zinc-200"
+							className="h-4 w-4 dark:text-zinc-200"
 							onClick={() => setEditPricing(true)}
 						/>
 					</div>

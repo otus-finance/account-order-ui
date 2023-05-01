@@ -26,8 +26,8 @@ export const TradeLimit = () => {
 
 	return (
 		<div className="col-span-1 px-4 pb-4">
-			<div className="p-4 border border-zinc-800">
-				<p className="text-zinc-200 text-xs leading-5">
+			<div className="p-4 border dark:border-zinc-800">
+				<p className="dark:text-zinc-200 text-xs leading-5">
 					Create a margin account to trade Lyra options with limit orders. Set limit price orders or
 					limit votality orders. Coming Soon.
 				</p>
@@ -143,20 +143,20 @@ const TradeLimitActions = () => {
 						<div className="flex justify-between">
 							<div
 								onClick={() => setOrderType(OrderTypes.LIMIT_PRICE)}
-								className={`hover:border-emerald-600 cursor-pointer p-2 font-normal text-center w-full rounded-l-full text-xs bg-zinc-900 border-2 ${
+								className={`hover:border-emerald-600 cursor-pointer p-2 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 border-2 ${
 									OrderTypes.LIMIT_PRICE === orderType
 										? "border-emerald-600"
-										: "border-zinc-800 border-r-transparent"
+										: "dark:border-zinc-800 border-r-transparent"
 								}`}
 							>
 								Price
 							</div>
 							<div
 								onClick={() => setOrderType(OrderTypes.LIMIT_VOL)}
-								className={`hover:border-emerald-600 cursor-pointer p-2 font-normal text-center w-full rounded-r-full text-xs bg-zinc-900 border-2  ${
+								className={`hover:border-emerald-600 cursor-pointer p-2 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900 border-2  ${
 									OrderTypes.LIMIT_VOL === orderType
 										? "border-emerald-600"
-										: "border-zinc-800 border-l-transparent"
+										: "dark:border-zinc-800 border-l-transparent"
 								}`}
 							>
 								Volatility
@@ -166,13 +166,13 @@ const TradeLimitActions = () => {
 
 					<div className="pt-2 pb-2">
 						{orderType === OrderTypes.LIMIT_PRICE && (
-							<div className="bg-black border border-zinc-800 py-4 p-2">
+							<div className="dark:bg-black border dark:border-zinc-800 py-4 p-2">
 								<div className="flex items-center justify-between px-2">
-									<p className="truncate font-sans text-xs font-normal text-zinc-400">
+									<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">
 										Entry Price Per Option
 									</p>
 									<div className="ml-2 flex flex-shrink-0">
-										<p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
+										<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
 											Current Price:{" "}
 											{strikes[0] ? formatUSD(fromBigNumber(strikes[0].quote.pricePerOption)) : ""}
 										</p>
@@ -195,23 +195,23 @@ const TradeLimitActions = () => {
 										name="size"
 										id="size"
 										value={fromBigNumber(order?.targetPrice)}
-										className="block ring-transparent outline-none w-24 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+										className="block ring-transparent outline-none w-24 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 									/>
 									<div className="ml-2 flex flex-shrink-0">
-										<p className="inline-flex font-normal text-2xl text-white">USD</p>
+										<p className="inline-flex font-normal text-2xl dark:text-white">USD</p>
 									</div>
 								</div>
 							</div>
 						)}
 
 						{orderType === OrderTypes.LIMIT_VOL && (
-							<div className="bg-black border border-zinc-800 py-4 p-2">
+							<div className="dark:bg-black border dark:border-zinc-800 py-4 p-2">
 								<div className="flex items-center justify-between px-2">
-									<p className="truncate font-sans text-xs font-normal text-zinc-400">
+									<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">
 										Entry Volatility
 									</p>
 									<div className="ml-2 flex flex-shrink-0">
-										<p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
+										<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
 											Current Volatility:{" "}
 											{strikes[0] ? formatPercentage(fromBigNumber(strikes[0].quote.iv)) : ""}
 										</p>
@@ -234,17 +234,17 @@ const TradeLimitActions = () => {
 										name="size"
 										id="size"
 										value={fromBigNumber(order.targetVolatility) * 100}
-										className="block ring-transparent outline-none w-24 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+										className="block ring-transparent outline-none w-24 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 									/>
 									<div className="ml-2 flex flex-shrink-0">
-										<p className="inline-flex font-normal text-2xl text-white">%</p>
+										<p className="inline-flex font-normal text-2xl dark:text-white">%</p>
 									</div>
 								</div>
 							</div>
 						)}
 					</div>
 					{orderDirectionMessage && (
-						<div className="p-4 border border-zinc-800 font-normal text-zinc-200 text-xs">
+						<div className="p-4 border dark:border-zinc-800 font-normal dark:text-zinc-200 text-xs">
 							{orderDirectionMessage}
 						</div>
 					)}
@@ -252,7 +252,7 @@ const TradeLimitActions = () => {
 						<div className="py-6">
 							<div
 								onClick={() => placeOrder?.()}
-								className="cursor-pointer border-2 bg-emerald-600 border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 p-2 py-3 col-span-3 text-sm font-semibold text-white text-center rounded-full"
+								className="cursor-pointer border-2 dark:bg-emerald-600 border-emerald-600 hover:dark:bg-emerald-500 hover:border-emerald-500 p-2 py-3 col-span-3 text-sm font-semibold dark:text-white text-center rounded-full"
 							>
 								Place Order
 							</div>
@@ -260,7 +260,7 @@ const TradeLimitActions = () => {
 					)}
 				</>
 			) : (
-				<div className="p-4 border border-zinc-800 font-normal text-zinc-200 text-xs mt-4">
+				<div className="p-4 border dark:border-zinc-800 font-normal dark:text-zinc-200 text-xs mt-4">
 					Currently only <span className="font-semibold">1</span> strike at a time supported.
 				</div>
 			)}

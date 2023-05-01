@@ -27,7 +27,7 @@ export const AccountPosition = () => {
 					selectedAccountTab={selectedAccountTab}
 					setSelectedAccountTab={setSelectedAccountTab}
 				/>
-				<div className="border border-zinc-800 rounded-lg p-6 shadow-md shadow-black">
+				<div className="border dark:border-zinc-800 rounded-lg p-6 shadow-md dark:shadow-black shadow-zinc-100">
 					<AccountInfo selectedAccountTab={selectedAccountTab} />
 				</div>
 			</>
@@ -46,10 +46,10 @@ const AccountInfoSelect = ({
 		<div className="flex items-center gap-8 text-sm px-6 pt-6 pb-2">
 			<div
 				onClick={() => setSelectedAccountTab(AccountTab.SpreadPositions)}
-				className={`cursor-pointer hover:text-white ${
+				className={`cursor-pointer hover:dark:text-white ${
 					selectedAccountTab === AccountTab.SpreadPositions
-						? "text-white underline"
-						: "text-zinc-300"
+						? "dark:text-white underline"
+						: "dark:text-zinc-300"
 				}`}
 			>
 				Spread Positions
@@ -87,7 +87,7 @@ const AccountInfo = ({ selectedAccountTab }: { selectedAccountTab: AccountTab })
 const AccountOrders = ({ orders }: { orders: Array<Order> }) => {
 	return (
 		<table className="min-w-full divide-y divide-zinc-700">
-			<thead className="bg-zinc-800">
+			<thead className="dark:bg-zinc-800">
 				<tr>
 					<th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-xs font-light">
 						Order Id
@@ -121,7 +121,7 @@ const AccountOrders = ({ orders }: { orders: Array<Order> }) => {
 					</th>
 				</tr>
 			</thead>
-			<tbody className="divide-y divide-zinc-700 bg-zinc-800">
+			<tbody className="divide-y divide-zinc-700 dark:bg-zinc-800">
 				{orders.map((order: Order, index: number) => {
 					const {
 						id,
@@ -142,34 +142,34 @@ const AccountOrders = ({ orders }: { orders: Array<Order> }) => {
 
 					return (
 						<tr key={index}>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{orderId}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								Order Type
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{status}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{formatUSD(fromBigNumber(committedMargin))}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{optionType}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{fromBigNumber(strikeId)}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{fromBigNumber(size)}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{fromBigNumber(tradeDirection)}
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								Target Price
 							</td>
-							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-zinc-200 sm:pl-3">
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium dark:text-zinc-200 sm:pl-3">
 								{formatPercentage(fromBigNumber(targetVolatility))}
 							</td>
 						</tr>

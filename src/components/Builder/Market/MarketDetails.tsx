@@ -8,7 +8,7 @@ export const MarketDetails = () => {
 
 	return (
 		<div className="flex divider items-center sm:ml-4">
-			<div className="font-semibold text-lg uppercase text-zinc-200 p-2 px-4">
+			<div className="font-semibold text-lg uppercase dark:text-zinc-200 p-2 px-4">
 				<strong>
 					{selectedMarket &&
 						selectedMarket.spotPrice &&
@@ -18,9 +18,9 @@ export const MarketDetails = () => {
 
 			{selectedMarket && (
 				<div className="hidden sm:block px-4">
-					<div className="font-semibold text-xs text-zinc-400">Free Liquidity</div>
+					<div className="font-semibold text-xs dark:text-zinc-400">Free Liquidity</div>
 
-					<div className="font-light text-sm uppercase text-zinc-200">
+					<div className="font-light text-sm uppercase dark:text-zinc-200">
 						<strong>
 							{selectedMarket &&
 								selectedMarket.liquidity &&

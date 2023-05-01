@@ -10,24 +10,24 @@ import { DarkModeSwitch } from "./darkMode";
 
 const linkStyle = (path: string, activePath: string) => {
 	if (path == activePath) {
-		return "p-3 text-sm font-bold text-white";
+		return "p-3 text-sm font-bold dark:text-white";
 	} else {
-		return "p-3 text-sm font-normal text-white hover:text-zinc-500";
+		return "p-3 text-sm font-normal dark:text-white hover:dark:text-zinc-500";
 	}
 };
 
 const linkStyleMobile = (path: string, activePath: string) => {
 	if (path == activePath) {
-		return "block p-3 text-base font-bold text-white";
+		return "block p-3 dark:text-base font-bold dark:text-white";
 	} else {
-		return "block p-3 text-base font-normal text-white hover:text-zinc-500";
+		return "block p-3 dark:text-base font-normal dark:text-white hover:dark:text-zinc-500";
 	}
 };
 
 export const Navigation = () => {
 	const router = useRouter();
 	return (
-		<Disclosure as="nav" className="border-b border-zinc-800 ">
+		<Disclosure as="nav" className="border-b dark:border-zinc-800 ">
 			{({ open }) => (
 				<>
 					<div className="mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
@@ -59,19 +59,19 @@ export const Navigation = () => {
 								<div className="flex items-center">
 									<Web3Button />
 								</div>
-								<div className="flex items-center text-white">
+								<div className="flex items-center dark:text-white ml-4">
 									<DarkModeSwitch />
 								</div>
 							</div>
 
 							<div className="-mr-2 flex sm:hidden">
 								{/* Mobile menu button */}
-								<Disclosure.Button className="text-white inline-flex items-center justify-center rounded-md p-2 hover:bg-zinc-800 hover:text-white focus:outline-none focus:ring-1 focus:ring-inset focus:ring-zinc-200">
+								<Disclosure.Button className="dark:text-white inline-flex items-center justify-center rounded-md p-2 hover:dark:bg-zinc-800 hover:dark:text-white focus:outline-none focus:ring-1 focus:ring-inset focus:ring-zinc-200">
 									<span className="sr-only">Open main menu</span>
 									{open ? (
-										<XMarkIcon className="block h-6 w-6 text-zinc-200" aria-hidden="true" />
+										<XMarkIcon className="block h-6 w-6 dark:text-zinc-200" aria-hidden="true" />
 									) : (
-										<Bars3Icon className="block h-6 w-6 text-zinc-200" aria-hidden="true" />
+										<Bars3Icon className="block h-6 w-6 dark:text-zinc-200" aria-hidden="true" />
 									)}
 								</Disclosure.Button>
 							</div>
@@ -96,11 +96,11 @@ export const Navigation = () => {
 								</Disclosure.Button>
 							</Link>
 						</div>
-						<div className="border-zinc-800 border-t pt-4 pb-3 flex">
+						<div className="dark:border-zinc-800 border-t pt-4 pb-3 flex">
 							<div className="flex items-center px-5">
 								<Web3Button />
 							</div>
-							<div className="flex items-center text-white">
+							<div className="flex items-center dark:text-white">
 								<DarkModeSwitch />
 							</div>
 						</div>

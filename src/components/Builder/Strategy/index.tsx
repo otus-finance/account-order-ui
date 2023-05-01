@@ -6,17 +6,17 @@ import { Strategies } from "./Strategies";
 export const Strategy = () => {
 	return (
 		<div className="flex flex-col">
-			<div className="border-b border-zinc-800 py-4 sm:flex sm:justify-between">
-				<div className="p-2 w-full">
+			<div className="border-b dark:border-zinc-800 py-4 sm:flex sm:justify-between">
+				<div className="py-2 p-4 w-full">
 					<SelectDirectionType />
 				</div>
 
-				<div className="p-2  w-full">
+				<div className="py-2 p-4  w-full">
 					<SelectBuilderExpiration />
 				</div>
 			</div>
 
-			<div className="hidden sm:flex flex-row flex-wrap p-2">
+			<div className="hidden sm:flex flex-row flex-wrap p-4">
 				<Strategies />
 			</div>
 

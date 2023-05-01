@@ -7,7 +7,7 @@ export type ToastVariant = "info" | "success" | "error" | "warning";
 
 export const createToast = (variant: ToastVariant, message: string, href?: string): Id => {
 	const toastId = toast(
-		<div className="bg-black text-zinc-200 text-sm">
+		<div className="dark:bg-black dark:text-zinc-200 text-sm">
 			{message}
 			{href ? (
 				<a target="_blank" rel="noreferrer" href={href}>
@@ -16,14 +16,14 @@ export const createToast = (variant: ToastVariant, message: string, href?: strin
 			) : null}
 		</div>,
 		{
-			progressClassName: variant == "error" ? "bg-rose-600" : "bg-emerald-600",
+			progressClassName: variant == "error" ? "dark:bg-rose-600" : "dark:bg-emerald-600",
 			icon:
 				variant == "error" ? (
-					<XMarkIcon className="text-rose-600" />
+					<XMarkIcon className="dark:text-rose-600" />
 				) : (
-					<CheckCircleIcon className="text-emerald-600" />
+					<CheckCircleIcon className="dark:text-emerald-600" />
 				),
-			className: "bg-black",
+			className: "dark:bg-black",
 			autoClose: 5000,
 			type: variant,
 		}
@@ -35,10 +35,15 @@ export const updateToast = (variant: ToastVariant, id: Id, message: string, href
 	if (toast.isActive(id)) {
 		toast.update(id, {
 			render: (
-				<div className="bg-black text-zinc-200 text-sm">
+				<div className="dark:bg-black dark:text-zinc-200 text-sm">
 					<p>{message}</p>
 					{href ? (
-						<a className="text-emerald-500 text-sm" target="_blank" rel="noreferrer" href={href}>
+						<a
+							className="dark:text-emerald-500 text-sm"
+							target="_blank"
+							rel="noreferrer"
+							href={href}
+						>
 							View Transaction
 						</a>
 					) : null}
@@ -48,16 +53,16 @@ export const updateToast = (variant: ToastVariant, id: Id, message: string, href
 		});
 	} else {
 		toast(
-			<div className="bg-black text-zinc-200">
+			<div className="dark:bg-black dark:text-zinc-200">
 				{message}
 				{href ? (
-					<a className="text-emerald-500 text-sm" target="_blank" rel="noreferrer" href={href}>
+					<a className="dark:text-emerald-500 text-sm" target="_blank" rel="noreferrer" href={href}>
 						View Transaction
 					</a>
 				) : null}
 			</div>,
 			{
-				className: "bg-black",
+				className: "dark:bg-black",
 				autoClose: 5000,
 				type: variant,
 			}

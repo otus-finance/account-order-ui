@@ -31,7 +31,7 @@ export const LyraMarketOptions = ({
 					.map((market: LyraMarket, index: number) => {
 						const { name } = market;
 						const isSelected = selectedMarket?.name == name;
-						const selectedClass = isSelected ? "bg-black border-none" : "border-none";
+						const selectedClass = isSelected ? "dark:bg-black border-none" : "border-none";
 						return (
 							<div
 								key={index}

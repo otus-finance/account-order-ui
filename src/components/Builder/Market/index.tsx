@@ -8,7 +8,7 @@ export const Market = () => {
 	const { markets, selectedMarket, isMarketLoading, handleSelectedMarket } = useBuilderContext();
 
 	return (
-		<div className="flex flex-wrap sm:justify-between border border-zinc-800 shadow-xl rounded-lg p-1">
+		<div className="flex flex-wrap sm:justify-between border dark:border-zinc-800 shadow-xl dark:shadow-black shadow-zinc-100 rounded-lg p-1">
 			<LyraMarketOptions
 				markets={markets}
 				selectedMarket={selectedMarket}

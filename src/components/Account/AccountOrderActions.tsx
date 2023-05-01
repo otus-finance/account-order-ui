@@ -27,7 +27,7 @@ const AccountOrderInfo = () => {
 	const { isLoading, accountOrder } = useAccountOrderContext();
 
 	return (
-		<div className="border-t border-zinc-800 bg-zinc-900 p-4 py-6">
+		<div className="border-t dark:border-zinc-800 dark:bg-zinc-900 p-4 py-6">
 			{isLoading ? (
 				<Spinner />
 			) : (
@@ -82,20 +82,20 @@ export const AccountManage = () => {
 				<div className="flex justify-between">
 					<div
 						onClick={() => setAccountActionType(AccountActionType.DEPOSIT)}
-						className={`hover:border-emerald-600 text-white cursor-pointer p-2 font-normal text-center w-full rounded-l-full text-xs bg-zinc-900 border-2 ${
+						className={`hover:border-emerald-600 dark:text-white cursor-pointer p-2 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 border-2 ${
 							AccountActionType.DEPOSIT === accountActionType
 								? "border-emerald-600"
-								: "border-zinc-800 border-r-transparent"
+								: "dark:border-zinc-800 border-r-transparent"
 						}`}
 					>
 						Deposit
 					</div>
 					<div
 						onClick={() => setAccountActionType(AccountActionType.WITHDRAW)}
-						className={`hover:border-emerald-600 text-white cursor-pointer p-2 font-normal text-center w-full rounded-r-full text-xs bg-zinc-900 border-2  ${
+						className={`hover:border-emerald-600 dark:text-white cursor-pointer p-2 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900 border-2  ${
 							AccountActionType.WITHDRAW === accountActionType
 								? "border-emerald-600"
-								: "border-zinc-800 border-l-transparent"
+								: "dark:border-zinc-800 border-l-transparent"
 						}`}
 					>
 						Withdraw
@@ -104,22 +104,24 @@ export const AccountManage = () => {
 			</div>
 
 			<div className="pb-2">
-				<div className="bg-black border border-zinc-800 py-4 p-2">
+				<div className="dark:bg-black border dark:border-zinc-800 py-4 p-2">
 					<div className="flex items-center justify-between px-2">
-						<p className="truncate font-sans text-xs font-normal text-zinc-400">Wallet Balance</p>
+						<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">
+							Wallet Balance
+						</p>
 						<div className="ml-2 flex flex-shrink-0">
-							<p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
+							<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
 								{userBalance}
 							</p>
 						</div>
 					</div>
 
 					<div className="flex items-center justify-between px-2">
-						<p className="truncate font-sans text-xs font-normal text-zinc-400">
+						<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">
 							Margin Account Balance
 						</p>
 						<div className="ml-2 flex flex-shrink-0">
-							<p className="inline-flex font-mono text-xs font-normal leading-5 text-zinc-400">
+							<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
 								{accountBalance}
 							</p>
 						</div>
@@ -141,7 +143,7 @@ export const AccountManage = () => {
 								name="size"
 								id="size"
 								value={depositAmount || 0}
-								className="block ring-transparent outline-none w-32 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+								className="block ring-transparent outline-none w-32 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 							/>
 						) : null}
 
@@ -158,7 +160,7 @@ export const AccountManage = () => {
 								name="size"
 								id="size"
 								value={allowanceAmount || 0}
-								className="block ring-transparent outline-none w-32 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+								className="block ring-transparent outline-none w-32 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 							/>
 						) : null}
 
@@ -175,12 +177,12 @@ export const AccountManage = () => {
 								name="size"
 								id="size"
 								value={withdrawAmount || 0}
-								className="block ring-transparent outline-none w-32 bg-transparent pr-2 text-left text-white font-normal text-2xl"
+								className="block ring-transparent outline-none w-32 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 							/>
 						) : null}
 
 						<div className="ml-2 flex flex-shrink-0">
-							<p className="inline-flex font-normal text-2xl text-white">USD</p>
+							<p className="inline-flex font-normal text-2xl dark:text-white">USD</p>
 						</div>
 					</div>
 				</div>
@@ -189,7 +191,7 @@ export const AccountManage = () => {
 			{accountAllowance === 0 && AccountActionType.DEPOSIT === accountActionType ? (
 				<div
 					onClick={() => approveQuote?.()}
-					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
+					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm dark:text-white text-center rounded-full"
 				>
 					{isApproveQuoteLoading ? <Spinner /> : "Approve Quote"}
 				</div>
@@ -200,7 +202,7 @@ export const AccountManage = () => {
 			AccountActionType.DEPOSIT === accountActionType ? (
 				<div
 					onClick={() => deposit?.()}
-					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
+					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm dark:text-white text-center rounded-full"
 				>
 					{isDepositLoading ? <Spinner /> : "Deposit"}
 				</div>
@@ -209,7 +211,7 @@ export const AccountManage = () => {
 			{AccountActionType.WITHDRAW === accountActionType ? (
 				<div
 					onClick={() => withdraw?.()}
-					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
+					className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm dark:text-white text-center rounded-full"
 				>
 					{isWithdrawLoading ? <Spinner /> : "Withdraw"}
 				</div>
@@ -224,12 +226,12 @@ export const AccountDeposit = ({ setOpen }: { setOpen: Dispatch<boolean> }) => {
 	return (
 		<>
 			<div className="flex justify-between pb-4">
-				<div className="text-xs text-zinc-200">Margin Account Balance</div>
-				<div className="text-xs text-zinc-200 font-semibold">{accountBalance}</div>
+				<div className="text-xs dark:text-zinc-200">Margin Account Balance</div>
+				<div className="text-xs dark:text-zinc-200 font-semibold">{accountBalance}</div>
 			</div>
 			<div
 				onClick={() => setOpen(true)}
-				className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full"
+				className="cursor-pointer border-2 border-emerald-600 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm dark:text-white text-center rounded-full"
 			>
 				Margin Account Deposit
 			</div>
@@ -240,7 +242,7 @@ export const AccountDeposit = ({ setOpen }: { setOpen: Dispatch<boolean> }) => {
 export const AccountWithdraw = () => {
 	return (
 		<>
-			<div className="cursor-pointer border-2 border-orange-500 hover:border-orange-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full">
+			<div className="cursor-pointer border-2 border-orange-500 hover:border-orange-600 p-2 py-3 col-span-3 font-semibold text-sm dark:text-white text-center rounded-full">
 				Margin Account Withdraw
 			</div>
 		</>
@@ -259,7 +261,7 @@ export const CreateAccount = () => {
 			{isConnected ? (
 				<div
 					onClick={() => newAccount?.()}
-					className="cursor-pointer border-2 border-orange-500 hover:border-orange-600 p-2 py-3 col-span-3 font-normal text-md text-white text-center rounded-full"
+					className="cursor-pointer border-2 border-orange-500 hover:border-orange-600 p-2 py-3 col-span-3 font-normal text-md dark:text-white text-center rounded-full"
 				>
 					{isLoading ? (
 						<Spinner />

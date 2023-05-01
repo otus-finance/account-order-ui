@@ -38,14 +38,14 @@ export const SelectDirectionType = () => {
 			{({ open }) => (
 				<>
 					<div className="relative sm:pl-2">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-zinc-900 shadow-black shadow-sm py-3 pl-3 pr-20 text-left text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="block truncate">
 								{selectedDirectionTypes.length > 0
 									? buildTextSelectedDirections(selectedDirectionTypes)
 									: "Market Expectation"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-								<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+								<ChevronUpDownIcon className="h-5 w-5 dark:text-gray-400" aria-hidden="true" />
 							</span>
 						</Listbox.Button>
 
@@ -56,13 +56,13 @@ export const SelectDirectionType = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-zinc-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
+							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
 								{DirectionType.map((direction: StrategyDirection) => (
 									<Listbox.Option
 										key={direction.id}
 										className={({ active }) =>
 											classNames(
-												active ? "bg-emerald-600 text-white" : "text-white",
+												active ? "bg-emerald-500 text-white" : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}
@@ -86,7 +86,7 @@ export const SelectDirectionType = () => {
 													{selected ? (
 														<span
 															className={classNames(
-																active ? "text-white" : "text-emerald-400",
+																active ? "dark:text-white" : "dark:text-emerald-400",
 																"absolute inset-y-0 right-0 flex items-center pr-4"
 															)}
 														>

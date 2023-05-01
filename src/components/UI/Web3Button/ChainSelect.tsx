@@ -30,7 +30,7 @@ export const OfflineChainSelect = () => {
 		<Listbox value={offlineChain} onChange={setOfflineChain}>
 			{({ open }) => (
 				<div className="relative">
-					<Listbox.Button className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold">
+					<Listbox.Button className="flex items-center dark:bg-zinc-900 p-3 rounded-full dark:text-white text-sm font-semibold">
 						<div className={`mr-2`}>
 							{offlineChain.id == optimism.id || offlineChain.id == optimismGoerli.id ? (
 								<img height={20} width={20} src={OPImage} />
@@ -40,7 +40,7 @@ export const OfflineChainSelect = () => {
 						</div>
 						{offlineChain.name}
 						<div className="ml-2">
-							<ChevronDownIcon className="h-4 w-4 text-white font-bold" />
+							<ChevronDownIcon className="h-4 w-4 dark:text-white font-bold" />
 						</div>
 					</Listbox.Button>
 
@@ -51,11 +51,11 @@ export const OfflineChainSelect = () => {
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0"
 					>
-						<Listbox.Options className="rounded-xl absolute z-10 mt-1 max-h-60 w-full  overflow-auto bg-zinc-900 py-1 text-base shadow-lg">
+						<Listbox.Options className="rounded-xl absolute z-10 mt-1 max-h-60 w-full  overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg">
 							{chains?.map((chain: Chain) => (
 								<Listbox.Option
 									key={chain.id}
-									className="text-white relative cursor-default select-none py-2 pl-3 pr-2 w-full text-sm"
+									className="dark:text-white relative cursor-default select-none py-2 pl-3 pr-2 w-full text-sm"
 									value={chain}
 								>
 									{({ selected, active }) => (
@@ -82,7 +82,7 @@ export const OfflineChainSelect = () => {
 											{selected ? (
 												<span
 													className={classNames(
-														active ? "text-white" : "text-emerald-600",
+														active ? "dark:text-white" : "dark:text-emerald-600",
 														"absolute inset-y-0 right-0 flex items-center pr-2"
 													)}
 												>

@@ -21,17 +21,17 @@ export const MarketOrderActions = () => {
 	return trades.length > 0 ? (
 		<>
 			{validMaxLoss && (
-				<div className="border-t border-zinc-800 py-4 p-4">
+				<div className="border-t dark:border-zinc-800 py-4 p-4">
 					<Switch.Group as="div" className="flex items-center justify-between">
 						<span className="flex flex-grow flex-col">
 							<Switch.Label
 								as="span"
-								className="text-xs font-medium leading-6 text-zinc-200"
+								className="text-xs font-medium leading-6 dark:text-zinc-200"
 								passive
 							>
 								Post Max Loss Only
 							</Switch.Label>
-							<Switch.Description as="span" className="text-xs text-zinc-400">
+							<Switch.Description as="span" className="text-xs dark:text-zinc-400">
 								|Trade valid spreads through Otus to post max loss only.
 							</Switch.Description>
 						</span>
@@ -57,9 +57,9 @@ export const MarketOrderActions = () => {
 					</Switch.Group>
 				</div>
 			)}
-			<div className="border-t border-zinc-800 p-4">
+			<div className="border-t dark:border-zinc-800 p-4">
 				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-mono text-sm font-normal text-zinc-200">Max Cost</p>
+					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Cost</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 							{formatUSD(fromBigNumber(maxCost), { dps: 2 })}
@@ -68,9 +68,9 @@ export const MarketOrderActions = () => {
 				</div>
 
 				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-mono text-sm font-normal text-zinc-200">Min Received</p>
+					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Min Received</p>
 					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+						<span className="inline-flex font-sans text-sm font-semibold leading-5 dark:text-white">
 							{formatUSD(fromBigNumber(maxPremium), { dps: 2 })}
 						</span>
 					</div>
@@ -78,7 +78,7 @@ export const MarketOrderActions = () => {
 
 				<>
 					<div className="flex items-center justify-between py-2 pb-4">
-						<p className="truncate font-mono text-sm font-normal text-zinc-300">Otus Fee</p>
+						<p className="truncate font-mono text-sm font-normal dark:text-zinc-300">Otus Fee</p>
 						<div className="ml-2 flex flex-shrink-0">
 							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 								{validMaxLoss && spreadSelected
@@ -88,11 +88,11 @@ export const MarketOrderActions = () => {
 						</div>
 					</div>
 					<div className="flex items-center justify-between py-2">
-						<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+						<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
 							Total Collateral Required
 						</p>
 						<div className="ml-2 flex flex-shrink-0">
-							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-white">
+							<span className="inline-flex font-sans text-sm font-semibold leading-5 dark:text-white">
 								{validMaxLoss && spreadSelected
 									? formatUSD(0, { dps: 2 })
 									: formatUSD(totalCollateral, { dps: 2 })}
@@ -102,11 +102,11 @@ export const MarketOrderActions = () => {
 
 					{maxLossPost < 0 ? (
 						<div className="flex items-center justify-between py-2">
-							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
 								Total Received
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  dark:text-white">
 									{maxLossPost != Infinity
 										? formatUSD(Math.abs(maxLossPost), { dps: 2 })
 										: maxLossPost}
@@ -115,11 +115,11 @@ export const MarketOrderActions = () => {
 						</div>
 					) : (
 						<div className="flex items-center justify-between py-2">
-							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t from-emerald-700 to-emerald-500 p-1 px-2 rounded-full">
+							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
 								Total Cost
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  text-white">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  dark:text-white">
 									{maxLossPost != Infinity ? formatUSD(maxLossPost, { dps: 2 }) : maxLossPost}
 								</span>
 							</div>
@@ -130,11 +130,11 @@ export const MarketOrderActions = () => {
 				<MarketOrderInfo />
 			</div>
 
-			<div className="border-t border-zinc-800 p-4">
+			<div className="border-t dark:border-zinc-800 p-4">
 				<div className="flex items-center justify-between pb-2">
-					<p className="truncate font-mono text-sm font-normal text-zinc-200">Max Loss</p>
+					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Loss</p>
 					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex text-rose-400 font-sans text-sm font-semibold leading-5">
+						<span className="inline-flex dark:text-rose-400 font-sans text-sm font-semibold leading-5">
 							{maxLoss != Infinity && maxLoss != -Infinity
 								? formatUSD(Math.abs(maxLoss), { dps: 2 })
 								: Infinity}
@@ -143,9 +143,9 @@ export const MarketOrderActions = () => {
 				</div>
 
 				<div className="flex items-center justify-between pb-2">
-					<p className="truncate font-mono text-sm font-normal text-zinc-200">Max Profit</p>
+					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Profit</p>
 					<div className="ml-2 flex flex-shrink-0">
-						<span className="inline-flex text-emerald-400 font-sans text-sm font-semibold leading-5">
+						<span className="inline-flex dark:text-emerald-400 font-sans text-sm font-semibold leading-5">
 							{maxProfit != Infinity ? formatUSD(maxProfit, { dps: 2 }) : maxProfit}
 						</span>
 					</div>
@@ -153,20 +153,20 @@ export const MarketOrderActions = () => {
 			</div>
 		</>
 	) : (
-		<div className="border-t border-zinc-800 p-4">
+		<div className="border-t dark:border-zinc-800 p-4">
 			<div className="flex items-center p-2">
-				<p className="truncate font-sans text-xs font-normal text-white">
-					<ArrowLeftCircleIcon className="h-5 w-5 text-white" aria-hidden="true" />
+				<p className="truncate font-sans text-xs font-normal dark:text-white">
+					<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />
 				</p>
 				<div className="ml-2 flex flex-shrink-0">
-					<p className="inline-flex font-mono text-sm font-normal leading-5 text-white">
+					<p className="inline-flex font-mono text-sm font-normal leading-5 dark:text-white">
 						Select Strikes
 					</p>
 				</div>
 			</div>
 			<div className="flex items-center p-2">
 				{!isValid && (
-					<p className="font-mono text-sm font-normal leading-5 text-white">
+					<p className="font-mono text-sm font-normal leading-5 dark:text-white">
 						Strikes for strategy not available for selected assets or expiry.
 					</p>
 				)}

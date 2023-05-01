@@ -16,11 +16,11 @@ const getSpinnerSize = (size: string) => {
 const getColor = (color: string) => {
 	switch (color) {
 		case "primary":
-			return "fill-zinc-900 text-zinc-600 dark:text-zinc-600";
+			return "fill-zinc-900 dark:text-zinc-600 dark:dark:text-zinc-600";
 		case "secondary":
 			return "fill-zinc-100";
 		default:
-			return "fill-zinc-900 text-zinc-600 dark:text-zinc-600";
+			return "fill-zinc-900 dark:text-zinc-600 dark:dark:text-zinc-600";
 	}
 };
 

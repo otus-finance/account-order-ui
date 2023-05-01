@@ -14,7 +14,7 @@ export const OpenLyraPosition = () => {
 			{userBalance && userBalance.isZero() && (
 				<div
 					onClick={() => console.warn("Add funds")}
-					className="mb-4 cursor-disabled border-2 border-zinc-800 bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm text-white text-center rounded-full"
+					className="mb-4 cursor-disabled border-2 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm dark:text-white text-center rounded-full"
 				>
 					Insufficient Balance
 				</div>
@@ -23,7 +23,7 @@ export const OpenLyraPosition = () => {
 			{otusMarket?.allowance.isZero() ? (
 				<div
 					onClick={() => otusMarket.approve?.()}
-					className="cursor-pointer bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white"
+					className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
 				>
 					{otusMarket?.isApproveLoading ? (
 						<Spinner size={"medium"} color={"secondary"} />
@@ -34,11 +34,11 @@ export const OpenLyraPosition = () => {
 			) : (
 				<div
 					onClick={() => otusMarket?.open?.()}
-					className={` rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white
+					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center text-white 
           ${
 						otusMarket?.isOpenConfigSuccess
-							? "cursor-pointer  bg-gradient-to-t from-emerald-700 to-emerald-500"
-							: "bg-zinc-800 cursor-not-allowed "
+							? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
+							: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200"
 					}
           `}
 				>
@@ -54,7 +54,7 @@ export const OpenLyraPosition = () => {
 				<div className="py-4">
 					<div
 						onClick={() => handleSelectActivityType(ActivityType.Position)}
-						className="cursor-pointer rounded-full p-4 w-full font-semibold hover:text-emerald-100 py-3 text-center text-white bg-gradient-to-t from-black to-zinc-800"
+						className="cursor-pointer rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white dark:bg-gradient-to-t from-black to-zinc-800"
 					>
 						View Position
 					</div>
@@ -63,7 +63,7 @@ export const OpenLyraPosition = () => {
 
 			{otusMarket?.openConfigError && (
 				<div className="py-4 cursor-not-allowed">
-					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
+					<div className="p-4 text-sm  dark:bg-rose-500 rounded-xl">
 						{otusMarket?.openConfigError.reason}
 					</div>
 				</div>
