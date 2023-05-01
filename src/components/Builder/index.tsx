@@ -93,7 +93,7 @@ const ActivitySelect = () => {
 		<div className="flex justify-between border-b dark:border-zinc-800">
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Trade)}
-				className={`cursor-pointer p-4 w-full text-center text-sm font-mono border-r dark:border-zinc-800 
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r dark:border-zinc-800 
 		${
 			activityType === ActivityType.Trade
 				? "dark:text-white underline font-semibold"
@@ -104,7 +104,7 @@ const ActivitySelect = () => {
 			</div>
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Position)}
-				className={`cursor-pointer p-4 w-full text-center text-sm font-mono 
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono 
 		${
 			activityType === ActivityType.Position
 				? "dark:text-white underline font-semibold"
