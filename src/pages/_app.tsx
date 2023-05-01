@@ -14,6 +14,7 @@ import { optimism, arbitrum, hardhat, optimismGoerli, arbitrumGoerli } from "wag
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 import { ChainContextProvider } from "../context/ChainContext";
+import { ThemeProvider } from "next-themes";
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
@@ -55,7 +56,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<RainbowKitProvider chains={chains}>
 					<QueryClientProvider client={queryClient}>
 						<ChainContextProvider>
-							<Component {...pageProps} />
+							<ThemeProvider attribute="class">
+								<Component {...pageProps} />
+							</ThemeProvider>
 						</ChainContextProvider>
 						<ToastContainer />
 					</QueryClientProvider>

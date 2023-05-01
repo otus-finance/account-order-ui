@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import LogoIcon from "../UI/Icons/Logo/OTUS";
 // import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Web3Button } from "../UI/Web3Button";
+import { DarkModeSwitch } from "./darkMode";
 
 const linkStyle = (path: string, activePath: string) => {
 	if (path == activePath) {
@@ -54,11 +55,15 @@ export const Navigation = () => {
 									</div>
 								</div>
 							</div>
-							<div className="hidden sm:ml-6 sm:block">
+							<div className="hidden sm:ml-6 sm:flex">
 								<div className="flex items-center">
 									<Web3Button />
 								</div>
+								<div className="flex items-center text-white">
+									<DarkModeSwitch />
+								</div>
 							</div>
+
 							<div className="-mr-2 flex sm:hidden">
 								{/* Mobile menu button */}
 								<Disclosure.Button className="text-white inline-flex items-center justify-center rounded-md p-2 hover:bg-zinc-800 hover:text-white focus:outline-none focus:ring-1 focus:ring-inset focus:ring-zinc-200">
@@ -91,9 +96,12 @@ export const Navigation = () => {
 								</Disclosure.Button>
 							</Link>
 						</div>
-						<div className="border-zinc-800 border-t pt-4 pb-3">
+						<div className="border-zinc-800 border-t pt-4 pb-3 flex">
 							<div className="flex items-center px-5">
 								<Web3Button />
+							</div>
+							<div className="flex items-center text-white">
+								<DarkModeSwitch />
 							</div>
 						</div>
 					</Disclosure.Panel>

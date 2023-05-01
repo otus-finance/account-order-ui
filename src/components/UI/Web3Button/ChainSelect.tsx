@@ -30,7 +30,7 @@ export const OfflineChainSelect = () => {
 		<Listbox value={offlineChain} onChange={setOfflineChain}>
 			{({ open }) => (
 				<div className="relative">
-					<Listbox.Button className="flex items-center bg-zinc-800 p-3 rounded-xl text-white text-sm font-semibold">
+					<Listbox.Button className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold">
 						<div className={`mr-2`}>
 							{offlineChain.id == optimism.id || offlineChain.id == optimismGoerli.id ? (
 								<img height={20} width={20} src={OPImage} />
@@ -51,7 +51,7 @@ export const OfflineChainSelect = () => {
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0"
 					>
-						<Listbox.Options className="rounded-xl absolute z-10 mt-1 max-h-60 w-full  overflow-auto bg-zinc-800 py-1 text-base shadow-lg">
+						<Listbox.Options className="rounded-xl absolute z-10 mt-1 max-h-60 w-full  overflow-auto bg-zinc-900 py-1 text-base shadow-lg">
 							{chains?.map((chain: Chain) => (
 								<Listbox.Option
 									key={chain.id}

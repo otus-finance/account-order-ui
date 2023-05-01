@@ -28,7 +28,7 @@ export const Web3Button = () => {
 										<button
 											onClick={openConnectModal}
 											type="button"
-											className="flex items-center bg-zinc-800 p-3 rounded-xl text-white text-sm font-semibold"
+											className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
 										>
 											Connect Wallet
 										</button>
@@ -40,7 +40,7 @@ export const Web3Button = () => {
 									<button
 										onClick={openChainModal}
 										type="button"
-										className="flex items-center bg-zinc-800 p-3 rounded-xl text-white text-sm font-semibold"
+										className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
 									>
 										Wrong network
 									</button>
@@ -72,7 +72,7 @@ export const Web3Button = () => {
 										</div>
 									</button>
 									<button
-										className="flex items-center bg-zinc-800 p-3 rounded-xl text-white text-sm font-semibold"
+										className="flex items-center bg-zinc-900 p-3 rounded-full text-white text-sm font-semibold"
 										onClick={openAccountModal}
 										type="button"
 									>
