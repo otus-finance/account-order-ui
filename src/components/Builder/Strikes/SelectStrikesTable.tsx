@@ -50,7 +50,7 @@ export const SelectStrikesTable = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between py-6 my-auto">
+			<div className="flex justify-between px-4 py-6 my-auto">
 				<div className="flex basis-1/2">
 					<div
 						onClick={() => setIsBuy(true)}
