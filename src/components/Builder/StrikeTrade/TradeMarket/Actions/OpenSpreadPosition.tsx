@@ -23,7 +23,7 @@ export const OpenSpreadPosition = () => {
 			{spreadMarket?.allowance.isZero() ? (
 				<div
 					onClick={() => spreadMarket.approve?.()}
-					className="cursor-pointer dark:bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
+					className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
 				>
 					{spreadMarket?.isApproveLoading ? (
 						<Spinner size={"medium"} color={"secondary"} />
@@ -37,8 +37,8 @@ export const OpenSpreadPosition = () => {
 					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white
 	${
 		spreadMarket?.isOpenConfigSuccess
-			? "cursor-pointer  dark:bg-gradient-to-t from-emerald-700 to-emerald-500"
-			: "dark:bg-zinc-800 cursor-not-allowed "
+			? "cursor-pointer  bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
+			: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200 "
 	}
 	`}
 				>
@@ -54,7 +54,7 @@ export const OpenSpreadPosition = () => {
 				<div className="py-4 cursor-not-allowed">
 					<div
 						onClick={() => handleSelectActivityType(ActivityType.Position)}
-						className="p-4 text-sm  dark:bg-rose-500 rounded-xl"
+						className="p-4 text-sm  bg-rose-500 rounded-xl"
 					>
 						{spreadMarket?.openConfigError.reason}
 					</div>
