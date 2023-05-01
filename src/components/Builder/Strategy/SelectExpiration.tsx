@@ -17,7 +17,7 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative sm:pl-2 w-full">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 border dark:border-none dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="bloc]k truncate">
 								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
 							</span>
@@ -39,7 +39,7 @@ export const SelectBuilderExpiration = () => {
 										key={index}
 										className={({ active }) =>
 											classNames(
-												active ? "dark:bg-emerald-600 dark:text-white" : "dark:text-white",
+												active ? "bg-emerald-400 dark:text-white" : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}

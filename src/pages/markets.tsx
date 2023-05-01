@@ -1,12 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import { BuilderContextProvider } from "../context/BuilderContext";
-import { OptionsBuilder } from "../components/Builder";
 import Layout from "../components/UI/Layout";
-import SpreadLiquidityPool from "../components/Vaults/SpreadLiquidityPool";
-import { toBN } from "../utils/formatters/numbers";
-import { SpreadLiquidityPoolContextProvider } from "../context/SpreadLiquidityPoolContext";
 import Market from "../components/Vaults/RangedMarketTokens";
 import { useRangedMarkets } from "../queries/otus/rangedMarkets";
 import { Spinner } from "../components/UI/Components/Spinner";

@@ -206,7 +206,7 @@ export const SelectStrikesTable = () => {
 											) : (
 												<a
 													onClick={() => handleToggleSelectedStrike(strike, true)}
-													className="cursor-pointer text-white font-medium w-full rounded-full bg-gradient-to-t dark:from-black dark:to-zinc-900 from-black to-zinc-900 hover:opacity-80"
+													className="cursor-pointer text-zinc-900 dark:text-white font-medium w-full rounded-full bg-gradient-to-t dark:from-black dark:to-zinc-900 from-zinc-200 to-zinc-100 hover:opacity-80"
 												>
 													<div className="flex justify-between ">
 														<div className="border-r dark:border-zinc-800 p-2">

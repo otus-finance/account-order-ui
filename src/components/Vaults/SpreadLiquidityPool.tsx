@@ -34,7 +34,7 @@ const SpreadLiquidityPool = () => {
 
 	return liquidityPool ? (
 		<>
-			<div className="cursor-pointer rounded-xl dark:bg-gradient-to-l from-black to-zinc-900 shadow-lg">
+			<div className="dark:border-0 border border-zinc-200 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-md">
 				<div key={liquidityPool.id} className="border-b dark:border-zinc-800">
 					<div className="p-4">
 						<div className="flex">
@@ -111,7 +111,7 @@ const SpreadLiquidityPool = () => {
 								</div>
 							</div>
 
-							<div className="dark:bg-zinc-800 rounded-full px-12 py-2 hover:dark:bg-zinc-700">
+							<div className="dark:bg-zinc-800 bg-zinc-300 hover:dark:bg-zinc-400 rounded-full px-12 py-2 hover:bg-zinc-700 dark:text-white text-zinc-900 hover:text-zinc-100">
 								<div className="text-xs items-center">History</div>
 							</div>
 						</div>
@@ -123,7 +123,7 @@ const SpreadLiquidityPool = () => {
 						<div className="p-4 py-6">
 							<div
 								onClick={() => setOpen(true)}
-								className="cursor-pointer dark:bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center"
+								className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500  to-emerald-400 rounded-full p-4 w-full font-semibold hover:text-emerald-100 text-zinc-900 py-2 text-center"
 							>
 								Deposit
 							</div>
@@ -258,20 +258,20 @@ const LiquidityPoolActions = () => {
 				<div className="flex justify-between">
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.DEPOSIT)}
-						className={` dark:text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 ${
+						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 ${
 							LPActionType.DEPOSIT === liquidityPoolActionType
-								? "dark:bg-emerald-500 hover:dark:bg-emerald-600"
-								: "dark:bg-zinc-800 hover:dark:bg-zinc-900"
+								? "bg-emerald-500 hover:bg-emerald-600"
+								: "bg-zinc-800 hover:bg-zinc-900"
 						}`}
 					>
 						Deposit
 					</div>
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.WITHDRAW)}
-						className={`  dark:text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900  ${
+						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900  ${
 							LPActionType.WITHDRAW === liquidityPoolActionType
-								? "dark:bg-emerald-500 hover:dark:bg-emerald-600"
-								: "dark:bg-zinc-800 hover:dark:bg-zinc-900"
+								? "bg-emerald-500 hover:bg-emerald-600"
+								: "bg-zinc-800 hover:bg-zinc-900"
 						}`}
 					>
 						Withdraw
@@ -318,7 +318,7 @@ const LiquidityPoolActions = () => {
 								name="size"
 								id="size"
 								value={fromBigNumber(depositAmount, decimals)}
-								className="block ring-transparent outline-none w-64 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
+								className="block ring-transparent outline-none w-64 bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 							/>
 						) : null}
 
@@ -366,7 +366,7 @@ const LiquidityPoolActions = () => {
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
 							<div
 								onClick={() => approveQuote?.()}
-								className="text-sm cursor-pointer dark:bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center dark:text-white"
+								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center dark:text-white"
 							>
 								{isApproveQuoteLoading || isTxLoading ? (
 									<Spinner size={"medium"} color={"secondary"} />
@@ -380,7 +380,7 @@ const LiquidityPoolActions = () => {
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
 							<div
 								onClick={() => deposit?.()}
-								className="text-sm cursor-pointer dark:bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
+								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
 							>
 								{isDepositLoading && isTxLoading ? (
 									<Spinner size={"medium"} color={"secondary"} />
@@ -393,7 +393,7 @@ const LiquidityPoolActions = () => {
 						{LPActionType.WITHDRAW === liquidityPoolActionType ? (
 							<div
 								onClick={() => withdraw?.()}
-								className="text-sm cursor-pointer dark:bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
+								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
 							>
 								{isWithdrawLoading && isTxLoading ? (
 									<Spinner size={"medium"} color={"secondary"} />
