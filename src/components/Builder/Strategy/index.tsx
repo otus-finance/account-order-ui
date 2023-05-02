@@ -7,11 +7,11 @@ export const Strategy = () => {
 	return (
 		<div className="flex flex-col">
 			<div className="border-b dark:border-zinc-800 py-4 sm:flex sm:justify-between">
-				<div className="py-2 p-4 w-full">
+				<div className="py-2 p-4 pr-2 w-full">
 					<SelectDirectionType />
 				</div>
 
-				<div className="py-2 p-4  w-full">
+				<div className="py-2 p-4 pl-2  w-full">
 					<SelectBuilderExpiration />
 				</div>
 			</div>

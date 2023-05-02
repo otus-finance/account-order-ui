@@ -37,7 +37,7 @@ export const SelectDirectionType = () => {
 		>
 			{({ open }) => (
 				<>
-					<div className="relative sm:pl-2">
+					<div className="relative">
 						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 dark:border-none border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="block truncate">
 								{selectedDirectionTypes.length > 0
