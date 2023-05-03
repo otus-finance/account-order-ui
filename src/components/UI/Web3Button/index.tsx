@@ -9,6 +9,7 @@ export const Web3Button = () => {
 				// Note: If your app doesn't use authentication, you
 				// can remove all 'authenticationStatus' checks
 				const connected = mounted && account && chain ? true : false;
+
 				return (
 					<div
 						{...(!mounted && {
@@ -77,7 +78,10 @@ export const Web3Button = () => {
 										type="button"
 									>
 										{account?.displayName}
-										{account?.displayBalance ? ` (${account?.displayBalance})` : ""}
+
+										<span className="hidden sm:block">
+											{account?.displayBalance ? ` (${account?.displayBalance})` : ""}
+										</span>
 									</button>
 								</div>
 							);

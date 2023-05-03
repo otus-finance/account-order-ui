@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useBuilderContext } from "../context/BuilderContext";
 import { LyraStrike } from "../queries/lyra/useLyra";
 import { formatProfitAndLostAtTicks, ticks, Ticks } from "../utils/charting";
 

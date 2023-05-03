@@ -2,10 +2,11 @@ import React from "react";
 
 import { useMarketOrderContext } from "../../../../context/MarketOrderContext";
 import { useBuilderContext } from "../../../../context/BuilderContext";
-import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
+import { formatPercentage, formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { Switch } from "@headlessui/react";
 import { MarketOrderInfo } from "./Actions/MarketOrderInfo";
+import { OTUS_FEE } from "../../../../constants/markets";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
@@ -78,7 +79,9 @@ export const MarketOrderActions = () => {
 
 				<>
 					<div className="flex items-center justify-between py-2 pb-4">
-						<p className="truncate font-mono text-sm font-normal dark:text-zinc-300">Otus Fee</p>
+						<p className="truncate font-mono text-sm font-normal dark:text-zinc-300">
+							Otus Fee ({formatPercentage(OTUS_FEE, true)} x Collateral x (Duration / 365 Days))
+						</p>
 						<div className="ml-2 flex flex-shrink-0">
 							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 								{validMaxLoss && spreadSelected

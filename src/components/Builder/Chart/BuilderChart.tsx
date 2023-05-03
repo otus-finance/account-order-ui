@@ -76,7 +76,7 @@ export const BuilderPNLChart = ({
 					dataKey="combo_payoff"
 					stroke={"#eab308"}
 					dot={false}
-					strokeWidth={4}
+					strokeWidth={2}
 				/>
 				<Line
 					type="monotone"
@@ -84,7 +84,7 @@ export const BuilderPNLChart = ({
 					dataKey="negative_combo_payoff"
 					stroke={"#831843"}
 					dot={false}
-					strokeWidth={2}
+					strokeWidth={1}
 				/>
 				<Line
 					type="monotone"
@@ -92,7 +92,7 @@ export const BuilderPNLChart = ({
 					dataKey="positive_combo_payoff"
 					stroke={"#047857"}
 					dot={false}
-					strokeWidth={2}
+					strokeWidth={1}
 				/>
 
 				<Line
@@ -101,7 +101,7 @@ export const BuilderPNLChart = ({
 					dataKey="negative_payoff"
 					stroke={"#047857"}
 					dot={false}
-					strokeWidth={2}
+					strokeWidth={1}
 				/>
 				<Line
 					type="monotone"
@@ -109,7 +109,16 @@ export const BuilderPNLChart = ({
 					dataKey="positive_payoff"
 					stroke={"#831843"}
 					dot={false}
-					strokeWidth={2}
+					strokeWidth={1}
+				/>
+
+				<Line
+					type="monotone"
+					connectNulls={true}
+					dataKey="currentPrice"
+					stroke={"#047857"}
+					dot={false}
+					strokeWidth={1}
 				/>
 			</LineChart>
 		</ResponsiveContainer>

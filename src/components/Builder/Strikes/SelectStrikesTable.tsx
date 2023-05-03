@@ -34,7 +34,7 @@ export const SelectStrikesTable = () => {
 		setAvailableStrikes(
 			strikes.filter((strike: LyraStrike) => {
 				const {
-					quote: { isBuy, isCall },
+					quote: { isBuy, isCall, fee },
 				} = strike;
 				const _optionType = calculateOptionType(isBuy, isCall);
 				if (optionType == _optionType) {
@@ -145,10 +145,17 @@ export const SelectStrikesTable = () => {
 							</th> */}
 							<th
 								scope="col"
+								className="hidden px-3 py-3.5 text-left text-xs font-light uppercase dark:text-white sm:table-cell "
+							>
+								Fee
+							</th>
+							<th
+								scope="col"
 								className="px-3 py-3.5 text-left text-xs font-light uppercase dark:text-white flex "
 							>
 								Price <LyraIcon className="h-4 w-4 ml-2" />
 							</th>
+
 							{/* <th scope="col" className="relative py-3.5">
 								<span className="sr-only">Price</span>
 							</th> */}
@@ -160,8 +167,8 @@ export const SelectStrikesTable = () => {
 								{
 									/* @ts-ignore */
 								}
-								const { strikePrice, iv, vega, gamma, quote, id, isCall, selected } = strike;
-								const { size, premium, isBuy, greeks, pricePerOption } = quote;
+								const { strikePrice, iv, vega, gamma, quote, selected } = strike;
+								const { greeks, fee, pricePerOption } = quote;
 
 								const { delta, theta } = greeks;
 								return (
@@ -184,7 +191,10 @@ export const SelectStrikesTable = () => {
 										<td className="hidden whitespace-nowrap px-3 py-2 text-xs dark:text-zinc-200 sm:table-cell">
 											{formatNumber(fromBigNumber(gamma), { maxDps: 4 })}
 										</td>
-										<td className="whitespace-nowrap py-2   text-xs font-medium  flex px-3">
+										<td className="hidden whitespace-nowrap px-3 py-2 text-xs dark:text-zinc-200 sm:table-cell">
+											{formatUSD(fromBigNumber(fee), { maxDps: 2 })}
+										</td>
+										<td className="whitespace-nowrap py-2 text-xs font-medium flex px-3">
 											{selected ? (
 												<a
 													onClick={() => handleToggleSelectedStrike(strike, false)}
