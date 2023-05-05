@@ -16,7 +16,7 @@ export const convertTradeParams = (
 		const optionType = calculateOptionType(isBuy, isCall);
 		const _isLong = isLong(optionType);
 		const _premium = _isLong
-			? fromBigNumber(premium) + fromBigNumber(premium) * slippage
+			? fromBigNumber(premium) + fromBigNumber(premium) * 0.1 // slippage
 			: fromBigNumber(premium) - fromBigNumber(premium) * 0.1;
 
 		const collateral = _isLong
@@ -25,6 +25,7 @@ export const convertTradeParams = (
 					(fromBigNumber(strike.strikePrice) * fromBigNumber(size) * collateralPercent).toString()
 			  );
 
+		console.log({ _premium });
 		return {
 			strikeId: strike.id,
 			positionId: 0,

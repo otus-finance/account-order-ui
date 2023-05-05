@@ -57,9 +57,9 @@ export const Navigation = () => {
 										<Link href="/vaults">
 											<a className={linkStyle("/vaults", router.pathname)}>Vaults</a>
 										</Link>
-										<Link href="/markets">
+										{/* <Link href="/markets">
 											<a className={linkStyle("/markets", router.pathname)}>Ranged Markets</a>
-										</Link>
+										</Link> */}
 									</div>
 								</div>
 							</div>
@@ -98,11 +98,11 @@ export const Navigation = () => {
 									Vaults
 								</Disclosure.Button>
 							</Link>
-							<Link href="/markets">
+							{/* <Link href="/markets">
 								<Disclosure.Button className={linkStyleMobile("/markets", router.pathname)}>
 									Ranged Markets
 								</Disclosure.Button>
-							</Link>
+							</Link> */}
 						</div>
 						<div className="dark:border-zinc-800 border-t pt-4 pb-3 flex">
 							<div className="flex items-center px-5">

@@ -20,6 +20,7 @@ import { createToast, updateToast } from "../../components/UI/Toast";
 import { reportError } from "../../utils/errors";
 import { BigNumber, ethers } from "ethers";
 import { toBN } from "../../utils/formatters/numbers";
+import { isLong } from "../../utils/formatters/optiontypes";
 
 // prepares and executes transaction for spread market
 export const useSpreadMarket = (
@@ -88,8 +89,6 @@ export const useSpreadMarket = (
 		},
 	});
 
-	console.log({ params: [tradeInfo, trades, toBN(maxLossPost.toString())] });
-
 	const {
 		config: openPositionConfig,
 		error: openConfigError,
@@ -99,10 +98,14 @@ export const useSpreadMarket = (
 		address: spreadOptionMarket?.address,
 		abi: spreadOptionMarket?.abi,
 		functionName: "openPosition",
-		args:
-			maxLossPost != Infinity && maxLossPost != -Infinity
-				? [tradeInfo, trades, toBN(maxLossPost.toString())]
-				: [],
+		args: [
+			tradeInfo,
+			trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
+			trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
+		],
+		// overrides: {
+		// 	gasLimit: 50000000
+		// },
 		chainId: chain?.id,
 		enabled:
 			!Number.isNaN(maxLossPost) &&
@@ -110,8 +113,6 @@ export const useSpreadMarket = (
 			maxLossPost != -Infinity &&
 			spreadSelected,
 	});
-
-	ethers;
 
 	const {
 		isSuccess: isOpenPositionSuccess,

@@ -224,7 +224,6 @@ export const useMarketOrder = () => {
 				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes));
 			const _maxProfit = Math.max(..._pnl);
 			const _maxLoss = Math.min(..._pnl);
-
 			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);
 
 			const isValidSpread = checkValidSpread(updateStrikes);
@@ -271,7 +270,7 @@ export const useMarketOrder = () => {
 		otusContracts && otusContracts["OtusOptionMarket"] && otusContracts["OtusOptionMarket"];
 
 	const spreadOptionMarket =
-		otusContracts && otusContracts["SpreadOptionMarket"] && otusContracts["SpreadOptionMarket"];
+		otusContracts && otusContracts["SpreadMarket"] && otusContracts["SpreadMarket"];
 
 	const [userBalance, setUserBalance] = useState(ZERO_BN);
 
@@ -295,8 +294,8 @@ export const useMarketOrder = () => {
 		owner,
 		chain,
 		spreadSelected,
-		trades,
-		tradeInfo.market
+		tradeInfo,
+		trades
 	);
 	// spread market transactions
 	const spreadMarket: MarketOrderTransaction = useSpreadMarket(

@@ -21,25 +21,6 @@ const Builder: NextPage = () => {
 							<div className="col-span-4 sm:col-span-1">
 								<SpreadLiquidityPool />
 							</div>
-							<div className="col-span-4 sm:col-span-1">
-								<SpreadLiquidityPool />
-							</div>
-
-							<div className="col-span-4 sm:col-span-1">
-								<SpreadLiquidityPool />
-							</div>
-
-							<div className="col-span-4 sm:col-span-1">
-								<SpreadLiquidityPool />
-							</div>
-
-							<div className="col-span-4 sm:col-span-1">
-								<SpreadLiquidityPool />
-							</div>
-
-							<div className="col-span-4 sm:col-span-1">
-								<SpreadLiquidityPool />
-							</div>
 						</div>
 					</div>
 				</Layout>

@@ -28,8 +28,8 @@ export const useOtusMarket = (
 	owner: Address | undefined,
 	chain: Chain | undefined,
 	spreadSelected: boolean,
-	trades: TradeInputParameters[],
-	market?: string
+	tradeInfo: { market?: string; positionId?: number },
+	trades: TradeInputParameters[]
 ) => {
 	// option market allowance
 	const [allowance, setOtusOptionMarketCurrentAllowance] = useState(ZERO_BN);
@@ -88,7 +88,6 @@ export const useOtusMarket = (
 	});
 
 	// open lyra position
-	console.log({ trades });
 	const {
 		config: openPositionConfig,
 		isSuccess: isOpenConfigSuccess,
@@ -97,9 +96,9 @@ export const useOtusMarket = (
 	} = usePrepareContractWrite({
 		address: otusOptionMarket?.address,
 		abi: otusOptionMarket?.abi,
-		functionName: "openLyraPosition",
+		functionName: "openPosition",
 		args: [
-			market,
+			tradeInfo,
 			trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
 			trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
 		],

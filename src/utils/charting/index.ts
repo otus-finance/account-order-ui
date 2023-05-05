@@ -24,12 +24,7 @@ export const ticks = (asset: string, price: number) => {
 	return ticks;
 };
 
-export const formatProfitAndLostAtTicks = (
-	tick: number,
-	strikes: any[],
-	hasSpreadFee: boolean = false,
-	additionalFees: number = 0
-) => {
+export const formatProfitAndLostAtTicks = (tick: number, strikes: any[]) => {
 	const pnl = strikes.reduce((totalPnl: number, strike: any) => {
 		const {
 			strikePrice,
