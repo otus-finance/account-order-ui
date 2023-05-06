@@ -18,7 +18,7 @@ const SpreadLiquidityPool = () => {
 	const [open, setOpen] = useState(false);
 
 	const { address } = useAccount();
-	const { liquidityPool, isLoading } = useSpreadLiquidityPoolContext();
+	const { liquidityPool, isLoading, decimals } = useSpreadLiquidityPoolContext();
 
 	const { isLoading: isUserLPLoading, data: lpUserData } = useLPUser(liquidityPool?.id, address);
 
@@ -146,10 +146,20 @@ const SpreadLiquidityPool = () => {
 						</div>
 					</div>
 					<div className="rounded-xs h-3 w-full dark:bg-zinc-800 bg-zinc-200">
-						<div
-							className={`progress-bar h-3 bg-emerald-500`}
-							style={{ width: percentWidth(userDeposit || ZERO_BN, liquidityPool.cap) }}
-						></div>
+						{" "}
+						{liquidityPool.freeCollateral && liquidityPool.lockedCollateral && (
+							<div
+								className={`progress-bar h-3 bg-emerald-500`}
+								style={{
+									width: percentWidth(
+										fromBigNumber(liquidityPool.freeCollateral) +
+											fromBigNumber(liquidityPool.lockedCollateral) || 0,
+										liquidityPool.cap,
+										decimals
+									),
+								}}
+							></div>
+						)}
 					</div>
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xxs font-light dark:text-white">Maximum Capacity</div>
@@ -184,10 +194,14 @@ const SpreadLiquidityPool = () => {
 	);
 };
 
-const percentWidth = (totalDeposit: BigNumber, vaultCap: BigNumber): string => {
-	const formatTotalDeposit = fromBigNumber(totalDeposit);
-	const formatVaultCap = fromBigNumber(vaultCap);
-
+const percentWidth = (
+	formatTotalDeposit: number,
+	vaultCap: BigNumber,
+	decimals: number
+): string => {
+	// const formatTotalDeposit = fromBigNumber(totalDeposit, decimals);
+	const formatVaultCap = fromBigNumber(vaultCap, decimals);
+	console.log({ formatTotalDeposit, formatVaultCap });
 	return `${(formatTotalDeposit / formatVaultCap) * 10}%`;
 };
 
