@@ -12,13 +12,8 @@ function classNames(...classes: string[]) {
 }
 
 export const SelectStrategy = () => {
-	const {
-		selectedMarket,
-		selectedDirectionTypes,
-		selectedExpirationDate,
-		selectedStrategy,
-		handleSelectedStrategy,
-	} = useBuilderContext();
+	const { selectedMarket, selectedDirectionTypes, selectedStrategy, handleSelectedStrategy } =
+		useBuilderContext();
 
 	const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
@@ -55,7 +50,9 @@ export const SelectStrategy = () => {
 										<BTCIcon className="w-8 h-8" />
 									)}
 								</div>
-								<div className="pl-1 text-lg font-semibold">{selectedStrategy.name}</div>
+								{selectedStrategy && (
+									<div className="pl-1 text-lg font-semibold">{selectedStrategy.name}</div>
+								)}
 							</div>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 								<ChevronUpDownIcon className="h-5 w-5 dark:text-gray-400" aria-hidden="true" />
