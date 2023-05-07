@@ -11,9 +11,9 @@ import { useTheme } from "next-themes";
 
 const linkStyle = (path: string, activePath: string) => {
 	if (path == activePath) {
-		return "p-3 text-sm font-bold dark:text-white";
+		return "sm:p-3 sm:px-3 px-2 text-sm font-bold dark:text-white";
 	} else {
-		return "p-3 text-sm font-normal dark:text-white hover:dark:text-zinc-500";
+		return "sm:p-3 sm:px-3 px-2 text-sm font-normal dark:text-white hover:dark:text-zinc-500";
 	}
 };
 
@@ -49,10 +49,13 @@ export const Navigation = () => {
 									</Link>
 								</div>
 
-								<div className="hidden sm:ml-16 sm:block">
+								<div className="hidden sm:ml-2 lg:ml-16 sm:block">
 									<div className="flex space-x-4">
 										<Link href="/">
 											<a className={linkStyle("/", router.pathname)}>Trade</a>
+										</Link>
+										<Link href="/spread-pool">
+											<a className={linkStyle("/spread-pool", router.pathname)}>Spread Pool</a>
 										</Link>
 										<Link href="/vaults">
 											<a className={linkStyle("/vaults", router.pathname)}>Vaults</a>
@@ -91,6 +94,11 @@ export const Navigation = () => {
 							<Link href="/">
 								<Disclosure.Button className={linkStyleMobile("/", router.pathname)}>
 									Trade
+								</Disclosure.Button>
+							</Link>
+							<Link href="/spread-pool">
+								<Disclosure.Button className={linkStyleMobile("/spread-pool", router.pathname)}>
+									Spread Pool
 								</Disclosure.Button>
 							</Link>
 							<Link href="/vaults">

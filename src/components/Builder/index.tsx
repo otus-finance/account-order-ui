@@ -22,18 +22,20 @@ export const OptionsBuilder = () => {
 					<div className="p-4">
 						<Market />
 					</div>
-
+					{/* 
 					<div className="border-b dark:border-zinc-800">
 						<div className="px-4 pt-2 pb-4">
 							<BuilderSelect />
 						</div>
-					</div>
+					</div> */}
 
-					{builderType === BuilderType.Builder && (
-						<div className="border-b dark:border-zinc-800">
+					{/* {builderType === BuilderType.Builder && (
+						<div className="border-y dark:border-zinc-800">
 							<Strategy />
 						</div>
-					)}
+					)} */}
+
+					<Strategy />
 
 					<div>
 						<Strikes />

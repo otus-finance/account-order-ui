@@ -50,8 +50,12 @@ export const SelectStrategy = () => {
 										<BTCIcon className="w-8 h-8" />
 									)}
 								</div>
-								{selectedStrategy && (
+								{selectedStrategy ? (
 									<div className="pl-1 text-lg font-semibold">{selectedStrategy.name}</div>
+								) : (
+									<div className="pl-1 text-lg font-light text-zinc-600 dark:text-zinc-200">
+										Select a Prebuilt Strategy
+									</div>
 								)}
 							</div>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -67,12 +71,12 @@ export const SelectStrategy = () => {
 							leaveTo="opacity-0"
 						>
 							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
-								{filteredStrategies.map((strategy: Strategy, index: number) => (
+								{[custom].concat(filteredStrategies).map((strategy: Strategy, index: number) => (
 									<Listbox.Option
 										key={index}
 										className={({ active }) =>
 											classNames(
-												active ? "bg-emerald-500 text-white" : "dark:text-white",
+												active ? "bg-emerald-400 " : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}
@@ -121,7 +125,7 @@ export const SelectStrategy = () => {
 													{selected ? (
 														<span
 															className={classNames(
-																active ? "dark:text-white" : "dark:text-emerald-400",
+																active ? "dark:text-white" : "text-emerald-400",
 																"absolute inset-y-0 right-0 flex items-center pr-4"
 															)}
 														>
@@ -140,4 +144,13 @@ export const SelectStrategy = () => {
 			)}
 		</Listbox>
 	);
+};
+
+const custom: Strategy = {
+	id: 999,
+	name: "Custom",
+	description: "Build your own strategy",
+	type: [],
+	tags: [],
+	trade: [],
 };

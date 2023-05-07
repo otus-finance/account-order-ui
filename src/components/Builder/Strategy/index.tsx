@@ -7,7 +7,7 @@ import { SelectStrategy } from "./SelectStrategy";
 export const Strategy = () => {
 	return (
 		<div className="flex flex-col">
-			<div className="border-b dark:border-zinc-800 py-4 sm:flex sm:justify-between">
+			<div className="border-b dark:border-zinc-800 py-4 xl:flex xl:justify-between">
 				<div className="py-2 p-4 w-full">
 					<SelectDirectionType />
 				</div>
@@ -17,11 +17,11 @@ export const Strategy = () => {
 				</div>
 			</div>
 
-			<div className="hidden sm:grid sm:grid-cols-4 p-4 sm:gap-4 sm:gap-y-2 ">
+			{/* <div className="hidden xl:grid xl:grid-cols-4 p-4 xl:gap-4 xl:gap-y-2 ">
 				<Strategies />
-			</div>
+			</div> */}
 
-			<div className="sm:hidden p-4">
+			<div className="p-4">
 				<SelectStrategy />
 			</div>
 		</div>

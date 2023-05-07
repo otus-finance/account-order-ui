@@ -14,144 +14,31 @@ import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
 import Modal from "../UI/Modal";
 
-const SpreadLiquidityPool = () => {
+const Vault = () => {
 	const [open, setOpen] = useState(false);
 
-	const { address } = useAccount();
-	const { liquidityPool, isLoading } = useSpreadLiquidityPoolContext();
+	// const { address } = useAccount();
+	// const { liquidityPool, isLoading } = useSpreadLiquidityPoolContext();
 
-	const { isLoading: isUserLPLoading, data: lpUserData } = useLPUser(liquidityPool?.id, address);
+	// const { isLoading: isUserLPLoading, data: lpUserData } = useLPUser(liquidityPool?.id, address);
 
-	const userDeposit =
-		lpUserData &&
-		lpUserData.lpusers.length > 0 &&
-		lpUserData.lpusers[0] &&
-		lpUserData.lpusers[0].lpTokenBalance;
+	// const userDeposit =
+	// 	lpUserData &&
+	// 	lpUserData.lpusers.length > 0 &&
+	// 	lpUserData.lpusers[0] &&
+	// 	lpUserData.lpusers[0].lpTokenBalance;
 
-	if (isLoading) {
-		return <Spinner />;
-	}
+	// if (isLoading) {
+	// 	return <Spinner />;
+	// }
 
-	return liquidityPool ? (
-		<>
-			<div className="dark:border-0 border border-zinc-200 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-md">
-				<div key={0} className="border-b dark:border-zinc-800">
-					<div className="p-4">
-						<div className="flex">
-							<div>
-								<div className="dark:bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
-									<SUSDIcon />
-								</div>
-							</div>
-
-							<div className="ml-4">
-								<h2 className="text-sm font-semibold">Spread Liquidity Pool</h2>
-								<h3 className="text-xxs dark:text-zinc-300 pt-1">
-									Provide liquidity and earn fees from traders.
-								</h3>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div className="overflow-hidden border-b dark:border-zinc-800">
-					<div className="p-4">
-						<div className="flex gap-14">
-							<div className="block">
-								<div className="font-light text-xxs dark:text-zinc-400">TVL</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>$0</strong>
-								</div>
-							</div>
-
-							<div className="block">
-								<div className="font-light text-xxs dark:text-zinc-400">30D Fees</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>$0</strong>
-								</div>
-							</div>
-
-							<div className="block">
-								<div className="font-light text-xxs dark:text-zinc-400">Open Interest</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>-</strong>
-								</div>
-							</div>
-
-							<div className="block">
-								<div className="font-light text-xxs dark:text-zinc-400">APY</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>-</strong>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div className="border-b dark:border-zinc-800">
-					<div className="p-4 py-8">
-						<div className="flex justify-between items-center">
-							<div>
-								<div className="font-light text-xxs dark:text-zinc-400">Your Liquidity</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>$0</strong>
-								</div>
-							</div>
-
-							<div className="dark:bg-zinc-800 bg-zinc-300 hover:dark:bg-zinc-400 rounded-full px-12 py-2 hover:bg-zinc-700 dark:text-white text-zinc-900 hover:text-zinc-100">
-								<div className="text-xs items-center">History</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{!open ? (
-					<div className="border-b dark:border-zinc-800">
-						<div className="p-4 py-6">
-							<div
-								onClick={() => setOpen(true)}
-								className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500  to-emerald-400 rounded-full p-4 w-full font-semibold hover:text-emerald-100 text-zinc-900 py-2 text-center"
-							>
-								Deposit
-							</div>
-						</div>
-					</div>
-				) : (
-					<LiquidityPoolActions />
-				)}
-
-				<div className="p-4">
-					<div className="flex flex-wrap justify-between py-2">
-						<div className="text-xxs font-light dark:text-white">Total Deposits</div>
-						<div className="font-mono text-xxs font-normal dark:text-white">$0</div>
-					</div>
-					<div className="rounded-xs h-3 w-full dark:bg-zinc-800 bg-zinc-200">
-						<div
-							className={`progress-bar h-3 bg-emerald-500`}
-							style={{ width: percentWidth(ZERO_BN, ZERO_BN) }}
-						></div>
-					</div>
-					<div className="flex flex-wrap justify-between py-2">
-						<div className="text-xxs font-light dark:text-white">Maximum Capacity</div>
-						<div className="font-mono text-xxs font-normal dark:text-white">
-							{formatUSD(fromBigNumber(ZERO_BN))}
-						</div>
-					</div>
-				</div>
-			</div>
-		</>
-	) : (
-		<div className="cursor-pointer rounded-sm border dark:border-zinc-800 shadow-lg shadow-emerald-900">
+	return (
+		<div className="dark:border-0 border border-zinc-200 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-md h-full">
 			<div className="border-b dark:border-zinc-800">
 				<div className="p-4">
 					<div className="flex">
-						<div>
-							<div className="dark:bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
+						<div className="">
+							<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
 								<SUSDIcon />
 							</div>
 						</div>
@@ -159,9 +46,91 @@ const SpreadLiquidityPool = () => {
 						<div className="ml-4">
 							<h2 className="text-sm font-semibold">Spread Liquidity Pool</h2>
 							<h3 className="text-xxs dark:text-zinc-300 pt-1">
-								Currently not available on this network.
+								Provide liquidity and earn fees from traders.
 							</h3>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div className="overflow-hidden border-b dark:border-zinc-800">
+				<div className="p-4">
+					<div className="flex gap-14">
+						<div className="block">
+							<div className="font-light text-xxs dark:text-zinc-400">TVL</div>
+
+							<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
+								<strong>$0</strong>
+							</div>
+						</div>
+
+						<div className="block">
+							<div className="font-light text-xxs dark:text-zinc-400">30D Fees</div>
+
+							<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
+								<strong>$0</strong>
+							</div>
+						</div>
+
+						<div className="block">
+							<div className="font-light text-xxs dark:text-zinc-400">Open Interest</div>
+
+							<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
+								<strong>-</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div className="border-b dark:border-zinc-800">
+				<div className="p-4 py-8">
+					<div className="flex justify-between items-center">
+						<div>
+							<div className="font-light text-xxs dark:text-zinc-400">Your Liquidity</div>
+
+							<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
+								<strong>$0</strong>
+							</div>
+						</div>
+
+						<div className="dark:bg-zinc-800 bg-zinc-300 hover:dark:bg-zinc-400 rounded-full px-12 py-2 hover:bg-zinc-700 dark:text-white text-zinc-900 hover:text-zinc-100">
+							<div className="text-xs items-center">History</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{!open ? (
+				<div className="border-b dark:border-zinc-800">
+					<div className="p-4 py-6">
+						<div
+							onClick={() => setOpen(true)}
+							className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500  to-emerald-400 rounded-full p-4 w-full font-semibold hover:text-emerald-100 text-zinc-900 py-2 text-center"
+						>
+							Deposit
+						</div>
+					</div>
+				</div>
+			) : (
+				<LiquidityPoolActions />
+			)}
+
+			<div className="p-4">
+				<div className="flex flex-wrap justify-between py-2">
+					<div className="text-xxs font-light dark:text-white">Total Deposits</div>
+					<div className="font-mono text-xxs font-normal dark:text-white">$0</div>
+				</div>
+				<div className="rounded-xs h-3 w-full dark:bg-zinc-800 bg-zinc-200">
+					<div
+						className={`progress-bar h-3 bg-emerald-500`}
+						style={{ width: percentWidth(ZERO_BN, ZERO_BN) }}
+					></div>
+				</div>
+				<div className="flex flex-wrap justify-between py-2">
+					<div className="text-xxs font-light dark:text-white">Maximum Capacity</div>
+					<div className="font-mono text-xxs font-normal dark:text-white">
+						{formatUSD(fromBigNumber(ZERO_BN))}
 					</div>
 				</div>
 			</div>
@@ -211,8 +180,8 @@ const LiquidityPoolActions = () => {
 		<div className="p-4">
 			<div className="">
 				<div className="flex justify-between">
-					<div className="font-light py-2 text-sm dark:text-zinc-200 text-center">
-						Withdrawl Fee
+					<div className="font-light py-2 text-sm dark:text-zinc-200  text-center">
+						Withdrawal Fee
 					</div>
 					<div className="font-normal py-2 text-sm dark:text-zinc-200 text-center">0%</div>
 				</div>
@@ -239,11 +208,11 @@ const LiquidityPoolActions = () => {
 				</div>
 			</div>
 
-			<div className="pt-4 ">
+			<div className="pt-4">
 				<div className="flex justify-between">
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.DEPOSIT)}
-						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 ${
+						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs ${
 							LPActionType.DEPOSIT === liquidityPoolActionType
 								? "bg-emerald-500 hover:bg-emerald-600"
 								: "bg-zinc-800 hover:bg-zinc-900"
@@ -253,7 +222,7 @@ const LiquidityPoolActions = () => {
 					</div>
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.WITHDRAW)}
-						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900  ${
+						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs ${
 							LPActionType.WITHDRAW === liquidityPoolActionType
 								? "bg-emerald-500 hover:bg-emerald-600"
 								: "bg-zinc-800 hover:bg-zinc-900"
@@ -396,4 +365,4 @@ const LiquidityPoolActions = () => {
 	);
 };
 
-export default SpreadLiquidityPool;
+export default Vault;

@@ -5,9 +5,8 @@ import Layout from "../components/UI/Layout";
 import SpreadLiquidityPool from "../components/Vaults/SpreadLiquidityPool";
 import { SpreadLiquidityPoolContextProvider } from "../context/SpreadLiquidityPoolContext";
 import Vault from "../components/Vaults/Vault";
-import VaultBuild from "../components/Vaults/Build";
 
-const Vaults: NextPage = () => {
+const Builder: NextPage = () => {
 	return (
 		<div>
 			<Head>
@@ -18,9 +17,11 @@ const Vaults: NextPage = () => {
 
 			<Layout>
 				<div className="mx-auto max-w-screen-2xl py-0 sm:py-8 dark:text-white min-h-[70vh]">
-					<div className="grid grid-cols-4 gap-4 auto-cols-max">
-						<div className="col-span-4 lg:col-span-2 xl:col-span-1">
-							<VaultBuild />
+					<div className="grid grid-cols-4 gap-4">
+						<div className="col-span-4 sm:col-start-2 sm:col-end-4 sm:col-span-2">
+							<SpreadLiquidityPoolContextProvider>
+								<SpreadLiquidityPool />
+							</SpreadLiquidityPoolContextProvider>
 						</div>
 					</div>
 				</div>
@@ -29,4 +30,4 @@ const Vaults: NextPage = () => {
 	);
 };
 
-export default Vaults;
+export default Builder;

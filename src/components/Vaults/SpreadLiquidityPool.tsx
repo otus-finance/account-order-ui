@@ -39,7 +39,7 @@ const SpreadLiquidityPool = () => {
 					<div className="p-4">
 						<div className="flex">
 							<div>
-								<div className="dark:bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
+								<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
 									<SUSDIcon />
 								</div>
 							</div>
@@ -85,15 +85,11 @@ const SpreadLiquidityPool = () => {
 								<div className="font-light text-xxs dark:text-zinc-400">Open Interest</div>
 
 								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>-</strong>
-								</div>
-							</div>
-
-							<div className="block">
-								<div className="font-light text-xxs dark:text-zinc-400">APY</div>
-
-								<div className="font-semibold text-sm uppercase dark:text-zinc-200 mt-2">
-									<strong>-</strong>
+									<strong>
+										{liquidityPool.lockedCollateral
+											? formatUSD(fromBigNumber(liquidityPool.lockedCollateral))
+											: "$0"}
+									</strong>
 								</div>
 							</div>
 						</div>
@@ -152,10 +148,9 @@ const SpreadLiquidityPool = () => {
 								className={`progress-bar h-3 bg-emerald-500`}
 								style={{
 									width: percentWidth(
-										fromBigNumber(liquidityPool.freeCollateral) +
-											fromBigNumber(liquidityPool.lockedCollateral) || 0,
-										liquidityPool.cap,
-										decimals
+										liquidityPool.freeCollateral,
+										liquidityPool.lockedCollateral,
+										liquidityPool.cap
 									),
 								}}
 							></div>
@@ -195,14 +190,15 @@ const SpreadLiquidityPool = () => {
 };
 
 const percentWidth = (
-	formatTotalDeposit: number,
-	vaultCap: BigNumber,
-	decimals: number
+	freeCollateral: BigNumber,
+	totalCollateral: BigNumber,
+	vaultCap: BigNumber
 ): string => {
-	// const formatTotalDeposit = fromBigNumber(totalDeposit, decimals);
-	const formatVaultCap = fromBigNumber(vaultCap, decimals);
-	console.log({ formatTotalDeposit, formatVaultCap });
-	return `${(formatTotalDeposit / formatVaultCap) * 10}%`;
+	const _freeCollateral = fromBigNumber(freeCollateral);
+	const _totalCollateral = fromBigNumber(totalCollateral);
+
+	const formatVaultCap = fromBigNumber(vaultCap);
+	return `${((_freeCollateral + _totalCollateral) / formatVaultCap) * 10}%`;
 };
 
 enum LPActionType {
@@ -241,7 +237,7 @@ const LiquidityPoolActions = () => {
 			<div className="">
 				<div className="flex justify-between">
 					<div className="font-light py-2 text-sm dark:text-zinc-200 text-center">
-						Withdrawl Fee
+						Withdrawal Fee
 					</div>
 					<div className="font-normal py-2 text-sm dark:text-zinc-200 text-center">0%</div>
 				</div>
@@ -272,7 +268,7 @@ const LiquidityPoolActions = () => {
 				<div className="flex justify-between">
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.DEPOSIT)}
-						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs dark:bg-zinc-900 ${
+						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs bg-zinc-900 ${
 							LPActionType.DEPOSIT === liquidityPoolActionType
 								? "bg-emerald-500 hover:bg-emerald-600"
 								: "bg-zinc-800 hover:bg-zinc-900"
@@ -282,7 +278,7 @@ const LiquidityPoolActions = () => {
 					</div>
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.WITHDRAW)}
-						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs dark:bg-zinc-900  ${
+						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs bg-zinc-900  ${
 							LPActionType.WITHDRAW === liquidityPoolActionType
 								? "bg-emerald-500 hover:bg-emerald-600"
 								: "bg-zinc-800 hover:bg-zinc-900"
