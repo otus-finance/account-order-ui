@@ -74,9 +74,9 @@ export const StrikeTrade = () => {
 									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Type
 									</th>
-									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
+									{/* <th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Direction
-									</th>
+									</th> */}
 									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Strike Price
 									</th>
@@ -173,23 +173,24 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 				{expiryTimestamp && formatExpirationDate(expiryTimestamp)}
 			</td>
 			<td className="py-3 text-xs px-4">
-				{isCall ? (
-					<span className="dark:bg-emerald-500 dark:text-zinc-100 font-normal p-1 rounded-lg">
-						Call
-					</span>
-				) : (
-					<span className="dark:bg-pink-700 dark:text-zinc-100  font-normal p-1 rounded-lg">
-						Put
-					</span>
-				)}
+				<div>
+					{isCall ? (
+						<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">Call</span>
+					) : (
+						<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">Put</span>
+					)}
+				</div>
+				<div className="pt-1">
+					{isBuy ? (
+						<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+					) : (
+						<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+					)}
+				</div>
 			</td>
-			<td className="text-xs  px-4">
-				{isBuy ? (
-					<span className="dark:text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
-				) : (
-					<span className="dark:text-pink-700 font-normal p-1 rounded-lg">Sell</span>
-				)}
-			</td>
+			{/* <td className="text-xs  px-4">
+
+			</td> */}
 
 			<td className="text-xs font-medium dark:text-zinc-300   px-4">
 				{formatUSD(strikePrice, { dps: 0 })}

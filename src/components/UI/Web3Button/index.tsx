@@ -31,7 +31,7 @@ export const Web3Button = () => {
 											type="button"
 											className="flex items-center dark:bg-zinc-900 bg-zinc-300 p-3 rounded-full dark:text-white text-sm font-semibold"
 										>
-											Connect Wallet
+											Connect
 										</button>
 									</div>
 								);

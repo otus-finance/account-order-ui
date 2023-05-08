@@ -118,9 +118,6 @@ const LyraPositions = () => {
 							Type
 						</th>
 						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
-							Direction
-						</th>
-						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
 							Position Id
 						</th>
 
@@ -147,23 +144,24 @@ const LyraPositions = () => {
 							return (
 								<tr key={index} className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
 									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
-										{isCall ? (
-											<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">
-												Call
-											</span>
-										) : (
-											<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">
-												Put
-											</span>
-										)}
-									</td>
-
-									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium text-zinc-200">
-										{isLong ? (
-											<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
-										) : (
-											<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
-										)}
+										<div>
+											{isCall ? (
+												<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">
+													Call
+												</span>
+											) : (
+												<span className="bg-pink-700 text-zinc-100  font-normal p-1 rounded-lg">
+													Put
+												</span>
+											)}
+										</div>
+										<div className="pt-1">
+											{isLong ? (
+												<span className="text-emerald-500 font-normal p-1 rounded-lg">Buy</span>
+											) : (
+												<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
+											)}
+										</div>
 									</td>
 
 									<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
