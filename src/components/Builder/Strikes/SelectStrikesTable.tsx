@@ -92,9 +92,9 @@ export const SelectStrikesTable = () => {
 					</div>
 				</div>
 
-				<div className="flex py-2 items-center sm:basis-1/2">
+				{/* <div className="flex py-2 items-center sm:basis-1/2">
 					{builderType === BuilderType.Custom && <SelectBuilderExpiration />}
-				</div>
+				</div> */}
 			</div>
 
 			<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
