@@ -19,7 +19,7 @@ import getExplorerUrl from "../../utils/chains/getExplorerUrl";
 import { createToast, updateToast } from "../../components/UI/Toast";
 import { reportError } from "../../utils/errors";
 import { BigNumber, ethers } from "ethers";
-import { toBN } from "../../utils/formatters/numbers";
+import { fromBigNumber, toBN } from "../../utils/formatters/numbers";
 import { isLong } from "../../utils/formatters/optiontypes";
 
 // prepares and executes transaction for spread market
@@ -103,10 +103,11 @@ export const useSpreadMarket = (
 			trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
 			trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
 		],
-		// overrides: {
-		// 	gasLimit: 50000000
-		// },
 		chainId: chain?.id,
+		onError: (err: any) => {
+			// ethers.utils.decode
+			console.log("prepare error", err);
+		},
 		enabled:
 			!Number.isNaN(maxLossPost) &&
 			maxLossPost != Infinity &&
@@ -130,6 +131,25 @@ export const useSpreadMarket = (
 			}
 		},
 	});
+
+	// const { data: validMaxLoss, refetch: refetchValidMaxLoss } = useContractRead({
+	// 	address: spreadOptionMarket?.address,
+	// 	abi: spreadOptionMarket?.abi,
+	// 	functionName: "validMaxLoss",
+	// 	args: [
+	// 		tradeInfo.market,
+	// 		trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
+	// 		trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
+	// 	],
+	// 	chainId: chain?.id,
+	// });
+
+	// useEffect(() => {
+	// 	if (validMaxLoss) {
+	// 		console.log({ validMaxLoss: fromBigNumber(validMaxLoss) })
+	// 	}
+
+	// }, [validMaxLoss])
 
 	// const { config: closePositionConfig, error: closeError } = usePrepareContractWrite({
 	//   address: spreadOptionMarket?.address,

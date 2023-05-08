@@ -52,10 +52,7 @@ export const OpenSpreadPosition = () => {
 
 			{spreadMarket?.openConfigError && (
 				<div className="py-4 cursor-not-allowed">
-					<div
-						onClick={() => handleSelectActivityType(ActivityType.Position)}
-						className="p-4 text-sm  bg-rose-500 rounded-xl"
-					>
+					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
 						{spreadMarket?.openConfigError.reason}
 					</div>
 				</div>

@@ -5,7 +5,7 @@
 			"chainId": "421613",
 			"contracts": {
 				"LyraQuoter": {
-					"address": "0x1A76F7FC79dE279A4CCF3c9672122351cd304C2F",
+					"address": "0x533CD699932f4F9bFC9D8A411BE388704b4d1BE6",
 					"abi": [
 						{
 							"inputs": [
@@ -194,7 +194,7 @@
 					]
 				},
 				"LyraBaseBTC": {
-					"address": "0xD60908984607D09b4dc08Ef527a757B46d2bB830",
+					"address": "0x80417C2B58d7A146116EeCd36559036e7e3F42b0",
 					"abi": [
 						{
 							"inputs": [
@@ -837,7 +837,7 @@
 					]
 				},
 				"LyraBaseETH": {
-					"address": "0x239f4Bf885ed4CA82D1B0e5120934d21A6944e5e",
+					"address": "0xcaf8e4C346b5D4C1c2D26201A0166621a244278d",
 					"abi": [
 						{
 							"inputs": [
@@ -1480,7 +1480,7 @@
 					]
 				},
 				"OtusManager": {
-					"address": "0x69056bba032F9Be60885154d97794cDfb514118e",
+					"address": "0x66c53520046606814AFA1106b9cf3E21382D2955",
 					"abi": [
 						{
 							"inputs": [],
@@ -1978,7 +1978,7 @@
 					]
 				},
 				"OtusOptionMarket": {
-					"address": "0x45f0411797A0d0077d952f3c3B06e0E4c543B88E",
+					"address": "0xa856c4243FB4E280FE65B911BbaA5ed764Fe0Ca9",
 					"abi": [
 						{
 							"inputs": [],
@@ -2037,19 +2037,6 @@
 							],
 							"name": "TransferFundsToTraderFailed",
 							"type": "error"
-						},
-						{
-							"anonymous": false,
-							"inputs": [
-								{
-									"indexed": false,
-									"internalType": "uint256",
-									"name": "over",
-									"type": "uint256"
-								}
-							],
-							"name": "Over",
-							"type": "event"
 						},
 						{
 							"anonymous": false,
@@ -2571,7 +2558,7 @@
 					]
 				},
 				"SpreadMarket": {
-					"address": "0x482B8c9A78969Be5F0090523018B5A4BCd9b333e",
+					"address": "0x38b933CB2D63D3fe25f7648d46F259aB0f7b89eF",
 					"abi": [
 						{
 							"inputs": [],
@@ -3835,7 +3822,7 @@
 					]
 				},
 				"SpreadLiquidityPool": {
-					"address": "0x4fc6ed8B6EFfbD372f4DA4B80f20fF2f46919341",
+					"address": "0x028fa6641eFeDe9B38Ca012a8bA22326F416b9a4",
 					"abi": [
 						{
 							"inputs": [
@@ -5320,7 +5307,7 @@
 					]
 				},
 				"OtusOptionToken": {
-					"address": "0x7d517Ec3bbD54bD2B7eDb563fDF303EE63346F9b",
+					"address": "0xB61566A9Aa64639314361595CAd6af791E8D6b01",
 					"abi": [
 						{
 							"inputs": [
@@ -6911,7 +6898,7 @@
 					]
 				},
 				"SpreadMaxLossCollateral": {
-					"address": "0x4109c08dd820712893927C0d714eD901Fcb3fe05",
+					"address": "0xa1A68249053d486eCE7a26E027Aa035B3953A37A",
 					"abi": [
 						{
 							"inputs": [],
@@ -7151,7 +7138,7 @@
 					]
 				},
 				"MaxLossCalculator": {
-					"address": "0xd114402D7F1b3c894E04be1d1B70fB44B167eB4C",
+					"address": "0xb614b200C69Da708DEa685985Ff33437022929C9",
 					"abi": [
 						{
 							"inputs": [
@@ -7216,7 +7203,7 @@
 					]
 				},
 				"SettlementCalculator": {
-					"address": "0xc3f4000De9627BddD20aBc0acA46369aB47272BC",
+					"address": "0x875a54B60CEe0FaEA7aAB920CEEd77849d43A9D6",
 					"abi": [
 						{
 							"inputs": [

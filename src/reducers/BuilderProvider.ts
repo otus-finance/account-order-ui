@@ -90,6 +90,10 @@ export type BuilderAction =
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
 	  }
 	| {
+			type: "CONNECT_CHAIN";
+			selectedChain: BuilderProviderState["selectedChain"];
+	  }
+	| {
 			type: "SET_LYRA";
 			lyra: BuilderProviderState["lyra"];
 	  }
@@ -188,6 +192,11 @@ export function builderReducer(
 				strikes: action.strikes,
 				selectedExpirationDate: action.selectedExpirationDate,
 				selectedStrategy: action.selectedStrategy,
+			};
+		case "CONNECT_CHAIN":
+			return {
+				...state,
+				selectedChain: action.selectedChain,
 			};
 		case "SET_LYRA":
 			return {

@@ -28,7 +28,7 @@ import {
 	calculateOptionType,
 	orderFilter,
 } from "../utils/formatters/optiontypes";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
 import {
 	arbitrumGoerliUrl,
@@ -66,6 +66,8 @@ const getLyra = async (chain: Chain) => {
 export const useBuilder = () => {
 	const [state, dispatch] = useReducer(builderReducer, builderInitialState);
 
+	const { address: owner, isConnected } = useAccount();
+
 	const {
 		lyra,
 		activityType,
@@ -90,8 +92,10 @@ export const useBuilder = () => {
 
 	const { handleSelectedChain, selectedChain } = useChainContext();
 
+	const { data, isLoading } = useLyraMarket(lyra);
+
 	useEffect(() => {
-		if (selectedChain?.id) {
+		if (selectedChain?.id && !isConnected) {
 			dispatch({
 				type: "SET_CHAIN",
 				selectedChain: selectedChain,
@@ -101,17 +105,17 @@ export const useBuilder = () => {
 				selectedStrategy: null,
 			});
 		}
-	}, [selectedChain]);
+	}, [selectedChain, isConnected]);
 
 	const updateSelectedChain = useCallback(async () => {
-		if (selectedChain) {
-			const lyra = await getLyra(selectedChain);
+		if (selectedChain && lyra?.chainId != selectedChain.id) {
+			const _lyra = await getLyra(selectedChain);
 			dispatch({
 				type: "SET_LYRA",
-				lyra: lyra,
+				lyra: _lyra,
 			});
 		}
-	}, [selectedChain]);
+	}, [lyra, selectedChain]);
 
 	useEffect(() => {
 		try {
@@ -120,8 +124,6 @@ export const useBuilder = () => {
 			console.warn({ error });
 		}
 	}, [updateSelectedChain, selectedChain]);
-
-	const { data, isLoading } = useLyraMarket(lyra);
 
 	const handleSelectedExpirationDate = (expirationDate: LyraBoard) => {
 		const { strikesWithQuotes } = expirationDate;

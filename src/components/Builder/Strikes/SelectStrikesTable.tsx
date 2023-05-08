@@ -15,7 +15,7 @@ import { CheckIcon, PlusIcon } from "@heroicons/react/24/solid";
 import LyraIcon from "../../UI/Icons/Color/LYRA";
 
 const style =
-	"border-2 cursor-pointer dark:text-white-700 rounded-full dark:bg-zinc-900 text-center sm:w-24 sm:px-6 p-2 mr-1 text-sm font-light";
+	"border-2 cursor-pointer dark:text-white-700 rounded-full dark:bg-zinc-900 text-center sm:w-24 sm:px-6 w-16 p-2 mr-1 text-sm font-light";
 
 export const SelectStrikesTable = () => {
 	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
