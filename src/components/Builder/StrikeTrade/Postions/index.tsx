@@ -329,7 +329,10 @@ const LyraPositions = () => {
 					<table className="min-w-full table-fixed rounded-sm">
 						<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 "></thead>
 
-						<th scope="col" className="hidden sm:block py-3.5 text-left pl-4 text-xs font-light">
+						<th
+							scope="col"
+							className="hidden sm:table-cell py-3.5 text-left pl-4 text-xs font-light"
+						>
 							Market
 						</th>
 						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
@@ -356,7 +359,10 @@ const LyraPositions = () => {
 						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
 							Expiry
 						</th>
-						<th scope="col" className="hidden sm:block py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className="hidden sm:table-cell py-3.5 text-left pl-4  text-xs font-light"
+						>
 							Delta
 						</th>
 						<th scope="col" className="sr-only">
@@ -387,7 +393,7 @@ const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 
 	return (
 		<tr className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
-			<td className=" hidden sm:block whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+			<td className=" hidden sm:table-cell whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 				{marketName}
 			</td>
 
@@ -442,7 +448,7 @@ const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 				{formatExpirationDate(expiryTimestamp)}
 			</td>
 
-			<td className="hidden sm:block whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="hidden sm:table-cell whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
 				{parseFloat(fromBigNumber(delta).toString()).toFixed(4)}
 			</td>
 
