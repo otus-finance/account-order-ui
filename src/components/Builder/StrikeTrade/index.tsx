@@ -65,34 +65,43 @@ export const StrikeTrade = () => {
 					</div>
 
 					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
-						<table className="  font-semibold min-w-full divide-y dark:divide-zinc-800 divide-zinc-200 table-fixed">
+						<table className="font-normal min-w-full divide-y dark:divide-zinc-800 divide-zinc-200 table-fixed">
 							<thead className="dark:bg-inherit">
-								<tr className="font-mono ">
-									<th scope="col" className="py-2 text-xs dark:text-zinc-400 text-left  px-4">
+								<tr className=" ">
+									<th
+										scope="col"
+										className="py-2 text-xs dark:text-zinc-400 text-left font-light px-4"
+									>
 										Expiry
 									</th>
-									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
 										Type
 									</th>
 									{/* <th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
 										Direction
 									</th> */}
-									<th scope="col" className="text-xs dark:text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
 										Strike Price
 									</th>
 									{!spreadSelected && (
-										<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
+										<th
+											scope="col"
+											className="text-xs  dark:text-zinc-400 text-left font-light px-4"
+										>
 											Collateral Percent
 										</th>
 									)}
 
-									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
+									<th
+										scope="col"
+										className="text-xs  dark:text-zinc-400 text-left font-light  px-4"
+									>
 										Price
 									</th>
-									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
 										Credit/(Debit)
 									</th>
-									<th scope="col" className="text-xs  dark:text-zinc-400 text-left  px-4">
+									<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
 										Size
 									</th>
 								</tr>

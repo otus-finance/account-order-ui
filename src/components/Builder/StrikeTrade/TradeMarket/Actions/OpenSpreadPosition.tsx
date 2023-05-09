@@ -37,7 +37,7 @@ export const OpenSpreadPosition = () => {
 					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white
 	${
 		spreadMarket?.isOpenConfigSuccess
-			? "cursor-pointer  bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
+			? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
 			: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200 "
 	}
 	`}

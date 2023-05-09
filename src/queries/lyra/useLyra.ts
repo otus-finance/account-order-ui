@@ -77,6 +77,27 @@ export const useLyraPositions = (lyra: Lyra | null, owner?: Address) => {
 			return positions;
 		},
 		{
+			enabled: true,
+		}
+	);
+};
+
+export const useLyraPositionIds = (lyra: Lyra | null, market: string, positionIds: []) => {
+	return useQuery<Position[] | null>(
+		["positions", positionIds],
+		async () => {
+			if (!lyra) return null;
+			if (!market) return null;
+			if (!positionIds) return null;
+
+			const positions: Position[] = await Promise.all(
+				positionIds.map(async (id) => {
+					return await lyra.position(market, id);
+				})
+			);
+			return positions;
+		},
+		{
 			refetchInterval: false,
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,

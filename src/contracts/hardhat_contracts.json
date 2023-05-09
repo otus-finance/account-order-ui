@@ -5,7 +5,7 @@
 			"chainId": "421613",
 			"contracts": {
 				"LyraQuoter": {
-					"address": "0x533CD699932f4F9bFC9D8A411BE388704b4d1BE6",
+					"address": "0xf657d05B529FbC3B45eD3C7c4e72429982BC642A",
 					"abi": [
 						{
 							"inputs": [
@@ -194,7 +194,7 @@
 					]
 				},
 				"LyraBaseBTC": {
-					"address": "0x80417C2B58d7A146116EeCd36559036e7e3F42b0",
+					"address": "0xb12DDd834843E4f3595ABcd0212F4dF8973108EF",
 					"abi": [
 						{
 							"inputs": [
@@ -837,7 +837,7 @@
 					]
 				},
 				"LyraBaseETH": {
-					"address": "0xcaf8e4C346b5D4C1c2D26201A0166621a244278d",
+					"address": "0x7Ebfbb60e91AE959D796cB167213d98d39037Cf4",
 					"abi": [
 						{
 							"inputs": [
@@ -1480,7 +1480,7 @@
 					]
 				},
 				"OtusManager": {
-					"address": "0x66c53520046606814AFA1106b9cf3E21382D2955",
+					"address": "0xa286F732dfe7F8d17415f054893aeae757cE509d",
 					"abi": [
 						{
 							"inputs": [],
@@ -1978,7 +1978,7 @@
 					]
 				},
 				"OtusOptionMarket": {
-					"address": "0xa856c4243FB4E280FE65B911BbaA5ed764Fe0Ca9",
+					"address": "0x40D09aaaB243eea3F155E329E6Dd8aBb1f0d05B8",
 					"abi": [
 						{
 							"inputs": [],
@@ -2071,102 +2071,6 @@
 									"internalType": "uint256",
 									"name": "positionId",
 									"type": "uint256"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "sellResults",
-									"type": "tuple[]"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "buyResults",
-									"type": "tuple[]"
 								},
 								{
 									"indexed": false,
@@ -2558,7 +2462,7 @@
 					]
 				},
 				"SpreadMarket": {
-					"address": "0x38b933CB2D63D3fe25f7648d46F259aB0f7b89eF",
+					"address": "0xf4fc2eB1b28102C28cd4915d5D46A0c7a6407C3D",
 					"abi": [
 						{
 							"inputs": [],
@@ -2982,102 +2886,6 @@
 									"internalType": "uint256",
 									"name": "positionId",
 									"type": "uint256"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "sellResults",
-									"type": "tuple[]"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "buyResults",
-									"type": "tuple[]"
 								},
 								{
 									"indexed": false,
@@ -3822,7 +3630,7 @@
 					]
 				},
 				"SpreadLiquidityPool": {
-					"address": "0x028fa6641eFeDe9B38Ca012a8bA22326F416b9a4",
+					"address": "0xA018F3fd00a015286a889C68B8Aec0a2BD19159b",
 					"abi": [
 						{
 							"inputs": [
@@ -5307,7 +5115,7 @@
 					]
 				},
 				"OtusOptionToken": {
-					"address": "0xB61566A9Aa64639314361595CAd6af791E8D6b01",
+					"address": "0xBcD93d8273b8C199A14A6Dd66bc9f8C5E127eC5C",
 					"abi": [
 						{
 							"inputs": [
@@ -5652,102 +5460,6 @@
 									"internalType": "uint256",
 									"name": "positionId",
 									"type": "uint256"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "sellResults",
-									"type": "tuple[]"
-								},
-								{
-									"components": [
-										{
-											"internalType": "bytes32",
-											"name": "market",
-											"type": "bytes32"
-										},
-										{
-											"internalType": "uint256",
-											"name": "positionId",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalCost",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "totalFee",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "optionType",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "amount",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "setCollateralTo",
-											"type": "uint256"
-										},
-										{
-											"internalType": "uint256",
-											"name": "strikeId",
-											"type": "uint256"
-										}
-									],
-									"indexed": false,
-									"internalType": "struct ITradeTypes.TradeResult[]",
-									"name": "buyResults",
-									"type": "tuple[]"
 								},
 								{
 									"indexed": false,
@@ -6898,7 +6610,7 @@
 					]
 				},
 				"SpreadMaxLossCollateral": {
-					"address": "0xa1A68249053d486eCE7a26E027Aa035B3953A37A",
+					"address": "0xC2861EA39c190772d9E3Ba45d0529a92742a54D1",
 					"abi": [
 						{
 							"inputs": [],
@@ -7138,7 +6850,7 @@
 					]
 				},
 				"MaxLossCalculator": {
-					"address": "0xb614b200C69Da708DEa685985Ff33437022929C9",
+					"address": "0xA6f12eD07530CA43443Ff92d5bDc6c0658fb6673",
 					"abi": [
 						{
 							"inputs": [
@@ -7203,7 +6915,7 @@
 					]
 				},
 				"SettlementCalculator": {
-					"address": "0x875a54B60CEe0FaEA7aAB920CEEd77849d43A9D6",
+					"address": "0xd0DdcC01E05ffd09BEeEa1F923d7F5B0bC75dB51",
 					"abi": [
 						{
 							"inputs": [
