@@ -36,15 +36,12 @@ export const useOtusAccountContracts = () => {
 		if (contractsConfig) {
 			chain && contractsConfig.deployedContracts[chain.id];
 			const chainId = chain ? chain.id : LOCAL_CHAIN_ID;
-			console.log({ chainId });
 			const contracts = contractsConfig.deployedContracts[chainId];
-			console.log({ contracts });
 			if (contracts) {
 				const _contracts = contracts[0].contracts;
 				setOtusContracts(_contracts);
 				setNetworkNotSupported(false);
 			} else {
-				console.log("what the why");
 				setNetworkNotSupported(true);
 			}
 		}

@@ -33,7 +33,6 @@ export const useLyraTrade = (lyra: Lyra | null) => {
 	const fetchMarketQuoteBalance = useCallback(async () => {
 		if (lyra && address && market) {
 			const account = lyra.account(address);
-			console.log({ account, market });
 			const marketBalance = await account.marketBalances(market);
 			const _quoteAsset = marketBalance.quoteAsset;
 			setQuoteAssetBalance(_quoteAsset.balance);

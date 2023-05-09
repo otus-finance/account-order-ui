@@ -72,7 +72,7 @@ export const usePositions = (lyra: Lyra | null) => {
 				`,
 				{ owner: owner.toLowerCase() }
 			);
-			console.log({ response });
+
 			if (lyra) {
 				const positionsWithLegs: Position[] = await Promise.all(
 					response.positions.map(async (position: Position) => {

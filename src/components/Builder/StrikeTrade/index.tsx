@@ -28,7 +28,6 @@ export const StrikeTrade = () => {
 			{selectedMarket && strikes.length > 0 && (
 				<>
 					{/* strikes summary  */}
-					<WalletBalance />
 
 					<div className="border-b dark:border-zinc-800 py-4 p-4">
 						{builderType == BuilderType.Builder && builderTypeClean ? (

@@ -11,6 +11,7 @@ import { ActivityType, BuilderType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { MarketOrderContextProvider } from "../../context/MarketOrderContext";
 import { Positions } from "./StrikeTrade/Postions";
+import { WalletBalance } from "./StrikeTrade/TradeSelect";
 
 export const OptionsBuilder = () => {
 	const { lyra, strikes, builderType, activityType } = useBuilderContext();
@@ -46,23 +47,27 @@ export const OptionsBuilder = () => {
 			<div className="col-span-2 lg:col-span-1">
 				<div className="border-t sm:border dark:border-zinc-800 sm:rounded-lg shadow-md dark:shadow-black shadow-zinc-100">
 					<ActivitySelect />
+					{lyra && (
+						<LyraAccountContextProvider lyra={lyra}>
+							<WalletBalance />
+						</LyraAccountContextProvider>
+					)}
+
 					{activityType === ActivityType.Trade ? (
 						<div>
-							{lyra && strikes[0] ? (
+							{strikes[0] ? (
 								<>
-									<LyraAccountContextProvider lyra={lyra}>
-										<MarketOrderContextProvider>
-											<>
-												<StrikeTrade />
-												<div className="hidden sm:block p-4 border-t dark:border-zinc-900">
-													<Chart />
-												</div>
-												<div className="sm:hidden p-4 border-t dark:border-zinc-900">
-													<Chart height={200} />
-												</div>
-											</>
-										</MarketOrderContextProvider>
-									</LyraAccountContextProvider>
+									<MarketOrderContextProvider>
+										<>
+											<StrikeTrade />
+											<div className="hidden sm:block p-4 border-t dark:border-zinc-900">
+												<Chart />
+											</div>
+											<div className="sm:hidden p-4 border-t dark:border-zinc-900">
+												<Chart height={200} />
+											</div>
+										</>
+									</MarketOrderContextProvider>
 								</>
 							) : (
 								<div className=" p-4">
