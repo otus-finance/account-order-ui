@@ -136,3 +136,24 @@ export type MarketOrderTransaction = {
 	approve: () => Promise<void>;
 	open: () => Promise<void>;
 };
+
+export type PositionTransaction = {
+	burnPositionConfigSuccess: boolean;
+	burnPositionConfigError: any;
+	isBurnPositionSuccess: boolean;
+	isBurnPositionLoading: boolean;
+	isTxLoading: boolean;
+	burn: () => Promise<void>;
+};
+
+// PositionUpdate Event
+// PositionUpdatedType
+export enum PositionUpdatedType {
+	OPENED,
+	SPLIT_TRANSFER,
+	ADJUSTED,
+	CLOSED,
+	SETTLED,
+	LIQUIDATED,
+	TRANSFER,
+}

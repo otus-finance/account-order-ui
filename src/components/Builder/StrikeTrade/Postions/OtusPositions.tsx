@@ -1,0 +1,333 @@
+import { Chain } from "wagmi";
+import { useBuilderContext } from "../../../../context/BuilderContext";
+import { Position, usePositions } from "../../../../queries/otus/positions";
+import { Spinner } from "../../../UI/Components/Spinner";
+import { useChainContext } from "../../../../context/ChainContext";
+import { Dispatch, useState } from "react";
+import Modal from "../../../UI/Modal";
+import getExplorerUrl from "../../../../utils/chains/getExplorerUrl";
+import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
+import { Position as LyraPosition, PositionFilter } from "@lyrafinance/lyra-js";
+import { ArrowTopRightOnSquareIcon, LinkIcon } from "@heroicons/react/20/solid";
+import { OtusPositionSplit } from "./Actions/Split";
+import { ZERO_BN } from "../../../../constants/bn";
+import { OtusPositionClose } from "./Actions/Close";
+import SUSDIcon from "../../../UI/Icons/Color/SUSD";
+import ETHIcon from "../../../UI/Icons/Color/ETH";
+import BTCIcon from "../../../UI/Icons/Color/BTC";
+import LogoIcon from "../../../UI/Icons/Logo/OTUS";
+import { useTheme } from "next-themes";
+import { LyraPositionRow } from "./LyraPositions";
+
+export const OtusPositions = () => {
+	const { lyra } = useBuilderContext();
+
+	const { theme } = useTheme();
+
+	const { selectedChain: chain } = useChainContext();
+	const { isLoading, data } = usePositions(lyra);
+	const [showLegPositionId, setShowLegPositionId] = useState(0);
+	const [openClosePositionId, setOpenClosePositionId] = useState<Position>();
+	const [open, setOpen] = useState(false);
+
+	const [openSplitId, setOpenSplitId] = useState<Position>();
+	const [openSplit, setOpenSplit] = useState(false);
+
+	const handleCloseSpreadModal = (position: Position) => {
+		setOpen(true);
+		setOpenClosePositionId(position);
+	};
+
+	const handleSplitOtusPositionModal = (position: Position) => {
+		setOpenSplit(true);
+		setOpenSplitId(position);
+	};
+
+	return (
+		<>
+			<div className="border-b font-mono dark:border-zinc-900 p-4 text-sm font-normal dark:text-zinc-200">
+				Otus Positions
+			</div>
+			{isLoading ? (
+				<div className="p-4">
+					<Spinner />
+				</div>
+			) : (
+				<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
+					<table className="min-w-full table-fixed  rounded-sm">
+						<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 dark:bg-zinc-800"></thead>
+						<th scope="col" className="py-3.5 text-left pl-4  text-xs font-light"></th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Open Date
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Type
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Size
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Total Cost
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Otus Fee
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Profit / Loss
+						</th>
+
+						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+							Status
+						</th>
+
+						<th scope="col" className="py-3.5 text-left  pl-4  text-xs font-light">
+							Transaction
+						</th>
+
+						<th scope="col" className="py-3.5 text-left  pl-4  text-xs font-light">
+							Action
+						</th>
+
+						<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+							{data?.positions.map((position: Position, index: number) => {
+								return (
+									<PositionRow
+										handleCloseSpreadModal={handleCloseSpreadModal}
+										handleSplitOtusPositionModal={handleSplitOtusPositionModal}
+										key={index}
+										position={position}
+										chain={chain}
+										showLegPositionId={showLegPositionId}
+										setShowLegPositionId={setShowLegPositionId}
+									/>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
+			)}
+
+			<Modal
+				setOpen={setOpen}
+				open={open}
+				title={
+					<div className="px-4 pb-3 pt-5">
+						<div className="flex">
+							<div>
+								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-100">
+									{theme == "dark" ? (
+										<LogoIcon />
+									) : (
+										<img src="./OTUSICONLOGO.png" className="rounded-md h-8" />
+									)}
+								</div>
+							</div>
+
+							<div className="ml-4">
+								<h2 className="text-sm font-semibold">Close Spread Position</h2>
+								<h3 className="text-xxs dark:text-zinc-200 pt-1">
+									Close all your legs in a spread position.
+								</h3>
+							</div>
+						</div>
+					</div>
+				}
+			>
+				{openClosePositionId && <OtusPositionClose position={openClosePositionId} />}
+			</Modal>
+
+			<Modal
+				setOpen={setOpenSplit}
+				open={openSplit}
+				title={
+					<div className="px-4 pb-3 pt-5">
+						<div className="flex">
+							<div>
+								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-100">
+									{theme == "dark" ? (
+										<LogoIcon />
+									) : (
+										<img src="./OTUSICONLOGO.png" className="rounded-md h-8" />
+									)}
+								</div>
+							</div>
+
+							<div className="ml-4">
+								<h2 className="text-sm font-semibold">Split Multi Leg Position</h2>
+								<h3 className="text-xxs dark:text-zinc-200 pt-1">
+									Your Otus position will be split into multiple legs.
+								</h3>
+							</div>
+						</div>
+					</div>
+				}
+			>
+				{openSplitId && <OtusPositionSplit position={openSplitId} />}
+			</Modal>
+		</>
+	);
+};
+
+const PositionRow = ({
+	handleCloseSpreadModal,
+	handleSplitOtusPositionModal,
+	position,
+	chain,
+	showLegPositionId,
+	setShowLegPositionId,
+}: {
+	handleCloseSpreadModal: any;
+	handleSplitOtusPositionModal: any;
+	position: Position;
+	chain: Chain | null;
+	showLegPositionId: number;
+	setShowLegPositionId: Dispatch<number>;
+}) => {
+	const { id, state, tradeType, openTimestamp, txHash, unrealizedPnl, trade, totalCost } = position;
+	const txHref = chain && txHash && getExplorerUrl(chain, txHash);
+
+	// const cost = trade?.cost || ZERO_BN;
+	const fee = trade?.fee || ZERO_BN;
+
+	return (
+		<>
+			<tr className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
+				<td className="whitespace-nowrap py-4 text-left pl-4 text-xs font-medium dark:text-zinc-200">
+					{txHref && (
+						<div
+							className="p-1 dark:bg-zinc-900 dark:text-zinc-200 hover:dark:bg-zinc-800 bg-zinc-200 text-zinc-900 rounded-lg hover:bg-zinc-300 inline cursor-pointer"
+							onClick={() => {
+								if (showLegPositionId == fromBigNumber(id, 0)) {
+									setShowLegPositionId(0);
+								} else {
+									setShowLegPositionId(fromBigNumber(id, 0));
+								}
+							}}
+						>
+							{showLegPositionId != fromBigNumber(id, 0) ? "View Legs" : "Hide"}
+						</div>
+					)}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{new Date(openTimestamp * 1000).toDateString()}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{tradeType === 0 ? (
+						<span className="bg-zinc-700 text-zinc-200 font-normal p-1 rounded-lg">Multi Leg</span>
+					) : (
+						<span className="bg-blue-500 text-zinc-100 font-normal p-1 rounded-lg">Spread</span>
+					)}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{fromBigNumber(id, 0)}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{formatUSD(totalCost, { dps: 2 })}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{formatUSD(fromBigNumber(fee), { dps: 2 })}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{unrealizedPnl < 0 ? (
+						<span className="text-rose-500 font-bold">{formatUSD(unrealizedPnl)}</span>
+					) : (
+						<span className="text-emerald-500 font-bold">{formatUSD(unrealizedPnl)}</span>
+					)}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{state === 0 ? "Open" : "Closed"}
+				</td>
+
+				<td className="whitespace-nowrap py-4 pl-4 text-xs font-medium dark:text-zinc-200">
+					{txHref && (
+						<a className="p-1 block" target="_blank" rel="noreferrer" href={txHref}>
+							<ArrowTopRightOnSquareIcon className="text-zinc-900 dark:text-zinc-200 h-4 w-4 ml-1" />
+						</a>
+					)}
+				</td>
+
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+					{tradeType === 0 ? (
+						<div
+							onClick={() => handleSplitOtusPositionModal(position)}
+							className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 inline text-white p-1 rounded-lg"
+						>
+							Split
+						</div>
+					) : (
+						<div
+							onClick={() => handleCloseSpreadModal(position)}
+							className="cursor-pointer bg-gradient-to-t dark:from-rose-700 dark:to-rose-500 from-rose-500 to-rose-400 inline text-white p-1 rounded-lg"
+						>
+							Close
+						</div>
+					)}
+				</td>
+			</tr>
+			{showLegPositionId == fromBigNumber(id, 0) && (
+				<td colSpan={10}>
+					<OtusLegPositions lyraPositions={position.lyraPositions} />
+				</td>
+			)}
+		</>
+	);
+};
+
+const OtusLegPositions = ({ lyraPositions }: { lyraPositions: LyraPosition[] }) => {
+	return (
+		<table className="bg-zinc-100 dark:bg-black min-w-full">
+			<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 dark:bg-zinc-800"></thead>
+			<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+				Market
+			</th>
+			<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+				Type
+			</th>
+
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Strike Price
+			</th>
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Size
+			</th>
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Average Cost
+			</th>
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Profit / Loss
+			</th>
+
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Status
+			</th>
+
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Expiry
+			</th>
+			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+				Delta
+			</th>
+			<th scope="col" className="sr-only">
+				Action
+			</th>
+			<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+				{lyraPositions?.map((position: LyraPosition, index: number) => {
+					return <LyraPositionRow key={index} position={position} />;
+				})}
+			</tbody>
+		</table>
+	);
+};

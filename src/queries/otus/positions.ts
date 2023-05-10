@@ -29,6 +29,7 @@ export type Position = {
 	lyraPositions: LyraPosition[];
 	isInTheMoney: boolean;
 	unrealizedPnl: number;
+	totalCost: number;
 	trade: Trade;
 };
 
@@ -53,7 +54,7 @@ export const usePositions = (lyra: Lyra | null) => {
 				otusEndpoint,
 				gql`
 					query ($owner: String!) {
-						positions(where: { owner: $owner }) {
+						positions(where: { owner: $owner, state: 0 }) {
 							id
 							market
 							owner
@@ -62,6 +63,7 @@ export const usePositions = (lyra: Lyra | null) => {
 							txHash
 							allPositions
 							tradeType
+							state
 							trade {
 								cost
 								fee
@@ -76,7 +78,7 @@ export const usePositions = (lyra: Lyra | null) => {
 			if (lyra) {
 				const positionsWithLegs: Position[] = await Promise.all(
 					response.positions.map(async (position: Position) => {
-						const { allPositions, market } = position;
+						const { allPositions, market, tradeType, trade } = position;
 
 						const positions: LyraPosition[] = await Promise.all(
 							allPositions.map(async (id) => {
@@ -84,17 +86,26 @@ export const usePositions = (lyra: Lyra | null) => {
 							})
 						);
 
-						const unrealizedPnl = positions.reduce(
-							(totalUnrealized: number, position: LyraPosition) => {
-								const { unrealizedPnl } = position.pnl();
-								return totalUnrealized + fromBigNumber(unrealizedPnl);
+						const calculatePosition = positions.reduce(
+							(positionTotals: PositionTotal, position: LyraPosition) => {
+								const { unrealizedPnl, totalAverageOpenCost } = position.pnl();
+
+								return {
+									unrealizedPnl: positionTotals.unrealizedPnl + fromBigNumber(unrealizedPnl),
+									totalAverageOpenCost:
+										positionTotals.totalAverageOpenCost + fromBigNumber(totalAverageOpenCost),
+								};
 							},
-							0
+							{ unrealizedPnl: 0, totalAverageOpenCost: 0 } as PositionTotal
 						);
 
 						return {
 							...position,
-							unrealizedPnl,
+							unrealizedPnl: calculatePosition.unrealizedPnl,
+							totalCost:
+								tradeType === TradeType.Multi
+									? calculatePosition.totalAverageOpenCost
+									: fromBigNumber(trade.cost),
 							lyraPositions: positions,
 						} as Position;
 					})
@@ -111,6 +122,15 @@ export const usePositions = (lyra: Lyra | null) => {
 	);
 };
 
+type PositionTotal = {
+	unrealizedPnl: number;
+	totalAverageOpenCost: number;
+};
+
+enum TradeType {
+	Multi = 0,
+	Spread = 1,
+}
 // type OtusPositionPnl = {
 // 	unrealizedPnl = BigNumber;
 // settlementPnl: BigNumber;

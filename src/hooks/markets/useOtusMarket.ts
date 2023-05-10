@@ -123,6 +123,23 @@ export const useOtusMarket = (
 		},
 	});
 
+	const {
+		config: burnPositionConfig,
+		error: burnPositionConfigError,
+		isSuccess: burnPositionConfigSuccess,
+		refetch: refetchBurnPositionConfig,
+	} = usePrepareContractWrite({
+		address: otusOptionMarket?.address,
+		abi: otusOptionMarket?.abi,
+		functionName: "burnAndTransfer",
+		args: [],
+		chainId: chain?.id,
+		onError: (err: any) => {
+			// ethers.utils.decode
+			console.log("prepare error", err);
+		},
+	});
+
 	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,
 		onSuccess: (data) => {
