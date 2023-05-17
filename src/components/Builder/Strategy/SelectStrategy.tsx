@@ -41,7 +41,7 @@ export const SelectStrategy = () => {
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 dark:border-none border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<div className="flex items-center">
 								<div>
 									{selectedMarket?.name == "sETH-sUSD" || selectedMarket?.name == "ETH-USDC" ? (
@@ -70,13 +70,13 @@ export const SelectStrategy = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
-								{[custom].concat(filteredStrategies).map((strategy: Strategy, index: number) => (
+							<Listbox.Options className="cursor-pointer rounded-xl absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
+								{[CUSTOM].concat(filteredStrategies).map((strategy: Strategy, index: number) => (
 									<Listbox.Option
 										key={index}
 										className={({ active }) =>
 											classNames(
-												active ? "bg-emerald-400 " : "dark:text-white",
+												active ? " bg-zinc-100 dark:bg-zinc-700" : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}
@@ -146,7 +146,7 @@ export const SelectStrategy = () => {
 	);
 };
 
-const custom: Strategy = {
+export const CUSTOM: Strategy = {
 	id: 999,
 	name: "Custom",
 	description: "Build your own strategy",

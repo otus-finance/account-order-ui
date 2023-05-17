@@ -1,20 +1,6 @@
-import Lyra, { OptionType } from "@lyrafinance/lyra-js";
-import { ethers } from "ethers";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import {
-	ActivityType,
-	BuilderType,
-	Strategy,
-	StrategyDirection,
-	StrategyStrikeTrade,
-} from "../utils/types";
-import {
-	getStrikeQuote,
-	LyraBoard,
-	LyraMarket,
-	LyraStrike,
-	useLyraMarket,
-} from "../queries/lyra/useLyra";
+import { ActivityType, BuilderType, StrategyDirection, StrategyStrikeTrade } from "../utils/types";
+import { LyraBoard, LyraMarket, LyraStrike, useLyraMarket } from "../queries/lyra/useLyra";
 
 import {
 	BuilderProviderState,
@@ -28,48 +14,18 @@ import {
 	calculateOptionType,
 	orderFilter,
 } from "../utils/formatters/optiontypes";
-import { useAccount, useNetwork } from "wagmi";
-import { optimism, arbitrum, hardhat, Chain, optimismGoerli, arbitrumGoerli } from "wagmi/chains";
-import {
-	arbitrumGoerliUrl,
-	arbitrumUrl,
-	optimismGoerliUrl,
-	optimismUrl,
-} from "../constants/networks";
+import { useAccount } from "wagmi";
+
 import { DirectionType } from "../utils/direction";
 import { useChainContext } from "../context/ChainContext";
-
-const getRPCUrl = (chain: Chain) => {
-	switch (chain.id) {
-		case hardhat.id:
-			return optimismUrl;
-		case arbitrum.id:
-			return arbitrumUrl;
-		case optimism.id:
-			return optimismUrl;
-		case arbitrumGoerli.id:
-			return arbitrumGoerliUrl;
-		case optimismGoerli.id:
-			return optimismGoerliUrl;
-		default:
-			return optimismUrl;
-	}
-};
-
-const getLyra = async (chain: Chain) => {
-	const provider = new ethers.providers.JsonRpcProvider(getRPCUrl(chain));
-	await provider.getNetwork();
-	const _lyra = new Lyra({ provider });
-	return _lyra;
-};
+import { useLyraContext } from "../context/LyraContext";
 
 export const useBuilder = () => {
 	const [state, dispatch] = useReducer(builderReducer, builderInitialState);
 
-	const { address: owner, isConnected } = useAccount();
+	const { isConnected } = useAccount();
 
 	const {
-		lyra,
 		activityType,
 		builderType,
 		showStrikesSelect,
@@ -92,6 +48,8 @@ export const useBuilder = () => {
 
 	const { handleSelectedChain, selectedChain } = useChainContext();
 
+	const { lyra } = useLyraContext();
+
 	const { data, isLoading } = useLyraMarket(lyra);
 
 	useEffect(() => {
@@ -106,24 +64,6 @@ export const useBuilder = () => {
 			});
 		}
 	}, [selectedChain, isConnected]);
-
-	const updateSelectedChain = useCallback(async () => {
-		if (selectedChain && lyra?.chainId != selectedChain.id) {
-			const _lyra = await getLyra(selectedChain);
-			dispatch({
-				type: "SET_LYRA",
-				lyra: _lyra,
-			});
-		}
-	}, [lyra, selectedChain]);
-
-	useEffect(() => {
-		try {
-			updateSelectedChain();
-		} catch (error) {
-			console.warn({ error });
-		}
-	}, [updateSelectedChain, selectedChain]);
 
 	const handleSelectedExpirationDate = (expirationDate: LyraBoard) => {
 		const { strikesWithQuotes } = expirationDate;
@@ -374,7 +314,6 @@ export const useBuilder = () => {
 	const [activeStrike, setActiveStrike] = useState({ strikeId: 0, isCall: false });
 
 	return {
-		lyra,
 		activityType,
 		builderType,
 		selectedChain,

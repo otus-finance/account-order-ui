@@ -16,9 +16,9 @@ const Builder: NextPage = () => {
 			</Head>
 
 			<Layout>
-				<div className="mx-auto max-w-screen-2xl py-4 sm:py-8 dark:text-white min-h-[70vh]">
+				<div className="mx-auto max-w-screen-sm py-4 sm:py-24 dark:text-white min-h-[76vh]">
 					<div className="grid grid-cols-4 gap-4">
-						<div className="col-span-4 sm:col-start-2 sm:col-end-4 sm:col-span-2">
+						<div className="col-span-4">
 							<SpreadLiquidityPoolContextProvider>
 								<SpreadLiquidityPool />
 							</SpreadLiquidityPoolContextProvider>

@@ -38,7 +38,7 @@ export const SelectDirectionType = () => {
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-300 dark:border-none border dark:bg-zinc-900 dark:shadow-black shadow-zinc-100 shadow-sm py-3 pl-3 pr-20 text-left dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  sm:text-md">
 							<span className="block truncate">
 								{selectedDirectionTypes.length > 0
 									? buildTextSelectedDirections(selectedDirectionTypes)
@@ -56,13 +56,13 @@ export const SelectDirectionType = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="rounded-md absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
+							<Listbox.Options className="rounded-xl absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
 								{DirectionType.map((direction: StrategyDirection) => (
 									<Listbox.Option
 										key={direction.id}
 										className={({ active }) =>
 											classNames(
-												active ? "bg-emerald-500 text-white" : "dark:text-white",
+												active ? "bg-zinc-100 dark:bg-zinc-700" : "dark:text-white",
 												"relative cursor-default select-none py-2 pl-3 pr-9"
 											)
 										}

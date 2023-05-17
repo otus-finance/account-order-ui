@@ -106,7 +106,6 @@ export const useSpreadMarket = (
 		chainId: chain?.id,
 		onError: (err: any) => {
 			// ethers.utils.decode
-			console.log("prepare error", err);
 		},
 		enabled:
 			!Number.isNaN(maxLossPost) &&
@@ -132,54 +131,6 @@ export const useSpreadMarket = (
 		},
 	});
 
-	// const { data: validMaxLoss, refetch: refetchValidMaxLoss } = useContractRead({
-	// 	address: spreadOptionMarket?.address,
-	// 	abi: spreadOptionMarket?.abi,
-	// 	functionName: "validMaxLoss",
-	// 	args: [
-	// 		tradeInfo.market,
-	// 		trades.filter((t: TradeInputParameters) => (!isLong(t.optionType as number) ? true : false)),
-	// 		trades.filter((t: TradeInputParameters) => (isLong(t.optionType as number) ? true : false)),
-	// 	],
-	// 	chainId: chain?.id,
-	// });
-
-	// useEffect(() => {
-	// 	if (validMaxLoss) {
-	// 		console.log({ validMaxLoss: fromBigNumber(validMaxLoss) })
-	// 	}
-
-	// }, [validMaxLoss])
-
-	// const { config: closePositionConfig, error: closeError } = usePrepareContractWrite({
-	//   address: spreadOptionMarket?.address,
-	//   abi: spreadOptionMarket?.abi,
-	//   functionName: "closePosition",
-	//   args: [tradeInfo.market, tradeInfo.positionId, []],
-	//   chainId: chain?.id,
-	// });
-
-	// const {
-	//   isSuccess: isClosePositionSuccess,
-	//   isLoading: isClosePositionLoading,
-	//   write: closePosition,
-	//   data: closePositionData,
-	// } = useContractWrite({
-	//   ...closePositionConfig,
-	//   onSettled: (data, error) => {
-	//     if (chain && data?.hash) {
-	//       const txHref = getExplorerUrl(chain, data.hash);
-	//       const toastId = createToast("info", `Closing spread option position`, txHref);
-	//       setActiveTransaction({ hash: data.hash, toastId: toastId });
-	//     } else {
-	//       reportError(chain, error, undefined, false);
-	//     }
-	//   },
-	//   onSuccess: async (data) => {
-	//     await refetchAllowance();
-	//   },
-	// });
-
 	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,
 		onSuccess: (data) => {
@@ -187,7 +138,6 @@ export const useSpreadMarket = (
 				if (activeTransaction?.toastId) {
 					const txHref = getExplorerUrl(chain, data.transactionHash);
 					updateToast("success", activeTransaction?.toastId, "Success", txHref);
-					// handleSelectActivityType(ActivityType.Position);
 				}
 
 				setActiveTransaction(undefined);

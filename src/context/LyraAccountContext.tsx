@@ -1,19 +1,19 @@
-import Lyra from "@lyrafinance/lyra-js";
 import React, { createContext, ReactElement, useContext } from "react";
 import { useLyraTrade } from "../hooks";
 
 import { AccountProviderState, accountInitialState } from "../reducers";
+import { Address } from "wagmi";
 
 const LyraAccountContext = createContext<AccountProviderState>(accountInitialState);
 
 export const LyraAccountContextProvider = ({
 	children,
-	lyra,
+	address,
 }: {
 	children: ReactElement;
-	lyra: Lyra;
+	address: Address;
 }) => {
-	const accountProviderState = useLyraTrade(lyra);
+	const accountProviderState = useLyraTrade(address);
 
 	return (
 		<LyraAccountContext.Provider value={accountProviderState}>

@@ -22,7 +22,7 @@ export const MarketOrderActions = () => {
 	return trades.length > 0 ? (
 		<>
 			{validMaxLoss && (
-				<div className="border-t dark:border-zinc-800 py-4 p-4">
+				<div className="border-t dark:border-zinc-800 border-zinc-100 py-4 p-4">
 					<Switch.Group as="div" className="flex items-center justify-between">
 						<span className="flex flex-grow flex-col">
 							<Switch.Label
@@ -58,7 +58,7 @@ export const MarketOrderActions = () => {
 					</Switch.Group>
 				</div>
 			)}
-			<div className="border-t dark:border-zinc-800 p-4">
+			<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
 				<div className="flex items-center justify-between py-2">
 					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Cost</p>
 					<div className="ml-2 flex flex-shrink-0">
@@ -133,7 +133,7 @@ export const MarketOrderActions = () => {
 				<MarketOrderInfo />
 			</div>
 
-			<div className="border-t dark:border-zinc-800 p-4">
+			<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
 				<div className="flex items-center justify-between pb-2">
 					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Loss</p>
 					<div className="ml-2 flex flex-shrink-0">
@@ -156,7 +156,7 @@ export const MarketOrderActions = () => {
 			</div>
 		</>
 	) : (
-		<div className="border-t dark:border-zinc-800 p-4">
+		<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
 			<div className="flex items-center p-2">
 				<p className="truncate font-sans text-xs font-normal dark:text-white">
 					<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />

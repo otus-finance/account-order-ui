@@ -27,7 +27,6 @@ export const useOtusPosition = (
 		chainId: chain?.id,
 		onError: (err: any) => {
 			// ethers.utils.decode
-			console.log("prepare error", err);
 		},
 	});
 

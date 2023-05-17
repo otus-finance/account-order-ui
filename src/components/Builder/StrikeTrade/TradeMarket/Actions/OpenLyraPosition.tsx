@@ -14,7 +14,7 @@ export const OpenLyraPosition = () => {
 			{userBalance && userBalance.isZero() && (
 				<div
 					onClick={() => console.warn("Add funds")}
-					className="mb-4 cursor-disabled border-2 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm dark:text-white text-center rounded-full"
+					className="mb-4 cursor-disabled border-2 dark:border-zinc-800 border-zinc-100 dark:bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm dark:text-white text-center rounded-full"
 				>
 					Insufficient Balance
 				</div>

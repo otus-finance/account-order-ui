@@ -33,7 +33,7 @@ export type LiquidityPool = {
 	lpUsers: Array<LPUser>;
 };
 
-export const useLiquidityPool = (chain: Chain | null) => {
+export const useLiquidityPool = (chain?: Chain) => {
 	const otusSpreadLiquidityEndpoint = getOtusEndpoint(chain?.id);
 
 	return useQuery<LiquidityPool | null | undefined>(

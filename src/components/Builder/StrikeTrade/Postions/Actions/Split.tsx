@@ -4,7 +4,6 @@ import { formatUSD, fromBigNumber } from "../../../../../utils/formatters/number
 import { Position as LyraPosition } from "@lyrafinance/lyra-js";
 import LyraIcon from "../../../../UI/Icons/Color/LYRA";
 import { ArrowRightCircleIcon } from "@heroicons/react/20/solid";
-import LogoIcon from "../../../../UI/Icons/Logo/OTUS";
 import { useOtusPosition } from "../../../../../hooks/markets/useOtusPosition";
 import { useOtusAccountContracts } from "../../../../../hooks/Contracts";
 import { useNetwork } from "wagmi";
@@ -29,7 +28,7 @@ export const OtusPositionSplit = ({ position }: { position: Position }) => {
 	return (
 		<div>
 			<table className="min-w-full table-fixed rounded-sm">
-				<thead className="divide dark:divide-zinc-900 divide-zinc-300 "></thead>
+				<thead className="divide dark:divide-zinc-800 divide-zinc-100 "></thead>
 				<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
 					Protocol
 				</th>
@@ -47,14 +46,14 @@ export const OtusPositionSplit = ({ position }: { position: Position }) => {
 				<th scope="col" className="sr-only">
 					Transfer
 				</th>
-				<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+				<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
 					{lyraPositions?.map((position: LyraPosition, index: number) => {
 						return <LyraSplitPositionRow key={index} position={position} />;
 					})}
 				</tbody>
 			</table>
 
-			<div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
+			<div className="p-4 border-t border-zinc-100 dark:border-zinc-800">
 				<div
 					onClick={() => (isBurnPositionSuccess ? console.log("Close") : burn?.())}
 					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center text-white cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400`}

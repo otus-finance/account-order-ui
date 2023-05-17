@@ -11,44 +11,38 @@ import { ActivityType, BuilderType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { MarketOrderContextProvider } from "../../context/MarketOrderContext";
 import { Positions } from "./StrikeTrade/Postions";
-import { WalletBalance } from "./StrikeTrade/TradeSelect";
+import { WalletBalance } from "./StrikeTrade/Balance";
+import { useAccount } from "wagmi";
+import { CUSTOM } from "./Strategy/SelectStrategy";
 
 export const OptionsBuilder = () => {
-	const { lyra, strikes, builderType, activityType } = useBuilderContext();
+	const { strikes, activityType, selectedStrategy } = useBuilderContext();
+
+	const { address } = useAccount();
 
 	return (
 		<div className="grid sm:grid-cols-2 grid-cols-2 gap-8">
 			<div className="col-span-2 lg:col-span-1">
-				<div className="sm:border dark:border-zinc-800 sm:rounded-lg shadow-md dark:shadow-black shadow-zinc-100">
+				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
 					<div className="p-4">
 						<Market />
 					</div>
-					{/* 
-					<div className="border-b dark:border-zinc-800">
-						<div className="px-4 pt-2 pb-4">
-							<BuilderSelect />
-						</div>
-					</div> */}
-
-					{/* {builderType === BuilderType.Builder && (
-						<div className="border-y dark:border-zinc-800">
-							<Strategy />
-						</div>
-					)} */}
 
 					<Strategy />
 
-					<div>
-						<Strikes />
-					</div>
+					{(selectedStrategy == null || selectedStrategy?.id == CUSTOM.id) && (
+						<div>
+							<Strikes />
+						</div>
+					)}
 				</div>
 			</div>
 
 			<div className="col-span-2 lg:col-span-1">
-				<div className="border-t sm:border dark:border-zinc-800 sm:rounded-lg shadow-md dark:shadow-black shadow-zinc-100">
+				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
 					<ActivitySelect />
-					{lyra && (
-						<LyraAccountContextProvider lyra={lyra}>
+					{address && (
+						<LyraAccountContextProvider address={address}>
 							<WalletBalance />
 						</LyraAccountContextProvider>
 					)}
@@ -60,10 +54,10 @@ export const OptionsBuilder = () => {
 									<MarketOrderContextProvider>
 										<>
 											<StrikeTrade />
-											<div className="hidden sm:block p-4 border-t dark:border-zinc-900">
+											<div className="hidden sm:block p-4 border-t border-zinc-100 dark:border-zinc-800">
 												<Chart />
 											</div>
-											<div className="sm:hidden p-4 border-t dark:border-zinc-900">
+											<div className="sm:hidden p-4 border-t border-zinc-100 dark:border-zinc-800">
 												<Chart height={200} />
 											</div>
 										</>
@@ -93,14 +87,14 @@ export const OptionsBuilder = () => {
 	);
 };
 
-const ActivitySelect = () => {
+export const ActivitySelect = () => {
 	const { activityType, handleSelectActivityType } = useBuilderContext();
 
 	return (
-		<div className="flex justify-between border-b dark:border-zinc-800">
+		<div className="flex justify-between border-b border-zinc-100 dark:border-zinc-800">
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Trade)}
-				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r dark:border-zinc-800 
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-100 dark:border-zinc-800 
 		${
 			activityType === ActivityType.Trade
 				? "dark:text-white underline font-semibold"
@@ -119,6 +113,48 @@ const ActivitySelect = () => {
 		}`}
 			>
 				Positions
+			</div>
+		</div>
+	);
+};
+
+export const VaultActivitySelect = () => {
+	const { activityType, handleSelectActivityType } = useBuilderContext();
+
+	return (
+		<div className="flex justify-between border-b border-zinc-100 dark:border-zinc-800">
+			<div
+				onClick={() => handleSelectActivityType(ActivityType.Trade)}
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-100 dark:border-zinc-800 
+		${
+			activityType === ActivityType.Trade
+				? "dark:text-white underline font-semibold"
+				: "dark:text-zinc-300"
+		}`}
+			>
+				Trade
+			</div>
+			<div
+				onClick={() => handleSelectActivityType(ActivityType.Position)}
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono  border-r border-zinc-100 dark:border-zinc-800
+		${
+			activityType === ActivityType.Position
+				? "dark:text-white underline font-semibold"
+				: "dark:text-zinc-300"
+		}`}
+			>
+				Positions
+			</div>
+			<div
+				onClick={() => handleSelectActivityType(ActivityType.Manage)}
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono 
+		${
+			activityType === ActivityType.Manage
+				? "dark:text-white underline font-semibold"
+				: "dark:text-zinc-300"
+		}`}
+			>
+				Manage Vault
 			</div>
 		</div>
 	);

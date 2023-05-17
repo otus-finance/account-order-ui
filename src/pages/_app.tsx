@@ -15,14 +15,16 @@ import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 import { ChainContextProvider } from "../context/ChainContext";
 import { ThemeProvider } from "next-themes";
+import { LyraContextProvider } from "../context/LyraContext";
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-Sentry.init({
-	dsn: SENTRY_DSN,
-	tracesSampleRate: 1.0,
-});
+// Sentry.init({
+// 	dsn: SENTRY_DSN,
+// 	tracesSampleRate: 1.0,
+
+// });
 
 const { chains, provider } = configureChains(
 	[arbitrumGoerli, optimism, arbitrum],
@@ -56,9 +58,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<RainbowKitProvider chains={chains}>
 					<QueryClientProvider client={queryClient}>
 						<ChainContextProvider>
-							<ThemeProvider attribute="class">
-								<Component {...pageProps} />
-							</ThemeProvider>
+							<LyraContextProvider>
+								<ThemeProvider attribute="class">
+									<Component {...pageProps} />
+								</ThemeProvider>
+							</LyraContextProvider>
 						</ChainContextProvider>
 						<ToastContainer />
 					</QueryClientProvider>

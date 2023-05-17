@@ -323,7 +323,6 @@ const useGetPricing = (
 				setPriceLoading(false);
 			} catch (error) {
 				// log error
-				console.log({ error });
 			}
 		}
 	}, [rangedMarket, abi, size, slippage, position, direction, provider]);

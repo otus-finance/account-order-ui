@@ -25,7 +25,7 @@ const Markets: NextPage = () => {
 						{data?.rangedMarkets.map((market, index) => {
 							return (
 								<div key={index} className="col-span-1">
-									<div className="cursor-disabled rounded-xl dark:bg-gradient-to-b from-blue-600 to-emerald-600  shadow-lg dark:shadow-black shadow-zinc-100">
+									<div className="cursor-disabled rounded-xl dark:bg-gradient-to-b from-blue-600 to-emerald-600  shadow-md dark:shadow-black shadow-zinc-200">
 										<Market market={market} />
 									</div>
 								</div>

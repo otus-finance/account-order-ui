@@ -51,7 +51,7 @@ export const OfflineChainSelect = () => {
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0"
 					>
-						<Listbox.Options className="rounded-xl absolute z-10 bg-zinc-200 mt-1 max-h-60 w-48  overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg">
+						<Listbox.Options className="rounded-xl absolute z-10 bg-zinc-200 mt-1 max-h-60 w-48  overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-md dark:shadow-black shadow-zinc-200">
 							{chains?.map((chain: Chain) => (
 								<Listbox.Option
 									key={chain.id}

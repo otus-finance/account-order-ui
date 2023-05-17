@@ -10,10 +10,6 @@ const navigation = [
 		name: "Tutorials",
 		href: "#",
 	},
-	{
-		name: "Risks",
-		href: "#",
-	},
 ];
 
 const social = [

@@ -13,6 +13,7 @@ import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
 import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
 import Modal from "../UI/Modal";
+import { useChainContext } from "../../context/ChainContext";
 
 const Vault = () => {
 	const [open, setOpen] = useState(false);
@@ -33,12 +34,12 @@ const Vault = () => {
 	// }
 
 	return (
-		<div className="dark:border-0 border border-zinc-200 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-md h-full">
-			<div className="border-b dark:border-zinc-800">
+		<div className="dark:border-0 border border-zinc-100 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-zinc-200 shadow-md h-full">
+			<div className="border-b border-zinc-100 dark:border-zinc-800">
 				<div className="p-4">
 					<div className="flex">
 						<div className="">
-							<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
+							<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-200">
 								<SUSDIcon />
 							</div>
 						</div>
@@ -53,7 +54,7 @@ const Vault = () => {
 				</div>
 			</div>
 
-			<div className="overflow-hidden border-b dark:border-zinc-800">
+			<div className="overflow-hidden border-b border-zinc-100 dark:border-zinc-800">
 				<div className="p-4">
 					<div className="flex gap-14">
 						<div className="block">
@@ -83,7 +84,7 @@ const Vault = () => {
 				</div>
 			</div>
 
-			<div className="border-b dark:border-zinc-800">
+			<div className="border-b border-zinc-100 dark:border-zinc-800">
 				<div className="p-4 py-8">
 					<div className="flex justify-between items-center">
 						<div>
@@ -102,7 +103,7 @@ const Vault = () => {
 			</div>
 
 			{!open ? (
-				<div className="border-b dark:border-zinc-800">
+				<div className="border-b border-zinc-100 dark:border-zinc-800">
 					<div className="p-4 py-6">
 						<div
 							onClick={() => setOpen(true)}
@@ -171,7 +172,9 @@ const LiquidityPoolActions = () => {
 	} = useSpreadLiquidityPoolContext();
 
 	const { isConnected } = useAccount();
-	const { chain } = useNetwork();
+
+	const { selectedChain: chain } = useChainContext();
+
 	const { openConnectModal } = useConnectModal();
 
 	const [liquidityPoolActionType, setLiquidityPoolActionType] = useState(LPActionType.DEPOSIT);
@@ -310,7 +313,7 @@ const LiquidityPoolActions = () => {
 							LPActionType.DEPOSIT === liquidityPoolActionType && (
 								<div
 									onClick={() => console.warn("Add funds")}
-									className="mb-4 cursor-disabled border-2 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3  font-semibold text-sm dark:text-white text-center rounded-full"
+									className="mb-4 cursor-disabled border-2 border-zinc-100 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3  font-semibold text-sm dark:text-white text-center rounded-full"
 								>
 									Insufficient Balance
 								</div>

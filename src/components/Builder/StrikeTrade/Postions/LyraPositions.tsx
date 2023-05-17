@@ -1,18 +1,15 @@
-import { useAccount } from "wagmi";
+import { Address, useAccount } from "wagmi";
 import { useBuilderContext } from "../../../../context/BuilderContext";
 import { useLyraPositions } from "../../../../queries/lyra/useLyra";
 import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
-import { Position as LyraPosition } from "@lyrafinance/lyra-js";
+import Lyra, { Position as LyraPosition } from "@lyrafinance/lyra-js";
 import { formatExpirationDate } from "../../../../utils/formatters/expiry";
 import { Spinner } from "../../../UI/Components/Spinner";
 import { useChainContext } from "../../../../context/ChainContext";
 import LyraIcon from "../../../UI/Icons/Color/LYRA";
 import getLyraPositionUrl from "../../../../utils/chains/getLyraPositionUrl";
 
-export const LyraPositions = () => {
-	const { lyra } = useBuilderContext();
-	const { address } = useAccount();
-
+export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Address }) => {
 	const { isLoading: isLyraPositionsLoading, data: lyraPositions } = useLyraPositions(
 		lyra,
 		address
@@ -20,7 +17,7 @@ export const LyraPositions = () => {
 
 	return (
 		<>
-			<div className="font-mono border-b flex dark:border-zinc-900 pt-8 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="font-mono border-b border-zinc-100 flex dark:border-zinc-900  p-4 text-sm font-normal dark:text-zinc-200">
 				<LyraIcon className="h-4 w-4 mr-2" />
 				Lyra Positions
 			</div>
@@ -32,7 +29,7 @@ export const LyraPositions = () => {
 			) : (
 				<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
 					<table className="min-w-full table-fixed rounded-sm">
-						<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 "></thead>
+						<thead className="divide-b dark:divide-zinc-800 divide-zinc-100 "></thead>
 
 						<th
 							scope="col"
@@ -74,7 +71,7 @@ export const LyraPositions = () => {
 							Action
 						</th>
 
-						<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+						<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
 							{lyraPositions?.map((position: LyraPosition, index: number) => {
 								return <LyraPositionRow key={index} position={position} />;
 							})}

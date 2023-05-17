@@ -40,7 +40,7 @@ export default function Modal({
 							leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 						>
 							<Dialog.Panel className="relative bg-white transform overflow-hidden rounded-lg dark:bg-gradient-to-t from-black to-zinc-900 text-left shadow-xl transition-all w-full sm:max-w-sm ">
-								<Dialog.Title as="h3" className="border-b dark:border-zinc-800 border-zinc-200">
+								<Dialog.Title as="h3" className="border-b dark:border-zinc-800 border-zinc-100">
 									{title}
 								</Dialog.Title>
 

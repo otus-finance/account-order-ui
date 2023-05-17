@@ -30,6 +30,7 @@ export type Position = {
 	isInTheMoney: boolean;
 	unrealizedPnl: number;
 	totalCost: number;
+	expiry: number;
 	trade: Trade;
 };
 
@@ -39,7 +40,7 @@ type Trade = {
 	marginBorrowed: BigNumber;
 };
 
-export const usePositions = (lyra: Lyra | null) => {
+export const usePositions = (lyra?: Lyra) => {
 	const { chain } = useNetwork();
 	const { address: owner } = useAccount();
 
@@ -88,20 +89,26 @@ export const usePositions = (lyra: Lyra | null) => {
 
 						const calculatePosition = positions.reduce(
 							(positionTotals: PositionTotal, position: LyraPosition) => {
+								const { expiryTimestamp } = position;
 								const { unrealizedPnl, totalAverageOpenCost } = position.pnl();
 
 								return {
+									expiry:
+										positionTotals.expiry > expiryTimestamp
+											? positionTotals.expiry
+											: expiryTimestamp,
 									unrealizedPnl: positionTotals.unrealizedPnl + fromBigNumber(unrealizedPnl),
 									totalAverageOpenCost:
 										positionTotals.totalAverageOpenCost + fromBigNumber(totalAverageOpenCost),
 								};
 							},
-							{ unrealizedPnl: 0, totalAverageOpenCost: 0 } as PositionTotal
+							{ unrealizedPnl: 0, totalAverageOpenCost: 0, expiry: 0 } as PositionTotal
 						);
 
 						return {
 							...position,
 							unrealizedPnl: calculatePosition.unrealizedPnl,
+							expiry: calculatePosition.expiry,
 							totalCost:
 								tradeType === TradeType.Multi
 									? calculatePosition.totalAverageOpenCost
@@ -123,6 +130,7 @@ export const usePositions = (lyra: Lyra | null) => {
 };
 
 type PositionTotal = {
+	expiry: number;
 	unrealizedPnl: number;
 	totalAverageOpenCost: number;
 };

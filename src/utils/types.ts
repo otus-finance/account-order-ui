@@ -54,9 +54,15 @@ export type StrategyDirection = {
 	name: string;
 };
 
+export enum UserVaultActivityType {
+	Deposit,
+	Withdraw,
+}
+
 export enum ActivityType {
 	Trade,
 	Position,
+	Manage,
 }
 
 export enum BuilderType {
@@ -144,6 +150,15 @@ export type PositionTransaction = {
 	isBurnPositionLoading: boolean;
 	isTxLoading: boolean;
 	burn: () => Promise<void>;
+};
+
+export type SpreadPositionTransacation = {
+	settlePositionConfigSuccess: boolean;
+	settlePositionConfigError: any;
+	isSettlePositionSuccess: boolean;
+	isSettlePositionLoading: boolean;
+	isTxLoading: boolean;
+	settle: () => Promise<void>;
 };
 
 // PositionUpdate Event

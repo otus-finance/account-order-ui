@@ -161,7 +161,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 
 			<div className="overflow-hidden border-b dark:border-zinc-100 border-opacity-20 ">
 				<div className="p-4">
-					<div className="dark:bg-gradient-to-b from-black to-zinc-900  border dark:border-zinc-900  rounded-lg  border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-100">
+					<div className="dark:bg-gradient-to-b from-black to-zinc-900  border dark:border-zinc-900  rounded-lg  border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-200">
 						<RangedMarketChart
 							strikePrice1={2500}
 							strikePrice2={3100}
@@ -176,7 +176,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 			<div className="py-4">
 				{direction === TradeDirection.Open ? (
 					<div className="p-4 py-1 ">
-						<div className="dark:bg-inherit border rounded-lg dark:border-zinc-100 border-opacity-20  dark:bg-zinc-900 py-4 p-2 shadow-md">
+						<div className="dark:bg-inherit border rounded-lg dark:border-zinc-100 border-opacity-20  dark:bg-zinc-900 py-4 p-2 shadow-md dark:shadow-black shadow-zinc-200">
 							<div className="flex items-center justify-between px-2">
 								<p className="truncate font-mono text-xs font-normal dark:text-white">You Sell</p>
 								<div className="ml-2 flex flex-shrink-0">
@@ -202,7 +202,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 					</div>
 				) : (
 					<div className="p-4 py-1 ">
-						<div className="dark:bg-gradient-to-b from-black to-zinc-900  border dark:border-zinc-900  rounded-lg  border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-100">
+						<div className="dark:bg-gradient-to-b from-black to-zinc-900  border dark:border-zinc-900  rounded-lg  border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-200">
 							<div className="flex items-center justify-between px-2">
 								<p className="truncate font-mono text-xs font-normal dark:text-white">You Sell</p>
 								<div className="ml-2 flex flex-shrink-0">
@@ -243,7 +243,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 				<div className="flex items-center justify-center mt-[-20px] ">
 					<div
 						onClick={() => toggleDirection()}
-						className="dark:bg-zinc-900 rounded-md p-2 shadow-xl cursor-pointer border-2 dark:border-zinc-800 hover:dark:bg-black transition duration-200 ease-in-out transform hover:scale-110"
+						className="dark:bg-zinc-900 rounded-md p-2 shadow-xl cursor-pointer border-2 dark:border-zinc-800 border-zinc-100 hover:dark:bg-black transition duration-200 ease-in-out transform hover:scale-110"
 					>
 						<ArrowDownIcon className="h-4 w-4 dark:text-white" />
 					</div>
@@ -251,7 +251,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 
 				{direction === TradeDirection.Open ? (
 					<div className="p-4 py-1 mt-[-20px]">
-						<div className="dark:bg-gradient-to-b from-black to-zinc-900 border dark:border-zinc-900  rounded-lg border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-100">
+						<div className="dark:bg-gradient-to-b from-black to-zinc-900 border dark:border-zinc-900  rounded-lg border-opacity-20 py-4 p-2 shadow-inner dark:shadow-black shadow-zinc-200">
 							<div className="flex items-center justify-between px-2">
 								<p className="truncate font-mono text-xs font-normal dark:text-white">You Buy</p>
 								<div className="ml-2 flex flex-shrink-0">
@@ -288,7 +288,7 @@ const Market = ({ market }: { market: RangedMarket }) => {
 					</div>
 				) : (
 					<div className="p-4 py-1 mt-[-20px]">
-						<div className="dark:bg-inherit border rounded-lg dark:border-zinc-100 border-opacity-40 dark:bg-zinc-900 py-4 p-2 shadow-md ">
+						<div className="dark:bg-inherit border rounded-lg dark:border-zinc-100 border-opacity-40 dark:bg-zinc-900 py-4 p-2 shadow-md dark:shadow-black shadow-zinc-200">
 							<div className="flex items-center justify-between px-2">
 								<p className="truncate font-mono text-xs font-normal dark:text-white">You Buy</p>
 								<div className="ml-2 flex flex-shrink-0">
@@ -367,7 +367,7 @@ const RangedMarketActions = ({
 		return (
 			<div
 				onClick={() => console.warn("Add funds")}
-				className="mb-4 cursor-disabled border-2 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm dark:text-white text-center rounded-full"
+				className="mb-4 cursor-disabled border-2 dark:border-zinc-800 border-zinc-100 dark:bg-zinc-800 p-2 py-3 col-span-3 font-normal text-sm dark:text-white text-center rounded-full"
 			>
 				Insufficient Balance
 			</div>

@@ -54,7 +54,7 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsBuy(true)}
 						className={`${
 							isBuy
-								? "border-emerald-600 dark:bg-zinc-900"
+								? "border-emerald-400 dark:bg-zinc-900"
 								: "dark:border-zinc-700 hover:dark:border-zinc-700"
 						} ${style}`}
 					>
@@ -64,7 +64,7 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsBuy(false)}
 						className={`${
 							!isBuy
-								? "border-emerald-600 dark:bg-zinc-900"
+								? "border-emerald-400 dark:bg-zinc-900"
 								: "dark:border-zinc-700 hover:dark:border-zinc-700"
 						} ${style}`}
 					>
@@ -74,7 +74,7 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsCall(true)}
 						className={`${
 							isCall
-								? "border-emerald-600 dark:bg-zinc-900"
+								? "border-emerald-400 dark:bg-zinc-900"
 								: "dark:border-zinc-700 hover:dark:border-zinc-700"
 						} ${style} ml-2`}
 					>
@@ -84,7 +84,7 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsCall(false)}
 						className={`${
 							!isCall
-								? "border-emerald-600 dark:bg-zinc-900"
+								? "border-emerald-400 dark:bg-zinc-900"
 								: "dark:border-zinc-700 hover:dark:border-zinc-700"
 						} ${style}`}
 					>
@@ -98,7 +98,7 @@ export const SelectStrikesTable = () => {
 			</div>
 
 			<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
-				<table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
+				<table className="min-w-full divide-y divide-zinc-100 dark:divide-zinc-800">
 					<thead className="dark:bg-inherit  ">
 						<tr>
 							<th
@@ -161,7 +161,7 @@ export const SelectStrikesTable = () => {
 							</th> */}
 						</tr>
 					</thead>
-					<tbody className="divide-y dark:divide-zinc-800 divide-zinc-200 dark:bg-inherit">
+					<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
 						{availableStrikes &&
 							availableStrikes.map((strike: LyraStrike) => {
 								{
@@ -201,7 +201,7 @@ export const SelectStrikesTable = () => {
 													className="cursor-pointer font-medium w-full rounded-full hover:opacity-80 bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-400 to-emerald-300"
 												>
 													<div className="flex justify-between ">
-														<div className="border-r dark:border-zinc-800 p-2">
+														<div className="border-r dark:border-zinc-800 border-zinc-100 p-2">
 															<CheckIcon className="h-5 w-5 ml-1 dark:text-white " />
 														</div>
 														<div className="p-2 text-sm font-normal ">
@@ -217,7 +217,7 @@ export const SelectStrikesTable = () => {
 													className="cursor-pointer text-zinc-900 dark:text-white font-medium w-full rounded-full bg-gradient-to-t dark:from-black dark:to-zinc-900 from-zinc-200 to-zinc-100 hover:opacity-80"
 												>
 													<div className="flex justify-between ">
-														<div className="border-r dark:border-zinc-800 p-2">
+														<div className="border-r dark:border-zinc-800 border-zinc-100 p-2">
 															<PlusIcon className="h-5 w-5 ml-1 dark:text-white" />
 														</div>
 														<div className="p-2 text-sm font-normal ">
@@ -237,8 +237,4 @@ export const SelectStrikesTable = () => {
 			</div>
 		</div>
 	);
-};
-
-const isCreditOrDebit = (isBuy: boolean, usd: string): string => {
-	return isBuy ? `(${usd})` : usd;
 };

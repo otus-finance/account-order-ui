@@ -31,6 +31,7 @@ import { useOtusMarket } from "./markets/useOtusMarket";
 import { useSpreadMarket } from "./markets/useSpreadMarket";
 import { formatProfitAndLostAtTicks } from "../utils/charting";
 import { MAX_NUMBER, MIN_NUMBER, OTUS_FEE } from "../constants/markets";
+import { useLyraContext } from "../context/LyraContext";
 
 export const useMarketOrder = () => {
 	const { chain } = useNetwork();
@@ -39,8 +40,9 @@ export const useMarketOrder = () => {
 
 	const [tokenAddr, setTokenAddr] = useState<Address>();
 
+	const { lyra } = useLyraContext();
 	// build trades
-	const { lyra, strikes, selectedMarket, handleSelectBuilderType } = useBuilderContext();
+	const { strikes, selectedMarket, handleSelectBuilderType } = useBuilderContext();
 
 	const [loading, setLoading] = useState(true);
 

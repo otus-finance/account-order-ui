@@ -7,7 +7,7 @@ export const OtusPositionClose = ({ position }: { position: Position | null }) =
 
 	return (
 		<div className=" ">
-			<div className="p-4">
+			<div className="py-8 px-4">
 				{/* <p className="text-black dark:text-zinc-200 text-xs leading-6 ">
         Otus provide the tools to successfully and easily manage an options vault built on Otus Pools, Lyra and Synthetix Futures.
       </p> */}

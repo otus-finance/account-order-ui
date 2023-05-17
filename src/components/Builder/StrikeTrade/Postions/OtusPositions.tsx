@@ -7,7 +7,7 @@ import { Dispatch, useState } from "react";
 import Modal from "../../../UI/Modal";
 import getExplorerUrl from "../../../../utils/chains/getExplorerUrl";
 import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
-import { Position as LyraPosition, PositionFilter } from "@lyrafinance/lyra-js";
+import Lyra, { Position as LyraPosition, PositionFilter } from "@lyrafinance/lyra-js";
 import { ArrowTopRightOnSquareIcon, LinkIcon } from "@heroicons/react/20/solid";
 import { OtusPositionSplit } from "./Actions/Split";
 import { ZERO_BN } from "../../../../constants/bn";
@@ -18,20 +18,28 @@ import BTCIcon from "../../../UI/Icons/Color/BTC";
 import LogoIcon from "../../../UI/Icons/Logo/OTUS";
 import { useTheme } from "next-themes";
 import { LyraPositionRow } from "./LyraPositions";
+import { OtusPositionSettle } from "./Actions/Settle";
 
-export const OtusPositions = () => {
-	const { lyra } = useBuilderContext();
-
+export const OtusPositions = ({ lyra }: { lyra?: Lyra }) => {
 	const { theme } = useTheme();
 
 	const { selectedChain: chain } = useChainContext();
 	const { isLoading, data } = usePositions(lyra);
 	const [showLegPositionId, setShowLegPositionId] = useState(0);
+
 	const [openClosePositionId, setOpenClosePositionId] = useState<Position>();
 	const [open, setOpen] = useState(false);
 
 	const [openSplitId, setOpenSplitId] = useState<Position>();
 	const [openSplit, setOpenSplit] = useState(false);
+
+	const [openSettlePositionId, setOpenSettlePositionId] = useState<Position>();
+	const [openSettle, setOpenSettle] = useState(false);
+
+	const handleSettleSpreadModal = (position: Position) => {
+		setOpenSettle(true);
+		setOpenSettlePositionId(position);
+	};
 
 	const handleCloseSpreadModal = (position: Position) => {
 		setOpen(true);
@@ -45,7 +53,7 @@ export const OtusPositions = () => {
 
 	return (
 		<>
-			<div className="border-b font-mono dark:border-zinc-900 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="border-b font-mono border-zinc-100 dark:border-zinc-900 p-4 text-sm font-normal dark:text-zinc-200">
 				Otus Positions
 			</div>
 			{isLoading ? (
@@ -94,10 +102,11 @@ export const OtusPositions = () => {
 							Action
 						</th>
 
-						<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+						<tbody className="divide-y dark:divide-zinc-900 divide-zinc-100 dark:bg-inherit">
 							{data?.positions.map((position: Position, index: number) => {
 								return (
 									<PositionRow
+										handleSettleSpreadModal={handleSettleSpreadModal}
 										handleCloseSpreadModal={handleCloseSpreadModal}
 										handleSplitOtusPositionModal={handleSplitOtusPositionModal}
 										key={index}
@@ -120,12 +129,8 @@ export const OtusPositions = () => {
 					<div className="px-4 pb-3 pt-5">
 						<div className="flex">
 							<div>
-								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-100">
-									{theme == "dark" ? (
-										<LogoIcon />
-									) : (
-										<img src="./OTUSICONLOGO.png" className="rounded-md h-8" />
-									)}
+								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-200">
+									<LogoIcon />
 								</div>
 							</div>
 
@@ -149,7 +154,7 @@ export const OtusPositions = () => {
 					<div className="px-4 pb-3 pt-5">
 						<div className="flex">
 							<div>
-								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-100">
+								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-200">
 									{theme == "dark" ? (
 										<LogoIcon />
 									) : (
@@ -170,11 +175,41 @@ export const OtusPositions = () => {
 			>
 				{openSplitId && <OtusPositionSplit position={openSplitId} />}
 			</Modal>
+
+			<Modal
+				setOpen={setOpenSettle}
+				open={openSettle}
+				title={
+					<div className="px-4 pb-3 pt-5">
+						<div className="flex">
+							<div>
+								<div className=" inline-block rounded-full dark:shadow-black shadow-zinc-200">
+									{theme == "dark" ? (
+										<LogoIcon />
+									) : (
+										<img src="./OTUSICONLOGO.png" className="rounded-md h-8" />
+									)}
+								</div>
+							</div>
+
+							<div className="ml-4">
+								<h2 className="text-sm font-semibold">Settle Otus Spread Position</h2>
+								<h3 className="text-xxs dark:text-zinc-200 pt-1">
+									Your Otus position will be settled.
+								</h3>
+							</div>
+						</div>
+					</div>
+				}
+			>
+				{openSettlePositionId && <OtusPositionSettle position={openSettlePositionId} />}
+			</Modal>
 		</>
 	);
 };
 
 const PositionRow = ({
+	handleSettleSpreadModal,
 	handleCloseSpreadModal,
 	handleSplitOtusPositionModal,
 	position,
@@ -182,18 +217,22 @@ const PositionRow = ({
 	showLegPositionId,
 	setShowLegPositionId,
 }: {
+	handleSettleSpreadModal: any;
 	handleCloseSpreadModal: any;
 	handleSplitOtusPositionModal: any;
 	position: Position;
-	chain: Chain | null;
+	chain?: Chain;
 	showLegPositionId: number;
 	setShowLegPositionId: Dispatch<number>;
 }) => {
-	const { id, state, tradeType, openTimestamp, txHash, unrealizedPnl, trade, totalCost } = position;
+	const { id, state, tradeType, openTimestamp, txHash, unrealizedPnl, trade, totalCost, expiry } =
+		position;
 	const txHref = chain && txHash && getExplorerUrl(chain, txHash);
 
 	// const cost = trade?.cost || ZERO_BN;
 	const fee = trade?.fee || ZERO_BN;
+
+	const currentTimeStamp = Math.floor(Date.now() / 1000);
 
 	return (
 		<>
@@ -261,11 +300,27 @@ const PositionRow = ({
 
 				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 					{tradeType === 0 ? (
+						expiry < currentTimeStamp ? (
+							<div
+								onClick={() => handleSplitOtusPositionModal(position)}
+								className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 inline text-white p-1 rounded-lg"
+							>
+								Settle
+							</div>
+						) : (
+							<div
+								onClick={() => handleSplitOtusPositionModal(position)}
+								className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 inline text-white p-1 rounded-lg"
+							>
+								Split
+							</div>
+						)
+					) : expiry < currentTimeStamp ? (
 						<div
-							onClick={() => handleSplitOtusPositionModal(position)}
+							onClick={() => handleSettleSpreadModal(position)}
 							className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 inline text-white p-1 rounded-lg"
 						>
-							Split
+							Settle2
 						</div>
 					) : (
 						<div
@@ -323,7 +378,7 @@ const OtusLegPositions = ({ lyraPositions }: { lyraPositions: LyraPosition[] }) 
 			<th scope="col" className="sr-only">
 				Action
 			</th>
-			<tbody className="divide-y dark:divide-zinc-900 divide-zinc-200 dark:bg-inherit">
+			<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
 				{lyraPositions?.map((position: LyraPosition, index: number) => {
 					return <LyraPositionRow key={index} position={position} />;
 				})}

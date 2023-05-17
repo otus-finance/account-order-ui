@@ -2,18 +2,19 @@ import Lyra, { AccountQuoteBalance } from "@lyrafinance/lyra-js";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { LyraStrike } from "../queries/lyra/useLyra";
 
-import { useAccount } from "wagmi";
+import { Address, useAccount } from "wagmi";
 
 import { BigNumber } from "ethers";
 import { ZERO_BN } from "../constants/bn";
 import { AccountProviderState } from "../reducers";
+import { useLyraContext } from "../context/LyraContext";
 
-export const useLyraTrade = (lyra: Lyra | null) => {
+export const useLyraTrade = (address: Address) => {
+	const { lyra } = useLyraContext();
+
 	const [market, setMarket] = useState("");
 	const [quoteAsset, setQuoteAsset] = useState<AccountQuoteBalance>();
 	const [quoteAssetBalance, setQuoteAssetBalance] = useState<BigNumber>(ZERO_BN);
-
-	const { address } = useAccount();
 
 	const buildLyraMarket = useCallback(async () => {
 		if (lyra && address) {

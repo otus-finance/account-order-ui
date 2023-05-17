@@ -13,6 +13,7 @@ import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
 import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
 import Modal from "../UI/Modal";
+import { useChainContext } from "../../context/ChainContext";
 
 const SpreadLiquidityPool = () => {
 	const [open, setOpen] = useState(false);
@@ -34,12 +35,12 @@ const SpreadLiquidityPool = () => {
 
 	return liquidityPool ? (
 		<>
-			<div className="dark:border-0 border border-zinc-200 cursor-pointer rounded-xl bg-gradient-to-l dark:from-black dark:to-zinc-900 shadow-md">
-				<div key={liquidityPool.id} className="border-b dark:border-zinc-800">
+			<div className="dark:shadow-black bg-white shadow-md shadow-zinc-200 rounded-xl dark:bg-zinc-900 ">
+				<div key={liquidityPool.id} className="border-b dark:border-zinc-800 border-zinc-100">
 					<div className="p-4">
 						<div className="flex">
 							<div>
-								<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
+								<div className="bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-200">
 									<SUSDIcon />
 								</div>
 							</div>
@@ -54,7 +55,7 @@ const SpreadLiquidityPool = () => {
 					</div>
 				</div>
 
-				<div className="overflow-hidden border-b dark:border-zinc-800">
+				<div className="overflow-hidden border-b dark:border-zinc-800 border-zinc-100">
 					<div className="p-4">
 						<div className="flex gap-14">
 							<div className="block">
@@ -96,7 +97,7 @@ const SpreadLiquidityPool = () => {
 					</div>
 				</div>
 
-				<div className="border-b dark:border-zinc-800">
+				<div className="border-b dark:border-zinc-800 border-zinc-100">
 					<div className="p-4 py-8">
 						<div className="flex justify-between items-center">
 							<div>
@@ -115,7 +116,7 @@ const SpreadLiquidityPool = () => {
 				</div>
 
 				{!open ? (
-					<div className="border-b dark:border-zinc-800">
+					<div className="border-b dark:border-zinc-800 border-zinc-100">
 						<div className="p-4 py-6">
 							<div
 								onClick={() => setOpen(true)}
@@ -166,12 +167,12 @@ const SpreadLiquidityPool = () => {
 			</div>
 		</>
 	) : (
-		<div className="cursor-pointer rounded-sm border dark:border-zinc-800 shadow-lg shadow-emerald-900">
-			<div className="border-b dark:border-zinc-800">
+		<div className="cursor-pointer rounded-sm border dark:border-zinc-800 border-zinc-100 shadow-lg shadow-emerald-900">
+			<div className="border-b dark:border-zinc-800 border-zinc-100">
 				<div className="p-4">
 					<div className="flex">
 						<div>
-							<div className="dark:bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-100">
+							<div className="dark:bg-emerald-500 inline-block rounded-full dark:shadow-black shadow-zinc-200">
 								<SUSDIcon />
 							</div>
 						</div>
@@ -191,14 +192,14 @@ const SpreadLiquidityPool = () => {
 
 const percentWidth = (
 	freeCollateral: BigNumber,
-	totalCollateral: BigNumber,
+	lockedCollateral: BigNumber,
 	vaultCap: BigNumber
 ): string => {
 	const _freeCollateral = fromBigNumber(freeCollateral);
-	const _totalCollateral = fromBigNumber(totalCollateral);
-
+	const _lockedCollateral = fromBigNumber(lockedCollateral);
+	const _totalCollateral = _freeCollateral + _lockedCollateral;
 	const formatVaultCap = fromBigNumber(vaultCap);
-	return `${((_freeCollateral + _totalCollateral) / formatVaultCap) * 10}%`;
+	return `${(_totalCollateral / formatVaultCap) * 100}%`;
 };
 
 enum LPActionType {
@@ -227,7 +228,9 @@ const LiquidityPoolActions = () => {
 	} = useSpreadLiquidityPoolContext();
 
 	const { isConnected } = useAccount();
-	const { chain } = useNetwork();
+
+	const { selectedChain: chain } = useChainContext();
+
 	const { openConnectModal } = useConnectModal();
 
 	const [liquidityPoolActionType, setLiquidityPoolActionType] = useState(LPActionType.DEPOSIT);
@@ -366,7 +369,7 @@ const LiquidityPoolActions = () => {
 							LPActionType.DEPOSIT === liquidityPoolActionType && (
 								<div
 									onClick={() => console.warn("Add funds")}
-									className="mb-4 cursor-disabled border-2 dark:border-zinc-800 dark:bg-zinc-800 p-2 py-3 col-span-3  font-semibold text-sm dark:text-white text-center rounded-full"
+									className="mb-4 cursor-disabled border-2 dark:border-zinc-800 border-zinc-100 dark:bg-zinc-800 p-2 py-3 col-span-3  font-semibold text-sm dark:text-white text-center rounded-full"
 								>
 									Insufficient Balance
 								</div>

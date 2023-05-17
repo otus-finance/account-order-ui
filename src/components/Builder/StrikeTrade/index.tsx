@@ -8,7 +8,7 @@ import {
 } from "../../../utils/formatters/numbers";
 import { formatName } from "../Market/SelectMarket";
 import { DebounceInput } from "react-debounce-input";
-import { WalletBalance } from "./TradeSelect";
+import { WalletBalance } from "./Balance";
 import { LyraStrike, getStrikeQuote } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
 import { Spinner } from "../../UI/Components/Spinner";
@@ -17,6 +17,7 @@ import { formatBoardName, formatExpirationDate } from "../../../utils/formatters
 import { TradeMarket } from "./TradeMarket";
 import { MarketOrderActions } from "./TradeMarket/MarketOrderActions";
 import { BuilderType } from "../../../utils/types";
+import { isCreditOrDebit } from "../../../utils/formatters/message";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, builderType, builderTypeClean, selectedStrategy, strikes } =
@@ -29,7 +30,7 @@ export const StrikeTrade = () => {
 				<>
 					{/* strikes summary  */}
 
-					<div className="border-b dark:border-zinc-800 py-4 p-4">
+					<div className="border-b dark:border-zinc-800 border-zinc-100 py-4 p-4">
 						{builderType == BuilderType.Builder && builderTypeClean ? (
 							<div className="flex justify-between items-center">
 								<div className="text-sm font-semibold font-mono dark:text-emerald-100">
@@ -53,7 +54,7 @@ export const StrikeTrade = () => {
 											name="multiSize"
 											id="multiSize"
 											value={1}
-											className={`w-24 border dark:border-zinc-800 dark:bg-transparent p-2  dark:text-zinc-200 shadow-lg text-sm ring-emerald-600`}
+											className={`w-24 border dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2  dark:text-zinc-200 shadow-md dark:shadow-black shadow-zinc-200 text-sm ring-emerald-600`}
 										/>
 									</div>
 								</div>
@@ -64,7 +65,7 @@ export const StrikeTrade = () => {
 					</div>
 
 					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
-						<table className="font-normal min-w-full divide-y dark:divide-zinc-800 divide-zinc-200 table-fixed">
+						<table className="font-normal min-w-full divide-y dark:divide-zinc-800 divide-zinc-100 table-fixed">
 							<thead className="dark:bg-inherit">
 								<tr className=" ">
 									<th
@@ -105,7 +106,7 @@ export const StrikeTrade = () => {
 									</th>
 								</tr>
 							</thead>
-							<tbody className="divide-y dark:divide-zinc-800 divide-zinc-200 dark:bg-inherit">
+							<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
 								{loading && <Spinner />}
 								{selectedStrikes.map((strike, index) => {
 									return <StrikeTradeDetail strike={strike} key={index} />;
@@ -113,6 +114,7 @@ export const StrikeTrade = () => {
 							</tbody>
 						</table>
 					</div>
+
 					<MarketOrderActions />
 				</>
 			)}
@@ -289,7 +291,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 							name="size"
 							id="size"
 							value={newSize}
-							className={`w-12 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-lg text-xs ${
+							className={`w-12 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-md dark:shadow-black shadow-zinc-200 text-xs ${
 								isUpdating && "cursor-disabled"
 							}`}
 						/>
@@ -321,8 +323,4 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 			</td>
 		</tr>
 	);
-};
-
-const isCreditOrDebit = (isBuy: boolean, usd: string): string => {
-	return isBuy ? `(${usd})` : usd;
 };

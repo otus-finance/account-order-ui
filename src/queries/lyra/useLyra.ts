@@ -51,7 +51,7 @@ export type LyraMarket = {
 	liveBoards: LyraBoard[];
 };
 
-export const useLyraMarket = (lyra: Lyra | null) => {
+export const useLyraMarket = (lyra?: Lyra) => {
 	return useQuery<LyraMarket[] | null>(
 		["lyraMarkets", lyra?.chainId],
 		async () => {
@@ -67,7 +67,7 @@ export const useLyraMarket = (lyra: Lyra | null) => {
 	);
 };
 
-export const useLyraPositions = (lyra: Lyra | null, owner?: Address) => {
+export const useLyraPositions = (lyra?: Lyra, owner?: Address) => {
 	return useQuery<Position[] | null>(
 		["positions", owner],
 		async () => {

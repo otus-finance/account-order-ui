@@ -1,11 +1,9 @@
-import Lyra from "@lyrafinance/lyra-js";
 import { ActivityType, BuilderType, Strategy, StrategyDirection } from "../utils/types";
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra";
 import { Chain } from "wagmi";
 import { Dispatch } from "react";
 
 export type BuilderProviderState = {
-	lyra: Lyra | null;
 	activityType: ActivityType;
 	builderType: BuilderType;
 	showStrikesSelect: boolean;
@@ -39,7 +37,6 @@ export type BuilderProviderState = {
 };
 
 export const builderInitialState: BuilderProviderState = {
-	lyra: null,
 	activityType: ActivityType.Trade,
 	builderType: BuilderType.Builder,
 	showStrikesSelect: false,
@@ -92,10 +89,6 @@ export type BuilderAction =
 	| {
 			type: "CONNECT_CHAIN";
 			selectedChain: BuilderProviderState["selectedChain"];
-	  }
-	| {
-			type: "SET_LYRA";
-			lyra: BuilderProviderState["lyra"];
 	  }
 	| {
 			type: "SET_MARKETS_LOADING";
@@ -197,11 +190,6 @@ export function builderReducer(
 			return {
 				...state,
 				selectedChain: action.selectedChain,
-			};
-		case "SET_LYRA":
-			return {
-				...state,
-				lyra: action.lyra,
 			};
 		case "SET_MARKETS":
 			return {
