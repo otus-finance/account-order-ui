@@ -33,7 +33,7 @@ export const Navigation = () => {
 		<Disclosure as="nav" className="">
 			{({ open }) => (
 				<>
-					<div className="mx-auto px-2 md:px-6 lg:px-8 border-b border-zinc-200 dark:border-zinc-700">
+					<div className="mx-auto px-2 md:px-6 lg:px-8 ">
 						<div className="flex h-20 items-center justify-between">
 							<div className="flex items-center">
 								<div className="flex-shrink-0 ">

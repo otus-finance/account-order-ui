@@ -23,7 +23,7 @@ const VaultsList = () => {
 
 	return (
 		<div>
-			<div className="pb-4  font-semibold text-sm uppercase  text-zinc-900 dark:text-zinc-400">
+			<div className="pb-4  font-semibold text-xl text-zinc-900 dark:text-zinc-200">
 				Featured Vaults
 			</div>
 			<div className="grid grid-cols-3 gap-4 auto-cols-max pb-8">
@@ -39,9 +39,7 @@ const VaultsList = () => {
 					})
 				)}
 			</div>
-			<div className="py-4 font-semibold text-sm uppercase text-zinc-900 dark:text-zinc-400">
-				1x Vaults
-			</div>
+			<div className="py-4 font-semibold text-lg text-zinc-900 dark:text-zinc-200">1x Vaults</div>
 			<div className="pb-8">
 				<div className="rounded-lg">
 					<table className="min-w-full dark:divide-zinc-800 divide divide-zinc-800 dark:shadow-black shadow-zinc-200 bg-white shadow-md rounded-xl dark:bg-zinc-900 border-separate">
@@ -137,13 +135,13 @@ const VaultsList = () => {
 					</table>
 				</div>
 			</div>
-			<div className="py-4  font-semibold text-sm uppercase  text-zinc-900 dark:text-zinc-400">
+			<div className="py-4  font-semibold text-lg text-zinc-900 dark:text-zinc-200">
 				Basic Vaults
 			</div>
 			<div className="pb-8">
 				<table></table>
 			</div>
-			<div className="py-4  font-semibold text-sm uppercase  text-zinc-900 dark:text-zinc-400">
+			<div className="py-4  font-semibold text-lg text-zinc-900 dark:text-zinc-200">
 				Degen Vaults
 			</div>
 			<div className="pb-8">

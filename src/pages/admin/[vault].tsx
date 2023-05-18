@@ -16,7 +16,7 @@ const Vault: NextPage = () => {
 
 			<AdminContextProvider>
 				<Layout>
-					<div className="mx-auto max-w-screen-3xl py-0 sm:py-16 dark:text-white min-h-[76vh]">
+					<div className="mx-auto max-w-screen-3xl py-0 sm:py-10 dark:text-white min-h-[76vh]">
 						<AdminVault />
 					</div>
 				</Layout>
