@@ -17,7 +17,7 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative w-full">
-						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className="relative   w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-1 focus:ring-emerald-500 sm:text-md">
 							<span className="bloc]k truncate">
 								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
 							</span>
@@ -33,7 +33,7 @@ export const SelectBuilderExpiration = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="bg-white rounded-xl absolute z-10 mt-1 max-h-60 w-full overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-md dark:shadow-black shadow-zinc-200 ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
+							<Listbox.Options className="bg-white w-full rounded-xl absolute z-10 mt-1 max-h-60 overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-md dark:shadow-black shadow-zinc-200 ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
 								{selectedMarket?.liveBoards.map((board: LyraBoard, index: number) => (
 									<Listbox.Option
 										key={index}

@@ -22,7 +22,7 @@ export const OptionsBuilder = () => {
 
 	return (
 		<div className="grid sm:grid-cols-2 grid-cols-2 gap-8">
-			<div className="col-span-2 lg:col-span-1">
+			<div className="col-span-2 xl:col-span-1">
 				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
 					<div className="p-4">
 						<Market />
@@ -38,7 +38,7 @@ export const OptionsBuilder = () => {
 				</div>
 			</div>
 
-			<div className="col-span-2 lg:col-span-1">
+			<div className="col-span-2 xl:col-span-1">
 				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
 					<ActivitySelect />
 					{address && (
