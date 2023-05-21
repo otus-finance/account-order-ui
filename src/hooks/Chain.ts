@@ -20,6 +20,7 @@ export const useChain = () => {
 
 	const handleSelectedChain = (chain: Chain) => {
 		if (chain) {
+			console.log({ chain });
 			dispatch({
 				type: "SET_CHAIN",
 				selectedChain: chain,

@@ -32,15 +32,15 @@ export const LyraMarketOptions = ({
 						const { name } = market;
 						const isSelected = selectedMarket?.name == name;
 						const selectedClass = isSelected
-							? "dark:bg-black bg-zinc-100 dark:border-none"
-							: "border-none";
+							? "dark:bg-black bg-zinc-100 dark:border-emerald-400 border-emerald-400"
+							: "dark:border-zinc-800 border-zinc-100";
 						return (
 							<div
 								key={index}
 								onClick={() => {
 									handleSelectedMarket && handleSelectedMarket(market);
 								}}
-								className={`rounded-lg p-2 px-4 border hover:border-emerald-600 first:mr-1  cursor-pointer ${selectedClass}`}
+								className={`rounded-full p-2 px-4 border-2  hover:border-emerald-400 first:mr-1 cursor-pointer ${selectedClass}`}
 							>
 								<div className="flex items-center">
 									{name == "sETH-sUSD" && <ETHIcon className="h-8 w-8" />}

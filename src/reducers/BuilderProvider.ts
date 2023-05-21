@@ -2,6 +2,7 @@ import { ActivityType, BuilderType, Strategy, StrategyDirection } from "../utils
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra";
 import { Chain } from "wagmi";
 import { Dispatch } from "react";
+import { DirectionType } from "../utils/direction";
 
 export type BuilderProviderState = {
 	activityType: ActivityType;
@@ -12,7 +13,7 @@ export type BuilderProviderState = {
 	isMarketLoading: any | null | undefined;
 	currentPrice: number;
 	selectedMarket: LyraMarket | null;
-	selectedDirectionTypes: StrategyDirection[];
+	selectedDirectionTypes: StrategyDirection;
 	selectedExpirationDate: LyraBoard | null;
 	selectedStrategy: any | null | undefined;
 	previousStrikes: LyraStrike[];
@@ -29,7 +30,7 @@ export type BuilderProviderState = {
 	handleSelectBuilderType: (any: BuilderType) => void;
 	handleSelectedChain: (any: Chain) => void;
 	handleSelectedMarket: (any: LyraMarket | null) => void;
-	handleSelectedDirectionTypes: (any: StrategyDirection[]) => void;
+	handleSelectedDirectionTypes: (any: StrategyDirection) => void;
 	handleSelectedExpirationDate: (any: LyraBoard | null) => void;
 	handleSelectedStrategy: (any: Strategy | null) => void;
 	handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void;
@@ -45,7 +46,7 @@ export const builderInitialState: BuilderProviderState = {
 	isMarketLoading: true,
 	currentPrice: 0,
 	selectedMarket: null,
-	selectedDirectionTypes: [],
+	selectedDirectionTypes: DirectionType[1] as StrategyDirection,
 	selectedExpirationDate: null,
 	selectedStrategy: null,
 	previousStrikes: [],

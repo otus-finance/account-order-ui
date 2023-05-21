@@ -114,7 +114,7 @@ export const useBuilder = () => {
 		handleSelectActivityType(ActivityType.Trade);
 	}, []);
 
-	const handleSelectedDirectionTypes = useCallback((directionTypes: StrategyDirection[]) => {
+	const handleSelectedDirectionTypes = useCallback((directionTypes: StrategyDirection) => {
 		dispatch({
 			type: "SET_DIRECTION_TYPES",
 			selectedDirectionTypes: directionTypes,
@@ -145,9 +145,6 @@ export const useBuilder = () => {
 				const market = data[0];
 				if (market.liveBoards[0]) {
 					handleSelectedExpirationDate(market.liveBoards[0]);
-					if (DirectionType[0] && DirectionType[1]) {
-						handleSelectedDirectionTypes([DirectionType[0], DirectionType[1]]);
-					}
 				}
 			}
 		} else {

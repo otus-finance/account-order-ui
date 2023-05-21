@@ -14,31 +14,21 @@ function classNames(...classes: string[]) {
 }
 
 export const OfflineChainSelect = () => {
-	const { chain } = useNetwork();
-
-	const [offlineChain, setOfflineChain] = useState(optimism);
-
 	const { selectedChain, handleSelectedChain } = useChainContext();
 
-	useEffect(() => {
-		if (!chain && selectedChain?.id != offlineChain.id) {
-			handleSelectedChain(offlineChain);
-		}
-	}, [chain, handleSelectedChain, selectedChain, offlineChain]);
-
 	return (
-		<Listbox value={offlineChain} onChange={setOfflineChain}>
+		<Listbox value={selectedChain} onChange={handleSelectedChain}>
 			{({ open }) => (
 				<div className="relative">
 					<Listbox.Button className="flex items-center dark:bg-zinc-900 bg-zinc-300 p-3 rounded-full dark:text-white text-sm font-semibold">
 						<div className={`mr-2`}>
-							{offlineChain.id == optimism.id || offlineChain.id == optimismGoerli.id ? (
+							{selectedChain.id == optimism.id || selectedChain.id == optimismGoerli.id ? (
 								<img height={20} width={20} src={OPImage} />
 							) : (
 								<img height={20} width={20} src={ONEImage} />
 							)}
 						</div>
-						{offlineChain.name}
+						{selectedChain.name}
 						<div className="ml-2">
 							<ChevronDownIcon className="h-4 w-4 dark:text-white font-bold" />
 						</div>

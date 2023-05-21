@@ -45,16 +45,14 @@ export const StrikeTrade = () => {
 											onChange={async (e) => {
 												if (e.target.value == "") return;
 												const value = parseFloat(e.target.value);
-												// setMultiSize(value);
 												updateMultiSize?.(value);
 											}}
 											min={0.1}
-											step={0.1}
 											type="number"
 											name="multiSize"
 											id="multiSize"
 											value={1}
-											className={`w-24 border dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2  dark:text-zinc-200 shadow-md dark:shadow-black shadow-zinc-200 text-sm ring-emerald-600`}
+											className={`w-24 border dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2 dark:text-zinc-200 text-sm ring-emerald-600`}
 										/>
 									</div>
 								</div>
@@ -101,9 +99,14 @@ export const StrikeTrade = () => {
 									<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
 										Credit/(Debit)
 									</th>
-									<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
-										Size
-									</th>
+									{!builderTypeClean && (
+										<th
+											scope="col"
+											className="text-xs  dark:text-zinc-400 text-left font-light px-4"
+										>
+											Size
+										</th>
+									)}
 								</tr>
 							</thead>
 							<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
@@ -274,53 +277,54 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 					isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium), { dps: 2 }))
 				)}
 			</td>
+			{!builderTypeClean && (
+				<td className="text-xs font-semibold dark:text-zinc-300 px-4">
+					{editPricing ? (
+						<div className="flex gap-2 items-center">
+							<DebounceInput
+								minLength={1}
+								onChange={async (e) => {
+									if (e.target.value == "") return;
+									const value = parseFloat(e.target.value);
 
-			<td className="text-xs font-semibold dark:text-zinc-300 px-4">
-				{editPricing ? (
-					<div className="flex gap-2 items-center">
-						<DebounceInput
-							minLength={1}
-							onChange={async (e) => {
-								if (e.target.value == "") return;
-								const value = parseFloat(e.target.value);
+									handleNewSize(value);
+								}}
+								min={0}
+								type="number"
+								name="size"
+								id="size"
+								value={newSize}
+								className={`w-12 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-md dark:shadow-black shadow-zinc-200 text-xs ${
+									isUpdating && "cursor-disabled"
+								}`}
+							/>
 
-								handleNewSize(value);
-							}}
-							min={0}
-							type="number"
-							name="size"
-							id="size"
-							value={newSize}
-							className={`w-12 border-2 border-emerald-600 dark:bg-transparent p-1  dark:text-zinc-200 shadow-md dark:shadow-black shadow-zinc-200 text-xs ${
-								isUpdating && "cursor-disabled"
-							}`}
-						/>
+							<div>
+								<XMarkIcon
+									className=" h-4 w-4 dark:text-rose-500"
+									onClick={() => setEditPricing(false)}
+								/>
+							</div>
 
-						<div>
-							<XMarkIcon
-								className=" h-4 w-4 dark:text-rose-500"
-								onClick={() => setEditPricing(false)}
+							<div>
+								<CheckIcon
+									className="h-4 w-4 dark:text-emerald-500"
+									onClick={() => handleConfirmSizeUpdate()}
+								/>
+							</div>
+						</div>
+					) : (
+						<div className="flex gap-2 items-center">
+							{fromBigNumber(size)}
+
+							<PencilSquareIcon
+								className="h-4 w-4 dark:text-zinc-200"
+								onClick={() => setEditPricing(true)}
 							/>
 						</div>
-
-						<div>
-							<CheckIcon
-								className="h-4 w-4 dark:text-emerald-500"
-								onClick={() => handleConfirmSizeUpdate()}
-							/>
-						</div>
-					</div>
-				) : (
-					<div className="flex gap-2 items-center">
-						{fromBigNumber(size)}
-
-						<PencilSquareIcon
-							className="h-4 w-4 dark:text-zinc-200"
-							onClick={() => setEditPricing(true)}
-						/>
-					</div>
-				)}
-			</td>
+					)}
+				</td>
+			)}
 		</tr>
 	);
 };

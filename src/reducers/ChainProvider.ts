@@ -1,14 +1,14 @@
-import { Chain } from "wagmi";
+import { optimism, Chain } from "wagmi/chains";
 
 export type ChainProviderState = {
-	selectedChain?: Chain & {
+	selectedChain: Chain & {
 		unsupported?: boolean | undefined;
 	};
 	handleSelectedChain: (any: Chain) => void;
 };
 
 export const chainInitialState: ChainProviderState = {
-	selectedChain: undefined,
+	selectedChain: optimism,
 	handleSelectedChain: (any) => void any,
 };
 

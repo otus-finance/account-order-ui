@@ -14,7 +14,7 @@ const Vault: NextPage = () => {
 			</Head>
 
 			<Layout>
-				<div className="mx-auto max-w-screen-3xl py-0 sm:py-16 dark:text-white min-h-[76vh]">
+				<div className="mx-auto max-w-screen-2xl py-0 sm:py-16 dark:text-white min-h-[76vh]">
 					<UserVault />
 				</div>
 			</Layout>

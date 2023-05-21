@@ -17,32 +17,22 @@ export const SelectDirectionType = () => {
 	const { selectedDirectionTypes, handleSelectedDirectionTypes } = useBuilderContext();
 
 	const isSelected = (data: any) => {
-		return selectedDirectionTypes.find((_direction: StrategyDirection) => _direction.id == data.id);
+		return selectedDirectionTypes?.id == data.id;
 	};
 
 	return (
 		<Listbox
 			value={selectedDirectionTypes}
 			onChange={(data: any) => {
-				if (isSelected(data)) {
-					// filter out
-					const _directionTypesFiltered = selectedDirectionTypes.filter(
-						(_direction: StrategyDirection) => _direction.id != data.id
-					);
-					handleSelectedDirectionTypes(_directionTypesFiltered);
-				} else {
-					handleSelectedDirectionTypes(selectedDirectionTypes.concat([data]));
-				}
+				handleSelectedDirectionTypes(data);
 			}}
 		>
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  sm:text-md">
+						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border-2 dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  sm:text-md">
 							<span className="block truncate">
-								{selectedDirectionTypes.length > 0
-									? buildTextSelectedDirections(selectedDirectionTypes)
-									: "Market Expectation"}
+								{selectedDirectionTypes ? selectedDirectionTypes.name : "Market Expectation"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 								<ChevronUpDownIcon className="h-5 w-5 dark:text-gray-400" aria-hidden="true" />

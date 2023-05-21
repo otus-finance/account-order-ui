@@ -17,9 +17,9 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative w-full">
-						<Listbox.Button className="relative   w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-1 focus:ring-emerald-500 sm:text-md">
-							<span className="bloc]k truncate">
-								{selectedExpirationDate ? selectedExpirationDate.name : "Expiration Date"}
+						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border-2 dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-2 focus:ring-emerald-500 sm:text-md">
+							<span className="block truncate text-zinc-900 dark:text-zinc-200">
+								{selectedExpirationDate ? selectedExpirationDate.name : "Select an Expiration Date"}
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 								<ChevronUpDownIcon className="h-5 w-5 dark:text-gray-400" aria-hidden="true" />
@@ -29,11 +29,14 @@ export const SelectBuilderExpiration = () => {
 						<Transition
 							show={open}
 							as={Fragment}
+							enter="transition ease-in duration-200"
 							leave="transition ease-in duration-100"
+							enterFrom="opacity-0"
+							enterTo="opacity-100"
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="bg-white w-full rounded-xl absolute z-10 mt-1 max-h-60 overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-md dark:shadow-black shadow-zinc-200 ring-1 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
+							<Listbox.Options className="bg-white w-full rounded-xl absolute z-10 mt-1 max-h-60 overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-md dark:shadow-black shadow-zinc-200 ring-2 ring-emerald-500 ring-opacity-5 focus:outline-none sm:text-md cursor-pointer">
 								{selectedMarket?.liveBoards.map((board: LyraBoard, index: number) => (
 									<Listbox.Option
 										key={index}

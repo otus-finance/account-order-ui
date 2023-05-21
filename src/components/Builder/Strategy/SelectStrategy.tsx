@@ -18,10 +18,10 @@ export const SelectStrategy = () => {
 	const [filteredStrategies, setFilteredStrategies] = useState<Strategy[]>([]);
 
 	useEffect(() => {
-		if (selectedDirectionTypes.length > 0) {
-			const _selectedDirectionTypesIds = selectedDirectionTypes.map(({ id }: { id: number }) => id);
+		if (selectedDirectionTypes) {
+			const _selectedDirectionTypesIds = selectedDirectionTypes.id;
 			const _filteredStrategies = strategies.filter((strategy) => {
-				return strategy.type.some((r) => _selectedDirectionTypesIds.includes(r));
+				return strategy.type.some((r) => r == _selectedDirectionTypesIds);
 			});
 			setFilteredStrategies(_filteredStrategies);
 		} else {
@@ -41,19 +41,19 @@ export const SelectStrategy = () => {
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-1 focus:ring-emerald-500 sm:text-md">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border-2 dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-2 focus:ring-emerald-500">
 							<div className="flex items-center">
 								<div>
 									{selectedMarket?.name == "sETH-sUSD" || selectedMarket?.name == "ETH-USDC" ? (
-										<ETHIcon className="w-8 h-8" />
+										<ETHIcon className="bg-emerald-400 rounded-full w-8 h-8" />
 									) : (
-										<BTCIcon className="w-8 h-8" />
+										<BTCIcon className="bg-emerald-400 rounded-full w-8 h-8" />
 									)}
 								</div>
 								{selectedStrategy ? (
-									<div className="pl-1 text-lg font-semibold">{selectedStrategy.name}</div>
+									<div className="pl-1 text-md font-semibold">{selectedStrategy.name}</div>
 								) : (
-									<div className="pl-1 text-lg font-light text-zinc-600 dark:text-zinc-200">
+									<div className="pl-1 text-md font-normal text-zinc-900 dark:text-zinc-200">
 										Select a Prebuilt Strategy
 									</div>
 								)}
@@ -66,11 +66,14 @@ export const SelectStrategy = () => {
 						<Transition
 							show={open}
 							as={Fragment}
+							enter="transition ease-in duration-200"
 							leave="transition ease-in duration-100"
+							enterFrom="opacity-0"
+							enterTo="opacity-100"
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="cursor-pointer rounded-xl absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 dark:text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md">
+							<Listbox.Options className="cursor-pointer rounded-xl absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
 								{[CUSTOM].concat(filteredStrategies).map((strategy: Strategy, index: number) => (
 									<Listbox.Option
 										key={index}
