@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Strategy, StrategyTag } from "../../../utils/types";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { strategies } from "../../../strategies";
+import { motion } from "framer-motion";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
@@ -36,7 +37,9 @@ export const SelectStrategyBoxType = () => {
 				const { id, name, description, type, tags } = strategy;
 
 				return (
-					<div
+					<motion.div
+						whileHover={{ scale: 1.01 }}
+						whileTap={{ scale: 0.99 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
 						className={`w-full items-center border-2 mr-4 peer-last:mr-0 bg-white dark:bg-inherit border-zinc-100 dark:border-zinc-800 first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}
@@ -74,7 +77,7 @@ export const SelectStrategyBoxType = () => {
 						{id === CUSTOM.id ? (
 							<div className="flex flex-wrap text-sm font-light">{description}</div>
 						) : null}
-					</div>
+					</motion.div>
 				);
 			})}
 		</div>
