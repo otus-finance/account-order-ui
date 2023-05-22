@@ -60,7 +60,7 @@ export const MarketOrderActions = () => {
 			)}
 			<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
 				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Cost</p>
+					<p className="truncate font-sans  text-sm font-normal dark:text-zinc-200">Max Cost</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
 							{formatUSD(fromBigNumber(maxCost), { dps: 2 })}
@@ -69,7 +69,7 @@ export const MarketOrderActions = () => {
 				</div>
 
 				<div className="flex items-center justify-between py-2">
-					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Min Received</p>
+					<p className="truncate font-sans text-sm font-normal dark:text-zinc-200">Min Received</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex font-sans text-sm font-semibold leading-5 dark:text-white">
 							{formatUSD(fromBigNumber(maxPremium), { dps: 2 })}
@@ -79,7 +79,7 @@ export const MarketOrderActions = () => {
 
 				<>
 					<div className="flex items-center justify-between py-2 pb-4">
-						<p className="truncate font-mono text-sm font-normal dark:text-zinc-300">
+						<p className="truncate font-sans  text-sm font-normal dark:text-zinc-300">
 							Otus Fee ({formatPercentage(OTUS_FEE, true)} x Collateral x (Duration / 365 Days))
 						</p>
 						<div className="ml-2 flex flex-shrink-0">
@@ -91,7 +91,7 @@ export const MarketOrderActions = () => {
 						</div>
 					</div>
 					<div className="flex items-center justify-between py-2">
-						<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
+						<p className="truncate font-sans font-normal bg-zinc-900 text-white dark:bg-zinc-800 text-sm p-1 px-2 rounded-full">
 							Total Collateral Required
 						</p>
 						<div className="ml-2 flex flex-shrink-0">
@@ -105,7 +105,7 @@ export const MarketOrderActions = () => {
 
 					{maxLossPost < 0 ? (
 						<div className="flex items-center justify-between py-2">
-							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
+							<p className="truncate font-sans font-normal bg-zinc-900 text-white dark:bg-zinc-800 text-sm p-1 px-2 rounded-full">
 								Total Received
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
@@ -118,7 +118,7 @@ export const MarketOrderActions = () => {
 						</div>
 					) : (
 						<div className="flex items-center justify-between py-2">
-							<p className="truncate font-sans font-semibold text-zinc-100 text-sm bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 p-1 px-2 rounded-full">
+							<p className="truncate font-sans font-normal bg-zinc-900 text-white dark:bg-zinc-800 text-sm p-1 px-2 rounded-full">
 								Total Cost
 							</p>
 							<div className="ml-2 flex flex-shrink-0">

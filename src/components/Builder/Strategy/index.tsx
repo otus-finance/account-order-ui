@@ -18,7 +18,7 @@ export const Strategy = () => {
 				</div>
 			</div>
 
-			<div className="border-y border-zinc-100 dark:border-zinc-800 xl:flex xl:justify-between lg:flex-nowrap flex-wrap">
+			<div className="border-t border-zinc-100 dark:border-zinc-800 xl:flex xl:justify-between lg:flex-nowrap flex-wrap">
 				<div className="lg:hidden pt-4 px-4 xl:pr-2  w-full">
 					<SelectDirectionType />
 				</div>

@@ -1,5 +1,4 @@
 import { Chain } from "wagmi";
-import { useBuilderContext } from "../../../../context/BuilderContext";
 import { Position, usePositions } from "../../../../queries/otus/positions";
 import { Spinner } from "../../../UI/Components/Spinner";
 import { useChainContext } from "../../../../context/ChainContext";
@@ -12,9 +11,6 @@ import { ArrowTopRightOnSquareIcon, LinkIcon } from "@heroicons/react/20/solid";
 import { OtusPositionSplit } from "./Actions/Split";
 import { ZERO_BN } from "../../../../constants/bn";
 import { OtusPositionClose } from "./Actions/Close";
-import SUSDIcon from "../../../UI/Icons/Color/SUSD";
-import ETHIcon from "../../../UI/Icons/Color/ETH";
-import BTCIcon from "../../../UI/Icons/Color/BTC";
 import LogoIcon from "../../../UI/Icons/Logo/OTUS";
 import { useTheme } from "next-themes";
 import { LyraPositionRow } from "./LyraPositions";

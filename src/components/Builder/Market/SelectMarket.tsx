@@ -1,8 +1,7 @@
-import React, { Dispatch } from "react";
+import React from "react";
 import BTCIcon from "../../UI/Icons/Color/BTC";
 import ETHIcon from "../../UI/Icons/Color/ETH";
 import { LyraBoard, LyraMarket } from "../../../queries/lyra/useLyra";
-import { Spinner } from "../../UI/Components/Spinner";
 
 export const formatName = (marketName: string) => {
 	switch (marketName) {
@@ -32,8 +31,8 @@ export const LyraMarketOptions = ({
 						const { name } = market;
 						const isSelected = selectedMarket?.name == name;
 						const selectedClass = isSelected
-							? "dark:bg-black bg-zinc-100 dark:border-emerald-400 border-emerald-400"
-							: "dark:border-zinc-800 border-zinc-100";
+							? " dark:border-emerald-400 border-emerald-400"
+							: "border-zinc-100 dark:border-zinc-800";
 						return (
 							<div
 								key={index}
