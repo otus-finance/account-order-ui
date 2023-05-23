@@ -106,6 +106,7 @@ export const useSpreadMarket = (
 		chainId: chain?.id,
 		onError: (err: any) => {
 			// ethers.utils.decode
+			console.log({ err });
 		},
 		enabled:
 			!Number.isNaN(maxLossPost) &&

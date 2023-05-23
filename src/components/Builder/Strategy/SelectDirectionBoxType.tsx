@@ -15,7 +15,7 @@ export const SelectDirectionBoxType = () => {
 			{DirectionType.map((direction: StrategyDirection, index: number) => {
 				const isSelectedStyle = isSelected(direction)
 					? "border-emerald-400 dark:border-emerald-400"
-					: "";
+					: "border-zinc-100 dark:border-zinc-800";
 
 				return (
 					<div
@@ -23,7 +23,7 @@ export const SelectDirectionBoxType = () => {
 							handleSelectedDirectionTypes(direction);
 						}}
 						key={index}
-						className={`m-2 border-2 whitespace-nowrap bg-white dark:bg-inherit border-zinc-100 dark:border-zinc-800 first:ml-0 last:mr-0 p-3 mx-1 rounded-full cursor-pointer ${isSelectedStyle}`}
+						className={`m-2 border-2 whitespace-nowrap bg-white dark:bg-inherit  first:ml-0 last:mr-0 p-3 mx-1 rounded-full cursor-pointer ${isSelectedStyle}`}
 					>
 						{direction.name}
 					</div>

@@ -43,9 +43,8 @@ export const SelectStrategyBoxType = () => {
 
 				return (
 					<motion.div
-						whileHover={{ opacity: 0.8 }}
+						whileHover={{ scale: 1.01 }}
 						whileTap={{ scale: 0.99 }}
-						transition={{ duration: 250 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
 						className={`w-full items-center border-2 mr-4 peer-last:mr-0 bg-white dark:bg-inherit  first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}

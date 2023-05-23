@@ -70,7 +70,7 @@ export const OpenSpreadPosition = () => {
 				/>
 			)}
 
-			{spreadMarket?.openConfigError && spreadMarket?.openConfigError.reason && (
+			{spreadMarket?.openConfigError && (
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
