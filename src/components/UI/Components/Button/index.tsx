@@ -103,7 +103,7 @@ export const Button = ({
 	const buttonVariant = getButtonVariant(variant);
 	const buttonRadius = getButtonRadius(radius);
 	const activeButton = isActive ? "ring-1 ring-emerald-600" : "";
-	const isDisabledStyle = isDisabled ? "opacity-50 cursor-not-allowed" : "";
+	const isDisabledStyle = isDisabled ? "bg-zinc-700 dark:bg-zinc-400 cursor-not-allowed" : "";
 
 	return (
 		<button
