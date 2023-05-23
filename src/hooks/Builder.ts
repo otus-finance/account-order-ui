@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { ActivityType, BuilderType, StrategyDirection, StrategyStrikeTrade } from "../utils/types";
+import {
+	ActivityType,
+	BuilderType,
+	Strategy,
+	StrategyDirection,
+	StrategyStrikeTrade,
+} from "../utils/types";
 import { LyraBoard, LyraMarket, LyraStrike, useLyraMarket } from "../queries/lyra/useLyra";
 
 import {
@@ -60,7 +66,7 @@ export const useBuilder = () => {
 				selectedMarket: null,
 				strikes: [],
 				selectedExpirationDate: null,
-				selectedStrategy: null,
+				selectedStrategy: undefined,
 			});
 		}
 	}, [selectedChain, isConnected]);
@@ -108,7 +114,7 @@ export const useBuilder = () => {
 			selectedMarket: market,
 			strikes: [],
 			selectedExpirationDate: null,
-			selectedStrategy: null,
+			selectedStrategy: undefined,
 		} as BuilderAction);
 
 		handleSelectActivityType(ActivityType.Trade);
@@ -123,7 +129,7 @@ export const useBuilder = () => {
 		handleSelectActivityType(ActivityType.Trade);
 	}, []);
 
-	const handleSelectedStrategy = (strategy: any) => {
+	const handleSelectedStrategy = (strategy: Strategy) => {
 		dispatch({
 			type: "SET_STRATEGY",
 			selectedStrategy: strategy,
@@ -191,17 +197,17 @@ export const useBuilder = () => {
 
 			// build indexes of
 			const tradeOptionTypes = selectedStrategy.trade.reduce(
-				(accum: Record<number, StrategyStrikeTrade[]>, trade: StrategyStrikeTrade) => {
+				(accum: Record<0 | 1 | 2 | 3 | 4, StrategyStrikeTrade[]>, trade: StrategyStrikeTrade) => {
 					const trades = accum[trade.optionType]?.concat({ ...trade, matched: false });
 
 					return { ...accum, [trade.optionType]: trades };
 				},
 				{
-					0: [],
-					1: [],
-					3: [],
-					4: [],
-				} as Record<number, StrategyStrikeTrade[]>
+					0: [] as StrategyStrikeTrade[],
+					1: [] as StrategyStrikeTrade[],
+					3: [] as StrategyStrikeTrade[],
+					4: [] as StrategyStrikeTrade[],
+				} as Record<0 | 1 | 2 | 3 | 4, StrategyStrikeTrade[]>
 			);
 
 			let found = {

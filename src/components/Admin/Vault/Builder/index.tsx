@@ -59,30 +59,13 @@ export const AdminBuilder = () => {
 					)}
 
 					{activityType === ActivityType.Trade && (
-						<div>
-							{strikes[0] ? (
+						<>
+							<AdminVaultOrderContextProvider vaultId={vaultId}>
 								<>
-									<AdminVaultOrderContextProvider vaultId={vaultId}>
-										<>
-											<VaultStrikeTrade />
-										</>
-									</AdminVaultOrderContextProvider>
+									<VaultStrikeTrade />
 								</>
-							) : (
-								<div className="p-4">
-									<div className="flex items-center p-2">
-										<p className="truncate font-sans text-xs font-normal dark:text-white">
-											<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />
-										</p>
-										<div className="ml-2 flex flex-shrink-0">
-											<p className="inline-flex font-mono text-sm font-normal leading-5 dark:text-white">
-												Select Strikes
-											</p>
-										</div>
-									</div>
-								</div>
-							)}
-						</div>
+							</AdminVaultOrderContextProvider>
+						</>
 					)}
 
 					{activityType === ActivityType.Position && (

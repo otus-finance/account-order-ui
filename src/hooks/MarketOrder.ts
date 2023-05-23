@@ -224,6 +224,7 @@ export const useMarketOrder = () => {
 			const _pnl = [MIN_NUMBER, MAX_NUMBER]
 				.concat(buildTicks(updateStrikes))
 				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes));
+			console.log({ _pnl, max: formatProfitAndLostAtTicks(MAX_NUMBER, updateStrikes) });
 			const _maxProfit = Math.max(..._pnl);
 			const _maxLoss = Math.min(..._pnl);
 			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);

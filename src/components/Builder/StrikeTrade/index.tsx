@@ -18,7 +18,7 @@ import { TradeMarket } from "./TradeMarket";
 import { MarketOrderActions } from "./TradeMarket/MarketOrderActions";
 import { BuilderType } from "../../../utils/types";
 import { isCreditOrDebit } from "../../../utils/formatters/message";
-import { motion } from "framer-motion";
+import { Variants, motion } from "framer-motion";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, builderType, builderTypeClean, selectedStrategy, strikes } =
@@ -26,102 +26,93 @@ export const StrikeTrade = () => {
 	const { loading, selectedStrikes, spreadSelected, updateMultiSize } = useMarketOrderContext();
 
 	return (
-		<>
-			{selectedMarket && strikes.length > 0 && (
-				<>
-					{/* strikes summary  */}
-
-					<div className="border-b dark:border-zinc-800 border-zinc-100 py-4 p-4">
-						{builderType == BuilderType.Builder && builderTypeClean ? (
-							<div className="flex justify-between items-center">
-								<div className="text-sm font-semibold  dark:text-emerald-100 text-emerald-400">
-									{selectedStrategy && selectedStrategy.name}
-								</div>
-								<div className="flex justify-between items-center">
-									<div className="text-sm dark:text-zinc-200 atext-zinc-800 pr-4 font-light">
-										Size
-									</div>
-									<div>
-										<DebounceInput
-											debounceTimeout={300}
-											minLength={1}
-											onChange={async (e) => {
-												if (e.target.value == "") return;
-												const value = parseFloat(e.target.value);
-												updateMultiSize?.(value);
-											}}
-											min={0.1}
-											type="number"
-											name="multiSize"
-											id="multiSize"
-											value={1}
-											className={`w-24 border-2 text-right rounded-full dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2 dark:text-zinc-200 text-sm ring-emerald-600 pr-4 font-semibold text-zinc-800 `}
-										/>
-									</div>
-								</div>
+		<div className=" border-t border-zinc-100 dark:border-zinc-800">
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				className="border-b dark:border-zinc-800 border-zinc-100 py-4 p-4"
+			>
+				{builderType == BuilderType.Builder && builderTypeClean ? (
+					<div className="flex justify-between items-center">
+						<div className="text-sm font-semibold  dark:text-emerald-100 text-emerald-400">
+							{selectedStrategy && selectedStrategy.name}
+						</div>
+						<div className="flex justify-between items-center">
+							<div className="text-sm dark:text-zinc-200 atext-zinc-800 pr-4 font-light">Size</div>
+							<div>
+								<DebounceInput
+									debounceTimeout={300}
+									minLength={1}
+									onChange={async (e) => {
+										if (e.target.value == "") return;
+										const value = parseFloat(e.target.value);
+										updateMultiSize?.(value);
+									}}
+									min={0.1}
+									type="number"
+									name="multiSize"
+									id="multiSize"
+									value={1}
+									className={`w-24 border-2 text-right rounded-full dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2 dark:text-zinc-200 text-sm ring-emerald-600 pr-4 font-semibold text-zinc-800 `}
+								/>
 							</div>
-						) : (
-							<div className="text-sm font-semibold dark:text-emerald-100">Custom</div>
-						)}
+						</div>
 					</div>
+				) : (
+					<div className="text-sm font-semibold dark:text-emerald-100">Custom</div>
+				)}
+			</motion.div>
 
-					<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
-						<table className="font-normal min-w-full divide-y dark:divide-zinc-800 divide-zinc-100 table-fixed">
-							<thead className="dark:bg-inherit">
-								<tr className=" ">
-									<th
-										scope="col"
-										className="py-2 text-xs dark:text-zinc-400 text-left font-light px-4"
-									></th>
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto"
+			>
+				<table className="font-normal min-w-full divide-y dark:divide-zinc-800 divide-zinc-100 table-fixed">
+					<thead className="dark:bg-inherit">
+						<tr className=" ">
+							<th
+								scope="col"
+								className="py-2 text-xs dark:text-zinc-400 text-left font-light px-4"
+							></th>
 
-									<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
-										Strike
-									</th>
-									{!spreadSelected && (
-										<th
-											scope="col"
-											className="text-xs  dark:text-zinc-400 text-left font-light px-4"
-										>
-											Collateral
-										</th>
-									)}
+							<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
+								Strike
+							</th>
+							{!spreadSelected && (
+								<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
+									Collateral
+								</th>
+							)}
 
-									<th
-										scope="col"
-										className="text-xs  dark:text-zinc-400 text-left font-light  px-4"
-									>
-										Price
-									</th>
-									<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
-										Credit/(Debit)
-									</th>
-									{!builderTypeClean && (
-										<th
-											scope="col"
-											className="text-xs  dark:text-zinc-400 text-left font-light px-4"
-										>
-											Size
-										</th>
-									)}
-								</tr>
-							</thead>
-							<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
-								{loading && <Spinner />}
-								{selectedStrikes.map((strike, index) => {
-									return <StrikeTradeDetail strike={strike} key={index} />;
-								})}
-							</tbody>
-						</table>
-					</div>
+							<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light  px-4">
+								Price
+							</th>
+							<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
+								Credit/(Debit)
+							</th>
+							{!builderTypeClean && (
+								<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
+									Size
+								</th>
+							)}
+						</tr>
+					</thead>
+					<motion.tbody className=" divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit">
+						{loading && <Spinner />}
+						{selectedStrikes.map((strike, index) => {
+							return <StrikeTradeDetail strike={strike} key={index} index={index} />;
+						})}
+					</motion.tbody>
+				</table>
+			</motion.div>
 
-					<MarketOrderActions />
-				</>
-			)}
-		</>
+			<MarketOrderActions />
+		</div>
 	);
 };
 
-const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
+const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: number }) => {
 	const { setActiveStrike, builderType, builderTypeClean } = useBuilderContext();
 	const { updateSize, updateCollateralPercent, spreadSelected } = useMarketOrderContext();
 
@@ -174,7 +165,10 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 
 	return (
 		<>
-			<tr
+			<motion.tr
+				initial={{ opacity: 0 }}
+				transition={{ type: "spring", stiffness: 300, damping: 24, duration: index * 250 }}
+				animate={{ opacity: 1 }}
 				className="dark:bg-inherit hover:dark:bg-zinc-900 hover:bg-zinc-100 cursor-pointer"
 				onMouseEnter={() => setActiveStrike({ strikeId: strike.id, isCall })}
 				onMouseLeave={() => setActiveStrike({ strikeId: 0, isCall: false })}
@@ -323,7 +317,7 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 						)}
 					</td>
 				)}
-			</tr>
+			</motion.tr>
 			{editCollateral && (
 				<td colSpan={6}>
 					<motion.div

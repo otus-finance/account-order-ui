@@ -4,6 +4,8 @@ import { Spinner } from "../../../../UI/Components/Spinner";
 import { useMarketOrderContext } from "../../../../../context/MarketOrderContext";
 import { ActivityType, MarketOrderTransaction } from "../../../../../utils/types";
 import { useBuilderContext } from "../../../../../context/BuilderContext";
+import { motion } from "framer-motion";
+import { Button } from "../../../../UI/Components/Button";
 
 export const OpenLyraPosition = () => {
 	const { handleSelectActivityType } = useBuilderContext();
@@ -21,33 +23,51 @@ export const OpenLyraPosition = () => {
 			)}
 
 			{otusMarket?.allowance.isZero() ? (
-				<div
+				// <div
+				// 	onClick={() => otusMarket.approve?.()}
+				// 	className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
+				// >
+				// 	{otusMarket?.isApproveLoading ? (
+				// 		<Spinner size={"medium"} color={"secondary"} />
+				// 	) : (
+				// 		"Allow Otus to use your Quote"
+				// 	)}
+				// </div>
+				<Button
+					isDisabled={!otusMarket?.isOpenConfigSuccess}
+					label={"Allow Otus to use your USDC"}
+					isLoading={otusMarket?.isApproveLoading && otusMarket?.isTxLoading}
+					variant={"action"}
+					radius={"full"}
+					size={"full"}
 					onClick={() => otusMarket.approve?.()}
-					className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
-				>
-					{otusMarket?.isApproveLoading ? (
-						<Spinner size={"medium"} color={"secondary"} />
-					) : (
-						"Allow Otus to use your Quote"
-					)}
-				</div>
+				/>
 			) : (
-				<div
+				// <div
+				// 	onClick={() => otusMarket?.open?.()}
+				// 	className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center text-white
+				//   ${otusMarket?.isOpenConfigSuccess
+				// 			? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
+				// 			: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200"
+				// 		}
+				//   `}
+				// >
+				// 	{otusMarket?.isOpenPositionLoading || otusMarket?.isTxLoading ? (
+				// 		<Spinner size={"medium"} color={"secondary"} />
+				// 	) : (
+				// 		"Open Position"
+				// 	)}
+				// </div>
+
+				<Button
+					isDisabled={!otusMarket?.isOpenConfigSuccess}
+					label={"Open Position"}
+					isLoading={otusMarket?.isOpenPositionLoading && otusMarket?.isTxLoading}
+					variant={"action"}
+					radius={"full"}
+					size={"full"}
 					onClick={() => otusMarket?.open?.()}
-					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center text-white 
-          ${
-						otusMarket?.isOpenConfigSuccess
-							? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
-							: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200"
-					}
-          `}
-				>
-					{otusMarket?.isOpenPositionLoading || otusMarket?.isTxLoading ? (
-						<Spinner size={"medium"} color={"secondary"} />
-					) : (
-						"Open Position"
-					)}
-				</div>
+				/>
 			)}
 
 			{otusMarket?.isOpenPositionSuccess && (
@@ -61,12 +81,16 @@ export const OpenLyraPosition = () => {
 				</div>
 			)}
 
-			{otusMarket?.openConfigError && (
-				<div className="py-4 cursor-not-allowed">
+			{otusMarket?.openConfigError && otusMarket?.openConfigError.reason && (
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					className="py-4 cursor-not-allowed"
+				>
 					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
 						{otusMarket?.openConfigError.reason}
 					</div>
-				</div>
+				</motion.div>
 			)}
 		</>
 	);

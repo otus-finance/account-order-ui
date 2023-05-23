@@ -15,7 +15,7 @@ export type BuilderProviderState = {
 	selectedMarket: LyraMarket | null;
 	selectedDirectionTypes: StrategyDirection;
 	selectedExpirationDate: LyraBoard | null;
-	selectedStrategy: any | null | undefined;
+	selectedStrategy?: Strategy;
 	previousStrikes: LyraStrike[];
 	strikes: LyraStrike[];
 	isValid: boolean;
@@ -32,7 +32,7 @@ export type BuilderProviderState = {
 	handleSelectedMarket: (any: LyraMarket | null) => void;
 	handleSelectedDirectionTypes: (any: StrategyDirection) => void;
 	handleSelectedExpirationDate: (any: LyraBoard | null) => void;
-	handleSelectedStrategy: (any: Strategy | null) => void;
+	handleSelectedStrategy: (any: Strategy | undefined) => void;
 	handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void;
 	handleBuildNewStrategy: (any: boolean) => void;
 };
@@ -48,7 +48,7 @@ export const builderInitialState: BuilderProviderState = {
 	selectedMarket: null,
 	selectedDirectionTypes: DirectionType[1] as StrategyDirection,
 	selectedExpirationDate: null,
-	selectedStrategy: null,
+	selectedStrategy: undefined,
 	previousStrikes: [],
 	strikes: [],
 	isValid: false,
@@ -131,7 +131,6 @@ export type BuilderAction =
 	| {
 			type: "SET_STRATEGY";
 			selectedStrategy: BuilderProviderState["selectedStrategy"];
-			// strikes: BuilderProviderState["strikes"];
 			isBuildingNewStrategy: BuilderProviderState["isBuildingNewStrategy"];
 	  }
 	| {
@@ -232,7 +231,6 @@ export function builderReducer(
 			return {
 				...state,
 				selectedStrategy: action.selectedStrategy,
-				// strikes: action.strikes,
 				isBuildingNewStrategy: action.isBuildingNewStrategy,
 			};
 		case "SET_STRIKES":

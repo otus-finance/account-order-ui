@@ -9,14 +9,17 @@ import { useBuilderContext } from "../../context/BuilderContext";
 import { StrikeTrade } from "./StrikeTrade/index";
 import { ActivityType, BuilderType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
-import { MarketOrderContextProvider } from "../../context/MarketOrderContext";
+import {
+	MarketOrderContextProvider,
+	useMarketOrderContext,
+} from "../../context/MarketOrderContext";
 import { Positions } from "./StrikeTrade/Postions";
 import { WalletBalance } from "./StrikeTrade/Balance";
 import { useAccount } from "wagmi";
-import { CUSTOM } from "./Strategy/SelectStrategy";
+import { motion } from "framer-motion";
 
 export const OptionsBuilder = () => {
-	const { strikes, activityType, selectedStrategy } = useBuilderContext();
+	const { strikes, activityType } = useBuilderContext();
 
 	const { address } = useAccount();
 
@@ -30,16 +33,14 @@ export const OptionsBuilder = () => {
 
 					<Strategy />
 
-					{(selectedStrategy == null || selectedStrategy?.id == CUSTOM.id) && (
-						<div>
-							<Strikes />
-						</div>
-					)}
+					<div>
+						<Strikes />
+					</div>
 				</div>
 			</div>
 
 			<div className="col-span-5 lg:col-span-2">
-				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
+				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white">
 					<ActivitySelect />
 					{address && (
 						<LyraAccountContextProvider address={address}>
@@ -48,36 +49,11 @@ export const OptionsBuilder = () => {
 					)}
 
 					{activityType === ActivityType.Trade ? (
-						<div>
-							{strikes[0] ? (
-								<>
-									<MarketOrderContextProvider>
-										<>
-											<StrikeTrade />
-											<div className="hidden sm:block p-4 border-t border-zinc-100 dark:border-zinc-800">
-												<Chart />
-											</div>
-											<div className="sm:hidden p-4 border-t border-zinc-100 dark:border-zinc-800">
-												<Chart height={200} />
-											</div>
-										</>
-									</MarketOrderContextProvider>
-								</>
-							) : (
-								<div className=" p-4">
-									<div className="flex items-center p-2">
-										<p className="truncate font-sans text-xs font-normal dark:text-white">
-											<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />
-										</p>
-										<div className="ml-2 flex flex-shrink-0">
-											<p className="inline-flex font-mono text-sm font-normal leading-5 dark:text-white">
-												Select Strikes
-											</p>
-										</div>
-									</div>
-								</div>
-							)}
-						</div>
+						<MarketOrderContextProvider>
+							<div>
+								<MarketOrderTradePanel />
+							</div>
+						</MarketOrderContextProvider>
 					) : (
 						<Positions />
 					)}
@@ -87,11 +63,57 @@ export const OptionsBuilder = () => {
 	);
 };
 
+const MarketOrderTradePanel = () => {
+	const { isValid } = useBuilderContext();
+
+	const { trades } = useMarketOrderContext();
+
+	return trades.length ? (
+		<>
+			<StrikeTrade />
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				className="hidden sm:block p-4 border-t border-zinc-100 dark:border-zinc-800"
+			>
+				<Chart />
+			</motion.div>
+			<motion.div className="sm:hidden p-4 border-t border-zinc-100 dark:border-zinc-800">
+				<Chart height={200} />
+			</motion.div>
+		</>
+	) : (
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			className="border-t dark:border-zinc-800 border-zinc-100 p-4"
+		>
+			<div className="flex items-center p-2">
+				<p className="truncate font-sans text-xs font-normal dark:text-white">
+					<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />
+				</p>
+				<div className="ml-2 flex flex-shrink-0">
+					<p className="inline-flex font-mono text-sm font-normal leading-5 dark:text-white">
+						Select Strikes
+					</p>
+				</div>
+			</div>
+			{!isValid && (
+				<div className="flex items-center p-2">
+					<p className="font-mono text-sm font-normal leading-5 dark:text-white">
+						Strikes for strategy not available for selected assets or expiry.
+					</p>
+				</div>
+			)}
+		</motion.div>
+	);
+};
+
 export const ActivitySelect = () => {
 	const { activityType, handleSelectActivityType } = useBuilderContext();
 
 	return (
-		<div className="flex justify-between border-b border-zinc-100 dark:border-zinc-800">
+		<div className="flex justify-between">
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Trade)}
 				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-100 dark:border-zinc-800 
@@ -122,7 +144,7 @@ export const VaultActivitySelect = () => {
 	const { activityType, handleSelectActivityType } = useBuilderContext();
 
 	return (
-		<div className="flex justify-between border-b border-zinc-100 dark:border-zinc-800">
+		<div className="flex justify-between">
 			<div
 				onClick={() => handleSelectActivityType(ActivityType.Trade)}
 				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-100 dark:border-zinc-800 

@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Spinner } from "../../../../UI/Components/Spinner";
 import { useMarketOrderContext } from "../../../../../context/MarketOrderContext";
 import { useBuilderContext } from "../../../../../context/BuilderContext";
-import { ActivityType } from "../../../../../utils/types";
+import { motion } from "framer-motion";
+import { Button } from "../../../../UI/Components/Button";
 
 export const OpenSpreadPosition = () => {
 	const { handleSelectActivityType } = useBuilderContext();
@@ -21,41 +22,64 @@ export const OpenSpreadPosition = () => {
 			)}
 
 			{spreadMarket?.allowance.isZero() ? (
-				<div
+				// <div
+				// 	onClick={() => spreadMarket.approve?.()}
+				// 	className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
+				// >
+				// 	{spreadMarket?.isApproveLoading ? (
+				// 		<Spinner size={"medium"} color={"secondary"} />
+				// 	) : (
+				// 		"Allow Otus to use your Quote"
+				// 	)}
+				// </div>
+
+				<Button
+					isDisabled={!spreadMarket?.isOpenConfigSuccess}
+					label={"Allow Otus to use your USDC"}
+					isLoading={spreadMarket?.isApproveLoading && spreadMarket?.isTxLoading}
+					variant={"action"}
+					radius={"full"}
+					size={"full"}
 					onClick={() => spreadMarket.approve?.()}
-					className="cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white"
-				>
-					{spreadMarket?.isApproveLoading ? (
-						<Spinner size={"medium"} color={"secondary"} />
-					) : (
-						"Allow Otus to use your Quote"
-					)}
-				</div>
+				/>
 			) : (
-				<div
+				// 			<div
+				// 				onClick={() => spreadMarket?.open?.()}
+				// 				className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white
+				// ${spreadMarket?.isOpenConfigSuccess
+				// 						? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
+				// 						: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200 "
+				// 					}
+				// `}
+				// 			>
+				// 				{spreadMarket?.isOpenPositionLoading && spreadMarket?.isTxLoading ? (
+				// 					<Spinner />
+				// 				) : (
+				// 					"Open Position"
+				// 				)}
+				// 			</div>
+
+				<Button
+					isDisabled={!spreadMarket?.isOpenConfigSuccess}
+					label={"Open Position"}
+					isLoading={spreadMarket?.isOpenPositionLoading && spreadMarket?.isTxLoading}
+					variant={"action"}
+					radius={"full"}
+					size={"full"}
 					onClick={() => spreadMarket?.open?.()}
-					className={` rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-3 text-center dark:text-white
-	${
-		spreadMarket?.isOpenConfigSuccess
-			? "cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400"
-			: "dark:bg-zinc-800 cursor-not-allowed bg-zinc-200 "
-	}
-	`}
-				>
-					{spreadMarket?.isOpenPositionLoading && spreadMarket?.isTxLoading ? (
-						<Spinner />
-					) : (
-						"Open Position"
-					)}
-				</div>
+				/>
 			)}
 
-			{spreadMarket?.openConfigError && (
-				<div className="py-4 cursor-not-allowed">
+			{spreadMarket?.openConfigError && spreadMarket?.openConfigError.reason && (
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					className="py-4 cursor-not-allowed"
+				>
 					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
 						{spreadMarket?.openConfigError.reason}
 					</div>
-				</div>
+				</motion.div>
 			)}
 		</>
 	);

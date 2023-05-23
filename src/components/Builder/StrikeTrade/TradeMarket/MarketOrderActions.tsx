@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 import { useMarketOrderContext } from "../../../../context/MarketOrderContext";
 import { useBuilderContext } from "../../../../context/BuilderContext";
@@ -19,10 +20,14 @@ export const MarketOrderActions = () => {
 		useMarketOrderContext();
 	const { maxLossPost, maxCost, maxPremium, maxLoss, maxProfit, validMaxLoss } = validMaxPNL;
 
-	return trades.length > 0 ? (
+	return (
 		<>
 			{validMaxLoss && (
-				<div className="border-t dark:border-zinc-800 border-zinc-100 py-4 p-4">
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					className="border-t dark:border-zinc-800 border-zinc-100 py-4 p-4"
+				>
 					<Switch.Group as="div" className="flex items-center justify-between">
 						<span className="flex flex-grow flex-col">
 							<Switch.Label
@@ -56,9 +61,13 @@ export const MarketOrderActions = () => {
 							/>
 						</Switch>
 					</Switch.Group>
-				</div>
+				</motion.div>
 			)}
-			<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				className="border-t dark:border-zinc-800 border-zinc-100 p-4"
+			>
 				<div className="flex items-center justify-between py-2">
 					<p className="truncate font-sans  text-sm font-normal dark:text-zinc-200">Max Cost</p>
 					<div className="ml-2 flex flex-shrink-0">
@@ -78,18 +87,18 @@ export const MarketOrderActions = () => {
 				</div>
 
 				<>
-					<div className="flex items-center justify-between py-2 pb-4">
-						<p className="truncate font-sans  text-sm font-normal dark:text-zinc-300">
-							Otus Fee ({formatPercentage(OTUS_FEE, true)} x Collateral x (Duration / 365 Days))
-						</p>
-						<div className="ml-2 flex flex-shrink-0">
-							<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
-								{validMaxLoss && spreadSelected
-									? formatUSD(otusFee, { dps: 2 })
-									: formatUSD(0, { dps: 2 })}
-							</span>
-						</div>
+					{/* <div className="flex items-center justify-between py-2 pb-4">
+					<p className="truncate font-sans  text-sm font-normal dark:text-zinc-300">
+						Otus Fee ({formatPercentage(OTUS_FEE, true)} x Collateral x (Duration / 365 Days))
+					</p>
+					<div className="ml-2 flex flex-shrink-0">
+						<span className="inline-flex font-sans text-sm font-semibold leading-5 text-rose-400">
+							{validMaxLoss && spreadSelected
+								? formatUSD(otusFee, { dps: 2 })
+								: formatUSD(0, { dps: 2 })}
+						</span>
 					</div>
+				</div> */}
 					<div className="flex items-center justify-between py-2">
 						<p className="truncate font-sans font-normal bg-zinc-900 text-white dark:bg-zinc-800 text-sm p-1 px-2 rounded-full">
 							Total Collateral Required
@@ -131,9 +140,13 @@ export const MarketOrderActions = () => {
 				</>
 
 				<MarketOrderInfo />
-			</div>
+			</motion.div>
 
-			<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				className="border-t dark:border-zinc-800 border-zinc-100 p-4"
+			>
 				<div className="flex items-center justify-between pb-2">
 					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Loss</p>
 					<div className="ml-2 flex flex-shrink-0">
@@ -149,31 +162,11 @@ export const MarketOrderActions = () => {
 					<p className="truncate font-mono text-sm font-normal dark:text-zinc-200">Max Profit</p>
 					<div className="ml-2 flex flex-shrink-0">
 						<span className="inline-flex dark:text-emerald-400 font-sans text-sm font-semibold leading-5">
-							{maxProfit != Infinity ? formatUSD(maxProfit, { dps: 2 }) : maxProfit}
+							{maxProfit < 500000 ? formatUSD(maxProfit, { dps: 2 }) : Infinity}
 						</span>
 					</div>
 				</div>
-			</div>
+			</motion.div>
 		</>
-	) : (
-		<div className="border-t dark:border-zinc-800 border-zinc-100 p-4">
-			<div className="flex items-center p-2">
-				<p className="truncate font-sans text-xs font-normal dark:text-white">
-					<ArrowLeftCircleIcon className="h-5 w-5 dark:text-white" aria-hidden="true" />
-				</p>
-				<div className="ml-2 flex flex-shrink-0">
-					<p className="inline-flex font-mono text-sm font-normal leading-5 dark:text-white">
-						Select Strikes
-					</p>
-				</div>
-			</div>
-			<div className="flex items-center p-2">
-				{!isValid && (
-					<p className="font-mono text-sm font-normal leading-5 dark:text-white">
-						Strikes for strategy not available for selected assets or expiry.
-					</p>
-				)}
-			</div>
-		</div>
 	);
 };

@@ -21,6 +21,9 @@ export const SelectStrategyBoxType = () => {
 				return strategy.type.some((r) => r == _selectedDirectionTypesIds);
 			});
 			setFilteredStrategies(_filteredStrategies);
+			if (_filteredStrategies && _filteredStrategies.length > 0) {
+				handleSelectedStrategy(_filteredStrategies[0]);
+			}
 		} else {
 			setFilteredStrategies([]);
 		}
@@ -32,17 +35,20 @@ export const SelectStrategyBoxType = () => {
 		<div className="grid grid-cols-2 gap-2 m-2 ">
 			{[CUSTOM].concat(filteredStrategies).map((strategy: Strategy, index: number) => {
 				const selected = isSelected(strategy);
-				const isSelectedStyle = selected ? "border-emerald-400 dark:border-emerald-400" : "";
+				const isSelectedStyle = selected
+					? "border-emerald-400 dark:border-emerald-400"
+					: "border-zinc-100 dark:border-zinc-800";
 
 				const { id, name, description, type, tags } = strategy;
 
 				return (
 					<motion.div
-						whileHover={{ scale: 1.01 }}
+						whileHover={{ opacity: 0.8 }}
 						whileTap={{ scale: 0.99 }}
+						transition={{ duration: 250 }}
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`w-full items-center border-2 mr-4 peer-last:mr-0 bg-white dark:bg-inherit border-zinc-100 dark:border-zinc-800 first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}
+						className={`w-full items-center border-2 mr-4 peer-last:mr-0 bg-white dark:bg-inherit  first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}
 					>
 						<div className="flex items-center">
 							<span
