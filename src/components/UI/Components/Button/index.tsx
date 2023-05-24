@@ -111,7 +111,14 @@ export const Button = ({
 			className={`items-center ${buttonSize} ${buttonVariant} ${buttonRadius} ${activeButton} ${isDisabledStyle}`}
 			onClick={onClick}
 		>
-			{isLoading ? <Spinner /> : label}
+			{isLoading ? (
+				<div className="flex items-center justify-center">
+					<Spinner size="medium" color="secondary" />
+					{label}
+				</div>
+			) : (
+				label
+			)}
 		</button>
 	);
 };

@@ -27,7 +27,7 @@ export const Strategy = () => {
 					<SelectStrategy />
 				</div>
 
-				<div className="py-4 px-4 md:px-4 w-full">
+				<div className="lg:hidden py-4 px-4 md:px-4 w-full">
 					<SelectBuilderExpiration />
 				</div>
 			</div>

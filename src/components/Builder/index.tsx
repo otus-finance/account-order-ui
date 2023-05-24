@@ -16,50 +16,66 @@ import {
 import { Positions } from "./StrikeTrade/Postions";
 import { WalletBalance } from "./StrikeTrade/Balance";
 import { useAccount } from "wagmi";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Spinner } from "../UI/Components/Spinner";
 
 export const OptionsBuilder = () => {
-	const { strikes, activityType } = useBuilderContext();
+	const { isMarketLoading, activityType } = useBuilderContext();
 
 	const { address } = useAccount();
 
 	return (
-		<div className="grid lg:grid-cols-5 grid-cols-2 gap-8">
-			<div className="col-span-5 lg:col-span-3">
-				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
-					<div className="p-4">
-						<Market />
-					</div>
-
-					<Strategy />
-
-					<div>
-						<Strikes />
-					</div>
+		<AnimatePresence>
+			{isMarketLoading ? (
+				<div className="p-4 items-center">
+					<Spinner />
 				</div>
-			</div>
-
-			<div className="col-span-5 lg:col-span-2">
-				<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white">
-					<ActivitySelect />
-					{address && (
-						<LyraAccountContextProvider address={address}>
-							<WalletBalance />
-						</LyraAccountContextProvider>
-					)}
-
-					{activityType === ActivityType.Trade ? (
-						<MarketOrderContextProvider>
+			) : (
+				<motion.div
+					key="markets"
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					className="grid lg:grid-cols-5 grid-cols-2 gap-8"
+				>
+					<div className="col-span-5 lg:col-span-3">
+						<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200 ">
 							<div>
-								<MarketOrderTradePanel />
+								<div className="p-4">
+									<Market />
+								</div>
+
+								<Strategy />
+
+								<div>
+									<Strikes />
+								</div>
 							</div>
-						</MarketOrderContextProvider>
-					) : (
-						<Positions />
-					)}
-				</div>
-			</div>
-		</div>
+						</div>
+					</div>
+
+					<div className="col-span-5 lg:col-span-2">
+						<div className="px-4 sm:px-0 rounded-xl dark:bg-zinc-900 bg-white">
+							<ActivitySelect />
+							{address && (
+								<LyraAccountContextProvider address={address}>
+									<WalletBalance />
+								</LyraAccountContextProvider>
+							)}
+							{activityType === ActivityType.Trade ? (
+								<MarketOrderContextProvider>
+									<div>
+										<MarketOrderTradePanel />
+									</div>
+								</MarketOrderContextProvider>
+							) : (
+								<Positions />
+							)}
+						</div>
+					</div>
+				</motion.div>
+			)}
+		</AnimatePresence>
 	);
 };
 
@@ -72,8 +88,7 @@ const MarketOrderTradePanel = () => {
 		<>
 			<StrikeTrade />
 			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
+				initial={{ opacity: 1 }}
 				className="hidden sm:block p-4 border-t border-zinc-100 dark:border-zinc-800"
 			>
 				<Chart />
@@ -84,8 +99,7 @@ const MarketOrderTradePanel = () => {
 		</>
 	) : (
 		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
+			initial={{ opacity: 1 }}
 			className="border-t dark:border-zinc-800 border-zinc-100 p-4"
 		>
 			<div className="flex items-center p-2">
@@ -177,35 +191,6 @@ export const VaultActivitySelect = () => {
 		}`}
 			>
 				Manage Vault
-			</div>
-		</div>
-	);
-};
-
-const BuilderSelect = () => {
-	const { builderType, handleSelectBuilderType } = useBuilderContext();
-
-	return (
-		<div className="flex items-center gap-4 text-sm">
-			<div
-				onClick={() => handleSelectBuilderType(BuilderType.Builder)}
-				className={`cursor-pointer font-mono hover:dark:text-white ${
-					builderType === BuilderType.Builder
-						? "dark:text-white font-semibold underline"
-						: "dark:text-zinc-300"
-				}`}
-			>
-				Builder
-			</div>
-			<div
-				onClick={() => handleSelectBuilderType(BuilderType.Custom)}
-				className={`cursor-pointer font-mono hover:dark:text-white ${
-					builderType === BuilderType.Custom
-						? "dark:text-white font-semibold underline"
-						: "dark:text-zinc-300"
-				}`}
-			>
-				Custom
 			</div>
 		</div>
 	);

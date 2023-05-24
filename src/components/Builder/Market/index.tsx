@@ -2,10 +2,9 @@ import React from "react";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { MarketDetails } from "./MarketDetails";
 import { LyraMarketOptions } from "./SelectMarket";
-import { Spinner } from "../../UI/Components/Spinner";
 
 export const Market = () => {
-	const { markets, selectedMarket, isMarketLoading, handleSelectedMarket } = useBuilderContext();
+	const { markets, selectedMarket, handleSelectedMarket } = useBuilderContext();
 
 	return (
 		<div className="flex sm:justify-between rounded-lg p-1">
@@ -14,13 +13,7 @@ export const Market = () => {
 				selectedMarket={selectedMarket}
 				handleSelectedMarket={handleSelectedMarket}
 			/>
-			{isMarketLoading ? (
-				<div className="flex items-center">
-					<Spinner />
-				</div>
-			) : (
-				<MarketDetails />
-			)}
+			<MarketDetails />
 		</div>
 	);
 };

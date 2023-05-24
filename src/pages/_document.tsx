@@ -12,7 +12,7 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					/>
 				</Head>
-				<body className="bg-gradient-to-r from-zinc-100 dark:from-zinc-800 from-40% via-zinc-200 dark:via-black via-50% to-zinc-100 dark:to-zinc-800 to-90% font-sans h-full">
+				<body className="no-scrollbar bg-gradient-to-r from-zinc-100 dark:from-zinc-800 from-40% via-zinc-200 dark:via-black via-50% to-zinc-100 dark:to-zinc-800 to-90% font-sans h-full">
 					<Main />
 					<NextScript />
 				</body>

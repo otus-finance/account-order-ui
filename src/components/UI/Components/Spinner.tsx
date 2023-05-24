@@ -5,7 +5,7 @@ const getSpinnerSize = (size: string) => {
 		case "small":
 			return "h-3 w-3";
 		case "medium":
-			return "h-4 w-64";
+			return "h-4 w-4";
 		case "large":
 			return "h-6 w-6";
 		default:

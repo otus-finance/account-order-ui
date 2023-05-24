@@ -19,6 +19,7 @@ import { MarketOrderActions } from "./TradeMarket/MarketOrderActions";
 import { BuilderType } from "../../../utils/types";
 import { isCreditOrDebit } from "../../../utils/formatters/message";
 import { Variants, motion } from "framer-motion";
+import { EditCollateral } from "./Edit/Collateral";
 
 export const StrikeTrade = () => {
 	const { selectedMarket, builderType, builderTypeClean, selectedStrategy, strikes } =
@@ -214,15 +215,15 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 										if (e.target.value == "") return;
 										const value = parseFloat(e.target.value);
 
-										handleNewCollateralPercent(value);
+										// handleNewCollateralPercent(value);
 									}}
 									type="percent"
 									name="collateralPercent"
 									id="collateralPercent"
 									min={0.4}
 									max={1}
-									value={collateralPercent}
-									className={`w-16 rounded-full border-2 border-zinc-200 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
+									value={fromBigNumber(strikePrice)}
+									className={`w-16 rounded-full py-1 border-2 border-zinc-200 dark:border-zinc-800 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
 										isUpdating && "cursor-disabled"
 									}`}
 								/>
@@ -318,31 +319,10 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 					</td>
 				)}
 			</motion.tr>
+
 			{editCollateral && (
 				<td colSpan={6}>
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						className="p-4 dark:bg-zinc-800 bg-zinc-100"
-					>
-						<label
-							htmlFor="default-range"
-							className="block mb-2 text-sm font-medium text-zinc-900 dark:text-white"
-						>
-							Collateral
-						</label>
-						<input
-							id="default-range"
-							type="range"
-							value="50"
-							className=" w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer dark:bg-zinc-700"
-						/>
-						<div className="flex justify-between">
-							<div>Min</div>
-							<div>Max</div>
-						</div>
-					</motion.div>
+					<EditCollateral />
 				</td>
 			)}
 		</>
