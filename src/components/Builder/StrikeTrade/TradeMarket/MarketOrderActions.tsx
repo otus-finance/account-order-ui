@@ -77,7 +77,7 @@ export const MarketOrderActions = () => {
 								Total Received
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  dark:text-white">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  p-1 px-2  dark:text-white">
 									{maxLossPost != Infinity
 										? formatUSD(Math.abs(maxLossPost), { dps: 2 })
 										: maxLossPost}
@@ -90,7 +90,7 @@ export const MarketOrderActions = () => {
 								Total Cost
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  dark:text-white">
+								<span className="inline-flex font-sans text-sm font-semibold leading-5 rounded-md  p-1 px-2  dark:text-white">
 									{maxLossPost != Infinity ? formatUSD(maxLossPost, { dps: 2 }) : maxLossPost}
 								</span>
 							</div>
