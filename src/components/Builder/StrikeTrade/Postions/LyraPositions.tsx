@@ -31,7 +31,7 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					className="bg-zinc-100 dark:bg-zinc-800   overflow-x-scroll p-4 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto"
+					className="bg-zinc-100 dark:bg-zinc-800 rounded-b-xl overflow-x-scroll p-4 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto"
 				>
 					<table className="min-w-full table-fixed rounded-sm">
 						<thead className="divide-b dark:divide-zinc-800 divide-zinc-100 "></thead>
