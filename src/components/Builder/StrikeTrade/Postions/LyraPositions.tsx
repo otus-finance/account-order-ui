@@ -9,6 +9,7 @@ import { useChainContext } from "../../../../context/ChainContext";
 import LyraIcon from "../../../UI/Icons/Color/LYRA";
 import getLyraPositionUrl from "../../../../utils/chains/getLyraPositionUrl";
 import { motion } from "framer-motion";
+import ETHIcon from "../../../UI/Icons/Color/ETH";
 
 export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Address }) => {
 	const { isLoading: isLyraPositionsLoading, data: lyraPositions } = useLyraPositions(
@@ -36,18 +37,15 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 					<table className="min-w-full table-fixed rounded-sm">
 						<thead className="divide-b dark:divide-zinc-800 divide-zinc-100 "></thead>
 
-						<th
-							scope="col"
-							className="hidden sm:table-cell dark:text-zinc-400 py-3.5 text-left  text-xs font-light"
-						>
+						<th scope="col" className="sr-only">
 							Market
 						</th>
-						<th
+						{/* <th
 							scope="col"
 							className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light"
 						>
 							Type
-						</th>
+						</th> */}
 
 						<th
 							scope="col"
@@ -81,12 +79,12 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 							Status
 						</th>
 
-						<th
+						{/* <th
 							scope="col"
 							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
 						>
 							Expiry
-						</th>
+						</th> */}
 						<th
 							scope="col"
 							className="hidden sm:table-cell dark:text-zinc-400 py-3.5 text-left pl-4  text-xs font-light"
@@ -121,12 +119,12 @@ export const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 
 	return (
 		<tr className="">
-			<td className=" hidden sm:table-cell whitespace-nowrap py-4 text-left  text-xs font-medium dark:text-zinc-200">
+			{/* <td className=" hidden sm:table-cell whitespace-nowrap py-4 text-left  text-xs font-medium dark:text-zinc-200">
 				{marketName}
-			</td>
+			</td> */}
 
-			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
-				<div>
+			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700 flex justify-between items-center">
+				{/* <div>
 					{isCall ? (
 						<span className="bg-emerald-500 text-zinc-100 font-normal p-1 rounded-lg">Call</span>
 					) : (
@@ -139,20 +137,50 @@ export const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 					) : (
 						<span className="text-pink-700 font-normal p-1 rounded-lg">Sell</span>
 					)}
+				</div> */}
+				<div>
+					{/* {marketName} */}
+					<ETHIcon className="h-6 w-6 bg-zinc-100 rounded-full align-middle" />
+				</div>
+				<div className="items-center">
+					<div className="text-center text-xs py-1">
+						{expiryTimestamp && formatExpirationDate(expiryTimestamp)}
+					</div>
+					<div className="text-center text-xs py-1 flex">
+						<div>
+							{isLong ? (
+								<span className="text-emerald-500 font-normal rounded-lg">Buy</span>
+							) : (
+								<span className="text-pink-700 font-normal  rounded-lg">Sell</span>
+							)}
+						</div>
+						<div>
+							{isCall ? (
+								<span className="border border-emerald-500 text-emerald-500 font-normal ml-1 p-1 rounded-lg">
+									Call
+								</span>
+							) : (
+								<span className="border border-pink-700 text-pink-700  font-normal  ml-1 p-1 rounded-lg">
+									Put
+								</span>
+							)}
+						</div>
+					</div>
 				</div>
 			</td>
 
-			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-normal dark:text-zinc-300 text-zinc-700">
 				{formatUSD(fromBigNumber(strikePrice))}
 			</td>
-			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+
+			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 				{fromBigNumber(size)}
 			</td>
-			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-normal dark:text-zinc-300 text-zinc-700">
 				{formatUSD(fromBigNumber(totalAverageOpenCost))}
 			</td>
 
-			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-normal dark:text-zinc-300 text-zinc-700">
 				{formattedUnrealizedPnl < 0 ? (
 					<span className="text-rose-500 font-bold">{formatUSD(formattedUnrealizedPnl)}</span>
 				) : (
@@ -168,19 +196,19 @@ export const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 				}
 			</td> */}
 
-			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 				{isOpen ? "Open" : "Closed"}
 			</td>
 
-			<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+			{/* <td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 				{formatExpirationDate(expiryTimestamp)}
-			</td>
+			</td> */}
 
-			<td className="hidden sm:table-cell whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="hidden sm:table-cell whitespace-nowrap py-4 text-xs  pl-4 font-normal dark:text-zinc-300 text-zinc-700">
 				{parseFloat(fromBigNumber(delta).toString()).toFixed(4)}
 			</td>
 
-			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-medium dark:text-zinc-200">
+			<td className="whitespace-nowrap py-4 text-xs  pl-4 font-normal dark:text-zinc-300 text-zinc-700">
 				{lyraHref && (
 					<a
 						href={lyraHref}

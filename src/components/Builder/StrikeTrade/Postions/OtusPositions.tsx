@@ -258,10 +258,10 @@ const PositionRow = ({
 	return (
 		<>
 			<tr className="">
-				<td className="whitespace-nowrap py-4 text-left  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{txHref && (
 						<div
-							className="p-1 dark:bg-zinc-900 dark:text-zinc-200  bg-zinc-200 text-zinc-900 rounded-lg inline cursor-pointer"
+							className="p-1 dark:bg-zinc-900 dark:text-zinc-300 text-zinc-700  bg-zinc-200  rounded-lg inline cursor-pointer"
 							onClick={() => {
 								if (showLegPositionId == fromBigNumber(id, 0)) {
 									setShowLegPositionId(0);
@@ -275,11 +275,11 @@ const PositionRow = ({
 					)}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{new Date(openTimestamp * 1000).toDateString()}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{tradeType === 0 ? (
 						<span className="bg-zinc-700 text-zinc-200 font-normal p-1 rounded-lg">Multi Leg</span>
 					) : (
@@ -287,11 +287,11 @@ const PositionRow = ({
 					)}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{fromBigNumber(id, 0)}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{formatUSD(totalCost, { dps: 2 })}
 				</td>
 				{/* 
@@ -299,7 +299,7 @@ const PositionRow = ({
 					{formatUSD(fromBigNumber(fee), { dps: 2 })}
 				</td> */}
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{unrealizedPnl < 0 ? (
 						<span className="text-rose-500 font-bold">{formatUSD(unrealizedPnl)}</span>
 					) : (
@@ -307,19 +307,19 @@ const PositionRow = ({
 					)}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{state === 0 ? "Open" : "Closed"}
 				</td>
 
-				<td className="whitespace-nowrap py-4 pl-4 text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 pl-4 text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{txHref && (
 						<a className="p-1 block" target="_blank" rel="noreferrer" href={txHref}>
-							<ArrowTopRightOnSquareIcon className="text-zinc-900 dark:text-zinc-200 h-4 w-4 ml-1" />
+							<ArrowTopRightOnSquareIcon className=" dark:text-zinc-300 text-zinc-700 h-4 w-4 ml-1" />
 						</a>
 					)}
 				</td>
 
-				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-normal dark:text-zinc-300 text-zinc-700">
 					{tradeType === 0 ? (
 						expiry < currentTimeStamp ? (
 							<div
@@ -366,11 +366,8 @@ const OtusLegPositions = ({ lyraPositions }: { lyraPositions: LyraPosition[] }) 
 	return (
 		<table className="border-y dark:border-zinc-900 border-zinc-300 min-w-full   px-2">
 			<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 dark:bg-zinc-800"></thead>
-			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light">
+			<th scope="col" className="sr-only">
 				Market
-			</th>
-			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light">
-				Type
 			</th>
 
 			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
@@ -390,9 +387,9 @@ const OtusLegPositions = ({ lyraPositions }: { lyraPositions: LyraPosition[] }) 
 				Status
 			</th>
 
-			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
+			{/* <th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Expiry
-			</th>
+			</th> */}
 			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Delta
 			</th>

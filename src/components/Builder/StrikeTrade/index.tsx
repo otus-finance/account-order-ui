@@ -125,15 +125,7 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 
 	const [editCollateral, setEditCollateral] = useState(false);
 
-	// const [newCollateralPercent, setNewCollateralPercent] = useState(1);
-
-	// const handleNewCollateralPercent = (_collateralPercent: number) => {
-	// 	if (_collateralPercent > 1 || _collateralPercent < 0.4) return;
-	// 	setNewCollateralPercent(_collateralPercent);
-	// };
-
 	const handleConfirmCollateral = () => {
-		// updateCollateralPercent?.(strike, newCollateralPercent);
 		setEditCollateral(false);
 	};
 
