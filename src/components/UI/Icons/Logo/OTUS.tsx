@@ -1,6 +1,13 @@
 import * as React from "react";
 const LogoIcon = (props: any) => (
-	<svg xmlns="http://www.w3.org/2000/svg" width={48} height={53} fill="none" {...props}>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={48}
+		height={53}
+		viewBox="0 0 48 53"
+		fill="none"
+		{...props}
+	>
 		<g clipPath="url(#a)">
 			<path
 				fill="#000"

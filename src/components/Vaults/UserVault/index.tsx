@@ -82,7 +82,7 @@ const UserBalanceDeposit = ({ userBalance }: { userBalance: number }) => {
 		<div className="flex items-center justify-between py-2 px-4 dark:bg-zinc-800  bg-zinc-100">
 			<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">Balance</p>
 			<div className="ml-2 flex flex-shrink-0">
-				<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
+				<p className="inline-flex font-sans text-xs font-normal leading-5 dark:text-zinc-400">
 					{userBalance}
 				</p>
 			</div>
@@ -95,7 +95,7 @@ const UserBalanceWithdraw = ({ lpBalance }: { lpBalance: BigNumber }) => {
 		<div className="flex items-center justify-between py-2 px-4 dark:bg-zinc-800  bg-zinc-100">
 			<p className="truncate font-sans text-xs font-normal dark:text-zinc-400">Vault Tokens</p>
 			<div className="ml-2 flex flex-shrink-0">
-				<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-400">
+				<p className="inline-flex font-sans text-xs font-normal leading-5 dark:text-zinc-400">
 					{fromBigNumber(lpBalance)}
 				</p>
 			</div>
@@ -133,14 +133,14 @@ const UserVaultDetail = () => {
 					<Spinner />
 				) : (
 					<div className="px-0 rounded-xl dark:bg-zinc-900 bg-white shadow-md dark:shadow-black shadow-zinc-200">
-						<div className="p-4 font-mono bg-zinc-900 rounded-t-xl border-b border-zinc-100 dark:border-zinc-800 text-white text-sm font-semibold">
+						<div className="p-4 font-sans bg-zinc-900 rounded-t-xl border-b border-zinc-100 dark:border-zinc-800 text-white text-sm font-semibold">
 							{vault && vault.name && ethers.utils.parseBytes32String(vault?.name)}
 						</div>
 						<div className="border-b border-zinc-100 dark:border-zinc-800 text-sm font-semibold">
 							{vault && <UserVaultPositions vault={vault} />}
 						</div>
 						<div className="p-4 border-b border-zinc-100 dark:border-zinc-800 text-sm font-semibold">
-							<h2 className="font-mono">Strategy</h2>
+							<h2 className="font-sans">Strategy</h2>
 						</div>
 					</div>
 				)}
@@ -256,7 +256,7 @@ export const UserVaultActivitySelect = ({ activityType, setActivityType }: Props
 		<div className="flex justify-between border-b border-zinc-100 dark:border-zinc-800">
 			<div
 				onClick={() => setActivityType(UserVaultActivityType.Deposit)}
-				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono border-r border-zinc-100 dark:border-zinc-800 
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-sans border-r border-zinc-100 dark:border-zinc-800 
 		${
 			activityType === UserVaultActivityType.Deposit
 				? "dark:text-white underline font-semibold"
@@ -267,7 +267,7 @@ export const UserVaultActivitySelect = ({ activityType, setActivityType }: Props
 			</div>
 			<div
 				onClick={() => setActivityType(UserVaultActivityType.Withdraw)}
-				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-mono 
+				className={`hover:underline hover:font-semibold cursor-pointer p-4 w-full text-center text-sm font-sans 
 		${
 			activityType === UserVaultActivityType.Withdraw
 				? "dark:text-white underline font-semibold"

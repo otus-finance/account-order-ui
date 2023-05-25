@@ -36,8 +36,8 @@ export const SelectStrategyBoxType = () => {
 			{[CUSTOM].concat(filteredStrategies).map((strategy: Strategy, index: number) => {
 				const selected = isSelected(strategy);
 				const isSelectedStyle = selected
-					? "border-emerald-400 dark:border-emerald-400"
-					: "border-zinc-100 dark:border-zinc-800";
+					? "bg-zinc-100 dark:bg-zinc-800"
+					: "bg-inherit dark:bg-inherit hover:bg-zinc-100 dark:hover:bg-zinc-800";
 
 				const { id, name, description, type, tags } = strategy;
 
@@ -45,23 +45,26 @@ export const SelectStrategyBoxType = () => {
 					<motion.div
 						onClick={() => handleSelectedStrategy(strategy)}
 						key={index}
-						className={`w-full items-center border-2 mr-4 peer-last:mr-0 bg-white dark:bg-inherit  first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}
+						className={` dark:text-white text-zinc-800 text-center w-full items-center mr-4 peer-last:mr-0 bg-white first:ml-0 last:mr-0 p-4 rounded-xl cursor-pointer ${isSelectedStyle}`}
 					>
 						<div className="flex items-center">
 							<span
-								className={classNames(selected ? "font-semibold" : "font-normal", "block truncate")}
+								className={classNames(
+									selected ? "font-semibold" : "font-normal",
+									"text-sm block truncate"
+								)}
 							>
 								{name}
 							</span>
 						</div>
 
-						<div className="flex flex-wrap">
+						<div className="flex flex-nowrap">
 							{tags.map((tag: StrategyTag, index: number) => {
 								if (StrategyTag.PostMaxLossOnly === tag) {
 									return (
 										<span
 											key={index}
-											className="text-xs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 bg-emerald-400 text-white p-1 mr-1"
+											className="text-xxs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 bg-emerald-400 text-white p-1 mr-1"
 										>
 											{tag}
 										</span>
@@ -70,7 +73,7 @@ export const SelectStrategyBoxType = () => {
 								return (
 									<span
 										key={index}
-										className="text-xs font-light rounded-sm bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 p-1 mr-1"
+										className="text-xxs font-light rounded-sm text-zinc-100 bg-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 p-1 mr-1"
 									>
 										{tag}
 									</span>

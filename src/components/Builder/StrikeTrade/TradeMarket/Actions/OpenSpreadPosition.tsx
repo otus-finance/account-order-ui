@@ -45,7 +45,7 @@ export const OpenSpreadPosition = () => {
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					className="py-4 cursor-not-allowed"
+					className="pt-4 cursor-not-allowed"
 				>
 					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
 						{spreadMarket?.openConfigError.reason}

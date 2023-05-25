@@ -41,13 +41,13 @@ export const SelectStrategy = () => {
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border-2 dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  focus:ring-2 focus:ring-emerald-500">
+						<Listbox.Button className="relative w-full rounded-full cursor-pointer   bg-zinc-100 dark:bg-zinc-800   pl-4 pr-20 text-left dark:text-white text-sm py-2">
 							<div className="flex items-center">
 								<div>
-									{selectedMarket?.name == "sETH-sUSD" || selectedMarket?.name == "ETH-USDC" ? (
-										<ETHIcon className="bg-emerald-400 rounded-full w-8 h-8" />
+									{selectedMarket?.name == "ETH-USDC" ? (
+										<ETHIcon className="bg-emerald-400 rounded-full w-6 h-6" />
 									) : (
-										<BTCIcon className="bg-emerald-400 rounded-full w-8 h-8" />
+										<BTCIcon className="bg-emerald-400 rounded-full w-6 h-6" />
 									)}
 								</div>
 								{selectedStrategy ? (
@@ -73,7 +73,7 @@ export const SelectStrategy = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="cursor-pointer rounded-xl absolute z-10 mt-1 max-h-60 w-full bg-white overflow-auto dark:bg-zinc-900 py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+							<Listbox.Options className="overflow-hidden bg-white w-full rounded-xl absolute z-10 mt-1 dark:bg-zinc-800 focus:outline-none cursor-pointer">
 								{[CUSTOM].concat(filteredStrategies).map((strategy: Strategy, index: number) => (
 									<Listbox.Option
 										key={index}
@@ -95,7 +95,7 @@ export const SelectStrategy = () => {
 														<span
 															className={classNames(
 																selected ? "font-semibold" : "font-normal",
-																"block truncate"
+																"block truncate text-sm"
 															)}
 														>
 															{name}
@@ -108,7 +108,7 @@ export const SelectStrategy = () => {
 																return (
 																	<span
 																		key={index}
-																		className="text-xs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 bg-emerald-400 text-white p-1 mr-1"
+																		className="text-xxs font-normal rounded-sm dark:bg-emerald-600 dark:text-zinc-200 bg-emerald-400 text-white p-1 mr-1"
 																	>
 																		{tag}
 																	</span>
@@ -117,7 +117,7 @@ export const SelectStrategy = () => {
 															return (
 																<span
 																	key={index}
-																	className="text-xs font-light rounded-sm bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 p-1 mr-1"
+																	className="text-xxs font-light rounded-sm bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 p-1 mr-1"
 																>
 																	{tag}
 																</span>

@@ -30,7 +30,7 @@ export const SelectDirectionType = () => {
 			{({ open }) => (
 				<>
 					<div className="relative">
-						<Listbox.Button className="relative w-full rounded-full cursor-pointer bg-white border-zinc-100 dark:border-zinc-800 border-2 dark:bg-zinc-900  py-3 pl-3 pr-20 text-left dark:text-white  sm:text-md">
+						<Listbox.Button className="relative w-full rounded-full cursor-pointer   bg-zinc-100 dark:bg-zinc-800   pl-4 pr-20 text-left dark:text-white text-sm py-2">
 							<span className="block truncate">
 								{selectedDirectionTypes ? selectedDirectionTypes.name : "Market Expectation"}
 							</span>

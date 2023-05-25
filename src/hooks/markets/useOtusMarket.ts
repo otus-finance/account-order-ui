@@ -105,7 +105,7 @@ export const useOtusMarket = (
 		chainId: chain?.id,
 		enabled: !spreadSelected && trades.length > 0,
 	});
-	console.log({ openConfigError });
+
 	const {
 		isSuccess: isOpenPositionSuccess,
 		isLoading: isOpenPositionLoading,

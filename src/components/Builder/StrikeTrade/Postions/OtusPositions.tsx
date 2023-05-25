@@ -15,6 +15,7 @@ import LogoIcon from "../../../UI/Icons/Logo/OTUS";
 import { useTheme } from "next-themes";
 import { LyraPositionRow } from "./LyraPositions";
 import { OtusPositionSettle } from "./Actions/Settle";
+import { motion } from "framer-motion";
 
 export const OtusPositions = ({ lyra }: { lyra?: Lyra }) => {
 	const { theme } = useTheme();
@@ -49,56 +50,80 @@ export const OtusPositions = ({ lyra }: { lyra?: Lyra }) => {
 
 	return (
 		<>
-			<div className="border-b font-mono border-zinc-100 dark:border-zinc-900 p-4 text-sm font-normal dark:text-zinc-200">
-				Otus Positions
+			<div className="flex rounded-full p-4 text-sm font-semibold dark:text-zinc-200 ">
+				<LogoIcon className="h-4 w-4 mt-[1px] mr-2" /> Otus Positions
 			</div>
 			{isLoading ? (
 				<div className="p-4">
 					<Spinner />
 				</div>
 			) : (
-				<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					className="bg-zinc-100 dark:bg-zinc-800 overflow-x-scroll scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto p-4"
+				>
 					<table className="min-w-full table-fixed  rounded-sm">
-						<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 dark:bg-zinc-800"></thead>
-						<th scope="col" className="py-3.5 text-left pl-4  text-xs font-light"></th>
+						<thead className=""></thead>
+						<th scope="col" className="py-3.5 text-left dark:text-zinc-400 font-light"></th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Open Date
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Type
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Size
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400  text-xs font-light"
+						>
 							Total Cost
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
-							Otus Fee
-						</th>
-
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Profit / Loss
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 text-left pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Status
 						</th>
 
-						<th scope="col" className="py-3.5 text-left  pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className="py-3.5 text-left  pl-4 dark:text-zinc-400 text-xs font-light"
+						>
 							Transaction
 						</th>
 
-						<th scope="col" className="py-3.5 text-left  pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className="py-3.5 text-left  pl-4  dark:text-zinc-400 text-xs font-light"
+						>
 							Action
 						</th>
 
-						<tbody className="divide-y dark:divide-zinc-900 divide-zinc-100 dark:bg-inherit">
+						<tbody className="dark:bg-inherit">
 							{data?.positions.map((position: Position, index: number) => {
 								return (
 									<PositionRow
@@ -115,7 +140,7 @@ export const OtusPositions = ({ lyra }: { lyra?: Lyra }) => {
 							})}
 						</tbody>
 					</table>
-				</div>
+				</motion.div>
 			)}
 
 			<Modal
@@ -232,11 +257,11 @@ const PositionRow = ({
 
 	return (
 		<>
-			<tr className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
-				<td className="whitespace-nowrap py-4 text-left pl-4 text-xs font-medium dark:text-zinc-200">
+			<tr className="">
+				<td className="whitespace-nowrap py-4 text-left  text-xs font-medium dark:text-zinc-200">
 					{txHref && (
 						<div
-							className="p-1 dark:bg-zinc-900 dark:text-zinc-200 hover:dark:bg-zinc-800 bg-zinc-200 text-zinc-900 rounded-lg hover:bg-zinc-300 inline cursor-pointer"
+							className="p-1 dark:bg-zinc-900 dark:text-zinc-200  bg-zinc-200 text-zinc-900 rounded-lg inline cursor-pointer"
 							onClick={() => {
 								if (showLegPositionId == fromBigNumber(id, 0)) {
 									setShowLegPositionId(0);
@@ -269,10 +294,10 @@ const PositionRow = ({
 				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 					{formatUSD(totalCost, { dps: 2 })}
 				</td>
-
+				{/* 
 				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 					{formatUSD(fromBigNumber(fee), { dps: 2 })}
-				</td>
+				</td> */}
 
 				<td className="whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
 					{unrealizedPnl < 0 ? (
@@ -339,36 +364,36 @@ const PositionRow = ({
 
 const OtusLegPositions = ({ lyraPositions }: { lyraPositions: LyraPosition[] }) => {
 	return (
-		<table className="bg-zinc-100 dark:bg-black min-w-full">
+		<table className="border-y dark:border-zinc-900 border-zinc-300 min-w-full   px-2">
 			<thead className="divide-b dark:divide-zinc-900 divide-zinc-300 dark:bg-zinc-800"></thead>
-			<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light">
 				Market
 			</th>
-			<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light">
 				Type
 			</th>
 
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Strike Price
 			</th>
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Size
 			</th>
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Average Cost
 			</th>
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Profit / Loss
 			</th>
 
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Status
 			</th>
 
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Expiry
 			</th>
-			<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+			<th scope="col" className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light">
 				Delta
 			</th>
 			<th scope="col" className="sr-only">

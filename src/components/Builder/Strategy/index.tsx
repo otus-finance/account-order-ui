@@ -8,12 +8,12 @@ import { SelectStrategyBoxType } from "./SelectStrategyBoxType";
 export const Strategy = () => {
 	return (
 		<div className="flex flex-col">
-			<div className="hidden lg:grid grid-cols-5 border-t border-zinc-100 dark:border-zinc-800">
+			<div className="hidden lg:grid grid-cols-7 border-t border-zinc-100 dark:border-zinc-800">
 				<div className="col-span-1 border-r border-zinc-100 dark:border-zinc-800 p-2">
 					<SelectDirectionBoxType />
 				</div>
 
-				<div className="col-span-4 p-2">
+				<div className="col-span-6 p-2">
 					<SelectStrategyBoxType />
 				</div>
 			</div>

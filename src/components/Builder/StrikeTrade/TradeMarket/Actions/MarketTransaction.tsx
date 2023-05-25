@@ -11,11 +11,11 @@ export const MarketTransaction = () => {
 			Network not supported
 		</div>
 	) : (
-		<MarketOrderAction />
+		<MarketOrderTransaction />
 	);
 };
 
-const MarketOrderAction = () => {
+const MarketOrderTransaction = () => {
 	const { spreadSelected, validMaxPNL } = useMarketOrderContext();
 
 	const { validMaxLoss } = validMaxPNL;

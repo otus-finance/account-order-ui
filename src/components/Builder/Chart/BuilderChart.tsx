@@ -146,7 +146,7 @@ const CustomTooltip = ({
 						</p>
 					</div>
 					<div>
-						<p className="font-mono text-xs font-normal leading-5 dark:text-white">
+						<p className="font-sans text-xs font-normal leading-5 dark:text-white">
 							{formatUSD(label)}
 						</p>
 					</div>
@@ -158,11 +158,11 @@ const CustomTooltip = ({
 					</div>
 					<div>
 						{payload[0].value > 0 ? (
-							<p className="font-mono text-xs font-bold leading-5 text-emerald-600">
+							<p className="font-sans text-xs font-bold leading-5 text-emerald-600">
 								{formatUSD(payload[0].value)}
 							</p>
 						) : (
-							<p className="font-mono text-xs font-bold leading-5 text-pink-900">
+							<p className="font-sans text-xs font-bold leading-5 text-pink-900">
 								{formatUSD(payload[0].value)}
 							</p>
 						)}
@@ -174,7 +174,7 @@ const CustomTooltip = ({
 						<p className="truncate font-sans text-xs font-medium dark:text-white">Current Price</p>
 					</div>
 					<div>
-						<p className="font-mono text-xs font-normal leading-5 dark:text-white">
+						<p className="font-sans text-xs font-normal leading-5 dark:text-white">
 							{formatUSD(currentPrice)}
 						</p>
 					</div>

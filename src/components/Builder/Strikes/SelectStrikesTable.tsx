@@ -15,7 +15,7 @@ import { CheckIcon, PlusIcon } from "@heroicons/react/24/solid";
 import LyraIcon from "../../UI/Icons/Color/LYRA";
 
 const style =
-	"border-2 cursor-pointer dark:text-white-700 rounded-full dark:bg-zinc-900 text-center sm:w-24 sm:px-6 w-16 p-2 mr-1 text-sm font-light";
+	"cursor-pointer dark:text-zinc-200 rounded-full dark:inherit text-center sm:w-24 sm:px-6 w-16 p-2 mr-1 text-xs font-semibold";
 
 export const SelectStrikesTable = () => {
 	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
@@ -54,8 +54,8 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsBuy(true)}
 						className={`${
 							isBuy
-								? "border-emerald-400 dark:bg-zinc-900"
-								: "dark:border-zinc-700 hover:dark:border-zinc-700"
+								? "bg-zinc-100 dark:bg-zinc-800"
+								: "bg-inherit dark:bg-inherit hover:bg-zinc-100 dark:hover:bg-zinc-800"
 						} ${style}`}
 					>
 						Buy
@@ -64,8 +64,8 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsBuy(false)}
 						className={`${
 							!isBuy
-								? "border-emerald-400 dark:bg-zinc-900"
-								: "dark:border-zinc-700 hover:dark:border-zinc-700"
+								? "bg-zinc-100 dark:bg-zinc-800"
+								: "bg-inherit dark:bg-inherit hover:bg-zinc-100 dark:hover:bg-zinc-800"
 						} ${style}`}
 					>
 						Sell
@@ -74,8 +74,8 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsCall(true)}
 						className={`${
 							isCall
-								? "border-emerald-400 dark:bg-zinc-900"
-								: "dark:border-zinc-700 hover:dark:border-zinc-700"
+								? "bg-zinc-100 dark:bg-zinc-800"
+								: "bg-inherit dark:bg-inherit hover:bg-zinc-100 dark:hover:bg-zinc-800"
 						} ${style} ml-2`}
 					>
 						Call
@@ -84,8 +84,8 @@ export const SelectStrikesTable = () => {
 						onClick={() => setIsCall(false)}
 						className={`${
 							!isCall
-								? "border-emerald-400 dark:bg-zinc-900"
-								: "dark:border-zinc-700 hover:dark:border-zinc-700"
+								? "bg-zinc-100 dark:bg-zinc-800"
+								: "bg-inherit dark:bg-inherit hover:bg-zinc-100 dark:hover:bg-zinc-800"
 						} ${style}`}
 					>
 						Put

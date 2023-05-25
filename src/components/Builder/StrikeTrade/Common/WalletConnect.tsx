@@ -1,14 +1,18 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { Button } from "../../../UI/Components/Button";
 
 export const WalletConnect = () => {
 	const { openConnectModal } = useConnectModal();
 
 	return (
-		<div
+		<Button
+			isDisabled={false}
+			label={"Connect Wallet"}
+			isLoading={false}
+			variant={"primary"}
+			radius={"full"}
+			size={"full"}
 			onClick={openConnectModal}
-			className="cursor-pointer bg-gradient-to-b from-black to-zinc-900 hover:border-emerald-600 p-2 py-3 col-span-3 font-semibold text-sm text-white text-center rounded-full dark:bg-black"
-		>
-			Connect Wallet
-		</div>
+		/>
 	);
 };

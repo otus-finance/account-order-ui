@@ -194,9 +194,9 @@ const Vault = ({ vault }: { vault: OtusVault }) => {
 				<div className="p-4">
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xs font-semibold dark:text-white">Current Strikes</div>
-						<div className="font-mono text-xs font-normal dark:text-white">1800</div>
-						<div className="font-mono text-xs font-normal dark:text-white">1900</div>
-						<div className="font-mono text-xs font-normal dark:text-white">2000</div>
+						<div className="font-sans text-xs font-normal dark:text-white">1800</div>
+						<div className="font-sans text-xs font-normal dark:text-white">1900</div>
+						<div className="font-sans text-xs font-normal dark:text-white">2000</div>
 					</div>
 				</div>
 			</div>
@@ -205,11 +205,11 @@ const Vault = ({ vault }: { vault: OtusVault }) => {
 				<div className="p-4">
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xs font-semibold dark:text-white">Max Leverage</div>
-						<div className="font-mono text-xs font-normal dark:text-white">1x</div>
+						<div className="font-sans text-xs font-normal dark:text-white">1x</div>
 					</div>
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xs font-semibold dark:text-white">All Time APY</div>
-						<div className="font-mono text-xs font-normal dark:text-white">8.2%</div>
+						<div className="font-sans text-xs font-normal dark:text-white">8.2%</div>
 					</div>
 				</div>
 			</div>
@@ -218,7 +218,7 @@ const Vault = ({ vault }: { vault: OtusVault }) => {
 				<div className="p-4">
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xxs font-light dark:text-white">Total Deposits</div>
-						<div className="font-mono text-xxs font-normal dark:text-white">
+						<div className="font-sans text-xxs font-normal dark:text-white">
 							{formatUSD(fromBigNumber(ZERO_BN))}
 						</div>
 					</div>
@@ -232,7 +232,7 @@ const Vault = ({ vault }: { vault: OtusVault }) => {
 					</div>
 					<div className="flex flex-wrap justify-between py-2">
 						<div className="text-xxs font-light dark:text-white">Maximum Capacity</div>
-						<div className="font-mono text-xxs font-normal dark:text-white">
+						<div className="font-sans text-xxs font-normal dark:text-white">
 							{formatUSD(fromBigNumber(toBN("100000")))}
 						</div>
 					</div>

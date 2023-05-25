@@ -120,7 +120,7 @@ const Vault = () => {
 			<div className="p-4">
 				<div className="flex flex-wrap justify-between py-2">
 					<div className="text-xxs font-light dark:text-white">Total Deposits</div>
-					<div className="font-mono text-xxs font-normal dark:text-white">$0</div>
+					<div className="font-sans text-xxs font-normal dark:text-white">$0</div>
 				</div>
 				<div className="rounded-xs h-3 w-full dark:bg-zinc-800 bg-zinc-200">
 					<div
@@ -130,7 +130,7 @@ const Vault = () => {
 				</div>
 				<div className="flex flex-wrap justify-between py-2">
 					<div className="text-xxs font-light dark:text-white">Maximum Capacity</div>
-					<div className="font-mono text-xxs font-normal dark:text-white">
+					<div className="font-sans text-xxs font-normal dark:text-white">
 						{formatUSD(fromBigNumber(ZERO_BN))}
 					</div>
 				</div>
@@ -240,22 +240,22 @@ const LiquidityPoolActions = () => {
 				<div className="dark:bg-black border dark:border-zinc-900 rounded-lg py-4 p-2">
 					{LPActionType.DEPOSIT === liquidityPoolActionType ? (
 						<div className="flex items-center justify-between px-2">
-							<p className="truncate font-mono text-xs font-normal dark:text-zinc-300">
+							<p className="truncate font-sans text-xs font-normal dark:text-zinc-300">
 								Wallet Balance
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-300">
+								<p className="inline-flex font-sans text-xs font-normal leading-5 dark:text-zinc-300">
 									{formatUSD(userBalance, { dps: 2 })}
 								</p>
 							</div>
 						</div>
 					) : (
 						<div className="flex items-center justify-between px-2">
-							<p className="truncate font-mono text-xs font-normal dark:text-zinc-300">
+							<p className="truncate font-sans text-xs font-normal dark:text-zinc-300">
 								Liquidity Balance
 							</p>
 							<div className="ml-2 flex flex-shrink-0">
-								<p className="inline-flex font-mono text-xs font-normal leading-5 dark:text-zinc-300">
+								<p className="inline-flex font-sans text-xs font-normal leading-5 dark:text-zinc-300">
 									{fromBigNumber(lpBalance)}
 								</p>
 							</div>

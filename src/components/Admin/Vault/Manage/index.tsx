@@ -3,7 +3,7 @@ import { Button } from "../../../UI/Components/Button";
 export const VaultManage = () => {
 	return (
 		<>
-			<div className="border-b font-mono dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="border-b font-sans dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
 				Round Info
 			</div>
 			<table className="font-normal min-w-full divide-b dark:divide-zinc-800 divide-zinc-100 table-fixed">
@@ -31,7 +31,7 @@ export const VaultManage = () => {
 				</th>
 				<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit"></tbody>
 			</table>
-			<div className="border-y font-mono dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="border-y font-sans dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
 				Vault Info
 			</div>
 			<table className="font-normal min-w-full divide-b dark:divide-zinc-800  divide-zinc-100 table-fixed">
@@ -61,7 +61,7 @@ export const VaultManage = () => {
 				<tbody className="divide-y dark:divide-zinc-800 divide-zinc-100 dark:bg-inherit"></tbody>
 			</table>
 
-			<div className="border-y font-mono dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="border-y font-sans dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
 				<div className="flex justify-between items-center align-middle">
 					<div>Strategy Details</div>
 					<div>
@@ -88,7 +88,7 @@ export const VaultManage = () => {
 				})}
 			</div>
 
-			<div className="border-y font-mono dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
+			<div className="border-y font-sans dark:border-zinc-800 border-zinc-100 p-4 text-sm font-normal dark:text-zinc-200">
 				<div className="flex justify-between items-center align-middle">
 					<div>Hedge Strategy Details</div>
 					<div>

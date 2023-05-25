@@ -9,8 +9,8 @@ export type Ticks = {
 export const ticks = (asset: string, price: number) => {
 	const ticks = [];
 
-	let multiple = asset == "ETH-USDC" || asset == "sETH-sUSD" ? 1.5 : 1.2;
-	let tickSize = asset == "ETH-USDC" || asset == "sETH-sUSD" ? 2 : 100;
+	let multiple = asset == "ETH-USDC" ? 1.5 : 1.2;
+	let tickSize = asset == "ETH-USDC" ? 2 : 100;
 
 	let lowerBound = price / multiple;
 	let upperBound = price * multiple;

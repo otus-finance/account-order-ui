@@ -8,6 +8,7 @@ import { Spinner } from "../../../UI/Components/Spinner";
 import { useChainContext } from "../../../../context/ChainContext";
 import LyraIcon from "../../../UI/Icons/Color/LYRA";
 import getLyraPositionUrl from "../../../../utils/chains/getLyraPositionUrl";
+import { motion } from "framer-motion";
 
 export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Address }) => {
 	const { isLoading: isLyraPositionsLoading, data: lyraPositions } = useLyraPositions(
@@ -17,8 +18,8 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 
 	return (
 		<>
-			<div className="font-mono border-b border-zinc-100 flex dark:border-zinc-900  p-4 text-sm font-normal dark:text-zinc-200">
-				<LyraIcon className="h-4 w-4 mr-2" />
+			<div className=" rounded-full p-4 text-sm font-semibold dark:text-zinc-200 flex ">
+				<LyraIcon className="h-4 w-4 mt-[1px] mr-2" />
 				Lyra Positions
 			</div>
 
@@ -27,43 +28,68 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 					<Spinner />
 				</div>
 			) : (
-				<div className="overflow-x-scroll pb-3 sm:pb-0 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto">
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					className="bg-zinc-100 dark:bg-zinc-800   overflow-x-scroll p-4 scrollbar scrollbar-thumb-zinc-800 scrollbar-track-zinc-500 sm:overflow-auto"
+				>
 					<table className="min-w-full table-fixed rounded-sm">
 						<thead className="divide-b dark:divide-zinc-800 divide-zinc-100 "></thead>
 
 						<th
 							scope="col"
-							className="hidden sm:table-cell py-3.5 text-left pl-4 text-xs font-light"
+							className="hidden sm:table-cell dark:text-zinc-400 py-3.5 text-left  text-xs font-light"
 						>
 							Market
 						</th>
-						<th scope="col" className=" py-3.5 text-left pl-4 text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4 text-xs font-light"
+						>
 							Type
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Strike Price
 						</th>
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Size
 						</th>
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Average Cost
 						</th>
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Profit / Loss
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Status
 						</th>
 
-						<th scope="col" className=" py-3.5 text-left pl-4  text-xs font-light">
+						<th
+							scope="col"
+							className=" py-3.5 dark:text-zinc-400 text-left pl-4  text-xs font-light"
+						>
 							Expiry
 						</th>
 						<th
 							scope="col"
-							className="hidden sm:table-cell py-3.5 text-left pl-4  text-xs font-light"
+							className="hidden sm:table-cell dark:text-zinc-400 py-3.5 text-left pl-4  text-xs font-light"
 						>
 							Delta
 						</th>
@@ -77,7 +103,7 @@ export const LyraPositions = ({ lyra, address }: { lyra?: Lyra; address?: Addres
 							})}
 						</tbody>
 					</table>
-				</div>
+				</motion.div>
 			)}
 		</>
 	);
@@ -94,8 +120,8 @@ export const LyraPositionRow = ({ position }: { position: LyraPosition }) => {
 	const lyraHref = chain && id && getLyraPositionUrl(chain, marketName, id);
 
 	return (
-		<tr className="hover:bg-zinc-100 hover:dark:bg-zinc-900">
-			<td className=" hidden sm:table-cell whitespace-nowrap py-4 text-left pl-4  text-xs font-medium dark:text-zinc-200">
+		<tr className="">
+			<td className=" hidden sm:table-cell whitespace-nowrap py-4 text-left  text-xs font-medium dark:text-zinc-200">
 				{marketName}
 			</td>
 

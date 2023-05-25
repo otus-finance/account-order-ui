@@ -15,13 +15,13 @@ export const VaultInfo = () => {
 			<div className="flex bg-zinc-900 dark:bg-black sm:justify-between shadow-zinc-200 rounded-lg p-1">
 				{vault && (
 					<>
-						<div className="text-md font-mono p-2 font-normal text-white">
+						<div className="text-md font-sans p-2 font-normal text-white">
 							{vault.name && ethers.utils.parseBytes32String(vault.name)}
 						</div>
-						<div className="text-md font-mono p-2 font-normal text-white">
+						<div className="text-md font-sans p-2 font-normal text-white">
 							{vault.round ? `Round ${vault.round}` : "Round 0"}
 						</div>
-						<div className="text-md font-mono p-2 font-normal text-white">
+						<div className="text-md font-sans p-2 font-normal text-white">
 							{vault.lockedBalance
 								? `Locked Amount ${fromBigNumber(vault.lockedBalance)}`
 								: "Locked Amount 0"}
