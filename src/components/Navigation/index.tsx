@@ -54,9 +54,9 @@ export const Navigation = () => {
 										<Link href="/spread-pool">
 											<a className={linkStyle("/spread-pool", router.pathname)}>Spread Pool</a>
 										</Link>
-										<Link href="/vaults">
+										{/* <Link href="/vaults">
 											<a className={linkStyle("/vaults", router.pathname)}>Vaults</a>
-										</Link>
+										</Link> */}
 									</div>
 								</div>
 							</div>
@@ -99,11 +99,11 @@ export const Navigation = () => {
 									Spread Pool
 								</Disclosure.Button>
 							</Link>
-							<Link href="/vaults">
+							{/* <Link href="/vaults">
 								<Disclosure.Button className={linkStyleMobile("/vaults", router.pathname)}>
 									Vaults
 								</Disclosure.Button>
-							</Link>
+							</Link> */}
 						</div>
 						<div className="dark:border-zinc-800 border-zinc-100 border-t pt-4 pb-3 flex">
 							<div className="flex items-center px-5">
