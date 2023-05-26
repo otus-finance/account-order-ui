@@ -271,8 +271,7 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 									onChange={async (e) => {
 										if (e.target.value == "") return;
 										const value = parseFloat(e.target.value);
-
-										// handleNewCollateralPercent(value);
+										handleUpdateCollateral(value);
 									}}
 									type="percent"
 									name="setCollateralTo"

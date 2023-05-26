@@ -14,6 +14,7 @@ import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
 import Modal from "../UI/Modal";
 import { useChainContext } from "../../context/ChainContext";
+import { Button } from "../UI/Components/Button";
 
 const SpreadLiquidityPool = () => {
 	const [open, setOpen] = useState(false);
@@ -108,7 +109,7 @@ const SpreadLiquidityPool = () => {
 								</div>
 							</div>
 
-							<div className="dark:bg-zinc-800 bg-zinc-300 hover:dark:bg-zinc-400 rounded-full px-12 py-2 hover:bg-zinc-700 dark:text-white text-zinc-900 hover:text-zinc-100">
+							<div className="dark:bg-zinc-800 cursor-pointer bg-zinc-100 hover:dark:bg-zinc-400 rounded-full px-12 py-2 hover:bg-zinc-700 dark:text-white text-zinc-900 hover:text-zinc-100">
 								<div className="text-xs items-center">History</div>
 							</div>
 						</div>
@@ -271,20 +272,20 @@ const LiquidityPoolActions = () => {
 				<div className="flex justify-between">
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.DEPOSIT)}
-						className={` text-white cursor-pointer p-3 font-normal text-center w-full rounded-l-full text-xs bg-zinc-900 ${
+						className={`m-2 text-zinc-800 hover:bg-zinc-100 hover:dark:bg-zinc-800  dark:text-zinc-200 cursor-pointer p-3 font-normal text-center w-full rounded-full text-xs ${
 							LPActionType.DEPOSIT === liquidityPoolActionType
-								? "bg-emerald-500 hover:bg-emerald-600"
-								: "bg-zinc-800 hover:bg-zinc-900"
+								? "bg-zinc-100 dark:bg-zinc-800 font-semibold"
+								: ""
 						}`}
 					>
 						Deposit
 					</div>
 					<div
 						onClick={() => setLiquidityPoolActionType(LPActionType.WITHDRAW)}
-						className={`  text-white cursor-pointer p-3 font-normal text-center w-full rounded-r-full text-xs bg-zinc-900  ${
+						className={`m-2 text-zinc-700 hover:bg-zinc-100 hover:dark:bg-zinc-800  dark:text-zinc-200 cursor-pointer p-3 font-normal text-center w-full rounded-full text-xs  ${
 							LPActionType.WITHDRAW === liquidityPoolActionType
-								? "bg-emerald-500 hover:bg-emerald-600"
-								: "bg-zinc-800 hover:bg-zinc-900"
+								? "bg-zinc-100 dark:bg-zinc-800 font-semibold"
+								: ""
 						}`}
 					>
 						Withdraw
@@ -377,43 +378,73 @@ const LiquidityPoolActions = () => {
 
 						{poolAllowance?.lt(depositAmount) &&
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
-							<div
+							// <div
+							// 	onClick={() => approveQuote?.()}
+							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center dark:text-white"
+							// >
+							// 	{isApproveQuoteLoading || isTxLoading ? (
+							// 		<Spinner size={"medium"} color={"secondary"} />
+							// 	) : (
+							// 		"Approve Quote"
+							// 	)}
+							// </div>
+
+							<Button
+								isDisabled={false}
+								label={"Approve USDC"}
+								isLoading={isApproveQuoteLoading && isTxLoading}
+								variant={"action"}
+								radius={"full"}
+								size={"full"}
 								onClick={() => approveQuote?.()}
-								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center dark:text-white"
-							>
-								{isApproveQuoteLoading || isTxLoading ? (
-									<Spinner size={"medium"} color={"secondary"} />
-								) : (
-									"Approve Quote"
-								)}
-							</div>
+							/>
 						) : null}
 
 						{poolAllowance?.gte(depositAmount) &&
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
-							<div
+							// <div
+							// 	onClick={() => deposit?.()}
+							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
+							// >
+							// 	{isDepositLoading && isTxLoading ? (
+							// 		<Spinner size={"medium"} color={"secondary"} />
+							// 	) : (
+							// 		"Deposit"
+							// 	)}
+							// </div>
+
+							<Button
+								isDisabled={false}
+								label={"Deposit"}
+								isLoading={isDepositLoading && isTxLoading}
+								variant={"action"}
+								radius={"full"}
+								size={"full"}
 								onClick={() => deposit?.()}
-								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
-							>
-								{isDepositLoading && isTxLoading ? (
-									<Spinner size={"medium"} color={"secondary"} />
-								) : (
-									"Deposit"
-								)}
-							</div>
+							/>
 						) : null}
 
 						{LPActionType.WITHDRAW === liquidityPoolActionType ? (
-							<div
+							// <div
+							// 	onClick={() => withdraw?.()}
+							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
+							// >
+							// 	{isWithdrawLoading && isTxLoading ? (
+							// 		<Spinner size={"medium"} color={"secondary"} />
+							// 	) : (
+							// 		"Withdraw"
+							// 	)}
+							// </div>
+
+							<Button
+								isDisabled={false}
+								label={"Withdraw"}
+								isLoading={isWithdrawLoading && isTxLoading}
+								variant={"action"}
+								radius={"full"}
+								size={"full"}
 								onClick={() => withdraw?.()}
-								className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
-							>
-								{isWithdrawLoading && isTxLoading ? (
-									<Spinner size={"medium"} color={"secondary"} />
-								) : (
-									"Withdraw"
-								)}
-							</div>
+							/>
 						) : null}
 					</div>
 				)

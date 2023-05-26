@@ -29,7 +29,7 @@ export const EditCollateral = ({ handleUpdateCollateral, setCollateralTo, lyra, 
 		} else if (quote?.strikePrice) {
 			setMax(fromBigNumber(quote?.strikePrice.mul(2)));
 		}
-	}, [data]);
+	}, [quote, data]);
 
 	return isLoading ? (
 		<Spinner />
