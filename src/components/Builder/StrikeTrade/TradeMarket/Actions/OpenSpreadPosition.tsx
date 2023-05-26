@@ -21,7 +21,7 @@ export const OpenSpreadPosition = () => {
 
 			{spreadMarket?.allowance.isZero() ? (
 				<Button
-					isDisabled={!spreadMarket?.isOpenConfigSuccess}
+					isDisabled={false}
 					label={"Allow Otus to use your USDC"}
 					isLoading={spreadMarket?.isApproveLoading || spreadMarket?.isTxLoading}
 					variant={"action"}

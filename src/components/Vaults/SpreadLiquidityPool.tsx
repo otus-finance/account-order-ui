@@ -392,7 +392,7 @@ const LiquidityPoolActions = () => {
 							<Button
 								isDisabled={false}
 								label={"Approve USDC"}
-								isLoading={isApproveQuoteLoading && isTxLoading}
+								isLoading={isApproveQuoteLoading || isTxLoading}
 								variant={"action"}
 								radius={"full"}
 								size={"full"}
@@ -416,7 +416,7 @@ const LiquidityPoolActions = () => {
 							<Button
 								isDisabled={false}
 								label={"Deposit"}
-								isLoading={isDepositLoading && isTxLoading}
+								isLoading={isDepositLoading || isTxLoading}
 								variant={"action"}
 								radius={"full"}
 								size={"full"}
@@ -439,7 +439,7 @@ const LiquidityPoolActions = () => {
 							<Button
 								isDisabled={false}
 								label={"Withdraw"}
-								isLoading={isWithdrawLoading && isTxLoading}
+								isLoading={isWithdrawLoading || isTxLoading}
 								variant={"action"}
 								radius={"full"}
 								size={"full"}

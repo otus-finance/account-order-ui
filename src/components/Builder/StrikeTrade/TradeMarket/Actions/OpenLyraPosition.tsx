@@ -23,7 +23,7 @@ export const OpenLyraPosition = () => {
 
 			{otusMarket?.allowance.isZero() ? (
 				<Button
-					isDisabled={!otusMarket?.isOpenConfigSuccess}
+					isDisabled={false}
 					label={"Allow Otus to use your USDC"}
 					isLoading={otusMarket?.isApproveLoading || otusMarket?.isTxLoading}
 					variant={"action"}
