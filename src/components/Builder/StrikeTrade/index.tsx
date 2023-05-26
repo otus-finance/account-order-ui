@@ -8,51 +8,47 @@ import { Spinner } from "../../UI/Components/Spinner";
 import { CheckIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { formatExpirationDate } from "../../../utils/formatters/expiry";
 import { MarketOrderActions, MarketSpreadOrder } from "./TradeMarket/MarketOrderActions";
-import { BuilderType } from "../../../utils/types";
 import { isCreditOrDebit } from "../../../utils/formatters/message";
 import { motion } from "framer-motion";
 import { EditCollateral } from "./Edit/Collateral";
 import { useLyraContext } from "../../../context/LyraContext";
 
 export const StrikeTrade = () => {
-	const { selectedMarket, builderType, builderTypeClean, selectedStrategy, strikes } =
-		useBuilderContext();
-	const { loading, selectedStrikes, spreadSelected, updateMultiSize } = useMarketOrderContext();
+	const { selectedStrategy } = useBuilderContext();
+	const { validMaxPNL, loading, selectedStrikes, spreadSelected, updateMultiSize } =
+		useMarketOrderContext();
+	// const { validMaxLoss } = validMaxPNL;
 
 	return (
 		<div>
 			<MarketSpreadOrder />
 
 			<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className=" py-4 p-4">
-				{builderType == BuilderType.Builder && builderTypeClean ? (
+				<div className="flex justify-between items-center">
+					<div className="text-sm font-semibold dark:text-zinc-200 text-zinc-800">
+						{selectedStrategy && selectedStrategy.name}
+					</div>
 					<div className="flex justify-between items-center">
-						<div className="text-sm font-semibold dark:text-zinc-200 text-zinc-800">
-							{selectedStrategy && selectedStrategy.name}
-						</div>
-						<div className="flex justify-between items-center">
-							<div className="text-sm dark:text-zinc-200 text-zinc-800 pr-4 font-light">Size</div>
-							<div>
-								<DebounceInput
-									debounceTimeout={300}
-									minLength={1}
-									onChange={async (e) => {
-										if (e.target.value == "") return;
-										const value = parseFloat(e.target.value);
-										updateMultiSize?.(value);
-									}}
-									min={0.1}
-									type="number"
-									name="multiSize"
-									id="multiSize"
-									value={1}
-									className={`w-24 border-2 text-right rounded-full dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2 dark:text-zinc-200 text-sm  pr-4 font-semibold text-zinc-800 focus:ring-emerald-400`}
-								/>
-							</div>
+						<div className="text-sm dark:text-zinc-200 text-zinc-800 pr-4 font-light">Size</div>
+						<div>
+							<DebounceInput
+								debounceTimeout={300}
+								minLength={1}
+								onChange={async (e) => {
+									if (e.target.value == "") return;
+									const value = parseFloat(e.target.value);
+									updateMultiSize?.(value);
+								}}
+								min={0.1}
+								type="number"
+								name="multiSize"
+								id="multiSize"
+								value={1}
+								className={`w-24 border-2 text-right rounded-full dark:border-zinc-800 border-zinc-100 dark:bg-transparent p-2 dark:text-zinc-200 text-sm  pr-4 font-semibold text-zinc-800 focus:ring-emerald-400`}
+							/>
 						</div>
 					</div>
-				) : (
-					<div className="text-sm font-semibold dark:text-emerald-100">Custom</div>
-				)}
+				</div>
 			</motion.div>
 
 			<motion.div
@@ -71,11 +67,6 @@ export const StrikeTrade = () => {
 							<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
 								Strike
 							</th>
-							{!spreadSelected && (
-								<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
-									Collateral
-								</th>
-							)}
 
 							<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light  px-4">
 								Price
@@ -83,9 +74,14 @@ export const StrikeTrade = () => {
 							<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
 								Credit/(Debit)
 							</th>
-							{!builderTypeClean && (
+							{!spreadSelected && (
 								<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
 									Size
+								</th>
+							)}
+							{!spreadSelected && (
+								<th scope="col" className="text-xs  dark:text-zinc-400 text-left font-light px-4">
+									Collateral
 								</th>
 							)}
 						</tr>
@@ -105,8 +101,9 @@ export const StrikeTrade = () => {
 
 const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: number }) => {
 	const { lyra } = useLyraContext();
-	const { setActiveStrike, builderType, builderTypeClean } = useBuilderContext();
-	const { updateSize, updateCollateralPercent, spreadSelected } = useMarketOrderContext();
+	const { setActiveStrike } = useBuilderContext();
+	const { updateSize, spreadSelected, validMaxPNL } = useMarketOrderContext();
+	const { validMaxLoss } = validMaxPNL;
 
 	const {
 		quote,
@@ -114,7 +111,7 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 		strikePrice,
 		isUpdating,
 		expiryTimestamp,
-		collateralPercent,
+		setCollateralTo,
 	} = strike;
 
 	const [optionPriceLoading, setOptionPriceLoading] = useState(false);
@@ -187,58 +184,6 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 					{formatUSD(strikePrice, { dps: 0 })}
 				</td>
 
-				{!spreadSelected && (
-					<td className="text-xs font-normal  dark:text-zinc-300 text-zinc-700  px-4">
-						{isBuy ? (
-							"-"
-						) : editCollateral ? (
-							<div className="flex gap-3 items-center">
-								<DebounceInput
-									minLength={1}
-									onChange={async (e) => {
-										if (e.target.value == "") return;
-										const value = parseFloat(e.target.value);
-
-										// handleNewCollateralPercent(value);
-									}}
-									type="percent"
-									name="collateralPercent"
-									id="collateralPercent"
-									min={0.4}
-									max={1}
-									value={fromBigNumber(strikePrice)}
-									className={`w-16 rounded-full py-1 border-2 border-zinc-200 dark:border-zinc-800 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
-										isUpdating && "cursor-disabled"
-									}`}
-								/>
-
-								<div>
-									<XMarkIcon
-										className="h-4 w-4 text-rose-500"
-										onClick={() => setEditCollateral(false)}
-									/>
-								</div>
-
-								<div>
-									<CheckIcon
-										className="h-4 w-4 text-emerald-500"
-										onClick={() => handleConfirmCollateral()}
-									/>
-								</div>
-							</div>
-						) : (
-							<div className="flex gap-3 items-center">
-								{collateralPercent && formatPercentage(collateralPercent, true)}
-
-								<PencilSquareIcon
-									className="h-4 w-4 dark:text-zinc-500 text-zinc-400"
-									onClick={() => setEditCollateral(true)}
-								/>
-							</div>
-						)}
-					</td>
-				)}
-
 				<td className="text-xs font-normal  dark:text-zinc-300 text-zinc-700  px-4">
 					{isUpdating ? (
 						<Spinner size="small" />
@@ -254,8 +199,9 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 						isCreditOrDebit(isBuy, formatUSD(fromBigNumber(premium), { dps: 2 }))
 					)}
 				</td>
-				{!builderTypeClean && (
-					<td className="text-xs font-normal  dark:text-zinc-300 text-zinc-700 px-4">
+
+				{!spreadSelected && (
+					<td className="text-xs font-normal  dark:text-zinc-300 text-zinc-700 px-4 ">
 						{editPricing ? (
 							<div className="flex gap-3 items-center">
 								<DebounceInput
@@ -271,7 +217,7 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 									name="size"
 									id="size"
 									value={newSize}
-									className={`w-16 rounded-full py-1 border-2 border-zinc-200 dark:border-zinc-800 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
+									className={`w-16 rounded-full py-1 border-2 border-zinc-200 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
 										isUpdating && "cursor-disabled"
 									}`}
 								/>
@@ -296,7 +242,65 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 
 								<PencilSquareIcon
 									className="h-4 w-4 dark:text-zinc-500 text-zinc-400"
-									onClick={() => setEditPricing(true)}
+									onClick={() => {
+										setEditPricing(true);
+										setEditCollateral(false);
+									}}
+								/>
+							</div>
+						)}
+					</td>
+				)}
+
+				{!spreadSelected && (
+					<td className="text-xs font-normal  dark:text-zinc-300 text-zinc-700  px-4">
+						{isBuy ? (
+							"-"
+						) : editCollateral ? (
+							<div className="flex gap-3 items-center">
+								<DebounceInput
+									minLength={1}
+									onChange={async (e) => {
+										if (e.target.value == "") return;
+										const value = parseFloat(e.target.value);
+
+										// handleNewCollateralPercent(value);
+									}}
+									type="percent"
+									name="setCollateralTo"
+									id="setCollateralTo"
+									min={0.4}
+									max={1}
+									value={fromBigNumber(setCollateralTo)}
+									className={`w-16 rounded-full py-1 border-2 border-zinc-200 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-200 text-right pr-2  ${
+										isUpdating && "cursor-disabled"
+									}`}
+								/>
+
+								<div>
+									<XMarkIcon
+										className="h-4 w-4 text-rose-500"
+										onClick={() => setEditCollateral(false)}
+									/>
+								</div>
+
+								<div>
+									<CheckIcon
+										className="h-4 w-4 text-emerald-500"
+										onClick={() => handleConfirmCollateral()}
+									/>
+								</div>
+							</div>
+						) : (
+							<div className="flex gap-3 items-center">
+								{setCollateralTo && formatUSD(fromBigNumber(setCollateralTo), { showSign: false })}{" "}
+								USDC
+								<PencilSquareIcon
+									className="h-4 w-4 dark:text-zinc-500 text-zinc-400"
+									onClick={() => {
+										setEditCollateral(true);
+										setEditPricing(false);
+									}}
 								/>
 							</div>
 						)}

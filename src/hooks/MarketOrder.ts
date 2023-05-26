@@ -8,12 +8,7 @@ import { quote } from "../constants/quote";
 import { useOtusAccountContracts } from "./Contracts";
 import { MarketOrderProviderState } from "../reducers";
 import { ZERO_BN } from "../constants/bn";
-import {
-	BuilderType,
-	MarketOrderTransaction,
-	TradeInputParameters,
-	Transaction,
-} from "../utils/types";
+import { MarketOrderTransaction, TradeInputParameters, Transaction } from "../utils/types";
 import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { YEAR_SEC } from "../constants/dates";
@@ -32,6 +27,7 @@ import { useSpreadMarket } from "./markets/useSpreadMarket";
 import { formatProfitAndLostAtTicks } from "../utils/charting";
 import { MAX_NUMBER, MIN_NUMBER, OTUS_FEE } from "../constants/markets";
 import { useLyraContext } from "../context/LyraContext";
+import { BigNumber } from "ethers";
 
 export const useMarketOrder = () => {
 	const { chain } = useNetwork();
@@ -42,7 +38,7 @@ export const useMarketOrder = () => {
 
 	const { lyra } = useLyraContext();
 	// build trades
-	const { strikes, selectedMarket, handleSelectBuilderType } = useBuilderContext();
+	const { strikes, selectedMarket } = useBuilderContext();
 
 	const [loading, setLoading] = useState(true);
 
@@ -81,14 +77,14 @@ export const useMarketOrder = () => {
 
 	const updateStrikes = useDebounce(selectedStrikes, 500);
 
-	const updateCollateralPercent = useCallback(
-		async (strike: LyraStrike, _collateralPercent: number) => {
+	const updateCollateralRequirement = useCallback(
+		async (strike: LyraStrike, _setCollateralTo: BigNumber) => {
 			if (lyra) {
 				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
 					if (isStrikeMatch(strike, _strike)) {
 						return {
 							...strike,
-							collateralPercent: _collateralPercent,
+							setCollateralTo: _setCollateralTo,
 						} as LyraStrike;
 					}
 					return _strike;
@@ -104,10 +100,12 @@ export const useMarketOrder = () => {
 			if (lyra) {
 				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
 					const { quote } = _strike;
+					const { strikePrice, isBuy } = quote;
 					return {
 						..._strike,
 						isUpdating: true,
 						quote: { ...quote, size: toBN(size.toString()) },
+						setCollateralTo: isBuy ? ZERO_BN : toBN((fromBigNumber(strikePrice) * size).toString()),
 					} as LyraStrike;
 				});
 				setSelectedStrikes(_updated);
@@ -122,34 +120,37 @@ export const useMarketOrder = () => {
 				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
 					if (isStrikeMatch(strike, _strike)) {
 						const { quote } = strike;
+						const { strikePrice, isBuy } = quote;
 						return {
 							...strike,
 							isUpdating: true,
 							quote: { ...quote, size: toBN(size.toString()) },
+							setCollateralTo: isBuy
+								? ZERO_BN
+								: toBN((fromBigNumber(strikePrice) * size).toString()),
 						} as LyraStrike;
 					}
 					return _strike;
 				});
 				setSelectedStrikes(_updated);
-				handleSelectBuilderType(BuilderType.Custom);
 			}
 		},
-		[lyra, selectedStrikes, handleSelectBuilderType]
+		[lyra, selectedStrikes]
 	);
 
 	const calculateCollateral = useCallback(() => {
 		if (updateStrikes.length > 0) {
 			let _totalCollateral = updateStrikes.reduce((acc: number, strike: LyraStrike) => {
-				const { quote, collateralPercent } = strike;
+				const { quote, setCollateralTo } = strike;
 				const { size, strikePrice, isBuy } = quote;
 				if (isBuy) return acc;
 				const _size = fromBigNumber(size);
-				const _strikePrice = fromBigNumber(strikePrice);
-				const _collateral = _size * _strikePrice * collateralPercent;
-				return acc + _collateral;
+				console.log({ setCollateralTo });
+				const _setCollateralTo = fromBigNumber(setCollateralTo);
+				// const _collateral = _size * _setCollateralTo;
+				return acc + _setCollateralTo;
 			}, 0);
 			setTotalCollateral(_totalCollateral);
-
 			const _spreadCollateralLoanDuration = _furthestOutExpiry(updateStrikes) - Date.now();
 			setSpreadCollateralLoanDuration(_spreadCollateralLoanDuration);
 		} else {
@@ -318,16 +319,16 @@ export const useMarketOrder = () => {
 		spreadMarket,
 		totalCollateral,
 		spreadSelected,
-		setSpreadSelected,
 		networkNotSupported,
 		loading,
 		updateStrikes,
-		updateSize,
-		updateMultiSize,
-		updateCollateralPercent,
 		selectedStrikes,
 		trades,
 		validMaxPNL,
 		userBalance,
+		setSpreadSelected,
+		updateSize,
+		updateMultiSize,
+		updateCollateralRequirement,
 	} as MarketOrderProviderState;
 };

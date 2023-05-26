@@ -18,7 +18,7 @@ export type MarketOrderProviderState = {
 	otusMarket: MarketOrderTransaction | null;
 	spreadMarket: MarketOrderTransaction | null;
 	setSpreadSelected: Dispatch<boolean>;
-	updateCollateralPercent: ((any: any, any2: any) => void) | undefined;
+	updateCollateralRequirement: ((any: any, any2: any) => void) | undefined;
 	updateSize: ((any: any, any2: any) => void) | undefined;
 	updateMultiSize: ((any: any) => void) | undefined;
 };
@@ -41,7 +41,7 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 	trades: [],
 
 	userBalance: ZERO_BN,
-	updateCollateralPercent: (any, any2) => {},
+	updateCollateralRequirement: (any, any2) => {},
 	updateSize: (any, any2) => {},
 	updateMultiSize: (any) => {},
 	setSpreadSelected: (any) => {},

@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 
 import Lyra, { Board, Market, Chain, Quote, Strike, Position, Option } from "@lyrafinance/lyra-js";
 import { BigNumber, ethers } from "ethers";
-import { ONE_BN } from "../../constants/bn";
+import { ONE_BN, ZERO_BN } from "../../constants/bn";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import { formatBoardName } from "../../utils/formatters/expiry";
 import { ETH_MARKET } from "../../constants/markets";
@@ -24,7 +24,7 @@ export type LyraStrike = {
 	expiryTimestamp: number;
 	selected?: boolean;
 	isUpdating?: boolean;
-	collateralPercent: number;
+	setCollateralTo: BigNumber;
 } & Strike;
 
 export type LyraStrikeMapping = {
@@ -264,7 +264,7 @@ const formatStrikeWithQuote = async (
 				quote,
 				market: marketName,
 				expiryTimestamp,
-				collateralPercent: 1,
+				setCollateralTo: isLong ? ZERO_BN : quote.strikePrice,
 			};
 		})
 	);

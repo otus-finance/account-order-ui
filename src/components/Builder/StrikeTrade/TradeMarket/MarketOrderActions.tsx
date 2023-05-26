@@ -140,7 +140,7 @@ export const MaxPnl = () => {
 export const MarketSpreadOrder = () => {
 	const { validMaxPNL, spreadSelected, setSpreadSelected } = useMarketOrderContext();
 	const { validMaxLoss } = validMaxPNL;
-
+	console.log({ validMaxLoss });
 	return (
 		validMaxLoss && (
 			<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 p-4">

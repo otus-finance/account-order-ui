@@ -1,6 +1,8 @@
+import { BigNumber } from "ethers";
 import { LyraStrike } from "../../queries/lyra/useLyra";
 import { fromBigNumber } from "../formatters/numbers";
 import { calculateOptionType } from "../formatters/optiontypes";
+import { ZERO_BN } from "../../constants/bn";
 
 enum OptionType {
 	"LongCall" = 0,
@@ -222,18 +224,36 @@ export const checkValidSpread = (strikes: LyraStrike[]): boolean => {
 	let calls = strikes.filter((strike: LyraStrike) => strike.quote.isCall);
 	let puts = strikes.filter((strike: LyraStrike) => !strike.quote.isCall);
 
-	let buyCalls = calls.filter((strike: LyraStrike) => strike.quote.isBuy);
-	let sellCalls = calls.filter((strike: LyraStrike) => !strike.quote.isBuy);
+	let callSizes = calls.reduce(
+		(size: { buys: BigNumber; sells: BigNumber }, strike: LyraStrike) => {
+			const { quote } = strike;
+			const { isBuy } = quote;
 
-	if (buyCalls.length < sellCalls.length) {
+			return isBuy
+				? { ...size, buys: size.buys.add(strike.quote.size) }
+				: { ...size, sells: size.sells.add(strike.quote.size) };
+		},
+		{ buys: ZERO_BN, sells: ZERO_BN }
+	);
+
+	if (callSizes.buys.lt(callSizes.sells)) {
 		return false; // more sell calls than buy calls
 	}
 
-	let buyPuts = puts.filter((strike: LyraStrike) => strike.quote.isBuy);
-	let sellPuts = puts.filter((strike: LyraStrike) => !strike.quote.isBuy);
+	let putSizes = puts.reduce(
+		(size: { buys: BigNumber; sells: BigNumber }, strike: LyraStrike) => {
+			const { quote } = strike;
+			const { isBuy } = quote;
 
-	if (buyPuts.length < sellPuts.length) {
-		return false; // more sell puts than buy puts
+			return isBuy
+				? { ...size, buys: size.buys.add(strike.quote.size) }
+				: { ...size, sells: size.sells.add(strike.quote.size) };
+		},
+		{ buys: ZERO_BN, sells: ZERO_BN }
+	);
+
+	if (putSizes.buys.lt(putSizes.sells)) {
+		return false; // more sell calls than buy calls
 	}
 
 	return true;

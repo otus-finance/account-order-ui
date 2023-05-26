@@ -1,4 +1,4 @@
-import { ActivityType, BuilderType, Strategy, StrategyDirection } from "../utils/types";
+import { ActivityType, Strategy, StrategyDirection } from "../utils/types";
 import { LyraBoard, LyraMarket, LyraStrike } from "../queries/lyra/useLyra";
 import { Chain } from "wagmi";
 import { Dispatch } from "react";
@@ -6,7 +6,6 @@ import { DirectionType } from "../utils/direction";
 
 export type BuilderProviderState = {
 	activityType: ActivityType;
-	builderType: BuilderType;
 	showStrikesSelect: boolean;
 	selectedChain: Chain | null;
 	markets: LyraMarket[] | null;
@@ -24,10 +23,8 @@ export type BuilderProviderState = {
 	isUpdating: boolean;
 	isToggleStrikeLoading: boolean;
 	toggleStrikeId: number;
-	builderTypeClean: boolean;
 	setActiveStrike: Dispatch<any>;
 	handleSelectActivityType: (any: ActivityType) => void;
-	handleSelectBuilderType: (any: BuilderType) => void;
 	handleSelectedChain: (any: Chain) => void;
 	handleSelectedMarket: (any: LyraMarket | null) => void;
 	handleSelectedDirectionTypes: (any: StrategyDirection) => void;
@@ -39,7 +36,6 @@ export type BuilderProviderState = {
 
 export const builderInitialState: BuilderProviderState = {
 	activityType: ActivityType.Trade,
-	builderType: BuilderType.Builder,
 	showStrikesSelect: false,
 	selectedChain: null,
 	markets: [],
@@ -57,10 +53,8 @@ export const builderInitialState: BuilderProviderState = {
 	isUpdating: false,
 	isToggleStrikeLoading: false,
 	toggleStrikeId: 0,
-	builderTypeClean: true,
 	setActiveStrike: () => {},
 	handleSelectActivityType: (any) => void any,
-	handleSelectBuilderType: (any) => void any,
 	handleSelectedChain: (any) => void any,
 	handleSelectedMarket: (any) => void any,
 	handleSelectedDirectionTypes: (any) => void any,
@@ -100,11 +94,6 @@ export type BuilderAction =
 			activityType: BuilderProviderState["activityType"];
 	  }
 	| {
-			type: "SET_BUILDER_TYPE";
-			builderType: BuilderProviderState["builderType"];
-			builderTypeClean: BuilderProviderState["builderTypeClean"];
-	  }
-	| {
 			type: "SET_MARKETS";
 			markets: BuilderProviderState["markets"];
 			isMarketLoading: BuilderProviderState["isMarketLoading"];
@@ -137,7 +126,6 @@ export type BuilderAction =
 			type: "SET_STRIKES";
 			strikes: BuilderProviderState["strikes"];
 			isValid: BuilderProviderState["isValid"];
-			builderTypeClean: BuilderProviderState["builderTypeClean"];
 	  }
 	| {
 			type: "UPDATE_STRIKES";
@@ -201,12 +189,6 @@ export function builderReducer(
 			return { ...state, isMarketLoading: action.isMarketLoading };
 		case "SET_ACTIVITY_TYPE":
 			return { ...state, activityType: action.activityType };
-		case "SET_BUILDER_TYPE":
-			return {
-				...state,
-				builderType: action.builderType,
-				builderTypeClean: action.builderTypeClean,
-			};
 		case "SET_MARKET":
 			return {
 				...state,
@@ -238,7 +220,6 @@ export function builderReducer(
 				...state,
 				strikes: action.strikes,
 				isValid: action.isValid,
-				builderTypeClean: action.builderTypeClean,
 			};
 		case "UPDATE_STRIKES":
 			return {

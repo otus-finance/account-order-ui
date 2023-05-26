@@ -76,7 +76,6 @@ const StrikeTradeDetail = ({ strike }: { strike: LyraStrike }) => {
 		strikePrice,
 		isUpdating,
 		expiryTimestamp,
-		collateralPercent,
 	} = strike;
 
 	const [optionPriceLoading, setOptionPriceLoading] = useState(false);

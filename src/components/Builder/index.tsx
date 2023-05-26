@@ -7,7 +7,7 @@ import { Strikes } from "./Strikes";
 import { LyraAccountContextProvider } from "../../context/LyraAccountContext";
 import { useBuilderContext } from "../../context/BuilderContext";
 import { StrikeTrade } from "./StrikeTrade/index";
-import { ActivityType, BuilderType } from "../../utils/types";
+import { ActivityType } from "../../utils/types";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import {
 	MarketOrderContextProvider,

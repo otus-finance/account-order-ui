@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import {
-	ActivityType,
-	BuilderType,
-	Strategy,
-	StrategyDirection,
-	StrategyStrikeTrade,
-} from "../utils/types";
+import { ActivityType, Strategy, StrategyDirection, StrategyStrikeTrade } from "../utils/types";
 import { LyraBoard, LyraMarket, LyraStrike, useLyraMarket } from "../queries/lyra/useLyra";
 
 import {
@@ -33,7 +27,6 @@ export const useBuilder = () => {
 
 	const {
 		activityType,
-		builderType,
 		showStrikesSelect,
 		markets,
 		isMarketLoading,
@@ -49,7 +42,6 @@ export const useBuilder = () => {
 		toggleStrikeId,
 		isValid,
 		isBuildingNewStrategy,
-		builderTypeClean,
 	} = state;
 
 	const { handleSelectedChain, selectedChain } = useChainContext();
@@ -77,7 +69,6 @@ export const useBuilder = () => {
 			type: "SET_STRIKES",
 			strikes: strikesWithQuotes,
 			isValid: true,
-			builderTypeClean: false,
 		});
 
 		dispatch({
@@ -90,14 +81,6 @@ export const useBuilder = () => {
 		dispatch({
 			type: "SET_ACTIVITY_TYPE",
 			activityType: _type,
-		});
-	};
-
-	const handleSelectBuilderType = (_type: BuilderType) => {
-		dispatch({
-			type: "SET_BUILDER_TYPE",
-			builderType: _type,
-			builderTypeClean: true,
 		});
 	};
 
@@ -283,7 +266,6 @@ export const useBuilder = () => {
 				type: "SET_STRIKES",
 				strikes: isValid ? (_strikes1 as LyraStrike[]) : strikesWithQuotes,
 				isValid: isValid,
-				builderTypeClean: isValid,
 			});
 		}
 	}, [currentPrice, selectedStrategy, selectedExpirationDate]);
@@ -310,7 +292,6 @@ export const useBuilder = () => {
 			type: "SET_STRIKES",
 			strikes: _toggleStrikes,
 			isValid: true,
-			builderTypeClean: false,
 		});
 	};
 
@@ -318,7 +299,6 @@ export const useBuilder = () => {
 
 	return {
 		activityType,
-		builderType,
 		selectedChain,
 		showStrikesSelect,
 		markets,
@@ -336,10 +316,8 @@ export const useBuilder = () => {
 		isUpdating,
 		isToggleStrikeLoading,
 		toggleStrikeId,
-		builderTypeClean,
 		setActiveStrike,
 		handleSelectActivityType,
-		handleSelectBuilderType,
 		handleSelectedChain,
 		handleSelectedMarket,
 		handleSelectedExpirationDate,

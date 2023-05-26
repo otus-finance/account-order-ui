@@ -10,7 +10,7 @@ export const convertTradeParams = (
 ): TradeInputParameters[] => {
 	return strikes.map((strike: LyraStrike) => {
 		const {
-			collateralPercent,
+			setCollateralTo,
 			quote: { isBuy, isCall, premium, size },
 		} = strike;
 		const optionType = calculateOptionType(isBuy, isCall);
@@ -19,19 +19,13 @@ export const convertTradeParams = (
 			? fromBigNumber(premium) + fromBigNumber(premium) * 0.01 // slippage
 			: fromBigNumber(premium) - fromBigNumber(premium) * 0.01;
 
-		const collateral = _isLong
-			? toBN("0")
-			: toBN(
-					(fromBigNumber(strike.strikePrice) * fromBigNumber(size) * collateralPercent).toString()
-			  );
-
 		return {
 			strikeId: strike.id,
 			positionId: 0,
 			iterations: 1,
 			optionType: optionType,
 			amount: size,
-			setCollateralTo: collateral,
+			setCollateralTo: setCollateralTo,
 			minTotalCost: _isLong ? ZERO_BN : toBN(_premium.toString()),
 			maxTotalCost: _isLong ? toBN(_premium.toString()) : MAX_BN,
 			rewardRecipient: ZERO_ADDRESS,

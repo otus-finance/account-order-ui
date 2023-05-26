@@ -15,7 +15,7 @@ import { quote } from "../constants/quote";
 import { useOtusAccountContracts } from "./Contracts";
 import { AdminVaultOrderAction, AdminVaultOrderProviderState } from "../reducers";
 import { ZERO_BN } from "../constants/bn";
-import { BuilderType, TradeInputParameters, Transaction } from "../utils/types";
+import { TradeInputParameters, Transaction } from "../utils/types";
 import { LyraStrike, getStrikeQuote } from "../queries/lyra/useLyra";
 import { useBuilderContext } from "../context/BuilderContext";
 import { YEAR_SEC } from "../constants/dates";
@@ -49,7 +49,7 @@ export const useAdminVaultOrder = (vaultId: Address) => {
 	// get vaults
 	const { isLoading: isVaultLoading, data: vault } = useVaultById(chain, vaultId);
 	// build tradesu
-	const { strikes, selectedMarket, handleSelectBuilderType } = useBuilderContext();
+	const { strikes, selectedMarket } = useBuilderContext();
 
 	const [loading, setLoading] = useState(true);
 
@@ -120,21 +120,20 @@ export const useAdminVaultOrder = (vaultId: Address) => {
 					return _strike;
 				});
 				setSelectedStrikes(_updated);
-				handleSelectBuilderType(BuilderType.Custom);
 			}
 		},
-		[lyra, selectedStrikes, handleSelectBuilderType]
+		[lyra, selectedStrikes]
 	);
 
 	const calculateCollateral = useCallback(() => {
 		if (updateStrikes.length > 0) {
 			let _totalCollateral = updateStrikes.reduce((acc: number, strike: LyraStrike) => {
-				const { quote, collateralPercent } = strike;
-				const { size, strikePrice, isBuy } = quote;
+				const { quote, setCollateralTo } = strike;
+				const { size, isBuy } = quote;
 				if (isBuy) return acc;
 				const _size = fromBigNumber(size);
-				const _strikePrice = fromBigNumber(strikePrice);
-				const _collateral = _size * _strikePrice * collateralPercent;
+				const _setCollateralTo = fromBigNumber(setCollateralTo);
+				const _collateral = _size * _setCollateralTo;
 				return acc + _collateral;
 			}, 0);
 			setTotalCollateral(_totalCollateral);

@@ -7,7 +7,7 @@ import {
 	toBN,
 } from "../../../utils/formatters/numbers";
 import { LyraStrike } from "../../../queries/lyra/useLyra";
-import { BuilderType, OptionType } from "../../../utils/types";
+import { OptionType } from "../../../utils/types";
 import { calculateOptionType } from "../../../utils/formatters/optiontypes";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { SelectBuilderExpiration } from "../Strategy/SelectExpiration";
@@ -18,7 +18,7 @@ const style =
 	"cursor-pointer dark:text-zinc-200 rounded-full dark:inherit text-center sm:w-24 sm:px-6 w-16 p-2 mr-1 text-xs font-semibold";
 
 export const SelectStrikesTable = () => {
-	const { builderType, strikes, handleToggleSelectedStrike } = useBuilderContext();
+	const { strikes, handleToggleSelectedStrike } = useBuilderContext();
 
 	const [availableStrikes, setAvailableStrikes] = useState<LyraStrike[] | undefined>([]);
 
