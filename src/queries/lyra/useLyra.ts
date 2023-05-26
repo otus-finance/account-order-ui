@@ -1,8 +1,18 @@
 import { useQuery } from "react-query";
 
-import Lyra, { Board, Market, Chain, Quote, Strike, Position, Option } from "@lyrafinance/lyra-js";
+import Lyra, {
+	Board,
+	Market,
+	Chain,
+	Quote,
+	Strike,
+	Position,
+	Option,
+	Trade,
+	TradeCollateral,
+} from "@lyrafinance/lyra-js";
 import { BigNumber, ethers } from "ethers";
-import { ONE_BN, ZERO_BN } from "../../constants/bn";
+import { ONE_BN, ZERO_ADDRESS, ZERO_BN } from "../../constants/bn";
 import { fromBigNumber } from "../../utils/formatters/numbers";
 import { formatBoardName } from "../../utils/formatters/expiry";
 import { ETH_MARKET } from "../../constants/markets";
@@ -60,7 +70,6 @@ export const useLyraMarket = (lyra?: Lyra) => {
 		async () => {
 			if (!lyra) return null;
 			const response: Market[] = await lyra.markets();
-			console.log({ response });
 			return response ? parseMarketResponse(response) : null;
 		},
 		{
@@ -109,26 +118,31 @@ export const useLyraPositionIds = (lyra: Lyra | null, market: string, positionId
 	);
 };
 
-// export const useTradeCollateralRequired = (lyra?: Lyra, quote?: Quote) => {
+// build trade and get collateral for sells
+export const useLyraTrade = (currentSetToCollateral: BigNumber, lyra?: Lyra, quote?: Quote) => {
+	return useQuery<TradeCollateral | null>(
+		["tradeCollateral", quote?.strikeId],
+		async () => {
+			if (!lyra) return null;
+			if (!quote) return null;
 
-// 	return useQuery<PositionCollateral | null>(
-// 		["positionCollateral", quote?.strikeId],
-// 		async () => {
-// 			if (!lyra) return null;
-// 			if (!quote) return null;
-
-// 			// trade(owner: string, marketAddressOrName: string, strikeId: number, isCall: boolean, isBuy: boolean, size: BigNumber, slippage: number, options?: MarketTradeOptions)
-
-// 			// const option: Option = quote.option();
-// 			// const positionCollateral: PositionCollateral = getPositionCollateral(option, quote.size, quote.strikePrice, false);
-// 			// console.log({ positionCollateral })
-// 			// return positionCollateral;
-// 		},
-// 		{
-// 			enabled: true,
-// 		}
-// 	);
-// }
+			const trade: Trade = await lyra.trade(
+				ZERO_ADDRESS,
+				quote.marketName,
+				quote.strikeId,
+				quote.isCall,
+				quote.isBuy,
+				quote.size,
+				0,
+				{ setToCollateral: currentSetToCollateral }
+			);
+			return trade.collateral ? trade.collateral : null;
+		},
+		{
+			enabled: true,
+		}
+	);
+};
 
 export const getStrikeQuote = async (
 	lyra: Lyra,

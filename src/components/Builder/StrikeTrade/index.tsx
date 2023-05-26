@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useBuilderContext } from "../../../context/BuilderContext";
-import { formatPercentage, formatUSD, fromBigNumber } from "../../../utils/formatters/numbers";
+import {
+	formatPercentage,
+	formatUSD,
+	fromBigNumber,
+	toBN,
+} from "../../../utils/formatters/numbers";
 import { DebounceInput } from "react-debounce-input";
 import { LyraStrike } from "../../../queries/lyra/useLyra";
 import { useMarketOrderContext } from "../../../context/MarketOrderContext";
@@ -102,8 +107,7 @@ export const StrikeTrade = () => {
 const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: number }) => {
 	const { lyra } = useLyraContext();
 	const { setActiveStrike } = useBuilderContext();
-	const { updateSize, spreadSelected, validMaxPNL } = useMarketOrderContext();
-	const { validMaxLoss } = validMaxPNL;
+	const { updateCollateralSetTo, updateSize, spreadSelected } = useMarketOrderContext();
 
 	const {
 		quote,
@@ -143,6 +147,10 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 	const handleConfirmSizeUpdate = () => {
 		updateSize?.(strike, newSize);
 		setEditPricing(false);
+	};
+
+	const handleUpdateCollateral = (_setCollateralTo: number) => {
+		updateCollateralSetTo(strike, toBN(_setCollateralTo.toString()));
 	};
 
 	return (
@@ -310,7 +318,12 @@ const StrikeTradeDetail = ({ strike, index }: { strike: LyraStrike; index: numbe
 
 			{editCollateral && (
 				<td colSpan={6}>
-					<EditCollateral lyra={lyra} quote={quote} />
+					<EditCollateral
+						handleUpdateCollateral={handleUpdateCollateral}
+						setCollateralTo={setCollateralTo}
+						lyra={lyra}
+						quote={quote}
+					/>
 				</td>
 			)}
 		</>

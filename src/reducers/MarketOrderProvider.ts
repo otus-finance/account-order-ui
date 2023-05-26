@@ -18,8 +18,8 @@ export type MarketOrderProviderState = {
 	otusMarket: MarketOrderTransaction | null;
 	spreadMarket: MarketOrderTransaction | null;
 	setSpreadSelected: Dispatch<boolean>;
-	updateCollateralRequirement: ((any: any, any2: any) => void) | undefined;
 	updateSize: ((any: any, any2: any) => void) | undefined;
+	updateCollateralSetTo: (any: any, any2: any) => void;
 	updateMultiSize: ((any: any) => void) | undefined;
 };
 
@@ -39,14 +39,13 @@ export const marketOrderInitialState: MarketOrderProviderState = {
 	updateStrikes: [],
 	selectedStrikes: [],
 	trades: [],
-
 	userBalance: ZERO_BN,
-	updateCollateralRequirement: (any, any2) => {},
-	updateSize: (any, any2) => {},
-	updateMultiSize: (any) => {},
-	setSpreadSelected: (any) => {},
 	otusMarket: null,
 	spreadMarket: null,
+	updateSize: (any, any2) => {},
+	updateMultiSize: (any) => {},
+	updateCollateralSetTo: (any, any2) => {},
+	setSpreadSelected: (any) => {},
 };
 
 export type MarketOrderAction = {

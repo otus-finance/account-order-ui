@@ -60,7 +60,7 @@ export const OpenLyraPosition = () => {
 					animate={{ opacity: 1 }}
 					className="pt-4 cursor-not-allowed"
 				>
-					<div className="p-4 text-sm  bg-rose-500 rounded-xl">
+					<div className="p-4 text-sm text-zinc-800  bg-rose-400 rounded-xl">
 						{otusMarket?.openConfigError.reason}
 					</div>
 				</motion.div>

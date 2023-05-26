@@ -77,24 +77,6 @@ export const useMarketOrder = () => {
 
 	const updateStrikes = useDebounce(selectedStrikes, 500);
 
-	const updateCollateralRequirement = useCallback(
-		async (strike: LyraStrike, _setCollateralTo: BigNumber) => {
-			if (lyra) {
-				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
-					if (isStrikeMatch(strike, _strike)) {
-						return {
-							...strike,
-							setCollateralTo: _setCollateralTo,
-						} as LyraStrike;
-					}
-					return _strike;
-				});
-				setSelectedStrikes(_updated);
-			}
-		},
-		[lyra, selectedStrikes]
-	);
-
 	const updateMultiSize = useCallback(
 		async (size: number) => {
 			if (lyra) {
@@ -138,16 +120,31 @@ export const useMarketOrder = () => {
 		[lyra, selectedStrikes]
 	);
 
+	const updateCollateralSetTo = useCallback(
+		async (strike: LyraStrike, _setCollateralTo: BigNumber) => {
+			if (lyra) {
+				const _updated = selectedStrikes.map((_strike: LyraStrike) => {
+					if (isStrikeMatch(strike, _strike)) {
+						return {
+							...strike,
+							setCollateralTo: _setCollateralTo,
+						} as LyraStrike;
+					}
+					return _strike;
+				});
+				setSelectedStrikes(_updated);
+			}
+		},
+		[lyra, selectedStrikes]
+	);
+
 	const calculateCollateral = useCallback(() => {
 		if (updateStrikes.length > 0) {
 			let _totalCollateral = updateStrikes.reduce((acc: number, strike: LyraStrike) => {
 				const { quote, setCollateralTo } = strike;
 				const { size, strikePrice, isBuy } = quote;
 				if (isBuy) return acc;
-				const _size = fromBigNumber(size);
-				console.log({ setCollateralTo });
 				const _setCollateralTo = fromBigNumber(setCollateralTo);
-				// const _collateral = _size * _setCollateralTo;
 				return acc + _setCollateralTo;
 			}, 0);
 			setTotalCollateral(_totalCollateral);
@@ -225,7 +222,6 @@ export const useMarketOrder = () => {
 			const _pnl = [MIN_NUMBER, MAX_NUMBER]
 				.concat(buildTicks(updateStrikes))
 				.map((tick) => formatProfitAndLostAtTicks(tick, updateStrikes));
-			console.log({ _pnl, max: formatProfitAndLostAtTicks(MAX_NUMBER, updateStrikes) });
 			const _maxProfit = Math.max(..._pnl);
 			const _maxLoss = Math.min(..._pnl);
 			let [maxCost, maxPremium] = _calculateMaxPremiums(updateStrikes);
@@ -327,8 +323,8 @@ export const useMarketOrder = () => {
 		validMaxPNL,
 		userBalance,
 		setSpreadSelected,
+		updateCollateralSetTo,
 		updateSize,
 		updateMultiSize,
-		updateCollateralRequirement,
 	} as MarketOrderProviderState;
 };
