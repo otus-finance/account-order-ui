@@ -188,7 +188,7 @@ export const useSpreadLiquidityPool = () => {
 	// withdraw
 	const [withdrawAmount, setWithdrawAmount] = useState<BigNumber>(ZERO_BN);
 
-	const { config: accountOrderWithdrawConfig } = usePrepareContractWrite({
+	const { config: withdrawConfig } = usePrepareContractWrite({
 		address: spreadLiquidityPool?.address,
 		abi: spreadLiquidityPool?.abi,
 		functionName: "initiateWithdraw",
@@ -196,9 +196,18 @@ export const useSpreadLiquidityPool = () => {
 		chainId: chain?.id,
 	});
 
-	const { isLoading: isWithdrawLoading, write: withdraw } = useContractWrite(
-		accountOrderWithdrawConfig
-	);
+	const { isLoading: isWithdrawLoading, write: withdraw } = useContractWrite({
+		...withdrawConfig,
+		onSettled: (data, error) => {
+			if (chain && data?.hash) {
+				const txHref = getExplorerUrl(chain, data.hash);
+				const toastId = createToast("info", "Confirm your deposit", txHref);
+				setActiveTransaction({ hash: data.hash, toastId: toastId });
+			} else {
+				reportError(chain, error, undefined, false);
+			}
+		},
+	});
 
 	const { isLoading: isTxLoading } = useWaitForTransaction({
 		hash: activeTransaction?.hash,

@@ -51,9 +51,9 @@ export const SelectStrategy = () => {
 									)}
 								</div>
 								{selectedStrategy ? (
-									<div className="pl-1 text-md font-semibold">{selectedStrategy.name}</div>
+									<div className="pl-1 text-sm font-semibold">{selectedStrategy.name}</div>
 								) : (
-									<div className="pl-1 text-md font-normal text-zinc-900 dark:text-zinc-200">
+									<div className="pl-1 text-sm font-normal text-zinc-900 dark:text-zinc-200">
 										Select a Prebuilt Strategy
 									</div>
 								)}

@@ -17,9 +17,6 @@ import { fromBigNumber } from "../../utils/formatters/numbers";
 import { formatBoardName } from "../../utils/formatters/expiry";
 import { ETH_MARKET } from "../../constants/markets";
 import { Address } from "wagmi";
-import getPositionCollateral, {
-	PositionCollateral,
-} from "@lyrafinance/lyra-js/dist/types/position/getPositionCollateral";
 
 export type LyraChain = {
 	name: Chain;

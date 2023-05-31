@@ -6,7 +6,7 @@ import { Dispatch, useState } from "react";
 import Modal from "../../../UI/Modal";
 import getExplorerUrl from "../../../../utils/chains/getExplorerUrl";
 import { formatUSD, fromBigNumber } from "../../../../utils/formatters/numbers";
-import Lyra, { Position as LyraPosition, PositionFilter } from "@lyrafinance/lyra-js";
+import Lyra, { Position as LyraPosition } from "@lyrafinance/lyra-js";
 import { ArrowTopRightOnSquareIcon, LinkIcon } from "@heroicons/react/20/solid";
 import { OtusPositionSplit } from "./Actions/Split";
 import { ZERO_BN } from "../../../../constants/bn";

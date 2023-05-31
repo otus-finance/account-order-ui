@@ -2,17 +2,14 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumber } from "ethers";
 import { useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { useAccount, useNetwork } from "wagmi";
-import { ZERO_BN } from "../../constants/bn";
+import { useAccount } from "wagmi";
 import { useSpreadLiquidityPoolContext } from "../../context/SpreadLiquidityPoolContext";
 import { useLPUser } from "../../queries/otus/user";
 import { formatUSD, fromBigNumber, toBN } from "../../utils/formatters/numbers";
 
-import { LiquidityPool } from "../../utils/types";
 import { WalletConnect } from "../Builder/StrikeTrade/Common/WalletConnect";
 import { Spinner } from "../UI/Components/Spinner";
 import SUSDIcon from "../UI/Icons/Color/SUSD";
-import Modal from "../UI/Modal";
 import { useChainContext } from "../../context/ChainContext";
 import { Button } from "../UI/Components/Button";
 
@@ -219,6 +216,7 @@ const LiquidityPoolActions = () => {
 		isDepositLoading,
 		isWithdrawLoading,
 		depositAmount,
+		withdrawAmount,
 		poolAllowance,
 		lpBalance,
 		setDepositAmount,
@@ -342,13 +340,12 @@ const LiquidityPoolActions = () => {
 								debounceTimeout={300}
 								onChange={async (e) => {
 									if (e.target.value == "") return;
-									const value = parseFloat(e.target.value);
 									setWithdrawAmount(toBN(e.target.value));
 								}}
 								type="number"
 								name="size"
 								id="size"
-								value={fromBigNumber(depositAmount)}
+								value={fromBigNumber(withdrawAmount)}
 								className="block ring-transparent outline-none w-32 dark:bg-transparent pr-2 text-left dark:text-white font-normal text-2xl"
 							/>
 						) : null}
@@ -378,17 +375,6 @@ const LiquidityPoolActions = () => {
 
 						{poolAllowance?.lt(depositAmount) &&
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
-							// <div
-							// 	onClick={() => approveQuote?.()}
-							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center dark:text-white"
-							// >
-							// 	{isApproveQuoteLoading || isTxLoading ? (
-							// 		<Spinner size={"medium"} color={"secondary"} />
-							// 	) : (
-							// 		"Approve Quote"
-							// 	)}
-							// </div>
-
 							<Button
 								isDisabled={false}
 								label={"Approve USDC"}
@@ -402,17 +388,6 @@ const LiquidityPoolActions = () => {
 
 						{poolAllowance?.gte(depositAmount) &&
 						LPActionType.DEPOSIT === liquidityPoolActionType ? (
-							// <div
-							// 	onClick={() => deposit?.()}
-							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
-							// >
-							// 	{isDepositLoading && isTxLoading ? (
-							// 		<Spinner size={"medium"} color={"secondary"} />
-							// 	) : (
-							// 		"Deposit"
-							// 	)}
-							// </div>
-
 							<Button
 								isDisabled={false}
 								label={"Deposit"}
@@ -425,17 +400,6 @@ const LiquidityPoolActions = () => {
 						) : null}
 
 						{LPActionType.WITHDRAW === liquidityPoolActionType ? (
-							// <div
-							// 	onClick={() => withdraw?.()}
-							// 	className="text-sm cursor-pointer bg-gradient-to-t dark:from-emerald-700 dark:to-emerald-500 from-emerald-500 to-emerald-400 rounded-full p-4 w-full font-semibold hover:dark:text-emerald-100 py-2 text-center  dark:text-white"
-							// >
-							// 	{isWithdrawLoading && isTxLoading ? (
-							// 		<Spinner size={"medium"} color={"secondary"} />
-							// 	) : (
-							// 		"Withdraw"
-							// 	)}
-							// </div>
-
 							<Button
 								isDisabled={false}
 								label={"Withdraw"}

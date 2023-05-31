@@ -1,16 +1,34 @@
 import { BigNumber } from "ethers";
 import { fromBigNumber } from "../formatters/numbers";
-import { calculateOptionType } from "../formatters/optiontypes";
 
 export type Ticks = {
 	[key: number]: { profitAtTick: number };
 };
 
+type MultipleTickProps = {
+	multiple: number;
+	tickSize: number;
+};
+
+const tickMultipleAndSize = (asset: string): MultipleTickProps => {
+	switch (asset) {
+		case "ETH-USDC":
+			return { multiple: 1.5, tickSize: 2 };
+		case "WBTC-USDC":
+			return { multiple: 1.2, tickSize: 100 };
+		case "OP-USDC":
+			return { multiple: 1.2, tickSize: 0.01 };
+		case "ARB-USDC":
+			return { multiple: 1.2, tickSize: 0.01 };
+		default:
+			return { multiple: 1.2, tickSize: 1 };
+	}
+};
+
 export const ticks = (asset: string, price: number) => {
 	const ticks = [];
 
-	let multiple = asset == "ETH-USDC" ? 1.5 : 1.2;
-	let tickSize = asset == "ETH-USDC" ? 2 : 100;
+	const { multiple, tickSize } = tickMultipleAndSize(asset);
 
 	let lowerBound = price / multiple;
 	let upperBound = price * multiple;

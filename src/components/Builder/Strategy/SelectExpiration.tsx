@@ -17,7 +17,7 @@ export const SelectBuilderExpiration = () => {
 			{({ open }) => (
 				<>
 					<div className="relative w-full">
-						<Listbox.Button className=" relative w-full rounded-full cursor-pointer   bg-zinc-100 dark:bg-zinc-800   pl-4 pr-20 text-left dark:text-white text-xs sm:text-sm py-2 ">
+						<Listbox.Button className=" relative w-full rounded-full cursor-pointer   bg-zinc-100 dark:bg-zinc-800   pl-4 pr-20 text-left dark:text-white text-sm py-2 ">
 							<span className="block truncate text-zinc-900 dark:text-zinc-200">
 								{selectedExpirationDate ? selectedExpirationDate.name : "Select an Expiration Date"}
 							</span>

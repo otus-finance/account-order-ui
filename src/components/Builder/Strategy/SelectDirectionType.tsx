@@ -9,10 +9,6 @@ function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
 }
 
-const buildTextSelectedDirections = (directionTypes: StrategyDirection[]) => {
-	return directionTypes.map(({ name }: { name: string }) => name).join(" ");
-};
-
 export const SelectDirectionType = () => {
 	const { selectedDirectionTypes, handleSelectedDirectionTypes } = useBuilderContext();
 
