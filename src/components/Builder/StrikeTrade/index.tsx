@@ -81,10 +81,6 @@ export const StrikeTrade = () => {
 								scope="col"
 								className="py-4 text-xs dark:text-zinc-400 text-left font-light px-4"
 							></th>
-							<th
-								scope="col"
-								className="py-4 text-xs dark:text-zinc-400 text-left font-light px-4"
-							></th>
 
 							<th scope="col" className="text-xs dark:text-zinc-400 text-left font-light px-4">
 								Strike
