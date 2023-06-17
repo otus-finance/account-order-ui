@@ -32,6 +32,7 @@ export type BuilderProviderState = {
 	handleSelectedStrategy: (any: Strategy | undefined) => void;
 	handleToggleSelectedStrike: (strike: LyraStrike, selected: boolean) => void;
 	handleBuildNewStrategy: (any: boolean) => void;
+	handleClearSelectedStrikes: () => void;
 };
 
 export const builderInitialState: BuilderProviderState = {
@@ -62,6 +63,7 @@ export const builderInitialState: BuilderProviderState = {
 	handleSelectedStrategy: (any) => void any,
 	handleToggleSelectedStrike: (any) => void any,
 	handleBuildNewStrategy: (any) => void any,
+	handleClearSelectedStrikes: () => void {},
 };
 
 export type BuilderAction =

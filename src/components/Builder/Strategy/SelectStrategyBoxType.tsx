@@ -3,6 +3,7 @@ import { Strategy, StrategyTag } from "../../../utils/types";
 import { useBuilderContext } from "../../../context/BuilderContext";
 import { strategies } from "../../../strategies";
 import { motion } from "framer-motion";
+import { CUSTOM } from "../../../utils/placeholders/strategy";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
@@ -88,13 +89,4 @@ export const SelectStrategyBoxType = () => {
 			})}
 		</div>
 	);
-};
-
-export const CUSTOM: Strategy = {
-	id: 999,
-	name: "Custom",
-	description: "Build your own strategy",
-	type: [],
-	tags: [],
-	trade: [],
 };

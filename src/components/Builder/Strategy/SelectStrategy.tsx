@@ -6,6 +6,7 @@ import { useBuilderContext } from "../../../context/BuilderContext";
 import { strategies } from "../../../strategies";
 import ETHIcon from "../../UI/Icons/Color/ETH";
 import BTCIcon from "../../UI/Icons/Color/BTC";
+import { CUSTOM } from "../../../utils/placeholders/strategy";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
@@ -147,13 +148,4 @@ export const SelectStrategy = () => {
 			)}
 		</Listbox>
 	);
-};
-
-export const CUSTOM: Strategy = {
-	id: 999,
-	name: "Custom",
-	description: "Build your own strategy",
-	type: [],
-	tags: [],
-	trade: [],
 };

@@ -160,6 +160,7 @@ const parseMarketResponse = async (markets: Market[]): Promise<LyraMarket[]> => 
 	return await Promise.all(
 		markets.map(async (market) => {
 			const { address, name, isPaused, openInterest, spotPrice, lyra } = market;
+			console.log({ market });
 			{
 				/* @ts-ignore */
 			}

@@ -16,9 +16,11 @@ import {
 } from "../utils/formatters/optiontypes";
 import { useAccount } from "wagmi";
 
-import { DirectionType } from "../utils/direction";
 import { useChainContext } from "../context/ChainContext";
 import { useLyraContext } from "../context/LyraContext";
+import { isStrikeSelected } from "../utils/strikes";
+import { strikeSelector } from "../utils/engine";
+import { CUSTOM } from "../utils/placeholders/strategy";
 
 export const useBuilder = () => {
 	const [state, dispatch] = useReducer(builderReducer, builderInitialState);
@@ -176,91 +178,11 @@ export const useBuilder = () => {
 
 	const filterStrikes = useCallback(() => {
 		if (currentPrice > 0 && selectedStrategy != null && selectedExpirationDate != null) {
-			const { strikesByOptionTypes, strikesWithQuotes } = selectedExpirationDate;
-
-			// build indexes of
-			const tradeOptionTypes = selectedStrategy.trade.reduce(
-				(accum: Record<0 | 1 | 2 | 3 | 4, StrategyStrikeTrade[]>, trade: StrategyStrikeTrade) => {
-					const trades = accum[trade.optionType]?.concat({ ...trade, matched: false });
-
-					return { ...accum, [trade.optionType]: trades };
-				},
-				{
-					0: [] as StrategyStrikeTrade[],
-					1: [] as StrategyStrikeTrade[],
-					3: [] as StrategyStrikeTrade[],
-					4: [] as StrategyStrikeTrade[],
-				} as Record<0 | 1 | 2 | 3 | 4, StrategyStrikeTrade[]>
+			const { _strikes1, strikesWithQuotes, isValid } = strikeSelector(
+				selectedExpirationDate,
+				selectedStrategy,
+				currentPrice
 			);
-
-			let found = {
-				0: 0,
-				1: 0,
-				3: 0,
-				4: 0,
-			};
-
-			const _strikes1 = Object.keys(strikesByOptionTypes || {})
-				.reduce((combo: LyraStrike[], key: string) => {
-					const _key = parseInt(key);
-					combo =
-						strikesByOptionTypes && strikesByOptionTypes[_key]
-							? combo.concat(strikesByOptionTypes[_key] || [])
-							: combo;
-					return combo;
-				}, [] as LyraStrike[])
-				.map((strike: LyraStrike) => {
-					const {
-						strikePrice,
-						isCall,
-						quote: { isBuy },
-					} = strike;
-
-					const optionType = calculateOptionType(isBuy, isCall);
-
-					if (tradeOptionTypes.hasOwnProperty(optionType)) {
-						const _strikePrice = fromBigNumber(strikePrice);
-
-						const trades = tradeOptionTypes[optionType];
-
-						let strikeMatch = strike;
-
-						trades.forEach((trade: StrategyStrikeTrade) => {
-							if (!trade.matched) {
-								let orderMatch = false;
-								let valueMatch = extrensicValueFilter(
-									trade.priceAt,
-									isCall,
-									currentPrice || 0,
-									_strikePrice
-								);
-
-								if (valueMatch) {
-									orderMatch = orderFilter(trade, found[optionType]);
-								}
-
-								if (orderMatch) {
-									trade.matched = true;
-									strikeMatch = { ...strike, selected: true } as LyraStrike;
-								}
-
-								if (valueMatch && !orderMatch) {
-									found[optionType] = found[optionType] + 1;
-								}
-							}
-						});
-
-						tradeOptionTypes[optionType] = trades;
-
-						return strikeMatch;
-					} else {
-						return strike;
-					}
-				});
-
-			const isValid =
-				_strikes1.filter((strike: LyraStrike) => strike.selected).length ==
-				selectedStrategy.trade.length;
 
 			dispatch({
 				type: "SET_STRIKES",
@@ -275,6 +197,26 @@ export const useBuilder = () => {
 			filterStrikes();
 		}
 	}, [filterStrikes, currentPrice, selectedStrategy, selectedExpirationDate]);
+
+	const handleClearSelectedStrikes = (selectedStrike: LyraStrike, selected: boolean) => {
+		const _toggleStrikes = strikes.map((strike: LyraStrike) => {
+			const {
+				quote: { isCall, isBuy },
+			} = strike;
+			return {
+				...strike,
+				selected: false,
+			};
+		}) as LyraStrike[];
+
+		dispatch({
+			type: "SET_STRIKES",
+			strikes: _toggleStrikes,
+			isValid: true,
+		});
+
+		handleSelectedStrategy(CUSTOM);
+	};
 
 	const handleToggleSelectedStrike = (selectedStrike: LyraStrike, selected: boolean) => {
 		const _toggleStrikes = strikes.map((strike: LyraStrike) => {
@@ -325,23 +267,6 @@ export const useBuilder = () => {
 		handleToggleSelectedStrike,
 		handleSelectedStrategy,
 		handleBuildNewStrategy,
+		handleClearSelectedStrikes,
 	} as BuilderProviderState;
-};
-
-const isStrikeSelected = (
-	selected: boolean,
-	optionType: number,
-	selectedStrike: LyraStrike,
-	currentStrike: LyraStrike
-) => {
-	const {
-		quote: { isCall, isBuy, strikeId },
-	} = selectedStrike;
-	const selectedOptionType = calculateOptionType(isBuy, isCall);
-
-	if (selectedOptionType == optionType && currentStrike.id == strikeId) {
-		return selected;
-	} else {
-		return currentStrike.selected;
-	}
 };

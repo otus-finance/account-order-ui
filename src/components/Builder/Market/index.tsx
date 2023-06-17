@@ -6,7 +6,7 @@ import { SelectMarketBoxType } from "./SelectMarketBoxType";
 
 export const Market = () => {
 	const { markets, selectedMarket, handleSelectedMarket } = useBuilderContext();
-
+	console.log({ markets });
 	return (
 		<div className="flex justify-between rounded-lg p-1">
 			<div className="hidden sm:flex">

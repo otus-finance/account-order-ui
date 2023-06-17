@@ -17,12 +17,11 @@ import { isCreditOrDebit } from "../../../utils/formatters/message";
 import { motion } from "framer-motion";
 import { EditCollateral } from "./Edit/Collateral";
 import { useLyraContext } from "../../../context/LyraContext";
+import { Button } from "../../UI/Components/Button";
 
 export const StrikeTrade = () => {
-	const { selectedStrategy } = useBuilderContext();
-	const { validMaxPNL, loading, selectedStrikes, spreadSelected, updateMultiSize } =
-		useMarketOrderContext();
-	// const { validMaxLoss } = validMaxPNL;
+	const { selectedStrategy, handleClearSelectedStrikes } = useBuilderContext();
+	const { loading, selectedStrikes, spreadSelected, updateMultiSize } = useMarketOrderContext();
 
 	return (
 		<div>
@@ -30,8 +29,22 @@ export const StrikeTrade = () => {
 
 			<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className=" py-4 p-4">
 				<div className="flex justify-between items-center">
-					<div className="text-sm font-semibold dark:text-zinc-200 text-zinc-800">
-						{selectedStrategy && selectedStrategy.name}
+					<div className="flex justify-between items-center ">
+						<div className="text-sm font-semibold dark:text-zinc-200 text-zinc-800">
+							{selectedStrategy && selectedStrategy.name}
+						</div>
+
+						<div className="ml-2">
+							<Button
+								isDisabled={false}
+								label={"Clear Selected"}
+								isLoading={false}
+								variant={"default"}
+								radius={"full"}
+								size={"xxs"}
+								onClick={() => handleClearSelectedStrikes()}
+							/>
+						</div>
 					</div>
 					<div className="flex justify-between items-center">
 						<div className="text-sm dark:text-zinc-200 text-zinc-800 pr-4 font-light">Size</div>
@@ -64,6 +77,10 @@ export const StrikeTrade = () => {
 				<table className="font-normal min-w-full divide-t dark:divide-zinc-800 divide-zinc-100 table-fixed">
 					<thead className="dark:bg-inherit">
 						<tr className=" ">
+							<th
+								scope="col"
+								className="py-4 text-xs dark:text-zinc-400 text-left font-light px-4"
+							></th>
 							<th
 								scope="col"
 								className="py-4 text-xs dark:text-zinc-400 text-left font-light px-4"

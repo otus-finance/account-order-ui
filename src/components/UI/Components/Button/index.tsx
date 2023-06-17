@@ -1,8 +1,9 @@
+import React from "react";
 import { Spinner } from "../Spinner";
 
 export type ButtonFontSize = "xs" | "sm" | "md" | "lg";
 
-export type ButtonSize = "xs" | "sm" | "md" | "full-sm" | "full";
+export type ButtonSize = "xxs" | "xs" | "sm" | "md" | "full-sm" | "full";
 
 export type ButtonRadius = "lg" | "xl" | "full";
 
@@ -26,7 +27,7 @@ export type BaseButtonProps = {
 };
 
 export type ButtonProps = {
-	label: string | number;
+	label: string | number | React.ReactNode;
 	variant: ButtonVariant;
 	radius: ButtonRadius;
 	size: ButtonSize;
@@ -50,6 +51,8 @@ export const getButtonFontSize = (fontSize: ButtonFontSize): string => {
 
 export const getButtonSize = (size: ButtonSize): string => {
 	switch (size) {
+		case "xxs":
+			return "text-xs font-light px-2 py-2";
 		case "xs":
 			return "text-xs font-normal px-4 py-2";
 		case "sm":
@@ -66,7 +69,7 @@ export const getButtonSize = (size: ButtonSize): string => {
 export const getButtonVariant = (variant: ButtonVariant): string => {
 	switch (variant) {
 		case "default":
-			return "dark:bg-zinc-800 bg-zinc-100 dark:text-zinc-100 text-zinc-900 font-semibold";
+			return "dark:bg-zinc-800 bg-zinc-100 dark:text-zinc-100 text-zinc-900 font-semibold hover:bg-zinc-200 hover:dark:bg-zinc-900";
 		case "primary":
 			return "dark:bg-black bg-zinc-200 dark:text-zinc-100 text-zinc-900 font-semibold";
 		case "action":
