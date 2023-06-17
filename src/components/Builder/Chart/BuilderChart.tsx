@@ -14,6 +14,7 @@ import {
 import { PnlChartPoint } from "../../../hooks/BuilderChart";
 import { formatUSD } from "../../../utils/formatters/numbers";
 import { useTheme } from "next-themes";
+import { fill } from "lodash";
 
 export const BuilderPNLChart = ({
 	currentPrice,
@@ -26,8 +27,8 @@ export const BuilderPNLChart = ({
 }) => {
 	const { theme } = useTheme();
 
-	const cartesianGridColor = theme === "dark" ? "#27272a" : "#d4d4d8";
-
+	const cartesianGridColor = theme === "dark" ? "#27272a5" : "#d4d4d85";
+	const fillColor = theme === "dark" ? "#d4d4d8" : "#27272a";
 	return (
 		<ResponsiveContainer width={"99%"} height={height}>
 			<LineChart
@@ -43,22 +44,22 @@ export const BuilderPNLChart = ({
 					dataKey="asset_price"
 					tickSize={10}
 					tick={{
-						stroke: "#fff",
+						stroke: fillColor,
 						strokeWidth: 0.25,
 						fontSize: "10px",
-						fontWeight: "100",
-						fontFamily: "Rubik",
+						fontWeight: "400",
+						fontFamily: "DM Sans",
 					}}
 				/>
 				<YAxis
 					tickCount={100}
 					tickSize={10}
 					tick={{
-						stroke: "#fff",
+						stroke: fillColor,
 						strokeWidth: 0.25,
 						fontSize: "10px",
-						fontWeight: "100",
-						fontFamily: "Rubik",
+						fontWeight: "400",
+						fontFamily: "DM Sans",
 					}}
 				/>
 

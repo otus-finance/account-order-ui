@@ -13,7 +13,7 @@ export const Chart = ({ height = 360 }: { height?: number }) => {
 	const chartData = useBuilderProfitLossChart(selectedMarket?.name, currentPrice, updateStrikes);
 
 	return (
-		<div className="col-span-3 sm:col-span-3 p-4 dark:bg-black bg-zinc-100 rounded-lg">
+		<div className="col-span-3 sm:col-span-3 p-4 dark:bg-black bg-white rounded-lg">
 			{chartData.length > 0 && currentPrice > 0 && isValid && (
 				<BuilderPNLChart height={height} currentPrice={currentPrice} data={chartData} />
 			)}
